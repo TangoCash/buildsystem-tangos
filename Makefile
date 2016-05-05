@@ -83,13 +83,16 @@ include make/root-etc.mk
 include make/python.mk
 include make/gstreamer.mk
 include make/enigma2.mk
+include make/enigma2-tangos.mk
 include make/enigma2-plugins.mk
 include make/enigma2-release.mk
+include make/enigma2-release-small.mk
 include make/neutrino.mk
 include make/neutrino-plugins.mk
 include make/neutrino-release.mk
 include make/cleantargets.mk
 include make/patches.mk
+include make/oscam.mk
 
 all:
 	@echo "'make all' is not a valid target. Please read the documentation."
