@@ -26,7 +26,8 @@ preqs: $(PREQS)
 
 SYSTEM_TOOLS  = $(D)/module_init_tools $(D)/busybox $(D)/zlib $(D)/sysvinit $(D)/diverse-tools
 SYSTEM_TOOLS += $(D)/e2fsprogs $(D)/jfsutils
-SYSTEM_TOOLS += $(D)/portmap $(D)/nfs_utils $(D)/vsftpd $(D)/autofs
+SYSTEM_TOOLS += $(D)/portmap $(D)/nfs_utils $(D)/vsftpd
+#SYSTEM_TOOLS += $(D)/autofs
 SYSTEM_TOOLS += $(D)/driver $(D)/tools
 
 $(D)/system-tools: $(SYSTEM_TOOLS)
