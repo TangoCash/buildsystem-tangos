@@ -1804,12 +1804,12 @@ $(D)/lcd4linux: $(D)/bootstrap $(D)/libusbcompat $(D)/libgd2 $(D)/libusb
 #
 GD_VER = 2.1.1
 
-$(ARCHIVE)/libgd-$(GD_VER).tar.gz:
-	$(WGET) https://github.com/libgd/libgd/releases/download/gd-$(GD_VER)/libgd-$(GD_VER).tar.gz
+$(ARCHIVE)/libgd-$(GD_VER).tar.xz:
+	$(WGET) https://github.com/libgd/libgd/releases/download/gd-$(GD_VER)/libgd-$(GD_VER).tar.xz
 
-$(D)/libgd2: $(D)/bootstrap $(D)/libpng $(D)/libjpeg $(D)/libfreetype $(ARCHIVE)/libgd-$(GD_VER).tar.gz
+$(D)/libgd2: $(D)/bootstrap $(D)/libpng $(D)/libjpeg $(D)/libfreetype $(ARCHIVE)/libgd-$(GD_VER).tar.xz
 	$(REMOVE)/libgd-$(GD_VER)
-	$(UNTAR)/libgd-$(GD_VER).tar.gz
+	$(UNTAR)/libgd-$(GD_VER).tar.xz
 	set -e; cd $(BUILD_TMP)/libgd-$(GD_VER); \
 		$(CONFIGURE) \
 			--prefix=/usr \
@@ -1820,6 +1820,7 @@ $(D)/libgd2: $(D)/bootstrap $(D)/libpng $(D)/libjpeg $(D)/libfreetype $(ARCHIVE)
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)
 	$(REWRITE_LIBTOOL)/libgd.la
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gdlib.pc
 	$(REMOVE)/libgd-$(GD_VER)
 	touch $@
 
