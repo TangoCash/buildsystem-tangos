@@ -13,7 +13,11 @@ $(TARGETPREFIX)/var/etc/.version:
 NEUTRINO_DEPS  = $(D)/bootstrap $(D)/lirc $(D)/libcurl $(D)/libpng $(D)/libjpeg $(D)/libgif $(D)/libfreetype
 NEUTRINO_DEPS += $(D)/libalsa $(D)/ffmpeg $(D)/libdvbsi++ $(D)/libsigc++ $(D)/libopenthreads $(D)/libusb
 NEUTRINO_DEPS += $(D)/lua $(D)/luaexpat $(D)/luacurl $(D)/luasocket $(D)/lua-feedparser $(D)/luasoap $(D)/luajson
-NEUTRINO_DEPS += $(D)/pugixml $(D)/openvpn
+NEUTRINO_DEPS += $(D)/pugixml $(D)/openssl
+
+ifeq ($(OPENVPN), openvpn)
+NEUTRINO_DEPS += $(D)/openvpn
+endif
 
 ifeq ($(WLANDRIVER), wlandriver)
 NEUTRINO_DEPS += $(D)/wpa_supplicant $(D)/wireless_tools
@@ -38,6 +42,7 @@ N_CONFIG_OPTS += --enable-lua
 N_CONFIG_OPTS += --enable-giflib
 N_CONFIG_OPTS += --enable-ffmpegdec
 #N_CONFIG_OPTS += --enable-pip
+#N_CONFIG_OPTS += --disable-webif
 N_CONFIG_OPTS += --enable-pugixml
 
 ifeq ($(EXTERNAL_LCD), externallcd)

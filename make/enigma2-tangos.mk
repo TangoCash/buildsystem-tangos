@@ -15,8 +15,7 @@ E2_REPO="https://github.com/TangoCash/tangos-enigma2.git"
 #
 # yaud-enigma2-tangos
 #
-yaud-enigma2-tangos: yaud-none host_python lirc \
-		boot-elf enigma2-tangos enigma2-plugins release_enigma2
+yaud-enigma2-tangos: yaud-none host_python enigma2-tangos enigma2-plugins release_enigma2
 	$(TUXBOX_YAUD_CUSTOMIZE)
 
 

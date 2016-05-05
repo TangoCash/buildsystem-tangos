@@ -2,7 +2,7 @@
 # Build Dual Image
 #
 yaud-nmp-e2-tangos: yaud-none \
-		neutrino-mp-tangos neutrino-mp-plugins lcd4linux enigma2-tangos release_neutrino release_enigma2_small
+		neutrino-mp-tangos neutrino-mp-plugins lcd4linux enigma2-tangos enigma2-plugins release_neutrino release_enigma2_small
 	$(TUXBOX_YAUD_CUSTOMIZE)
 
 #
@@ -91,7 +91,7 @@ $(D)/release_enigma2_small:
 #
 	rm -rf $(RELEASE_DIR)/lib/autofs
 	rm -rf $(RELEASE_DIR)/usr/lib/m4-nofpu/
-	rm -rf $(RELEASE_DIR)/lib/modules/$(KERNELVERSION)
+	rm -rf $(RELEASE_DIR)/lib/modules/$(KERNEL_VERSION)
 	rm -rf $(RELEASE_DIR)/usr/lib/gcc
 	rm -f $(RELEASE_DIR)/usr/lib/libc.so
 	rm -rf $(RELEASE_DIR)/usr/lib/enigma2/python/Plugins/DemoPlugins

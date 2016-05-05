@@ -775,6 +775,12 @@ endif
 		rm -f $(RELEASE_DIR)/usr/lib/libglcdskin.so*; \
 	fi
 #
+# lcd4linux
+#
+	if [ -e $(TARGETPREFIX)/usr/bin/lcd4linux ]; then \
+		cp -f $(TARGETPREFIX)/usr/bin/lcd4linux $(RELEASE_DIR)/usr/bin/lcd4linux; \
+	fi
+#
 # minidlna
 #
 	if [ -e $(TARGETPREFIX)/usr/sbin/minidlnad ]; then \
