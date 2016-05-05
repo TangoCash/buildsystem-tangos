@@ -3,7 +3,7 @@
 #
 yaud-nmp-e2-tangos: yaud-none \
 		neutrino-mp-tangos neutrino-mp-plugins lcd4linux enigma2-tangos release_neutrino release_enigma2_small
-	@TUXBOX_YAUD_CUSTOMIZE@
+	$(TUXBOX_YAUD_CUSTOMIZE)
 
 #
 # release_common_utils
@@ -18,7 +18,7 @@ $(D)/release_enigma2_small:
 	cp $(SKEL_ROOT)/root_enigma2/etc/tuxbox/satellites.xml $(RELEASE_DIR)/var/etc/tuxbox/ && \
 	cp $(SKEL_ROOT)/root_enigma2/etc/tuxbox/cables.xml $(RELEASE_DIR)/var/etc/tuxbox/ && \
 	cp $(SKEL_ROOT)/root_enigma2/etc/tuxbox/terrestrial.xml $(RELEASE_DIR)/var/etc/tuxbox/ && \
-	cp $(SKEL_ROOT)/root_enigma2/etc/tuxbox/tuxtxt2.conf $(RELEASE_DIR)/var/etc/tuxtxt/ && \
+	cp $(SKEL_ROOT)/root_enigma2/etc/tuxtxt/tuxtxt2.conf $(RELEASE_DIR)/var/etc/tuxtxt/ && \
 	cp -p $(TARGETPREFIX)/usr/bin/opkg-cl $(RELEASE_DIR)/usr/bin/opkg && \
 	cp -dp $(TARGETPREFIX)/usr/bin/python* $(RELEASE_DIR)/usr/bin/ && \
 	cp -p $(TARGETPREFIX)/usr/sbin/ethtool $(RELEASE_DIR)/usr/sbin/ && \
