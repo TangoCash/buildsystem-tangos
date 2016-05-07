@@ -607,7 +607,7 @@ $(D)/hd-idle: $(D)/bootstrap $(ARCHIVE)/hd-idle-$(HDIDLE_VER).tgz
 FBSHOT-VER = 0.3
 
 $(ARCHIVE)/fbshot-$(FBSHOT-VER).tar.gz:
-	$(WGET) http://www.sfires.net/stuff/fbshot/fbshot-$(FBSHOT-VER).tar.gz
+	$(WGET) http://www.sourcefiles.org/Graphics/Tools/Capture/fbshot-$(FBSHOT-VER).tar.gz
 
 $(D)/fbshot: $(TARGETPREFIX)/bin/fbshot
 	touch $@
@@ -750,7 +750,7 @@ $(D)/imagemagick: $(D)/bootstrap $(ARCHIVE)/ImageMagick-$(IMAGEMAGICK_VER).tar.g
 #
 # shairport
 #
-$(D)/shairport: $(D)/bootstrap $(D)/openssl $(D)/howl $(D)/libalsa
+$(D)/shairport: $(D)/bootstrap $(D)/openssl $(D)/howl $(D)/alsa-lib
 	$(REMOVE)/shairport
 	[ -d "$(ARCHIVE)/shairport.git" ] && \
 	(cd $(ARCHIVE)/shairport.git; git pull; ); \

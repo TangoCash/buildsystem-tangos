@@ -247,7 +247,7 @@ $(D)/libreadline: $(D)/bootstrap $(ARCHIVE)/readline-$(READLINE_VER).tar.gz
 # openssl
 #
 OPENSSL_VER = 1.0.2
-OPENSSL_SUBVER = g
+OPENSSL_SUBVER = h
 
 $(ARCHIVE)/openssl-$(OPENSSL_VER)$(OPENSSL_SUBVER).tar.gz:
 	$(WGET) http://www.openssl.org/source/openssl-$(OPENSSL_VER)$(OPENSSL_SUBVER).tar.gz
@@ -256,7 +256,11 @@ $(D)/openssl: $(D)/bootstrap $(ARCHIVE)/openssl-$(OPENSSL_VER)$(OPENSSL_SUBVER).
 	$(REMOVE)/openssl-$(OPENSSL_VER)$(OPENSSL_SUBVER)
 	$(UNTAR)/openssl-$(OPENSSL_VER)$(OPENSSL_SUBVER).tar.gz
 	set -e; cd $(BUILD_TMP)/openssl-$(OPENSSL_VER)$(OPENSSL_SUBVER); \
-		$(PATCH)/openssl-$(OPENSSL_VER).patch; \
+		$(PATCH)/openssl-$(OPENSSL_VER)-optimize-for-size.patch; \
+		$(PATCH)/openssl-$(OPENSSL_VER)-makefile-dirs.patch; \
+		$(PATCH)/openssl-$(OPENSSL_VER)-disable_doc_tests.patch; \
+		$(PATCH)/openssl-$(OPENSSL_VER)-remove_timestamp_check.patch; \
+		$(PATCH)/openssl-$(OPENSSL_VER)-parallel_build.patch; \
 		$(BUILDENV) \
 		./Configure -DL_ENDIAN shared no-hw linux-generic32 \
 			--prefix=/usr \
@@ -689,6 +693,7 @@ $(D)/libpng: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/libpng-$(PNG_VER).tar.xz
 	$(REMOVE)/libpng-$(PNG_VER)
 	$(UNTAR)/libpng-$(PNG_VER).tar.xz
 	set -e; cd $(BUILD_TMP)/libpng-$(PNG_VER); \
+		$(PATCH)/libpng-$(PNG_VER)-disable-tools.patch; \
 		$(CONFIGURE) \
 			--prefix=$(TARGETPREFIX)/usr \
 			--mandir=$(TARGETPREFIX)/.remove \
@@ -1681,6 +1686,7 @@ $(D)/libroxml: $(D)/bootstrap $(ARCHIVE)/libroxml-$(LIBROXML_VER).tar.gz
 			--prefix=/usr \
 			--enable-shared \
 			--disable-static \
+			--disable-roxml \
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)
@@ -1758,7 +1764,7 @@ $(D)/libdpf: $(D)/bootstrap
 #
 # lcd4linux
 #--with-python
-$(D)/lcd4_linux: $(D)/bootstrap $(D)/libusbcompat $(D)/libgd2 $(D)/libusb
+$(D)/lcd4_linux: $(D)/bootstrap $(D)/libusbcompat $(D)/libgd $(D)/libusb
 	$(REMOVE)/lcd4linux
 	[ -d "$(ARCHIVE)/lcd4linux.svn" ] && \
 	(cd $(ARCHIVE)/lcd4linux.svn; svn update;); \
@@ -1779,7 +1785,7 @@ $(D)/lcd4_linux: $(D)/bootstrap $(D)/libusbcompat $(D)/libgd2 $(D)/libusb
 	$(REMOVE)/lcd4linux
 	touch $@
 
-$(D)/lcd4linux: $(D)/bootstrap $(D)/libusbcompat $(D)/libgd2 $(D)/libusb
+$(D)/lcd4linux: $(D)/bootstrap $(D)/libusbcompat $(D)/libgd $(D)/libusb
 	$(REMOVE)/lcd4linux
 	[ -d "$(ARCHIVE)/lcd4linux.git" ] && \
 	(cd $(ARCHIVE)/lcd4linux.git; git pull;); \
@@ -1800,14 +1806,14 @@ $(D)/lcd4linux: $(D)/bootstrap $(D)/libusbcompat $(D)/libgd2 $(D)/libusb
 	touch $@
 
 #
-# libgd2
+# libgd
 #
 GD_VER = 2.1.1
 
 $(ARCHIVE)/libgd-$(GD_VER).tar.xz:
 	$(WGET) https://github.com/libgd/libgd/releases/download/gd-$(GD_VER)/libgd-$(GD_VER).tar.xz
 
-$(D)/libgd2: $(D)/bootstrap $(D)/libpng $(D)/libjpeg $(D)/libfreetype $(ARCHIVE)/libgd-$(GD_VER).tar.xz
+$(D)/libgd: $(D)/bootstrap $(D)/libpng $(D)/libjpeg $(D)/libfreetype $(ARCHIVE)/libgd-$(GD_VER).tar.xz
 	$(REMOVE)/libgd-$(GD_VER)
 	$(UNTAR)/libgd-$(GD_VER).tar.xz
 	set -e; cd $(BUILD_TMP)/libgd-$(GD_VER); \
@@ -1883,11 +1889,12 @@ ALSA_VER = 1.1.1
 $(ARCHIVE)/alsa-lib-$(ALSA_VER).tar.bz2:
 	$(WGET) ftp://ftp.alsa-project.org/pub/lib/alsa-lib-$(ALSA_VER).tar.bz2
 
-$(D)/libalsa: $(D)/bootstrap $(ARCHIVE)/alsa-lib-$(ALSA_VER).tar.bz2
+$(D)/alsa-lib: $(D)/bootstrap $(ARCHIVE)/alsa-lib-$(ALSA_VER).tar.bz2
 	$(REMOVE)/alsa-lib-$(ALSA_VER)
 	$(UNTAR)/alsa-lib-$(ALSA_VER).tar.bz2
 	set -e; cd $(BUILD_TMP)/alsa-lib-$(ALSA_VER); \
 		$(PATCH)/alsa-lib-$(ALSA_VER).patch; \
+		$(PATCH)/alsa-lib-$(ALSA_VER)-link_fix.patch; \
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--with-plugindir=/usr/lib/alsa \
@@ -1902,6 +1909,8 @@ $(D)/libalsa: $(D)/bootstrap $(ARCHIVE)/alsa-lib-$(ALSA_VER).tar.bz2
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+	for i in `cd $(TARGETPREFIX)/usr/lib/alsa/smixer; echo *.la`; do \
+		$(REWRITE_LIBTOOL)/alsa/smixer/$$i; done
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/alsa.pc
 	$(REWRITE_LIBTOOL)/libasound.la
 	$(REMOVE)/alsa-lib-$(ALSA_VER)
@@ -1913,7 +1922,7 @@ $(D)/libalsa: $(D)/bootstrap $(ARCHIVE)/alsa-lib-$(ALSA_VER).tar.bz2
 $(ARCHIVE)/alsa-utils-$(ALSA_VER).tar.bz2:
 	$(WGET) ftp://ftp.alsa-project.org/pub/utils/alsa-utils-$(ALSA_VER).tar.bz2
 
-$(D)/alsautils: $(D)/bootstrap $(D)/libalsa $(ARCHIVE)/alsa-utils-$(ALSA_VER).tar.bz2
+$(D)/alsautils: $(D)/bootstrap $(D)/alsa-lib $(ARCHIVE)/alsa-utils-$(ALSA_VER).tar.bz2
 	$(REMOVE)/alsa-utils-$(ALSA_VER)
 	$(UNTAR)/alsa-utils-$(ALSA_VER).tar.bz2
 	set -e; cd $(BUILD_TMP)/alsa-utils-$(ALSA_VER); \
@@ -2263,7 +2272,7 @@ LIBAO_VER = 1.1.0
 $(ARCHIVE)/libao-$(LIBAO_VER).tar.gz:
 	$(WGET) http://downloads.xiph.org/releases/ao/libao-$(LIBAO_VER).tar.gz
 
-$(D)/libao: $(D)/bootstrap $(D)/libalsa $(ARCHIVE)/libao-$(LIBAO_VER).tar.gz
+$(D)/libao: $(D)/bootstrap $(D)/alsa-lib $(ARCHIVE)/libao-$(LIBAO_VER).tar.gz
 	$(REMOVE)/libao-$(LIBAO_VER)
 	$(UNTAR)/libao-$(LIBAO_VER).tar.gz
 	set -e; cd $(BUILD_TMP)/libao-$(LIBAO_VER); \
