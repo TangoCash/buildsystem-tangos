@@ -700,6 +700,10 @@ endif
 		cp $(TARGETPREFIX)/usr/local/bin/udpstreampes $(RELEASE_DIR)/usr/local/bin/; \
 	fi
 #
+# channellist / tuxtxt
+#
+	cp -aR $(TARGETPREFIX)/var/tuxbox/config/* $(RELEASE_DIR)/var/tuxbox/config
+#
 # copy root_neutrino
 #
 	cp -aR $(SKEL_ROOT)/root_neutrino/* $(RELEASE_DIR)/
@@ -707,10 +711,6 @@ ifneq ($(BOXTYPE), $(filter $(BOXTYPE), atevio7500 spark7162 cuberevo_mini2 cube
 	rm -f $(RELEASE_DIR)/var/tuxbox/config/cables.xml
 	rm -f $(RELEASE_DIR)/var/tuxbox/config/terrestrial.xml
 endif
-#
-# channellist / tuxtxt
-#
-	cp -aR $(TARGETPREFIX)/var/tuxbox/config/* $(RELEASE_DIR)/var/tuxbox/config
 #
 # iso-codes
 #
@@ -750,6 +750,7 @@ endif
 		cp $(TARGETPREFIX)/usr/share/alsa/cards/aliases.conf $(RELEASE_DIR)/usr/share/alsa/cards/; \
 		cp $(TARGETPREFIX)/usr/share/alsa/pcm/default.conf $(RELEASE_DIR)/usr/share/alsa/pcm/; \
 		cp $(TARGETPREFIX)/usr/share/alsa/pcm/dmix.conf $(RELEASE_DIR)/usr/share/alsa/pcm/; \
+		cp $(TARGETPREFIX)/usr/bin/amixer $(RELEASE_DIR)/usr/bin/; \
 	fi
 #
 # nfs-utils
