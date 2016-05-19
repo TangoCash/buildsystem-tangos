@@ -13,6 +13,15 @@ find-%:
 toolcheck: $(TOOLCHECK)
 	@echo "All required tools seem to be installed."
 	@echo
+	@for i in audio_7100 audio_7105 audio_7111 video_7100 video_7105 video_7109 video_7111; do \
+		if [ ! -e $(SKEL_ROOT)/boot/$$i.elf ]; then \
+			echo -e "\n    ERROR: One or more .elf files are missing in $(SKEL_ROOT)/boot!"; \
+			echo "           $$i.elf is one of them"; \
+			echo; \
+			echo "    Correct this and retry."; \
+			echo; \
+		fi; \
+	done
 	@if test "$(subst /bin/,,$(shell readlink /bin/sh))" != bash; then \
 		echo "WARNING: /bin/sh is not linked to bash."; \
 		echo "         This configuration might work, but is not supported."; \
@@ -23,6 +32,24 @@ PREQS =
 
 preqs: $(PREQS)
 
+TOOLS += $(D)/tools-aio-grab
+TOOLS += $(D)/tools-devinit
+TOOLS += $(D)/tools-evremote2
+TOOLS += $(D)/tools-fp_control
+TOOLS += $(D)/tools-hotplug
+TOOLS += $(D)/tools-showiframe
+TOOLS += $(D)/tools-streamproxy
+TOOLS += $(D)/tools-ustslave
+TOOLS += $(D)/tools-vfdctl
+TOOLS += $(D)/tools-wait4button
+#TOOLS += $(D)/tools-libmme_host
+#TOOLS += $(D)/tools-libmmeimage
+ifeq ($(MEDIAFW), eplayer3)
+TOOLS += $(D)/tools-libeplayer3
+endif
+
+$(D)/tools: $(TOOLS)
+	touch $@
 
 SYSTEM_TOOLS  = $(D)/module_init_tools
 SYSTEM_TOOLS += $(D)/busybox
@@ -38,23 +65,8 @@ SYSTEM_TOOLS += $(D)/nfs_utils
 SYSTEM_TOOLS += $(D)/vsftpd
 #SYSTEM_TOOLS += $(D)/autofs
 SYSTEM_TOOLS += $(D)/driver
-SYSTEM_TOOLS += $(D)/aio-grab
-SYSTEM_TOOLS += $(D)/devinit
-SYSTEM_TOOLS += $(D)/evremote2
-SYSTEM_TOOLS += $(D)/fp_control
-SYSTEM_TOOLS += $(D)/hotplug
-SYSTEM_TOOLS += $(D)/showiframe
-SYSTEM_TOOLS += $(D)/streamproxy
-SYSTEM_TOOLS += $(D)/ustslave
-SYSTEM_TOOLS += $(D)/vfdctl
-SYSTEM_TOOLS += $(D)/wait4button
-#SYSTEM_TOOLS += $(D)/libmme_host
-#SYSTEM_TOOLS += $(D)/libmmeimage
-ifeq ($(MEDIAFW), eplayer3)
-SYSTEM_TOOLS += $(D)/libeplayer3
-endif
 
-$(D)/system-tools: $(SYSTEM_TOOLS)
+$(D)/system-tools: $(SYSTEM_TOOLS) $(TOOLS)
 	touch $@
 
 #

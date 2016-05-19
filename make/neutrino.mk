@@ -10,25 +10,24 @@ $(TARGETPREFIX)/var/etc/.version:
 	echo "version=0200`date +%Y%m%d%H%M`" >> $@
 	echo "git=`git describe`" >> $@
 
-NEUTRINO_DEPS  = $(D)/bootstrap $(D)/libncurses $(D)/lirc $(D)/libcurl
+NEUTRINO_DEPS  = $(D)/bootstrap $(D)/libncurses $(D)/lirc $(D)/openssl $(D)/libcurl
 NEUTRINO_DEPS += $(D)/libpng $(D)/libjpeg $(D)/libgif $(D)/libfreetype
 NEUTRINO_DEPS += $(D)/alsa-utils $(D)/ffmpeg
 NEUTRINO_DEPS += $(D)/libfribidi  $(D)/libsigc++ $(D)/libdvbsi++ $(D)/libusb
 NEUTRINO_DEPS += $(D)/pugixml $(D)/libopenthreads
 NEUTRINO_DEPS += $(D)/lua $(D)/luaexpat $(D)/luacurl $(D)/luasocket $(D)/lua-feedparser $(D)/luasoap $(D)/luajson
-NEUTRINO_DEPS += $(D)/openssl
+NEUTRINO_DEPS += $(LOCAL_NEUTRINO_DEPS)
 
-ifeq ($(OPENVPN), openvpn)
-NEUTRINO_DEPS += $(D)/openvpn
-endif
 
 ifeq ($(WLANDRIVER), wlandriver)
 NEUTRINO_DEPS += $(D)/wpa_supplicant $(D)/wireless_tools
 endif
 
 NEUTRINO_DEPS2 = $(D)/libid3tag $(D)/libmad $(D)/libvorbisidec
+
 N_CFLAGS       = -Wall -W -Wshadow -pipe -Os -fno-strict-aliasing
 N_CFLAGS      += -DCPU_FREQ
+N_CFLAGS      += $(LOCAL_NEUTRINO_CFLAGS)
 
 N_CPPFLAGS     = -I$(DRIVER_DIR)/bpamem
 N_CPPFLAGS    += -I$(TARGETPREFIX)/usr/include
@@ -39,7 +38,7 @@ ifeq ($(BOXTYPE), $(filter $(BOXTYPE), spark spark7162))
 N_CPPFLAGS += -I$(DRIVER_DIR)/frontcontroller/aotom_spark
 endif
 
-N_CONFIG_OPTS  =
+N_CONFIG_OPTS  = $(LOCAL_NEUTRINO_BUILD_OPTIONS)
 N_CONFIG_OPTS += --enable-freesatepg
 N_CONFIG_OPTS += --enable-lua
 N_CONFIG_OPTS += --enable-giflib
