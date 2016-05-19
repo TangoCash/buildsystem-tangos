@@ -2,7 +2,7 @@
 # Build Dual Image
 #
 yaud-nmp-e2-tangos: yaud-none \
-		neutrino-mp-tangos neutrino-mp-plugins lcd4linux enigma2-tangos enigma2-plugins release_neutrino release_enigma2_small
+		neutrino-mp-tangos neutrino-mp-plugins enigma2-tangos enigma2-plugins release_neutrino release_enigma2_small
 	$(TUXBOX_YAUD_CUSTOMIZE)
 
 #
