@@ -779,7 +779,9 @@ endif
 # lcd4linux
 #
 	if [ -e $(TARGETPREFIX)/usr/bin/lcd4linux ]; then \
-		cp -f $(TARGETPREFIX)/usr/bin/lcd4linux $(RELEASE_DIR)/usr/bin/lcd4linux; \
+		cp -f $(TARGETPREFIX)/usr/bin/lcd4linux $(RELEASE_DIR)/usr/bin/; \
+		cp -f $(TARGETPREFIX)/etc/init.d/lcd4linux $(RELEASE_DIR)/etc/init.d/; \
+		cp -a $(TARGETPREFIX)/etc/lcd4linux.conf $(RELEASE_DIR)/etc/; \
 	fi
 #
 # minidlna
