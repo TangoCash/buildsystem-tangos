@@ -22,7 +22,7 @@ SOURCE_DIR            = $(BASE_DIR)/source
 
 # for local extensions, e.g. special plugins or similar...
 # put them into $(BASE_DIR)/local since that is ignored in .gitignore
--include ./Makefile.local
+-include $(CDK_DIR)/Makefile.local
 
 # default platform...
 TARGET               ?= sh4-linux
