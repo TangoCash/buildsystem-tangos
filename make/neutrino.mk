@@ -18,7 +18,6 @@ NEUTRINO_DEPS += $(D)/alsa-utils $(D)/ffmpeg
 NEUTRINO_DEPS += $(D)/libfribidi  $(D)/libsigc++ $(D)/libdvbsi++ $(D)/libusb
 NEUTRINO_DEPS += $(D)/pugixml $(D)/libopenthreads
 NEUTRINO_DEPS += $(D)/lua $(D)/luaexpat $(D)/luacurl $(D)/luasocket $(D)/lua-feedparser $(D)/luasoap $(D)/luajson
-NEUTRINO_DEPS += $(LOCAL_NEUTRINO_DEPS)
 
 ifeq ($(IMAGE), neutrino-wlandriver)
 NEUTRINO_DEPS += $(D)/wpa_supplicant $(D)/wireless_tools
@@ -643,6 +642,9 @@ yaud-neutrino-mp-tangos-all: yaud-none \
 NEUTRINO_MP_TANGOS_PATCHES =
 
 $(D)/neutrino-mp-tangos.do_prepare: | $(NEUTRINO_DEPS) $(D)/libstb-hal-cst-next
+	for i in $(LOCAL_NEUTRINO_DEPS); do \
+		$(MAKE) $$i; \
+	done;
 	rm -rf $(SOURCE_DIR)/neutrino-mp-tangos
 	rm -rf $(SOURCE_DIR)/neutrino-mp-tangos.org
 	rm -rf $(N_OBJDIR)
