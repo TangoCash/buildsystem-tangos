@@ -683,7 +683,7 @@ $(D)/libjpeg_turbo: $(D)/bootstrap $(ARCHIVE)/libjpeg-turbo-$(JPEG_TURBO_VER).ta
 #
 # libpng
 #
-PNG_VER = 1.6.21
+PNG_VER = 1.6.23
 PNG_VER_X = 16
 
 $(ARCHIVE)/libpng-$(PNG_VER).tar.xz:
@@ -746,7 +746,7 @@ $(D)/libungif: $(D)/bootstrap $(ARCHIVE)/libungif-$(UNGIF_VER).tar.bz2
 #
 # libgif
 #
-GIFLIB_VER = 5.1.2
+GIFLIB_VER = 5.1.4
 
 $(ARCHIVE)/giflib-$(GIFLIB_VER).tar.bz2:
 	$(WGET) http://sourceforge.net/projects/giflib/files/giflib-$(GIFLIB_VER).tar.bz2

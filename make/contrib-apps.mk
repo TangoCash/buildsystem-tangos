@@ -45,7 +45,7 @@ $(D)/host_pkgconfig: $(ARCHIVE)/pkg-config-$(PKGCONFIG_VER).tar.gz
 			--prefix=$(HOSTPREFIX) \
 			--program-prefix=$(TARGET)- \
 			--disable-host-tool \
-			--with-pc_path=$(TARGETPREFIX)/usr/lib/pkgconfig \
+			--with-pc_path=$(PKG_CONFIG_PATH) \
 		; \
 		$(MAKE); \
 		$(MAKE) install
@@ -187,6 +187,7 @@ $(D)/module_init_tools: $(D)/bootstrap $(D)/lsb  $(ARCHIVE)/module-init-tools-$(
 		$(PATCH)/module-init-tools-$(MODULE_INIT_TOOLS_VER).patch; \
 		autoreconf -fi; \
 		$(CONFIGURE) \
+			--target=$(TARGET) \
 			--prefix= \
 			--mandir=/.remove \
 			--docdir=/.remove \
@@ -560,7 +561,7 @@ $(D)/hddtemp: $(D)/bootstrap $(ARCHIVE)/hddtemp-$(HDDTEMP_VER).tar.bz2
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)
 		install -d $(TARGETPREFIX)/var/tuxbox/config
-		install -m 644 root/release/hddtemp.db $(TARGETPREFIX)/var
+		install -m 644 $(SKEL_ROOT)/release/hddtemp.db $(TARGETPREFIX)/var
 	$(REMOVE)/hddtemp-$(HDPARM_VER)
 	touch $@
 
@@ -1210,6 +1211,7 @@ $(D)/xupnpd: $(D)/bootstrap
 		$(BUILDENV) \
 		$(MAKE) TARGET=$(TARGET) sh4; \
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+	install -m 755 $(SKEL_ROOT)/etc/init.d/xupnpd $(TARGETPREFIX)/etc/init.d/
 	$(REMOVE)/xupnpd
 	touch $@
 
