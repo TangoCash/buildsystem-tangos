@@ -20,6 +20,9 @@ SOURCE_DIR            = $(BASE_DIR)/source
 
 -include $(CDK_DIR)/config
 
+# for local extensions, e.g. LOCAL_NEUTRINO_DEPS
+-include $(CDK_DIR)/config.local
+
 # default platform...
 TARGET               ?= sh4-linux
 BOXARCH              ?= sh4
