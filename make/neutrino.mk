@@ -10,6 +10,8 @@ $(TARGETPREFIX)/var/etc/.version:
 	echo "version=0200`date +%Y%m%d%H%M`" >> $@
 	echo "git=`git describe`" >> $@
 
+LOCAL_NEUTRINO_DEPS =
+
 NEUTRINO_DEPS  = $(D)/bootstrap $(D)/libncurses $(D)/lirc $(D)/openssl $(D)/libcurl
 NEUTRINO_DEPS += $(D)/libpng $(D)/libjpeg $(D)/libgif $(D)/libfreetype
 NEUTRINO_DEPS += $(D)/alsa-utils $(D)/ffmpeg
