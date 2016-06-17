@@ -262,16 +262,23 @@ $(D)/openssl: $(D)/bootstrap $(ARCHIVE)/openssl-$(OPENSSL_VER)$(OPENSSL_SUBVER).
 		$(PATCH)/openssl-$(OPENSSL_VER)-remove_timestamp_check.patch; \
 		$(PATCH)/openssl-$(OPENSSL_VER)-parallel_build.patch; \
 		$(BUILDENV) \
-		./Configure -DL_ENDIAN shared no-hw linux-generic32 \
+		./Configure \
+			-DL_ENDIAN \
+			shared \
+			no-hw \
+			linux-generic32 \
 			--prefix=/usr \
 			--openssldir=/etc/ssl \
 		; \
+		sed -i 's|MAKEDEPPROG=makedepend|MAKEDEPPROG=$(CROSS_DIR)/bin/$$(CC) -M|' Makefile; \
+		make depend; \
 		$(MAKE) all; \
 		$(MAKE) install_sw INSTALL_PREFIX=$(TARGETPREFIX)
 	chmod 0755 $(TARGETPREFIX)/usr/lib/lib{crypto,ssl}.so.*
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/openssl.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libcrypto.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libssl.pc
+	cd $(TARGETPREFIX) && rm -rf etc/ssl/man
 	$(REMOVE)/openssl-$(OPENSSL_VER)$(OPENSSL_SUBVER)
 	touch $@
 
@@ -343,10 +350,10 @@ $(D)/lua: $(D)/bootstrap $(D)/libncurses $(ARCHIVE)/lua-$(LUA_VER).tar.gz
 #
 $(D)/luacurl: $(D)/bootstrap $(D)/libcurl $(D)/lua
 	$(REMOVE)/luacurl
-	[ -d "$(ARCHIVE)/luacurl.git" ] && \
-	(cd $(ARCHIVE)/luacurl.git; git pull;); \
-	[ -d "$(ARCHIVE)/luacurl.git" ] || \
-	git clone git://github.com/Lua-cURL/Lua-cURLv3.git $(ARCHIVE)/luacurl.git; \
+	set -e; if [ -d $(ARCHIVE)/luacurl.git ]; \
+		then cd $(ARCHIVE)/luacurl.git; git pull; \
+		else cd $(ARCHIVE); git clone git://github.com/Lua-cURL/Lua-cURLv3.git luacurl.git; \
+		fi
 	cp -ra $(ARCHIVE)/luacurl.git $(BUILD_TMP)/luacurl
 	set -e; cd $(BUILD_TMP)/luacurl; \
 		$(MAKE) CC=$(TARGET)-gcc LDFLAGS="-L$(TARGETPREFIX)/usr/lib" \
@@ -379,10 +386,10 @@ $(D)/luaexpat: $(D)/bootstrap $(D)/lua $(D)/libexpat $(ARCHIVE)/luaexpat-$(LUAEX
 #
 $(D)/luasocket: $(D)/bootstrap $(D)/lua
 	$(REMOVE)/luasocket
-	[ -d "$(ARCHIVE)/luasocket.git" ] && \
-	(cd $(ARCHIVE)/luasocket.git; git pull;); \
-	[ -d "$(ARCHIVE)/luasocket.git" ] || \
-	git clone git://github.com/diegonehab/luasocket.git $(ARCHIVE)/luasocket.git; \
+	set -e; if [ -d $(ARCHIVE)/luasocket.git ]; \
+		then cd $(ARCHIVE)/luasocket.git; git pull; \
+		else cd $(ARCHIVE); git clone git://github.com/diegonehab/luasocket.git luasocket.git; \
+		fi
 	cp -ra $(ARCHIVE)/luasocket.git $(BUILD_TMP)/luasocket
 	set -e; cd $(BUILD_TMP)/luasocket; \
 		sed -i -e "s@LD_linux=gcc@LD_LINUX=$(TARGET)-gcc@" -e "s@CC_linux=gcc@CC_LINUX=$(TARGET)-gcc -L$(TARGETPREFIX)/usr/lib@" -e "s@DESTDIR=@DESTDIR=$(TARGETPREFIX)/usr@" src/makefile; \
@@ -396,10 +403,10 @@ $(D)/luasocket: $(D)/bootstrap $(D)/lua
 #
 $(D)/lua-feedparser: $(D)/bootstrap $(D)/lua $(D)/luasocket $(D)/luaexpat
 	$(REMOVE)/lua-feedparser
-	[ -d "$(ARCHIVE)/lua-feedparser.git" ] && \
-	(cd $(ARCHIVE)/lua-feedparser.git; git pull;); \
-	[ -d "$(ARCHIVE)/lua-feedparser.git" ] || \
-	git clone git://github.com/slact/lua-feedparser.git $(ARCHIVE)/lua-feedparser.git; \
+	set -e; if [ -d $(ARCHIVE)/lua-feedparser.git ]; \
+		then cd $(ARCHIVE)/lua-feedparser.git; git pull; \
+		else cd $(ARCHIVE); git clone git://github.com/slact/lua-feedparser.git lua-feedparser.git; \
+		fi
 	cp -ra $(ARCHIVE)/lua-feedparser.git $(BUILD_TMP)/lua-feedparser
 	set -e; cd $(BUILD_TMP)/lua-feedparser; \
 		sed -i -e "s/^PREFIX.*//" -e "s/^LUA_DIR.*//" Makefile ; \
@@ -640,7 +647,7 @@ $(D)/libjpeg_old: $(D)/bootstrap $(ARCHIVE)/jpegsrc.v$(JPEG_VER).tar.gz
 #
 # libjpeg_turbo
 #
-JPEG_TURBO_VER = 1.4.2
+JPEG_TURBO_VER = 1.5.0
 
 $(ARCHIVE)/libjpeg-turbo-$(JPEG_TURBO_VER).tar.gz:
 	$(WGET) http://sourceforge.net/projects/libjpeg-turbo/files/$(JPEG_TURBO_VER)/libjpeg-turbo-$(JPEG_TURBO_VER).tar.gz
@@ -769,7 +776,7 @@ $(D)/libgif: $(D)/bootstrap $(ARCHIVE)/giflib-$(GIFLIB_VER).tar.bz2
 #
 # libcurl
 #
-CURL_VER = 7.48.0
+CURL_VER = 7.49.1
 
 $(ARCHIVE)/curl-$(CURL_VER).tar.bz2:
 	$(WGET) http://curl.haxx.se/download/$(lastword $(subst /, ,$@))

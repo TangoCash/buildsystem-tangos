@@ -180,7 +180,7 @@ $(D)/host_module_init_tools: $(ARCHIVE)/module-init-tools-$(MODULE_INIT_TOOLS_VE
 #
 # module_init_tools
 #
-$(D)/module_init_tools: $(D)/bootstrap $(D)/lsb  $(ARCHIVE)/module-init-tools-$(MODULE_INIT_TOOLS_VER).tar.bz2
+$(D)/module_init_tools: $(D)/bootstrap $(D)/lsb $(ARCHIVE)/module-init-tools-$(MODULE_INIT_TOOLS_VER).tar.bz2
 	$(REMOVE)/module-init-tools-$(MODULE_INIT_TOOLS_VER)
 	$(UNTAR)/module-init-tools-$(MODULE_INIT_TOOLS_VER).tar.bz2
 	set -e; cd $(BUILD_TMP)/module-init-tools-$(MODULE_INIT_TOOLS_VER); \
@@ -189,6 +189,7 @@ $(D)/module_init_tools: $(D)/bootstrap $(D)/lsb  $(ARCHIVE)/module-init-tools-$(
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix= \
+			--program-suffix="" \
 			--mandir=/.remove \
 			--docdir=/.remove \
 			--disable-builddir \
@@ -292,6 +293,30 @@ $(D)/e2fsprogs: $(D)/bootstrap $(D)/utillinux $(ARCHIVE)/e2fsprogs-$(E2FSPROGS_V
 				 sbin/e2undo usr/sbin/filefrag usr/sbin/e2freefrag \
 				 usr/bin/chattr usr/bin/lsattr usr/bin/uuidgen
 	$(REMOVE)/e2fsprogs-$(E2FSPROGS_VER)
+	touch $@
+
+#
+# dosfstools
+#
+DOSFSTOOLS_VER = 4.0
+
+$(ARCHIVE)/dosfstools-$(DOSFSTOOLS_VER).tar.xz:
+	$(WGET) https://github.com/dosfstools/dosfstools/releases/download/v$(DOSFSTOOLS_VER)/dosfstools-$(DOSFSTOOLS_VER).tar.xz
+
+$(D)/dosfstools: bootstrap $(ARCHIVE)/dosfstools-$(DOSFSTOOLS_VER).tar.xz
+	$(REMOVE)/dosfstools-$(DOSFSTOOLS_VER)
+	$(UNTAR)/dosfstools-$(DOSFSTOOLS_VER).tar.xz
+	set -e; cd $(BUILD_TMP)/dosfstools-$(DOSFSTOOLS_VER); \
+		autoreconf -fi; \
+		$(CONFIGURE) \
+			--prefix= \
+			--without-udev \
+			--enable-compat-symlinks \
+			CFLAGS="$(TARGET_CFLAGS) -fomit-frame-pointer -D_FILE_OFFSET_BITS=64" \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+	$(REMOVE)/dosfstools-$(DOSFSTOOLS_VER)
 	touch $@
 
 #
