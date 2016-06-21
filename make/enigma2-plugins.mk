@@ -3,11 +3,11 @@
 #
 $(D)/hotplug_e2: $(D)/bootstrap
 	$(REMOVE)/hotplug-e2-helper
-	[ -d "$(ARCHIVE)/hotplug-e2-helper.git" ] && \
-	(cd $(ARCHIVE)/hotplug-e2-helper.git; git pull; ); \
-	[ -d "$(ARCHIVE)/hotplug-e2-helper.git" ] || \
-	git clone https://github.com/OpenPLi/hotplug-e2-helper.git $(ARCHIVE)/hotplug-e2-helper.git; \
-	cp -ra $(ARCHIVE)/hotplug-e2-helper.git $(BUILD_TMP)/hotplug-e2-helper; \
+	set -e; if [ -d $(ARCHIVE)/hotplug-e2-helper.git ]; \
+		then cd $(ARCHIVE)/hotplug-e2-helper.git; git pull; \
+		else cd $(ARCHIVE); git clone https://github.com/OpenPLi/hotplug-e2-helper.git hotplug-e2-helper.git; \
+		fi
+	cp -ra $(ARCHIVE)/hotplug-e2-helper.git $(BUILD_TMP)/hotplug-e2-helper
 	set -e; cd $(BUILD_TMP)/hotplug-e2-helper; \
 		$(PATCH)/hotplug-e2-helper.patch; \
 		$(CONFIGURE) \
@@ -23,11 +23,11 @@ $(D)/hotplug_e2: $(D)/bootstrap
 #
 $(D)/tuxtxtlib: $(D)/bootstrap
 	$(REMOVE)/tuxtxtlib
-	[ -d "$(ARCHIVE)/tuxtxt.git" ] && \
-	(cd $(ARCHIVE)/tuxtxt.git; git pull;); \
-	[ -d "$(ARCHIVE)/tuxtxt.git" ] || \
-	git clone https://github.com/OpenPLi/tuxtxt.git $(ARCHIVE)/tuxtxt.git; \
-	cp -ra $(ARCHIVE)/tuxtxt.git/libtuxtxt $(BUILD_TMP)/tuxtxtlib; \
+	set -e; if [ -d $(ARCHIVE)/tuxtxt.git ]; \
+		then cd $(ARCHIVE)/tuxtxt.git; git pull; \
+		else cd $(ARCHIVE); git clone https://github.com/OpenPLi/tuxtxt.git tuxtxt.git; \
+		fi
+	cp -ra $(ARCHIVE)/tuxtxt.git/libtuxtxt $(BUILD_TMP)/tuxtxtlib
 	set -e; cd $(BUILD_TMP)/tuxtxtlib; \
 		$(PATCH)/tuxtxtlib-1.0-fix-dbox-headers.patch; \
 		aclocal; \
@@ -92,11 +92,11 @@ $(D)/enigma2-plugins: $(D)/enigma2_networkbrowser $(D)/enigma2_openwebif
 #
 $(D)/enigma2_openwebif: $(D)/bootstrap $(D)/python $(D)/python_cheetah
 	$(REMOVE)/e2openplugin-OpenWebif
-	[ -d "$(ARCHIVE)/e2openplugin-OpenWebif.git" ] && \
-	(cd $(ARCHIVE)/e2openplugin-OpenWebif.git; git pull; git checkout HEAD;); \
-	[ -d "$(ARCHIVE)/e2openplugin-OpenWebif.git" ] || \
-	git clone https://github.com/HDMU/e2openplugin-OpenWebif.git $(ARCHIVE)/e2openplugin-OpenWebif.git; \
-	cp -ra $(ARCHIVE)/e2openplugin-OpenWebif.git $(BUILD_TMP)/e2openplugin-OpenWebif; \
+	set -e; if [ -d $(ARCHIVE)/e2openplugin-OpenWebif.git ]; \
+		then cd $(ARCHIVE)/e2openplugin-OpenWebif.git; git pull; \
+		else cd $(ARCHIVE); git clone https://github.com/HDMU/e2openplugin-OpenWebif.git e2openplugin-OpenWebif.git; \
+		fi
+	cp -ra $(ARCHIVE)/e2openplugin-OpenWebif.git $(BUILD_TMP)/e2openplugin-OpenWebif
 	set -e; cd $(BUILD_TMP)/e2openplugin-OpenWebif; \
 		$(BUILDENV) \
 		cp -a plugin $(TARGETPREFIX)/usr/lib/enigma2/python/Plugins/Extensions/OpenWebif; \
@@ -120,11 +120,11 @@ $(D)/enigma2_openwebif: $(D)/bootstrap $(D)/python $(D)/python_cheetah
 #
 $(D)/enigma2_networkbrowser: $(D)/bootstrap $(D)/python
 	$(REMOVE)/enigma2-networkbrowser
-	[ -d "$(ARCHIVE)/enigma2-plugins.git" ] && \
-	(cd $(ARCHIVE)/enigma2-plugins.git; git pull; git checkout HEAD;); \
-	[ -d "$(ARCHIVE)/enigma2-plugins.git" ] || \
-	git clone https://github.com/OpenPLi/enigma2-plugins.git $(ARCHIVE)/enigma2-plugins.git; \
-	cp -ra $(ARCHIVE)/enigma2-plugins.git/networkbrowser/ $(BUILD_TMP)/enigma2-networkbrowser; \
+	set -e; if [ -d $(ARCHIVE)/enigma2-plugins.git ]; \
+		then cd $(ARCHIVE)/enigma2-plugins.git; git pull; \
+		else cd $(ARCHIVE); git clone https://github.com/OpenPLi/enigma2-plugins.git enigma2-plugins.git; \
+		fi
+	cp -ra $(ARCHIVE)/enigma2-plugins.git/networkbrowser/ $(BUILD_TMP)/enigma2-networkbrowser
 	set -e; cd $(BUILD_TMP)/enigma2-networkbrowser; \
 		$(PATCH)/enigma2-networkbrowser-support-autofs.patch; \
 	set -e; cd $(BUILD_TMP)/enigma2-networkbrowser/src/lib; \

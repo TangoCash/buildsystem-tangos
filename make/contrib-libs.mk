@@ -328,9 +328,10 @@ $(ARCHIVE)/lua-$(LUA_VER).tar.gz:
 
 $(D)/lua: $(D)/bootstrap $(D)/libncurses $(ARCHIVE)/lua-$(LUA_VER).tar.gz
 	$(REMOVE)/lua-$(LUA_VER)
-	[ -d "$(ARCHIVE)/luaposix.git" ] || \
-	git clone -b release-v$(LUAPOSIX_VER) git://github.com/luaposix/luaposix.git $(ARCHIVE)/luaposix.git; \
-	mkdir -p $(TARGETPREFIX)/usr/share/lua/$(LUA_VER_SHORT)/
+	set -e; if [ ! -d $(ARCHIVE)/luaposix.git ]; \
+		then cd $(ARCHIVE); git clone -b release-v$(LUAPOSIX_VER) git://github.com/luaposix/luaposix.git luaposix.git; \
+		fi
+	mkdir -p $(TARGETPREFIX)/usr/share/lua/$(LUA_VER_SHORT)
 	$(UNTAR)/lua-$(LUA_VER).tar.gz
 	set -e; cd $(BUILD_TMP)/lua-$(LUA_VER); \
 		$(PATCH)/lua-$(LUA_VER)-luaposix-$(LUAPOSIX_VER).patch; \
@@ -340,8 +341,9 @@ $(D)/lua: $(D)/bootstrap $(D)/libncurses $(ARCHIVE)/lua-$(LUA_VER).tar.gz
 		sed -i 's/<config.h>/"config.h"/' src/posix.c; \
 		sed -i '/^#define/d' src/lua52compat.h; \
 		sed -i 's|man/man1|/.remove|' Makefile; \
-		$(MAKE) linux CC=$(TARGET)-gcc LDFLAGS="-L$(TARGETPREFIX)/usr/lib" BUILDMODE=dynamic PKG_VERSION=$(LUA_VER); \
+		$(MAKE) linux CC=$(TARGET)-gcc CPPFLAGS="$(TARGET_CPPFLAGS)" LDFLAGS="-L$(TARGETPREFIX)/usr/lib" BUILDMODE=dynamic PKG_VERSION=$(LUA_VER); \
 		$(MAKE) install INSTALL_TOP=$(TARGETPREFIX)/usr INSTALL_MAN=$(TARGETPREFIX)/.remove
+	cd $(TARGETPREFIX)/usr && rm bin/lua bin/luac
 	$(REMOVE)/lua-$(LUA_VER)
 	touch $@
 
@@ -445,12 +447,12 @@ $(D)/luajson: $(D)/bootstrap $(D)/lua $(ARCHIVE)/json.lua
 # libboost
 #
 BOOST_MAJOR = 1
-BOOST_MINOR = 53
+BOOST_MINOR = 61
 BOOST_MICRO = 0
 BOOST_VER = $(BOOST_MAJOR)_$(BOOST_MINOR)_$(BOOST_MICRO)
 
 $(ARCHIVE)/boost_$(BOOST_VER).tar.bz2:
-	$(WGET) http://downloads.sourceforge.net/project/boost/boost/$(BOOST_MAJOR).$(BOOST_MINOR).$(BOOST_MICRO)/boost_$(BOOST_VER).tar.bz2
+	$(WGET) http://sourceforge.net/projects/boost/files/boost/$(BOOST_MAJOR).$(BOOST_MINOR).$(BOOST_MICRO)/boost_$(BOOST_VER).tar.bz2
 
 $(D)/libboost: $(D)/bootstrap $(ARCHIVE)/boost_$(BOOST_VER).tar.bz2
 	$(REMOVE)/boost_$(BOOST_VER)
@@ -547,7 +549,7 @@ $(D)/timezone: $(D)/bootstrap find-zic $(ARCHIVE)/tzdata$(TZ_VER).tar.gz
 FREETYPE_VER = 2.6.3
 
 $(ARCHIVE)/freetype-$(FREETYPE_VER).tar.bz2:
-	$(WGET) http://prdownloads.sourceforge.net/sourceforge/freetype/freetype-$(FREETYPE_VER).tar.bz2
+	$(WGET) http://sourceforge.net/projects/freetype/files/freetype2/$(FREETYPE_VER)/freetype-$(FREETYPE_VER).tar.bz2
 
 $(D)/libfreetype: $(D)/bootstrap $(D)/zlib $(D)/bzip2 $(D)/libpng $(ARCHIVE)/freetype-$(FREETYPE_VER).tar.bz2
 	$(REMOVE)/freetype-$(FREETYPE_VER)
@@ -733,7 +735,7 @@ $(D)/png++: $(D)/bootstrap $(D)/libpng $(ARCHIVE)/png++-$(PNGPP_VER).tar.gz
 UNGIF_VER = 4.1.4
 
 $(ARCHIVE)/libungif-$(UNGIF_VER).tar.bz2:
-	$(WGET) http://downloads.sourceforge.net/project/giflib/libungif-4.x/libungif-$(UNGIF_VER)/libungif-$(UNGIF_VER).tar.bz2
+	$(WGET) http://sourceforge.net/projects/giflib/files/libungif-4.x/libungif-$(UNGIF_VER)/libungif-$(UNGIF_VER).tar.bz2
 
 $(D)/libungif: $(D)/bootstrap $(ARCHIVE)/libungif-$(UNGIF_VER).tar.bz2
 	$(RM_PKGPREFIX)
@@ -903,7 +905,7 @@ $(D)/libsigc++: $(D)/bootstrap $(ARCHIVE)/libsigc++-$(LIBSIGCPP_VER).tar.xz
 MAD_VER = 0.15.1b
 
 $(ARCHIVE)/libmad-$(MAD_VER).tar.gz:
-	$(WGET) http://downloads.sourceforge.net/project/mad/libmad/$(MAD_VER)/libmad-$(MAD_VER).tar.gz
+	$(WGET) http://sourceforge.net/projects/mad/files/libmad/$(MAD_VER)/libmad-$(MAD_VER).tar.gz
 
 $(D)/libmad: $(D)/bootstrap $(ARCHIVE)/libmad-$(MAD_VER).tar.gz
 	$(REMOVE)/libmad-$(MAD_VER)
@@ -932,7 +934,7 @@ $(D)/libmad: $(D)/bootstrap $(ARCHIVE)/libmad-$(MAD_VER).tar.gz
 ID3TAG_VER = 0.15.1b
 
 $(ARCHIVE)/libid3tag-$(ID3TAG_VER)$(ID3TAG_SUBVER).tar.gz:
-	$(WGET) http://downloads.sourceforge.net/project/mad/libid3tag/$(ID3TAG_VER)/libid3tag-$(ID3TAG_VER).tar.gz
+	$(WGET) http://sourceforge.net/projects/mad/files/libid3tag/$(ID3TAG_VER)/libid3tag-$(ID3TAG_VER).tar.gz
 
 $(D)/libid3tag: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/libid3tag-$(ID3TAG_VER).tar.gz
 	$(REMOVE)/libid3tag-$(ID3TAG_VER)
@@ -1041,7 +1043,7 @@ $(D)/libiconv: $(D)/bootstrap $(ARCHIVE)/libiconv-$(ICONV_VER).tar.gz
 EXPAT_VER = 2.1.1
 
 $(ARCHIVE)/expat-$(EXPAT_VER).tar.bz2:
-	$(WGET) http://downloads.sourceforge.net/project/expat/expat/$(EXPAT_VER)/expat-$(EXPAT_VER).tar.bz2
+	$(WGET) http://sourceforge.net/projects/expat/files/expat/$(EXPAT_VER)/expat-$(EXPAT_VER).tar.bz2
 
 $(D)/libexpat: $(D)/bootstrap $(ARCHIVE)/expat-$(EXPAT_VER).tar.bz2
 	$(REMOVE)/expat-$(EXPAT_VER)
@@ -1169,11 +1171,11 @@ $(D)/libdvdread: $(D)/bootstrap $(ARCHIVE)/libdvdread-$(LIBDVDREAD_VER).tar.xz
 #
 $(D)/libdreamdvd: $(D)/bootstrap $(D)/libdvdnav
 	$(REMOVE)/libdreamdvd
-	[ -d "$(ARCHIVE)/libdreamdvd.git" ] && \
-	(cd $(ARCHIVE)/libdreamdvd.git; git pull;); \
-	[ -d "$(ARCHIVE)/libdreamdvd.git" ] || \
-	git clone git://github.com/mirakels/libdreamdvd.git $(ARCHIVE)/libdreamdvd.git; \
-	cp -ra $(ARCHIVE)/libdreamdvd.git $(BUILD_TMP)/libdreamdvd; \
+	set -e; if [ -d $(ARCHIVE)/libdreamdvd.git ]; \
+		then cd $(ARCHIVE)/libdreamdvd.git; git pull; \
+		else cd $(ARCHIVE); git clone git://github.com/mirakels/libdreamdvd.git libdreamdvd.git; \
+		fi
+	cp -ra $(ARCHIVE)/libdreamdvd.git $(BUILD_TMP)/libdreamdvd
 	set -e; cd $(BUILD_TMP)/libdreamdvd; \
 		$(PATCH)/libdreamdvd-1.0-sh4-support.patch; \
 		$(BUILDENV) \
@@ -1734,11 +1736,11 @@ $(D)/pugixml: $(D)/bootstrap $(ARCHIVE)/pugixml-$(PUGIXML_VER).tar.gz
 #
 $(D)/graphlcd: $(D)/bootstrap $(D)/libfreetype $(D)/libusb
 	$(REMOVE)/graphlcd
-	[ -d "$(ARCHIVE)/graphlcd-base-touchcol.git" ] && \
-	(cd $(ARCHIVE)/graphlcd-base-touchcol.git; git pull;); \
-	[ -d "$(ARCHIVE)/graphlcd-base-touchcol.git" ] || \
-	git clone -b touchcol git://projects.vdr-developer.org/graphlcd-base.git $(ARCHIVE)/graphlcd-base-touchcol.git; \
-	cp -ra $(ARCHIVE)/graphlcd-base-touchcol.git $(BUILD_TMP)/graphlcd; \
+	set -e; if [ -d $(ARCHIVE)/graphlcd-base-touchcol.git ]; \
+		then cd $(ARCHIVE)/graphlcd-base-touchcol.git; git pull; \
+		else cd $(ARCHIVE); git clone -b touchcol git://projects.vdr-developer.org/graphlcd-base.git graphlcd-base-touchcol.git; \
+		fi
+	cp -ra $(ARCHIVE)/graphlcd-base-touchcol.git $(BUILD_TMP)/graphlcd
 	set -e; cd $(BUILD_TMP)/graphlcd; \
 		$(PATCH)/graphlcd-base-touchcol.patch; \
 		export TARGET=$(TARGET)-; \
@@ -1749,56 +1751,15 @@ $(D)/graphlcd: $(D)/bootstrap $(D)/libfreetype $(D)/libusb
 	touch $@
 
 #
-# libdpfax
-#
-$(D)/libdpf: $(D)/bootstrap
-	$(REMOVE)/dpf-ax
-	[ -d "$(ARCHIVE)/dpf-ax.svn" ] && \
-	(cd $(ARCHIVE)/dpf-ax.svn; svn update;); \
-	[ -d "$(ARCHIVE)/dpf-ax.svn" ] || \
-	svn co https://svn.code.sf.net/p/dpf-ax/code/trunk $(ARCHIVE)/dpf-ax.svn; \
-	cp -ra $(ARCHIVE)/dpf-ax.svn $(BUILD_TMP)/dpf-ax; \
-	set -e; cd $(BUILD_TMP)/dpf-ax; \
-		$(PATCH)/libdpf-crossbuild.patch; \
-		cp include/spiflash.h $(TARGETPREFIX)/usr/include/; \
-		cp include/usbuser.h $(TARGETPREFIX)/usr/include/; \
-		$(BUILDENV) \
-		$(MAKE) default CFLAGS="$(TARGET_CFLAGS) " LDFLAGS="$(TARGET_LDFLAGS) -L."; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
-	$(REMOVE)/dpf-ax
-	touch $@
-
-#
 # lcd4linux
-#--with-python
-$(D)/lcd4_linux: $(D)/bootstrap $(D)/libusbcompat $(D)/libgd $(D)/libusb
-	$(REMOVE)/lcd4linux
-	[ -d "$(ARCHIVE)/lcd4linux.svn" ] && \
-	(cd $(ARCHIVE)/lcd4linux.svn; svn update;); \
-	[ -d "$(ARCHIVE)/lcd4linux.svn" ] || \
-	svn co https://ssl.bulix.org/svn/lcd4linux/trunk $(ARCHIVE)/lcd4linux.svn; \
-	cp -ra $(ARCHIVE)/lcd4linux.svn $(BUILD_TMP)/lcd4linux; \
-	set -e; cd $(BUILD_TMP)/lcd4linux; \
-		$(PATCH)/lcd4linux.patch; \
-		$(BUILDENV) ./bootstrap; \
-		$(BUILDENV) ./configure $(CONFIGURE_OPTS) \
-			--prefix=/usr \
-			--with-drivers='DPF,SamsungSPF' \
-			--with-plugins='all,!apm,!asterisk,!dbus,!dvb,!gps,!hddtemp,!huawei,!imon,!isdn,!kvv,!mpd,!mpris_dbus,!mysql,!pop3,!ppp,!python,!qnaplog,!raspi,!sample,!seti,!w1retap,!wireless,!xmms' \
-			--without-ncurses \
-		; \
-		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
-	$(REMOVE)/lcd4linux
-	touch $@
-
+#
 $(D)/lcd4linux: $(D)/bootstrap $(D)/libusbcompat $(D)/libgd $(D)/libusb
 	$(REMOVE)/lcd4linux
-	[ -d "$(ARCHIVE)/lcd4linux.git" ] && \
-	(cd $(ARCHIVE)/lcd4linux.git; git pull;); \
-	[ -d "$(ARCHIVE)/lcd4linux.git" ] || \
-	git clone https://github.com/TangoCash/lcd4linux.git $(ARCHIVE)/lcd4linux.git; \
-	cp -ra $(ARCHIVE)/lcd4linux.git $(BUILD_TMP)/lcd4linux; \
+	set -e; if [ -d $(ARCHIVE)/lcd4linux.git ]; \
+		then cd $(ARCHIVE)/lcd4linux.git; git pull; \
+		else cd $(ARCHIVE); git clone https://github.com/TangoCash/lcd4linux.git lcd4linux.git; \
+		fi
+	cp -ra $(ARCHIVE)/lcd4linux.git $(BUILD_TMP)/lcd4linux
 	set -e; cd $(BUILD_TMP)/lcd4linux; \
 		$(BUILDENV) ./bootstrap; \
 		$(BUILDENV) ./configure $(CONFIGURE_OPTS) \
@@ -1845,7 +1806,7 @@ $(D)/libgd: $(D)/bootstrap $(D)/libpng $(D)/libjpeg $(D)/libfreetype $(ARCHIVE)/
 USB_VER = 1.0.9
 
 $(ARCHIVE)/libusb-$(USB_VER).tar.bz2:
-	$(WGET) http://downloads.sourceforge.net/libusb/libusb-$(USB_VER).tar.bz2
+	$(WGET) http://sourceforge.net/projects/libusb/files/libusb-1.0/libusb-$(USB_VER)/libusb-$(USB_VER).tar.bz2
 
 $(D)/libusb: $(D)/bootstrap $(ARCHIVE)/libusb-$(USB_VER).tar.bz2
 	$(REMOVE)/libusb-$(USB_VER)
@@ -1873,7 +1834,7 @@ $(D)/libusb: $(D)/bootstrap $(ARCHIVE)/libusb-$(USB_VER).tar.bz2
 USBCOMPAT_VER = 0.1.5
 
 $(ARCHIVE)/libusb-compat-$(USBCOMPAT_VER).tar.bz2:
-	$(WGET) http://downloads.sourceforge.net/libusb/libusb-compat-$(USBCOMPAT_VER).tar.bz2
+	$(WGET) http://sourceforge.net/projects/libusb/files/libusb-compat-0.1/libusb-compat-$(USBCOMPAT_VER)/libusb-compat-$(USBCOMPAT_VER).tar.bz2
 
 $(D)/libusbcompat: $(D)/bootstrap $(D)/libusb $(ARCHIVE)/libusb-compat-$(USBCOMPAT_VER).tar.bz2
 	$(REMOVE)/libusb-compat-$(USBCOMPAT_VER)
@@ -1962,11 +1923,11 @@ $(D)/alsa-utils: $(D)/bootstrap $(D)/alsa-lib $(ARCHIVE)/alsa-utils-$(ALSA_VER).
 #
 $(D)/libopenthreads: $(D)/bootstrap
 	$(REMOVE)/openthreads
-	[ -d "$(ARCHIVE)/cst-public-libraries-openthreads.git" ] && \
-	(cd $(ARCHIVE)/cst-public-libraries-openthreads.git; git pull; ); \
-	[ -d "$(ARCHIVE)/cst-public-libraries-openthreads.git" ] || \
-	git clone --recursive git://github.com/coolstreamtech/cst-public-libraries-openthreads.git $(ARCHIVE)/cst-public-libraries-openthreads.git; \
-	cp -ra $(ARCHIVE)/cst-public-libraries-openthreads.git $(BUILD_TMP)/openthreads; \
+	set -e; if [ -d $(ARCHIVE)/cst-public-libraries-openthreads.git ]; \
+		then cd $(ARCHIVE)/cst-public-libraries-openthreads.git; git pull; \
+		else cd $(ARCHIVE); git clone --recursive git://github.com/coolstreamtech/cst-public-libraries-openthreads.git cst-public-libraries-openthreads.git; \
+		fi
+	cp -ra $(ARCHIVE)/cst-public-libraries-openthreads.git $(BUILD_TMP)/openthreads
 	set -e; cd $(BUILD_TMP)/openthreads; \
 		$(PATCH)/libopenthreads.patch; \
 		rm CMakeFiles/* -rf CMakeCache.txt cmake_install.cmake; \
@@ -1991,11 +1952,11 @@ $(D)/libopenthreads: $(D)/bootstrap
 #
 $(D)/librtmpdump: $(D)/bootstrap $(D)/zlib $(D)/openssl
 	$(REMOVE)/librtmpdump
-	[ -d "$(ARCHIVE)/rtmpdump.git" ] && \
-	(cd $(ARCHIVE)/rtmpdump.git; git pull;); \
-	[ -d "$(ARCHIVE)/rtmpdump.git" ] || \
-	git clone git://github.com/oe-alliance/rtmpdump.git $(ARCHIVE)/rtmpdump.git; \
-	cp -ra $(ARCHIVE)/rtmpdump.git $(BUILD_TMP)/librtmpdump; \
+	set -e; if [ -d $(ARCHIVE)/rtmpdump.git ]; \
+		then cd $(ARCHIVE)/rtmpdump.git; git pull; \
+		else cd $(ARCHIVE); git clone git://github.com/oe-alliance/rtmpdump.git rtmpdump.git; \
+		fi
+	cp -ra $(ARCHIVE)/rtmpdump.git $(BUILD_TMP)/librtmpdump
 	set -e; cd $(BUILD_TMP)/librtmpdump; \
 		$(PATCH)/rtmpdump-2.4.patch; \
 		$(BUILDENV) \
@@ -2032,7 +1993,7 @@ $(D)/libdvbsi++: $(D)/bootstrap $(ARCHIVE)/libdvbsi++-$(LIBDVBSI_VER).tar.bz2
 LIBMODPLUG_VER = 0.8.8.4
 
 $(ARCHIVE)/libmodplug-$(LIBMODPLUG_VER).tar.gz:
-	$(WGET) http://downloads.sourceforge.net/project/modplug-xmms/libmodplug/$(LIBMODPLUG_VER)/libmodplug-$(LIBMODPLUG_VER).tar.gz
+	$(WGET) http://sourceforge.net/projects/modplug-xmms/files/libmodplug/$(LIBMODPLUG_VER)/libmodplug-$(LIBMODPLUG_VER).tar.gz
 
 $(D)/libmodplug: $(D)/bootstrap $(ARCHIVE)/libmodplug-$(LIBMODPLUG_VER).tar.gz
 	$(REMOVE)/libmodplug-$(LIBMODPLUG_VER)
@@ -2083,6 +2044,7 @@ $(D)/minidlna: $(D)/bootstrap $(D)/zlib $(D)/sqlite $(D)/libexif $(D)/libjpeg $(
 	$(UNTAR)/minidlna-$(MINIDLNA_VER).tar.gz
 	set -e; cd $(BUILD_TMP)/minidlna-$(MINIDLNA_VER); \
 		$(PATCH)/minidlna-$(MINIDLNA_VER).patch; \
+		autoreconf -fi; \
 		$(CONFIGURE) \
 			--prefix=/usr \
 		; \
@@ -2094,7 +2056,7 @@ $(D)/minidlna: $(D)/bootstrap $(D)/zlib $(D)/sqlite $(D)/libexif $(D)/libjpeg $(
 #
 # libexif
 #
-LIBEXIF_VER = 0.6.20
+LIBEXIF_VER = 0.6.21
 
 $(ARCHIVE)/libexif-$(LIBEXIF_VER).tar.gz:
 	$(WGET) http://sourceforge.net/projects/libexif/files/libexif/$(LIBEXIF_VER)/libexif-$(LIBEXIF_VER).tar.gz
@@ -2136,10 +2098,10 @@ $(D)/djmount: $(D)/bootstrap $(D)/fuse $(ARCHIVE)/djmount-$(DJMOUNT_VER).tar.gz
 #
 # libupnp
 #
-LIBUPNP_VER = 1.6.17
+LIBUPNP_VER = 1.6.19
 
 $(ARCHIVE)/libupnp-$(LIBUPNP_VER).tar.bz2:
-	$(WGET) http://downloads.sourceforge.net/project/pupnp/pupnp/libUPnP\ $(LIBUPNP_VER)/libupnp-$(LIBUPNP_VER).tar.bz2
+	$(WGET) http://sourceforge.net/projects/pupnp/files/pupnp/libUPnP\ $(LIBUPNP_VER)/libupnp-$(LIBUPNP_VER).tar.bz2
 
 $(D)/libupnp: $(D)/bootstrap $(ARCHIVE)/libupnp-$(LIBUPNP_VER).tar.bz2
 	$(REMOVE)/libupnp-$(LIBUPNP_VER)
@@ -2207,7 +2169,7 @@ $(D)/sshfs: $(D)/bootstrap $(D)/glib2 $(D)/fuse $(ARCHIVE)/sshfs-fuse-$(SSHFS_VE
 HOWL_VER = 1.0.0
 
 $(ARCHIVE)/howl-$(HOWL_VER).tar.gz:
-	$(WGET) http://downloads.sourceforge.net/project/howl/howl/$(HOWL_VER)/howl-$(HOWL_VER).tar.gz
+	$(WGET) http://sourceforge.net/projects/howl/files/howl/$(HOWL_VER)/howl-$(HOWL_VER).tar.gz
 
 $(D)/howl: $(D)/bootstrap $(ARCHIVE)/howl-$(HOWL_VER).tar.gz
 	$(REMOVE)/howl-$(HOWL_VER)

@@ -84,6 +84,50 @@ $(D)/mtd_utils: $(D)/bootstrap $(D)/zlib $(D)/lzo $(D)/e2fsprogs $(ARCHIVE)/mtd-
 	touch $@
 
 #
+#
+#
+GDB_VER = 7.8
+
+$(ARCHIVE)/gdb-$(GDB_VER).tar.xz:
+	$(WGET) ftp://sourceware.org/pub/gdb/releases/gdb-$(GDB_VER).tar.xz
+
+# gdb-remote built for local-PC or target
+$(D)/gdb-remote: $(ARCHIVE)/gdb-$(GDB_VER).tar.xz | $(TARGETPREFIX)
+	$(UNTAR)/gdb-$(GDB_VER).tar.xz
+	set -e; cd $(BUILD_TMP)/gdb-$(GDB_VER); \
+		./configure \
+			--nfp --disable-werror \
+			--prefix=$(HOSTPREFIX) \
+			--build=$(BUILD) \
+			--host=$(BUILD) \
+			--target=$(TARGET) \
+		; \
+		$(MAKE) all-gdb; \
+		make install-gdb; \
+	$(REMOVE)/gdb-$(GDB_VER)
+	touch $@
+
+# gdb built for target or local-PC
+$(D)/gdb: $(D)/bootstrap $(D)/libncurses $(D)/zlib $(ARCHIVE)/gdb-$(GDB_VER).tar.xz
+	$(RM_PKGPREFIX)
+	$(UNTAR)/gdb-$(GDB_VER).tar.xz
+	set -e; cd $(BUILD_TMP)/gdb-$(GDB_VER); \
+		$(PATCH)/gdb-$(GDB_VER)-remove-builddate.patch; \
+		./configure \
+			--host=$(BUILD) \
+			--build=$(BUILD) \
+			--target=$(TARGET) \
+			--prefix=/usr \
+			--mandir=$(TARGETPREFIX)/.remove \
+			--infodir=$(TARGETPREFIX)/.remove \
+			--nfp --disable-werror \
+		; \
+		$(MAKE) all-gdb; \
+		$(MAKE) install-gdb prefix=$(TARGETPREFIX)
+	$(REMOVE)/gdb-$(GDB_VER)
+	touch $@
+
+#
 # opkg
 #
 OPKG_VER = 0.2.2
@@ -596,7 +640,7 @@ $(D)/hddtemp: $(D)/bootstrap $(ARCHIVE)/hddtemp-$(HDDTEMP_VER).tar.bz2
 HDPARM_VER = 9.48
 
 $(ARCHIVE)/hdparm-$(HDPARM_VER).tar.gz:
-	$(WGET) http://downloads.sourceforge.net/project/hdparm/hdparm/hdparm-$(HDPARM_VER).tar.gz
+	$(WGET) http://sourceforge.net/projects/hdparm/files/hdparm/hdparm-$(HDPARM_VER).tar.gz
 
 $(D)/hdparm: $(D)/bootstrap $(ARCHIVE)/hdparm-$(HDPARM_VER).tar.gz
 	$(REMOVE)/hdparm-$(HDPARM_VER)
@@ -614,7 +658,7 @@ $(D)/hdparm: $(D)/bootstrap $(ARCHIVE)/hdparm-$(HDPARM_VER).tar.gz
 HDIDLE_VER = 1.05
 
 $(ARCHIVE)/hd-idle-$(HDIDLE_VER).tgz:
-	$(WGET) http://downloads.sourceforge.net/project/hd-idle/hd-idle-$(HDIDLE_VER).tgz
+	$(WGET) http://sourceforge.net/projects/hd-idle/files/hd-idle-$(HDIDLE_VER).tgz
 
 $(D)/hd-idle: $(D)/bootstrap $(ARCHIVE)/hd-idle-$(HDIDLE_VER).tgz
 	$(REMOVE)/hd-idle
@@ -778,11 +822,11 @@ $(D)/imagemagick: $(D)/bootstrap $(ARCHIVE)/ImageMagick-$(IMAGEMAGICK_VER).tar.g
 #
 $(D)/shairport: $(D)/bootstrap $(D)/openssl $(D)/howl $(D)/alsa-lib
 	$(REMOVE)/shairport
-	[ -d "$(ARCHIVE)/shairport.git" ] && \
-	(cd $(ARCHIVE)/shairport.git; git pull; ); \
-	[ -d "$(ARCHIVE)/shairport.git" ] || \
-	git clone -b 1.0-dev git://github.com/abrasive/shairport.git $(ARCHIVE)/shairport.git; \
-	cp -ra $(ARCHIVE)/shairport.git $(BUILD_TMP)/shairport; \
+	set -e; if [ -d $(ARCHIVE)/shairport.git ]; \
+		then cd $(ARCHIVE)/shairport.git; git pull; \
+		else cd $(ARCHIVE); git clone -b 1.0-dev git://github.com/abrasive/shairport.git shairport.git; \
+		fi
+	cp -ra $(ARCHIVE)/shairport.git $(BUILD_TMP)/shairport
 	set -e; cd $(BUILD_TMP)/shairport; \
 		sed -i 's|pkg-config|$$PKG_CONFIG|g' configure; \
 		PKG_CONFIG=$(HOSTPREFIX)/bin/$(TARGET)-pkg-config \
@@ -936,7 +980,7 @@ $(D)/smartmontools: $(D)/bootstrap $(ARCHIVE)/smartmontools-$(SMARTMONTOOLS_VER)
 NFSUTILS_VER = 1.3.3
 
 $(ARCHIVE)/nfs-utils-$(NFSUTILS_VER).tar.bz2:
-	$(WGET) http://downloads.sourceforge.net/project/nfs/nfs-utils/$(NFSUTILS_VER)/nfs-utils-$(NFSUTILS_VER).tar.bz2
+	$(WGET) http://sourceforge.net/projects/nfs/files/nfs-utils/$(NFSUTILS_VER)/nfs-utils-$(NFSUTILS_VER).tar.bz2
 
 $(D)/nfs_utils: $(D)/bootstrap $(D)/e2fsprogs $(ARCHIVE)/nfs-utils-$(NFSUTILS_VER).tar.bz2
 	$(REMOVE)/nfs-utils-$(NFSUTILS_VER)
@@ -1019,7 +1063,7 @@ $(D)/vsftpd: $(D)/bootstrap $(ARCHIVE)/vsftpd-$(VSFTPD_VER).tar.gz
 	set -e; cd $(BUILD_TMP)/vsftpd-$(VSFTPD_VER); \
 		$(PATCH)/vsftpd-$(VSFTPD_VER).patch; \
 		$(MAKE) clean; \
-		$(MAKE) $(MAKE_OPTS) CFLAGS="-pipe -Os -g0"; \
+		$(MAKE) $(BUILDENV); \
 		$(MAKE) install PREFIX=$(TARGETPREFIX)
 		cp $(CDK_DIR)/root/etc/vsftpd.conf $(TARGETPREFIX)/etc
 	install -m 755 $(SKEL_ROOT)/etc/init.d/vsftpd $(TARGETPREFIX)/etc/init.d/
@@ -1226,11 +1270,11 @@ $(D)/wpa_supplicant: $(D)/bootstrap $(D)/openssl $(D)/wireless_tools $(ARCHIVE)/
 #
 $(D)/xupnpd: $(D)/bootstrap
 	$(REMOVE)/xupnpd
-	[ -d "$(ARCHIVE)/xupnpd.git" ] && \
-	(cd $(ARCHIVE)/xupnpd.git; git pull; ); \
-	[ -d "$(ARCHIVE)/xupnpd.git" ] || \
-	git clone git://github.com/clark15b/xupnpd.git $(ARCHIVE)/xupnpd.git; \
-	cp -ra $(ARCHIVE)/xupnpd.git $(BUILD_TMP)/xupnpd; \
+	set -e; if [ -d $(ARCHIVE)/xupnpd.git ]; \
+		then cd $(ARCHIVE)/xupnpd.git; git pull; \
+		else cd $(ARCHIVE); git clone git://github.com/clark15b/xupnpd.git xupnpd.git; \
+		fi
+	cp -ra $(ARCHIVE)/xupnpd.git $(BUILD_TMP)/xupnpd
 	set -e; cd $(BUILD_TMP)/xupnpd && $(PATCH)/xupnpd.patch
 	set -e; cd $(BUILD_TMP)/xupnpd/src; \
 		$(BUILDENV) \
@@ -1245,11 +1289,11 @@ $(D)/xupnpd: $(D)/bootstrap
 #
 $(D)/dvbsnoop: $(D)/bootstrap
 	$(REMOVE)/dvbsnoop
-	[ -d "$(ARCHIVE)/dvbsnoop.git" ] && \
-	(cd $(ARCHIVE)/dvbsnoop.git; git pull; ); \
-	[ -d "$(ARCHIVE)/dvbsnoop.git" ] || \
-	git clone https://github.com/cotdp/dvbsnoop.git $(ARCHIVE)/dvbsnoop.git; \
-	cp -ra $(ARCHIVE)/dvbsnoop.git $(BUILD_TMP)/dvbsnoop;
+	set -e; if [ -d $(ARCHIVE)/dvbsnoop.git ]; \
+		then cd $(ARCHIVE)/dvbsnoop.git; git pull; \
+		else cd $(ARCHIVE); git clone https://github.com/cotdp/dvbsnoop.git dvbsnoop.git; \
+		fi
+	cp -ra $(ARCHIVE)/dvbsnoop.git $(BUILD_TMP)/dvbsnoop
 	set -e; cd $(BUILD_TMP)/dvbsnoop; \
 		$(CONFIGURE) \
 			--prefix=/usr \
