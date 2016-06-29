@@ -16,6 +16,7 @@ include make/buildenv.mk
 # maybe a help about all supported targets would be nice here, too...
 #
 printenv:
+	clear
 	@echo '================================================================================'
 	@echo "Build Environment Varibles:"
 	@echo "MAINTAINER       : $(MAINTAINER)"
@@ -53,6 +54,7 @@ else ifeq ($(IMAGE), enigma2)
 	@echo "LOCAL_ENIGMA2_CPPFLAGS       :  $(LOCAL_ENIGMA2_CPPFLAGS)"
 	@echo "LOCAL_ENIGMA2_DEPS           :  $(LOCAL_ENIGMA2_DEPS)"
 endif
+	@echo '================================================================================'
 	@echo ""
 	@make --no-print-directory toolcheck
 ifeq ($(MAINTAINER),)
