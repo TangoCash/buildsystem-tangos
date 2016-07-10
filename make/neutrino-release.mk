@@ -645,6 +645,11 @@ endif
 	[ -e $(TARGETPREFIX)/lib/modules/$(KERNEL_VERSION)/kernel/fs/exportfs/exportfs.ko ] && cp $(TARGETPREFIX)/lib/modules/$(KERNEL_VERSION)/kernel/fs/exportfs/exportfs.ko $(RELEASE_DIR)/lib/modules/ || true
 	[ -e $(TARGETPREFIX)/lib/modules/$(KERNEL_VERSION)/kernel/fs/nfs_common/nfs_acl.ko ] && cp $(TARGETPREFIX)/lib/modules/$(KERNEL_VERSION)/kernel/fs/nfs_common/nfs_acl.ko $(RELEASE_DIR)/lib/modules/ || true
 	[ -e $(TARGETPREFIX)/lib/modules/$(KERNEL_VERSION)/kernel/fs/nfs/nfs.ko ] && cp $(TARGETPREFIX)/lib/modules/$(KERNEL_VERSION)/kernel/fs/nfs/nfs.ko $(RELEASE_DIR)/lib/modules/ || true
+	[ -e $(TARGETPREFIX)/lib/modules/$(KERNEL_VERSION)/extra/sata_switch/sata.ko ] && cp $(TARGETPREFIX)/lib/modules/$(KERNEL_VERSION)/extra/sata_switch/sata.ko $(RELEASE_DIR)/lib/modules/ || true
+	[ -e $(TARGETPREFIX)/lib/modules/$(KERNEL_VERSION)/kernel/fs/mini_fo/mini_fo.ko ] && cp $(TARGETPREFIX)/lib/modules/$(KERNEL_VERSION)/kernel/fs/mini_fo/mini_fo.ko $(RELEASE_DIR)/lib/modules/ || true
+#
+# wlan
+#
 	[ -e $(TARGETPREFIX)/lib/modules/$(KERNEL_VERSION)/extra/wireless/rt2870sta/rt2870sta.ko ] && cp $(TARGETPREFIX)/lib/modules/$(KERNEL_VERSION)/extra/wireless/rt2870sta/rt2870sta.ko $(RELEASE_DIR)/lib/modules/ || true
 	[ -e $(TARGETPREFIX)/lib/modules/$(KERNEL_VERSION)/extra/wireless/rt3070sta/rt3070sta.ko ] && cp $(TARGETPREFIX)/lib/modules/$(KERNEL_VERSION)/extra/wireless/rt3070sta/rt3070sta.ko $(RELEASE_DIR)/lib/modules/ || true
 	[ -e $(TARGETPREFIX)/lib/modules/$(KERNEL_VERSION)/extra/wireless/rt5370sta/rt5370sta.ko ] && cp $(TARGETPREFIX)/lib/modules/$(KERNEL_VERSION)/extra/wireless/rt5370sta/rt5370sta.ko $(RELEASE_DIR)/lib/modules/ || true
@@ -652,8 +657,20 @@ endif
 	[ -e $(TARGETPREFIX)/lib/modules/$(KERNEL_VERSION)/extra/wireless/rtl8188eu/8188eu.ko ] && cp $(TARGETPREFIX)/lib/modules/$(KERNEL_VERSION)/extra/wireless/rtl8188eu/8188eu.ko $(RELEASE_DIR)/lib/modules/ || true
 	[ -e $(TARGETPREFIX)/lib/modules/$(KERNEL_VERSION)/extra/wireless/rtl8192cu/8192cu.ko ] && cp $(TARGETPREFIX)/lib/modules/$(KERNEL_VERSION)/extra/wireless/rtl8192cu/8192cu.ko $(RELEASE_DIR)/lib/modules/ || true
 	[ -e $(TARGETPREFIX)/lib/modules/$(KERNEL_VERSION)/extra/wireless/rtl8192du/8192du.ko ] && cp $(TARGETPREFIX)/lib/modules/$(KERNEL_VERSION)/extra/wireless/rtl8192du/8192du.ko $(RELEASE_DIR)/release/lib/modules || true
-	[ -e $(TARGETPREFIX)/lib/modules/$(KERNEL_VERSION)/extra/sata_switch/sata.ko ] && cp $(TARGETPREFIX)/lib/modules/$(KERNEL_VERSION)/extra/sata_switch/sata.ko $(RELEASE_DIR)/lib/modules/ || true
-	[ -e $(TARGETPREFIX)/lib/modules/$(KERNEL_VERSION)/kernel/fs/mini_fo/mini_fo.ko ] && cp $(TARGETPREFIX)/lib/modules/$(KERNEL_VERSION)/kernel/fs/mini_fo/mini_fo.ko $(RELEASE_DIR)/lib/modules/ || true
+ifeq ($(IMAGE), $(filter $(IMAGE), enigma2-wlandriver neutrino-wlandriver))
+	install -d $(RELEASE_DIR)/etc/Wireless
+	cp -aR $(SKEL_ROOT)/firmware/Wireless/* $(RELEASE_DIR)/etc/Wireless/
+	cp -dp $(TARGETPREFIX)/usr/sbin/ifrename $(RELEASE_DIR)/usr/sbin/
+	cp -dp $(TARGETPREFIX)/usr/sbin/iwconfig $(RELEASE_DIR)/usr/sbin/
+	cp -dp $(TARGETPREFIX)/usr/sbin/iwevent $(RELEASE_DIR)/usr/sbin/
+	cp -dp $(TARGETPREFIX)/usr/sbin/iwgetid $(RELEASE_DIR)/usr/sbin/
+	cp -dp $(TARGETPREFIX)/usr/sbin/iwlist $(RELEASE_DIR)/usr/sbin/
+	cp -dp $(TARGETPREFIX)/usr/sbin/iwpriv $(RELEASE_DIR)/usr/sbin/
+	cp -dp $(TARGETPREFIX)/usr/sbin/iwspy $(RELEASE_DIR)/usr/sbin/
+	cp -dp $(TARGETPREFIX)/usr/sbin/wpa_cli $(RELEASE_DIR)/usr/sbin/
+	cp -dp $(TARGETPREFIX)/usr/sbin/wpa_passphrase $(RELEASE_DIR)/usr/sbin/
+	cp -dp $(TARGETPREFIX)/usr/sbin/wpa_supplicant $(RELEASE_DIR)/usr/sbin/
+endif
 #
 # lib usr/lib
 #
@@ -725,21 +742,6 @@ endif
 #
 	[ -e $(TARGETPREFIX)/usr/local/bin/backup.sh ] && cp -aR $(TARGETPREFIX)/usr/local/bin/backup.sh $(RELEASE_DIR)/bin || true
 	[ -e $(TARGETPREFIX)/usr/local/bin/restore.sh ] && cp -aR $(TARGETPREFIX)/usr/local/bin/restore.sh $(RELEASE_DIR)/bin || true
-#
-# wlan
-#
-	if [ -e $(TARGETPREFIX)/usr/sbin/ifrename ]; then \
-		cp -dp $(TARGETPREFIX)/usr/sbin/ifrename $(RELEASE_DIR)/usr/sbin/; \
-		cp -dp $(TARGETPREFIX)/usr/sbin/iwconfig $(RELEASE_DIR)/usr/sbin/; \
-		cp -dp $(TARGETPREFIX)/usr/sbin/iwevent $(RELEASE_DIR)/usr/sbin/; \
-		cp -dp $(TARGETPREFIX)/usr/sbin/iwgetid $(RELEASE_DIR)/usr/sbin/; \
-		cp -dp $(TARGETPREFIX)/usr/sbin/iwlist $(RELEASE_DIR)/usr/sbin/; \
-		cp -dp $(TARGETPREFIX)/usr/sbin/iwpriv $(RELEASE_DIR)/usr/sbin/; \
-		cp -dp $(TARGETPREFIX)/usr/sbin/iwspy $(RELEASE_DIR)/usr/sbin/; \
-		cp -dp $(TARGETPREFIX)/usr/sbin/wpa_cli $(RELEASE_DIR)/usr/sbin/; \
-		cp -dp $(TARGETPREFIX)/usr/sbin/wpa_passphrase $(RELEASE_DIR)/usr/sbin/; \
-		cp -dp $(TARGETPREFIX)/usr/sbin/wpa_supplicant $(RELEASE_DIR)/usr/sbin/; \
-	fi
 #
 # alsa
 #
