@@ -23,7 +23,7 @@ ifeq ($(IMAGE), neutrino-wlandriver)
 NEUTRINO_DEPS += $(D)/wpa_supplicant $(D)/wireless_tools
 endif
 
-NEUTRINO_DEPS2 = $(D)/libid3tag $(D)/libmad $(D)/libvorbisidec
+NEUTRINO_DEPS2 = $(D)/libid3tag $(D)/libmad $(D)/libflac
 
 N_CFLAGS       = -Wall -W -Wshadow -pipe -Os -fno-strict-aliasing
 N_CFLAGS      += -DCPU_FREQ
@@ -535,6 +535,7 @@ neutrino-cdkroot-clean:
 	[ -e $(TARGETPREFIX)/usr/local/share/iso-codes ] && cd $(TARGETPREFIX)/usr/local/share/iso-codes && find -name '*' -delete || true
 	[ -e $(TARGETPREFIX)/usr/share/tuxbox/neutrino ] && cd $(TARGETPREFIX)/usr/share/tuxbox/neutrino && find -name '*' -delete || true
 	[ -e $(TARGETPREFIX)/usr/share/fonts ] && cd $(TARGETPREFIX)/usr/share/fonts && find -name '*' -delete || true
+	[ -e $(TARGETPREFIX)/var/tuxbox ] && cd $(TARGETPREFIX)/var/tuxbox && find -name '*' -delete || true
 ################################################################################
 #
 # yaud-neutrino-hd2
@@ -560,21 +561,25 @@ endif
 #
 NEUTRINO_HD2_PATCHES =
 
-$(D)/neutrino-hd2.do_prepare: | $(NEUTRINO_DEPS) $(NEUTRINO_DEPS2) $(D)/libflac
-	rm -rf $(SOURCE_DIR)/nhd2-exp
+$(D)/neutrino-hd2.do_prepare: | $(NEUTRINO_DEPS) $(NEUTRINO_DEPS2)
+	rm -rf $(SOURCE_DIR)/neutrino-hd2
+	rm -rf $(SOURCE_DIR)/neutrino-hd2.org
+	rm -rf $(SOURCE_DIR)/neutrino-hd2.git
 	[ -d "$(ARCHIVE)/neutrino-hd2.git" ] && \
-	(cd $(ARCHIVE)/neutrino-hd2.git; git pull; cd "$(BUILD_TMP)";); \
+	(cd $(ARCHIVE)/neutrino-hd2.git; git pull;); \
 	[ -d "$(ARCHIVE)/neutrino-hd2.git" ] || \
-	git clone -b nhd2-exp https://github.com/mohousch/neutrinohd2.git $(ARCHIVE)/neutrino-hd2.git; \
-	cp -ra $(ARCHIVE)/neutrino-hd2.git $(SOURCE_DIR)/nhd2-exp
+	git clone https://github.com/mohousch/neutrinohd2.git $(ARCHIVE)/neutrino-hd2.git; \
+	cp -ra $(ARCHIVE)/neutrino-hd2.git $(SOURCE_DIR)/neutrino-hd2.git; \
+	ln -s $(SOURCE_DIR)/neutrino-hd2.git/nhd2-exp $(SOURCE_DIR)/neutrino-hd2;\
+	cp -ra $(SOURCE_DIR)/neutrino-hd2.git/nhd2-exp $(SOURCE_DIR)/neutrino-hd2.org
 	for i in $(NEUTRINO_HD2_PATCHES); do \
 		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
-		set -e; cd $(SOURCE_DIR)/nhd2-exp && patch -p1 -i $$i; \
+		set -e; cd $(SOURCE_DIR)/neutrino-hd2 && patch -p1 -i $$i; \
 	done;
 	touch $@
 
-$(SOURCE_DIR)/nhd2-exp/config.status:
-	cd $(SOURCE_DIR)/nhd2-exp; \
+$(SOURCE_DIR)/neutrino-hd2/config.status:
+	cd $(SOURCE_DIR)/neutrino-hd2; \
 		./autogen.sh; \
 		$(BUILDENV) \
 		./configure \
@@ -587,7 +592,7 @@ $(SOURCE_DIR)/nhd2-exp/config.status:
 			--with-configdir=/var/tuxbox/config \
 			--with-gamesdir=/var/tuxbox/games \
 			--with-plugindir=/var/tuxbox/plugins \
-			--with-isocodesdir=/usr/share/iso-codes \
+			--with-isocodesdir=/usr/local/share/iso-codes \
 			$(NHD2_OPTS) \
 			--enable-scart \
 			PKG_CONFIG=$(HOSTPREFIX)/bin/$(TARGET)-pkg-config \
@@ -596,7 +601,7 @@ $(SOURCE_DIR)/nhd2-exp/config.status:
 	touch $@
 
 $(D)/neutrino-hd2: $(D)/neutrino-hd2.do_prepare $(D)/neutrino-hd2.do_compile
-	$(MAKE) -C $(SOURCE_DIR)/nhd2-exp install DESTDIR=$(TARGETPREFIX); \
+	$(MAKE) -C $(SOURCE_DIR)/neutrino-hd2 install DESTDIR=$(TARGETPREFIX); \
 	rm -f $(TARGETPREFIX)/var/etc/.version
 	make $(TARGETPREFIX)/var/etc/.version
 	$(TARGET)-strip $(TARGETPREFIX)/usr/local/bin/neutrino
@@ -604,14 +609,14 @@ $(D)/neutrino-hd2: $(D)/neutrino-hd2.do_prepare $(D)/neutrino-hd2.do_compile
 	$(TARGET)-strip $(TARGETPREFIX)/usr/local/bin/sectionsdcontrol
 	touch $@
 
-$(D)/neutrino-hd2.do_compile: $(SOURCE_DIR)/nhd2-exp/config.status
-	cd $(SOURCE_DIR)/nhd2-exp; \
+$(D)/neutrino-hd2.do_compile: $(SOURCE_DIR)/neutrino-hd2/config.status
+	cd $(SOURCE_DIR)/neutrino-hd2; \
 		$(MAKE) all
 	touch $@
 
 neutrino-hd2-clean: neutrino-cdkroot-clean
 	rm -f $(D)/neutrino-hd2
-	cd $(SOURCE_DIR)/nhd2-exp; \
+	cd $(SOURCE_DIR)/neutrino-hd2; \
 		$(MAKE) clean
 
 neutrino-hd2-distclean: neutrino-cdkroot-clean

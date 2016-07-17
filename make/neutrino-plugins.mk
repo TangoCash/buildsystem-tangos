@@ -99,17 +99,57 @@ neutrino-mp-plugins-distclean:
 	rm -f $(D)/neutrino-mp-plugins.do_compile
 
 #
+# xupnpd
+#
+$(D)/xupnpd: $(D)/bootstrap $(D)/plugins-scripts-lua
+	$(REMOVE)/xupnpd
+	set -e; if [ -d $(ARCHIVE)/xupnpd.git ]; \
+		then cd $(ARCHIVE)/xupnpd.git; git pull; \
+		else cd $(ARCHIVE); git clone git://github.com/clark15b/xupnpd.git xupnpd.git; \
+		fi
+	cp -ra $(ARCHIVE)/xupnpd.git $(BUILD_TMP)/xupnpd
+	set -e; cd $(BUILD_TMP)/xupnpd && $(PATCH)/xupnpd.patch
+	set -e; cd $(BUILD_TMP)/xupnpd/src; \
+		$(BUILDENV) \
+		$(MAKE) TARGET=$(TARGET) sh4; \
+		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+	install -m 755 $(SKEL_ROOT)/etc/init.d/xupnpd $(TARGETPREFIX)/etc/init.d/
+	install -m 644 $(ARCHIVE)/cst-public-plugins-scripts-lua.git/xupnpd/xupnpd_18plus.lua ${TARGETPREFIX}/usr/share/xupnpd/plugins/
+	install -m 644 $(ARCHIVE)/cst-public-plugins-scripts-lua.git/xupnpd/xupnpd_cczwei.lua ${TARGETPREFIX}/usr/share/xupnpd/plugins/
+	: install -m 644 $(ARCHIVE)/cst-public-plugins-scripts-lua.git/xupnpd/xupnpd_coolstream.lua ${TARGETPREFIX}/usr/share/xupnpd/plugins/
+	install -m 644 $(ARCHIVE)/cst-public-plugins-scripts-lua.git/xupnpd/xupnpd_youtube.lua ${TARGETPREFIX}/usr/share/xupnpd/plugins/
+	$(REMOVE)/xupnpd
+	touch $@
+
+#
+# plugins-scripts-lua
+#
+$(D)/plugins-scripts-lua: $(D)/bootstrap $(D)/xupnpd
+	$(REMOVE)/plugins-scripts-lua
+	set -e; if [ -d $(ARCHIVE)/cst-public-plugins-scripts-lua.git ]; \
+		then cd $(ARCHIVE)/cst-public-plugins-scripts-lua.git; git pull; \
+		else cd $(ARCHIVE); git clone https://github.com/coolstreamtech/cst-public-plugins-scripts-lua.git cst-public-plugins-scripts-lua.git; \
+		fi
+	cp -ra $(ARCHIVE)/cst-public-plugins-scripts-lua.git/plugins $(BUILD_TMP)/plugins-scripts-lua
+	set -e; cd $(BUILD_TMP)/plugins-scripts-lua; \
+		install -d $(TARGETPREFIX)/var/tuxbox/plugins
+		cp -R $(BUILD_TMP)/plugins-scripts-lua/ard_mediathek/* $(TARGETPREFIX)/var/tuxbox/plugins/
+		cp -R $(BUILD_TMP)/plugins-scripts-lua/favorites2bin/* $(TARGETPREFIX)/var/tuxbox/plugins/
+		cp -R $(BUILD_TMP)/plugins-scripts-lua/mtv/* $(TARGETPREFIX)/var/tuxbox/plugins/
+		cp -R $(BUILD_TMP)/plugins-scripts-lua/netzkino/* $(TARGETPREFIX)/var/tuxbox/plugins/
+	$(REMOVE)/plugins-scripts-lua
+	touch $@
+
+#
 # neutrino-hd2 plugins
 #
 NEUTRINO_HD2_PLUGINS_PATCHES =
 
 $(D)/neutrino-hd2-plugins.do_prepare:
 	rm -rf $(SOURCE_DIR)/neutrino-hd2-plugins
-	set -e; if [ -d $(ARCHIVE)/neutrino-hd2-plugins.git ]; \
-		then cd $(ARCHIVE)/neutrino-hd2-plugins.git; git pull; \
-		else cd $(ARCHIVE); git clone -b plugins https://github.com/mohousch/neutrinohd2.git neutrino-hd2-plugins.git; \
-		fi
-	cp -ra $(ARCHIVE)/neutrino-hd2-plugins.git $(SOURCE_DIR)/neutrino-hd2-plugins
+	ln -s $(SOURCE_DIR)/neutrino-hd2.git/plugins $(SOURCE_DIR)/neutrino-hd2-plugins
+	cd $(SOURCE_DIR)/neutrino-hd2-plugins && find ./ -name "Makefile.am" -exec sed -i -e "s/\/..\/nhd2-exp//g" {} \;
+	cd $(SOURCE_DIR)/neutrino-hd2.git && git add --all
 	for i in $(NEUTRINO_HD2_PLUGINS_PATCHES); do \
 		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
 		set -e; cd $(SOURCE_DIR)/neutrino-hd2-plugins && patch -p1 -i $$i; \
@@ -136,11 +176,11 @@ $(SOURCE_DIR)/neutrino-hd2-plugins/config.status: $(D)/bootstrap neutrino-hd2
 
 $(D)/neutrino-hd2-plugins.do_compile: $(SOURCE_DIR)/neutrino-hd2-plugins/config.status
 	cd $(SOURCE_DIR)/neutrino-hd2-plugins; \
-	$(MAKE)
+	$(MAKE) top_srcdir=$(SOURCE_DIR)/neutrino-hd2
 	touch $@
 
 $(D)/neutrino-hd2-plugins: neutrino-hd2-plugins.do_prepare neutrino-hd2-plugins.do_compile
-	$(MAKE) -C $(SOURCE_DIR)/neutrino-hd2-plugins install DESTDIR=$(TARGETPREFIX)
+	$(MAKE) -C $(SOURCE_DIR)/neutrino-hd2-plugins install DESTDIR=$(TARGETPREFIX) top_srcdir=$(SOURCE_DIR)/neutrino-hd2
 #	touch $@
 
 neutrino-hd2-plugins-clean:
@@ -149,7 +189,7 @@ neutrino-hd2-plugins-clean:
 	$(MAKE) clean
 	rm -f $(SOURCE_DIR)/neutrino-hd2-plugins/config.status
 
-neutrino-hd2-plugins-distclean:
+neutrino-hd2-plugins-distclean: neutrino-hd2-plugins-clean
 	rm -f $(D)/neutrino-hd2-plugins.do_prepare
 	rm -f $(D)/neutrino-hd2-plugins.do_compile
 
