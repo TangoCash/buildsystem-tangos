@@ -87,8 +87,8 @@ $(D)/libstb-hal-cst-next-max.config.status: | $(NEUTRINO_DEPS)
 	test -d $(LH_OBJDIR) || mkdir -p $(LH_OBJDIR); \
 	cd $(LH_OBJDIR); \
 		$(SOURCE_DIR)/libstb-hal-cst-next-max/autogen.sh; \
-		export PKG_CONFIG=$(HOSTPREFIX)/bin/$(TARGET)-pkg-config; \
-		export PKG_CONFIG_PATH=$(TARGETPREFIX)/usr/lib/pkgconfig; \
+		export PKG_CONFIG=$(PKG_CONFIG); \
+		export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH); \
 		$(BUILDENV) \
 		$(SOURCE_DIR)/libstb-hal-cst-next-max/configure --enable-silent-rules \
 			--host=$(TARGET) \
@@ -151,8 +151,8 @@ $(D)/neutrino-mp-cst-next-max.config.status:
 	test -d $(N_OBJDIR) || mkdir -p $(N_OBJDIR); \
 	cd $(N_OBJDIR); \
 		$(SOURCE_DIR)/neutrino-mp-cst-next-max/autogen.sh; \
-		export PKG_CONFIG=$(HOSTPREFIX)/bin/$(TARGET)-pkg-config; \
-		export PKG_CONFIG_PATH=$(TARGETPREFIX)/usr/lib/pkgconfig; \
+		export PKG_CONFIG=$(PKG_CONFIG); \
+		export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH); \
 		$(BUILDENV) \
 		$(SOURCE_DIR)/neutrino-mp-cst-next-max/configure --enable-silent-rules \
 			--build=$(BUILD) \
@@ -246,8 +246,8 @@ $(D)/libstb-hal-cst-next.config.status: | $(NEUTRINO_DEPS)
 			--prefix= \
 			--with-target=cdk \
 			--with-boxtype=$(BOXTYPE) \
-			PKG_CONFIG=$(HOSTPREFIX)/bin/$(TARGET)-pkg-config \
-			PKG_CONFIG_PATH=$(TARGETPREFIX)/usr/lib/pkgconfig \
+			PKG_CONFIG=$(PKG_CONFIG) \
+			PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 			CFLAGS="$(N_CFLAGS)" CXXFLAGS="$(N_CFLAGS)" CPPFLAGS="$(N_CPPFLAGS)"
 
 $(D)/libstb-hal-cst-next.do_compile: $(D)/libstb-hal-cst-next.config.status
@@ -326,8 +326,8 @@ $(D)/neutrino-mp-cst-next.config.status:
 			--with-themesdir=/usr/share/tuxbox/neutrino/themes \
 			--with-stb-hal-includes=$(SOURCE_DIR)/libstb-hal-cst-next/include \
 			--with-stb-hal-build=$(LH_OBJDIR) \
-			PKG_CONFIG=$(HOSTPREFIX)/bin/$(TARGET)-pkg-config \
-			PKG_CONFIG_PATH=$(TARGETPREFIX)/usr/lib/pkgconfig \
+			PKG_CONFIG=$(PKG_CONFIG) \
+			PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 			CFLAGS="$(N_CFLAGS)" CXXFLAGS="$(N_CFLAGS)" CPPFLAGS="$(N_CPPFLAGS)"
 
 $(SOURCE_DIR)/neutrino-mp-cst-next/src/gui/version.h:
@@ -420,8 +420,8 @@ $(D)/libstb-hal-next.config.status: bootstrap
 			--prefix= \
 			--with-target=cdk \
 			--with-boxtype=$(BOXTYPE) \
-			PKG_CONFIG=$(HOSTPREFIX)/bin/$(TARGET)-pkg-config \
-			PKG_CONFIG_PATH=$(TARGETPREFIX)/usr/lib/pkgconfig \
+			PKG_CONFIG=$(PKG_CONFIG) \
+			PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 			CPPFLAGS="$(N_CPPFLAGS)"
 
 $(D)/libstb-hal-next.do_compile: $(D)/libstb-hal-next.config.status
@@ -483,8 +483,8 @@ $(D)/neutrino-mp-next.config.status:
 			--with-plugindir=/var/tuxbox/plugins \
 			--with-stb-hal-includes=$(SOURCE_DIR)/libstb-hal-next/include \
 			--with-stb-hal-build=$(LH_OBJDIR) \
-			PKG_CONFIG=$(HOSTPREFIX)/bin/$(TARGET)-pkg-config \
-			PKG_CONFIG_PATH=$(TARGETPREFIX)/usr/lib/pkgconfig \
+			PKG_CONFIG=$(PKG_CONFIG) \
+			PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 			CPPFLAGS="$(N_CPPFLAGS)"
 
 $(SOURCE_DIR)/neutrino-mp-next/src/gui/version.h:
@@ -595,8 +595,8 @@ $(SOURCE_DIR)/neutrino-hd2/config.status:
 			--with-isocodesdir=/usr/local/share/iso-codes \
 			$(NHD2_OPTS) \
 			--enable-scart \
-			PKG_CONFIG=$(HOSTPREFIX)/bin/$(TARGET)-pkg-config \
-			PKG_CONFIG_PATH=$(TARGETPREFIX)/usr/lib/pkgconfig \
+			PKG_CONFIG=$(PKG_CONFIG) \
+			PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 			CPPFLAGS="$(N_CPPFLAGS)" LDFLAGS="$(TARGET_LDFLAGS)"
 	touch $@
 
@@ -689,8 +689,8 @@ $(D)/neutrino-mp-tangos.config.status:
 			--with-themesdir=/usr/share/tuxbox/neutrino/themes \
 			--with-stb-hal-includes=$(SOURCE_DIR)/libstb-hal-cst-next/include \
 			--with-stb-hal-build=$(LH_OBJDIR) \
-			PKG_CONFIG=$(HOSTPREFIX)/bin/$(TARGET)-pkg-config \
-			PKG_CONFIG_PATH=$(TARGETPREFIX)/usr/lib/pkgconfig \
+			PKG_CONFIG=$(PKG_CONFIG) \
+			PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 			CPPFLAGS="$(N_CPPFLAGS)"
 
 $(SOURCE_DIR)/neutrino-mp-tangos/src/gui/version.h:
