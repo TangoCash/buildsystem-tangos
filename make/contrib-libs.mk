@@ -1263,6 +1263,7 @@ $(D)/ffmpeg: $(D)/bootstrap $(D)/openssl $(D)/bzip2 $(D)/libass $(D)/libroxml $(
 			--enable-muxer=h261 \
 			--enable-muxer=h263 \
 			--enable-muxer=h264 \
+			--enable-muxer=hevc \
 			--enable-muxer=image2 \
 			--enable-muxer=mpeg1video \
 			--enable-muxer=mpeg2video \
@@ -1278,6 +1279,7 @@ $(D)/ffmpeg: $(D)/bootstrap $(D)/openssl $(D)/bzip2 $(D)/libass $(D)/libroxml $(
 			--enable-parser=dvdsub \
 			--enable-parser=flac \
 			--enable-parser=h264 \
+			--enable-parser=hevc \
 			--enable-parser=mjpeg \
 			--enable-parser=mpeg4video \
 			--enable-parser=mpegvideo \
@@ -1306,6 +1308,7 @@ $(D)/ffmpeg: $(D)/bootstrap $(D)/openssl $(D)/bzip2 $(D)/libass $(D)/libroxml $(
 			--enable-decoder=h263 \
 			--enable-decoder=h263i \
 			--enable-decoder=h264 \
+			--enable-decoder=hevc \
 			--enable-decoder=mjpeg \
 			--enable-decoder=mp3 \
 			--enable-decoder=movtext \
