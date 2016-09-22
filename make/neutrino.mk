@@ -590,6 +590,7 @@ yaud-neutrino-mp-tangos-all: yaud-none \
 # neutrino-mp-tangos
 #
 NEUTRINO_MP_TANGOS_PATCHES =
+NEUTRINO_MP_TANGOS_PATCHES_DIR =
 
 $(D)/neutrino-mp-tangos.do_prepare: | $(NEUTRINO_DEPS) $(D)/libstb-hal-cst-next
 	for i in $(LOCAL_NEUTRINO_DEPS); do \
@@ -604,6 +605,12 @@ $(D)/neutrino-mp-tangos.do_prepare: | $(NEUTRINO_DEPS) $(D)/libstb-hal-cst-next
 	git clone https://github.com/TangoCash/neutrino-mp-cst-next.git $(ARCHIVE)/neutrino-mp-tangos.git; \
 	cp -ra $(ARCHIVE)/neutrino-mp-tangos.git $(SOURCE_DIR)/neutrino-mp-tangos; \
 	cp -ra $(SOURCE_DIR)/neutrino-mp-tangos $(SOURCE_DIR)/neutrino-mp-tangos.org
+	for i in $(NEUTRINO_MP_TANGOS_PATCHES_DIR); do \
+		for p in $$i/*; do \
+		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$p)"; \
+		set -e; cd $(SOURCE_DIR)/neutrino-mp-tangos && patch -p1 -i $$p; \
+		done; \
+	done; \
 	for i in $(NEUTRINO_MP_TANGOS_PATCHES); do \
 		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
 		set -e; cd $(SOURCE_DIR)/neutrino-mp-tangos && patch -p1 -i $$i; \
