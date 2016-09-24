@@ -608,7 +608,7 @@ $(D)/neutrino-mp-tangos.do_prepare: | $(NEUTRINO_DEPS) $(D)/libstb-hal-cst-next
 	for i in $(NEUTRINO_MP_TANGOS_PATCHES_DIR); do \
 		for p in $$i/*; do \
 		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$p)"; \
-		set -e; cd $(SOURCE_DIR)/neutrino-mp-tangos && patch -p1 -i $$p; \
+		set -e; cd $(SOURCE_DIR)/neutrino-mp-tangos && patch -p1 -i "$$p"; \
 		done; \
 	done; \
 	for i in $(NEUTRINO_MP_TANGOS_PATCHES); do \
