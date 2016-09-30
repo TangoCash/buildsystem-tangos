@@ -247,7 +247,7 @@ $(D)/libreadline: $(D)/bootstrap $(ARCHIVE)/readline-$(READLINE_VER).tar.gz
 # openssl
 #
 OPENSSL_VER = 1.0.2
-OPENSSL_SUBVER = h
+OPENSSL_SUBVER = j
 
 $(ARCHIVE)/openssl-$(OPENSSL_VER)$(OPENSSL_SUBVER).tar.gz:
 	$(WGET) http://www.openssl.org/source/openssl-$(OPENSSL_VER)$(OPENSSL_SUBVER).tar.gz
@@ -278,7 +278,7 @@ $(D)/openssl: $(D)/bootstrap $(ARCHIVE)/openssl-$(OPENSSL_VER)$(OPENSSL_SUBVER).
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/openssl.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libcrypto.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libssl.pc
-	cd $(TARGETPREFIX) && rm -rf etc/ssl/man
+	cd $(TARGETPREFIX) && rm -rf etc/ssl/man usr/bin/openssl
 	$(REMOVE)/openssl-$(OPENSSL_VER)$(OPENSSL_SUBVER)
 	touch $@
 
@@ -507,6 +507,7 @@ $(D)/bzip2: $(D)/bootstrap $(ARCHIVE)/bzip2-$(BZIP2_VER).tar.gz
 		CC=$(TARGET)-gcc AR=$(TARGET)-ar RANLIB=$(TARGET)-ranlib \
 		$(MAKE) all; \
 		$(MAKE) install PREFIX=$(TARGETPREFIX)/usr
+	cd $(TARGETPREFIX) && rm -f usr/bin/bzip2
 	$(REMOVE)/bzip2-$(BZIP2_VER)
 	touch $@
 
@@ -809,6 +810,7 @@ $(D)/libcurl: $(D)/bootstrap $(D)/openssl $(D)/zlib $(ARCHIVE)/curl-$(CURL_VER).
 		rm -f $(TARGETPREFIX)/usr/bin/curl-config
 	$(REWRITE_LIBTOOL)/libcurl.la
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libcurl.pc
+	cd $(TARGETPREFIX) && rm usr/bin/curl
 	$(REMOVE)/curl-$(CURL_VER)
 	touch $@
 
@@ -838,6 +840,7 @@ $(D)/libfribidi: $(D)/bootstrap $(ARCHIVE)/fribidi-$(FRIBIDI_VER).tar.bz2
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/fribidi.pc
 	$(REWRITE_LIBTOOL)/libfribidi.la
+	cd $(TARGETPREFIX) && rm usr/bin/fribidi
 	$(REMOVE)/fribidi-$(FRIBIDI_VER)
 	touch $@
 
@@ -1843,6 +1846,9 @@ $(D)/libusbcompat: $(D)/bootstrap $(D)/libusb $(ARCHIVE)/libusb-compat-$(USBCOMP
 	set -e; cd $(BUILD_TMP)/libusb-compat-$(USBCOMPAT_VER); \
 		$(CONFIGURE) \
 			--prefix=/usr \
+			--disable-log \
+			--disable-debug-log \
+			--disable-examples-build \
 		; \
 		$(MAKE) ; \
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)
@@ -1868,11 +1874,13 @@ $(D)/alsa-lib: $(D)/bootstrap $(ARCHIVE)/alsa-lib-$(ALSA_VER).tar.bz2
 		$(PATCH)/alsa-lib-$(ALSA_VER)-link_fix.patch; \
 		$(CONFIGURE) \
 			--prefix=/usr \
+			--with-alsa-devdir=/dev/snd/ \
 			--with-plugindir=/usr/lib/alsa \
 			--without-debug \
 			--with-debug=no \
 			--disable-aload \
 			--disable-rawmidi \
+			--disable-resmgr \
 			--disable-old-symbols \
 			--disable-alisp \
 			--disable-hwdep \
@@ -1917,6 +1925,7 @@ $(D)/alsa-utils: $(D)/bootstrap $(D)/alsa-lib $(ARCHIVE)/alsa-utils-$(ALSA_VER).
 	install -m 755 $(SKEL_ROOT)/etc/init.d/amixer $(TARGETPREFIX)/etc/init.d/amixer
 	install -m 644 $(SKEL_ROOT)/etc/amixer.conf $(TARGETPREFIX)/etc/amixer.conf
 	install -m 644 $(SKEL_ROOT)/etc/asound.conf $(TARGETPREFIX)/etc/asound.conf
+	cd $(TARGETPREFIX) && rm -f usr/bin/aserver
 	touch $@
 
 #
