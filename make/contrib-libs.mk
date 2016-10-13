@@ -1939,6 +1939,8 @@ $(D)/libopenthreads: $(D)/bootstrap
 		fi
 	cp -ra $(ARCHIVE)/library-openthreads.git $(BUILD_TMP)/openthreads
 	set -e; cd $(BUILD_TMP)/openthreads; \
+		git submodule init; \
+		git submodule update; \
 		$(PATCH)/libopenthreads.patch; \
 		rm CMakeFiles/* -rf CMakeCache.txt cmake_install.cmake; \
 		echo "# dummy file to prevent warning message" > $(BUILD_TMP)/openthreads/examples/CMakeLists.txt; \
