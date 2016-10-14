@@ -216,7 +216,7 @@
 +	     }, {
 +		 .name	= "Spark Userfs",
 +		 .offset = 0x800000,
-+		 .size = 0x13800000 //312M
++		 .size = 0x17800000 //376M
 +	     }, {
 +		 .name	= "E2 kernel",
 +		 .offset	= 0x18000000,
@@ -224,11 +224,11 @@
 +	     }, {
 +		 .name	= "E2 Userfs",
 +		 .offset = 0x18800000,
-+		 .size = 0x5000000 //80M
++		 .size = 0x02800000 //40M
 +	     }, {
 +		 .name = "NAND DATA",
-+		 .offset	= 0x14000000,
-+		 .size	= 0x04000000 //64M
++		 .offset	= 0x1B000000,
++		 .size	= 0x02800000 //40M
 +	     },
  	},
  	.timing_data	= &(struct stm_nand_timing_data) {
