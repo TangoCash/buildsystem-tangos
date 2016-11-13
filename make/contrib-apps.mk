@@ -656,7 +656,7 @@ $(D)/hddtemp: $(D)/bootstrap $(ARCHIVE)/hddtemp-$(HDDTEMP_VER).tar.bz2
 #
 # hdparm
 #
-HDPARM_VER = 9.48
+HDPARM_VER = 9.50
 
 $(ARCHIVE)/hdparm-$(HDPARM_VER).tar.gz:
 	$(WGET) http://sourceforge.net/projects/hdparm/files/hdparm/hdparm-$(HDPARM_VER).tar.gz
@@ -1347,7 +1347,6 @@ $(D)/openvpn: $(D)/bootstrap $(D)/openssl $(D)/lzo $(ARCHIVE)/openvpn-$(OPENVPN_
 			--disable-plugins \
 			--disable-debug \
 			--disable-pkcs11 \
-			--enable-password-save \
 			--enable-small \
 		; \
 		$(MAKE); \

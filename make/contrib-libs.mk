@@ -394,9 +394,9 @@ $(D)/luasocket: $(D)/bootstrap $(D)/lua
 		fi
 	cp -ra $(ARCHIVE)/luasocket.git $(BUILD_TMP)/luasocket
 	set -e; cd $(BUILD_TMP)/luasocket; \
-		sed -i -e "s@LD_linux=gcc@LD_LINUX=$(TARGET)-gcc@" -e "s@CC_linux=gcc@CC_LINUX=$(TARGET)-gcc -L$(TARGETPREFIX)/usr/lib@" -e "s@DESTDIR=@DESTDIR=$(TARGETPREFIX)/usr@" src/makefile; \
-		$(MAKE) CC=$(TARGET)-gcc LD=$(TARGET)-gcc LUAV=$(LUA_VER_SHORT) LUAINC_linux=$(TARGETPREFIX)/usr/include LUAPREFIX_linux= linux; \
-		$(MAKE) install LUAPREFIX_linux=/ LUAV=$(LUA_VER_SHORT)
+		sed -i -e "s@LD_linux=gcc@LD_LINUX=$(TARGET)-gcc@" -e "s@CC_linux=gcc@CC_LINUX=$(TARGET)-gcc -L$(TARGETPREFIX)/usr/lib@" -e "s@DESTDIR?=@DESTDIR?=$(TARGETPREFIX)/usr@" src/makefile; \
+		$(MAKE) CC=$(TARGET)-gcc LD=$(TARGET)-gcc LUAV=$(LUA_VER_SHORT) PLAT=linux COMPAT=COMPAT LUAINC_linux=$(TARGETPREFIX)/usr/include LUAPREFIX_linux=; \
+		$(MAKE) install LUAPREFIX_linux= LUAV=$(LUA_VER_SHORT)
 	$(REMOVE)/luasocket
 	touch $@
 
@@ -653,8 +653,13 @@ JPEG_TURBO_VER = 1.5.0
 $(ARCHIVE)/libjpeg-turbo-$(JPEG_TURBO_VER).tar.gz:
 	$(WGET) http://sourceforge.net/projects/libjpeg-turbo/files/$(JPEG_TURBO_VER)/libjpeg-turbo-$(JPEG_TURBO_VER).tar.gz
 
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), ufs910))
+$(D)/libjpeg: $(D)/libjpeg_old
+	touch $@
+else
 $(D)/libjpeg: $(D)/libjpeg_turbo
 	touch $@
+endif
 
 $(D)/libjpeg_turbo: $(D)/bootstrap $(ARCHIVE)/libjpeg-turbo-$(JPEG_TURBO_VER).tar.gz
 	$(REMOVE)/libjpeg-turbo-$(JPEG_TURBO_VER)
@@ -1823,7 +1828,6 @@ $(D)/libusb: $(D)/bootstrap $(ARCHIVE)/libusb-$(USB_VER).tar.bz2
 			--disable-log \
 			--disable-debug-log \
 			--disable-examples-build \
-			--disable-udev \
 		; \
 		$(MAKE) ; \
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)
