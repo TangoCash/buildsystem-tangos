@@ -270,6 +270,62 @@ libstb-hal-cst-next-distclean:
 
 ################################################################################
 #
+# libstb-hal-cst-next-tangos
+#
+NEUTRINO_MP_LIBSTB_CST_NEXT_TANGOS_PATCHES =
+
+$(D)/libstb-hal-cst-next-tangos.do_prepare:
+	rm -rf $(SOURCE_DIR)/libstb-hal-cst-next
+	rm -rf $(SOURCE_DIR)/libstb-hal-cst-next.org
+	rm -rf $(LH_OBJDIR)
+	[ -d "$(ARCHIVE)/libstb-hal-cst-next-tangos.git" ] && \
+	(cd $(ARCHIVE)/libstb-hal-cst-next-tangos.git; git pull; cd "$(BUILD_TMP)";); \
+	[ -d "$(ARCHIVE)/libstb-hal-cst-next-tangos.git" ] || \
+	git clone https://github.com/TangoCash/libstb-hal-cst-next.git $(ARCHIVE)/libstb-hal-cst-next-tangos.git; \
+	cp -ra $(ARCHIVE)/libstb-hal-cst-next-tangos.git $(SOURCE_DIR)/libstb-hal-cst-next;\
+	cp -ra $(SOURCE_DIR)/libstb-hal-cst-next $(SOURCE_DIR)/libstb-hal-cst-next.org
+	for i in $(NEUTRINO_MP_LIBSTB_CST_NEXT_PATCHES); do \
+		echo "==> Applying Patch: $(subst $(PATCHES)/,'',$$i)"; \
+		set -e; cd $(SOURCE_DIR)/libstb-hal-cst-next && patch -p1 -i $$i; \
+	done;
+	touch $@
+
+$(D)/libstb-hal-cst-next-tangos.config.status: | $(NEUTRINO_DEPS)
+	rm -rf $(LH_OBJDIR); \
+	test -d $(LH_OBJDIR) || mkdir -p $(LH_OBJDIR); \
+	cd $(LH_OBJDIR); \
+		$(SOURCE_DIR)/libstb-hal-cst-next/autogen.sh; \
+		$(BUILDENV) \
+		$(SOURCE_DIR)/libstb-hal-cst-next/configure --enable-silent-rules \
+			--host=$(TARGET) \
+			--build=$(BUILD) \
+			--prefix= \
+			--with-target=cdk \
+			--with-boxtype=$(BOXTYPE) \
+			PKG_CONFIG=$(PKG_CONFIG) \
+			PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
+			CFLAGS="$(N_CFLAGS)" CXXFLAGS="$(N_CFLAGS)" CPPFLAGS="$(N_CPPFLAGS)"
+
+$(D)/libstb-hal-cst-next-tangos.do_compile: $(D)/libstb-hal-cst-next-tangos.config.status
+	cd $(SOURCE_DIR)/libstb-hal-cst-next; \
+		$(MAKE) -C $(LH_OBJDIR) all DESTDIR=$(TARGETPREFIX)
+	touch $@
+
+$(D)/libstb-hal-cst-next-tangos: $(D)/libstb-hal-cst-next-tangos.do_prepare $(D)/libstb-hal-cst-next-tangos.do_compile
+	$(MAKE) -C $(LH_OBJDIR) install DESTDIR=$(TARGETPREFIX)
+	touch $@
+
+libstb-hal-cst-next-tangos-clean:
+	rm -f $(D)/libstb-hal-cst-next-tangos
+	cd $(LH_OBJDIR); \
+		$(MAKE) -C $(LH_OBJDIR) distclean
+
+libstb-hal-cst-next-tangos-distclean:
+	rm -rf $(LH_OBJDIR)
+	rm -f $(D)/libstb-hal-cst-next-tangos*
+
+################################################################################
+#
 # neutrino-mp-cst-next
 #
 yaud-neutrino-mp-cst-next: yaud-none \
@@ -592,7 +648,7 @@ yaud-neutrino-mp-tangos-all: yaud-none \
 NEUTRINO_MP_TANGOS_PATCHES =
 NEUTRINO_MP_TANGOS_PATCHES_DIR =
 
-$(D)/neutrino-mp-tangos.do_prepare: | $(NEUTRINO_DEPS) $(D)/libstb-hal-cst-next
+$(D)/neutrino-mp-tangos.do_prepare: | $(NEUTRINO_DEPS) $(D)/libstb-hal-cst-next-tangos
 	for i in $(LOCAL_NEUTRINO_DEPS); do \
 		$(MAKE) $$i; \
 	done;
