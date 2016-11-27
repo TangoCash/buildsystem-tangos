@@ -95,6 +95,29 @@ UNTAR                 = tar -C $(BUILD_TMP) -xf $(ARCHIVE)
 REMOVE                = rm -rf $(BUILD_TMP)
 RM_PKGPREFIX          = rm -rf $(PKGPREFIX)
 PATCH                 = patch -p1 -i $(PATCHES)
+APATCH                = patch -p1 -i
+START_BUILD           = @echo "---------------------------------------------------------------------------------"; echo; echo -e "Start build of \033[01;32m$(subst $(CDK_DIR)/.deps/,,$@)\033[0m."
+TOUCH                 = @touch $@; echo -e "Build of \033[01;32m$(subst $(CDK_DIR)/.deps/,,$@)\033[0m completed."; echo
+
+define post_patch
+    for i in $(1) ; do \
+     if [ -d $$i ] ; then \
+      for p in $$i/*; do \
+       if [ $${p:0:1} == "/" ]; then \
+        echo -e "==> \033[31mApplying Patch:\033[0m $$p"; $(APATCH) $$p; \
+       else \
+        echo -e "==> \033[31mApplying Patch:\033[0m $$p"; $(PATCH)/$$p; \
+       fi; \
+      done; \
+     else \
+      if [ $${i:0:1 == "/" ]; then \
+       echo -e "==> \033[31mApplying Patch:\033[0m $$i"; $(APATCH) $$i; \
+      else \
+       echo -e "==> \033[31mApplying Patch:\033[0m $$i"; $(PATCH)/$$i; \
+      fi; \
+     fi; \
+    done;
+endef
 
 #
 #
@@ -273,11 +296,11 @@ PLATFORM_CPPFLAGS += -DPLATFORM_UFS922
 DRIVER_PLATFORM   += UFS922=ufs922
 E_CONFIG_OPTS     += --enable-ufs922
 endif
-ifeq ($(BOXTYPE), ufs960)
+ifeq ($(BOXTYPE), ufc960)
 KERNEL_PATCHES_24  = $(UFC960_PATCHES_24)
-PLATFORM_CPPFLAGS += -DPLATFORM_UFS960
-DRIVER_PLATFORM   += UFC960=ufs960
-E_CONFIG_OPTS     += --enable-ufs960
+PLATFORM_CPPFLAGS += -DPLATFORM_UFC960
+DRIVER_PLATFORM   += UFC960=ufc960
+E_CONFIG_OPTS     += --enable-ufc960
 endif
 ifeq ($(BOXTYPE), tf7700)
 KERNEL_PATCHES_24  = $(TF7700_PATCHES_24)

@@ -1,6 +1,6 @@
 --- a/libavformat/avio.h
 +++ b/libavformat/avio.h
-@@ -190,12 +190,6 @@
+@@ -273,12 +273,6 @@
       */
      int writeout_count;
  
@@ -24,7 +24,7 @@
  
  /**
   * Do seeks within this distance ahead of the current buffer by skipping
-@@ -79,7 +79,6 @@
+@@ -88,7 +88,6 @@
                    int64_t (*seek)(void *opaque, int64_t offset, int whence))
  {
      s->buffer      = buffer;
@@ -32,7 +32,7 @@
      s->buffer_size = buffer_size;
      s->buf_ptr     = buffer;
      s->opaque      = opaque;
-@@ -466,16 +466,16 @@
+@@ -524,16 +523,16 @@
      }
  
      /* make buffer smaller in case it ended up large after probing */
@@ -53,7 +53,7 @@
      }
  
      if (s->read_packet)
-@@ -847,7 +847,6 @@
+@@ -965,7 +964,6 @@
  
      av_free(s->buffer);
      s->buffer = buffer;
@@ -63,7 +63,7 @@
      url_resetbuf(s, s->write_flag ? AVIO_FLAG_WRITE : AVIO_FLAG_READ);
 --- a/libavformat/hls.c
 +++ b/libavformat/hls.c
-@@ -1795,8 +1795,10 @@
+@@ -1871,8 +1871,10 @@
      HLSContext *c = s->priv_data;
      int ret, i, minplaylist = -1;
  
@@ -76,35 +76,12 @@
  
      for (i = 0; i < c->n_playlists; i++) {
          struct playlist *pls = c->playlists[i];
---- a/libavcodec/libwebpenc_animencoder.c
-+++ b/libavcodec/libwebpenc_animencoder.c
-@@ -41,8 +41,9 @@
-     int ret = ff_libwebp_encode_init_common(avctx);
-     if (!ret) {
-         LibWebPAnimContext *s = avctx->priv_data;
--        WebPAnimEncoderOptions enc_options;
-+        WebPAnimEncoderOptions enc_options = { 0 };
-         WebPAnimEncoderOptionsInit(&enc_options);
-+        enc_options.verbose = av_log_get_level() >= AV_LOG_VERBOSE;
-         // TODO(urvang): Expose some options on command-line perhaps.
-         s->enc = WebPAnimEncoderNew(avctx->width, avctx->height, &enc_options);
-         if (!s->enc)
---- a/libavcodec/avpacket.c
-+++ b/libavcodec/avpacket.c
-@@ -58,6 +58,7 @@ void av_init_packet(AVPacket *pkt)
- #if FF_API_DESTRUCT_PACKET
- FF_DISABLE_DEPRECATION_WARNINGS
-     pkt->destruct             = NULL;
-+    pkt->priv                 = NULL;
- FF_ENABLE_DEPRECATION_WARNINGS
- #endif
-     pkt->buf                  = NULL;
 --- a/libavformat/utils.c
 +++ b/libavformat/utils.c
-@@ -113,6 +113,25 @@
- MAKE_ACCESSORS(AVFormatContext, format, void *, opaque)
- MAKE_ACCESSORS(AVFormatContext, format, av_format_control_message, control_message_cb)
+@@ -118,6 +118,25 @@
  MAKE_ACCESSORS(AVFormatContext, format, AVOpenCallback, open_cb)
+ FF_ENABLE_DEPRECATION_WARNINGS
+ #endif
 +
 +void *av_fast_realloc(void *ptr, unsigned int *size, size_t min_size)
 +{
