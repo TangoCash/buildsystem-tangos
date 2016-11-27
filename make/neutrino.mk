@@ -291,7 +291,7 @@ $(D)/libstb-hal-cst-next-tangos.do_prepare:
 	git clone https://github.com/TangoCash/libstb-hal-cst-next.git $(ARCHIVE)/libstb-hal-cst-next-tangos.git; \
 	cp -ra $(ARCHIVE)/libstb-hal-cst-next-tangos.git $(SOURCE_DIR)/libstb-hal-cst-next;\
 	cp -ra $(SOURCE_DIR)/libstb-hal-cst-next $(SOURCE_DIR)/libstb-hal-cst-next.org
-	set -e; cd $(SOURCE_DIR)/libstb-hal-cst-next; \
+	@set -e; cd $(SOURCE_DIR)/libstb-hal-cst-next; \
 		$(call post_patch,$(NEUTRINO_MP_LIBSTB_CST_NEXT_PATCHES))
 	$(TOUCH)
 
