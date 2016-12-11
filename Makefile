@@ -55,7 +55,7 @@ else ifeq ($(IMAGE), $(filter $(IMAGE), enigma2 enigma2-wlandriver))
 endif
 	@echo '================================================================================'
 	@echo ""
-	@$(MAKE) --no-print-directory preqs toolcheck
+	@$(MAKE) --no-print-directory toolcheck
 ifeq ($(MAINTAINER),)
 	@echo "##########################################################################"
 	@echo "# The MAINTAINER variable is not set. It defaults to your name from the  #"
@@ -91,7 +91,6 @@ include make/neutrino-plugins.mk
 include make/neutrino-release.mk
 include make/cleantargets.mk
 include make/patches.mk
-include make/yaud.mk
 include make/oscam.mk
 
 
