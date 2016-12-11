@@ -206,9 +206,6 @@ CONFIGURE_TOOLS = \
 	$(BUILDENV) \
 	./configure $(CONFIGURE_OPTS)
 
-MAKEFLAGS += \
-	--no-print-directory
-
 MAKE_OPTS := \
 	CC=$(TARGET)-gcc \
 	CXX=$(TARGET)-g++ \
