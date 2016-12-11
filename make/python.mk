@@ -23,7 +23,7 @@ PYTHON_INSTALL = \
 # host_python
 #
 PYTHON_MAJOR = 2.7
-PYTHON_MINOR = 11
+PYTHON_MINOR = 12
 PYTHON_VER = $(PYTHON_MAJOR).$(PYTHON_MINOR)
 PYTHON_PATCH  = python-$(PYTHON_VER)-xcompile.patch
 PYTHON_PATCH += python-$(PYTHON_VER)-revert_use_of_sysconfigdata.patch
@@ -42,12 +42,12 @@ $(D)/host_python: $(ARCHIVE)/Python-$(PYTHON_VER).tar.xz
 	$(START_BUILD)
 	$(REMOVE)/Python-$(PYTHON_VER)
 	$(UNTAR)/Python-$(PYTHON_VER).tar.xz
-	@set -e; cd $(BUILD_TMP)/Python-$(PYTHON_VER); \
+	set -e; cd $(BUILD_TMP)/Python-$(PYTHON_VER); \
 		$(call post_patch,$(PYTHON_PATCH)); \
 		autoconf; \
 		CONFIG_SITE= \
 		OPT="$(HOST_CFLAGS)" \
-		./configure \
+		./configure $(CONFIGURE_SILENT) \
 			--without-cxx-main \
 			--with-threads \
 		; \
@@ -56,14 +56,14 @@ $(D)/host_python: $(ARCHIVE)/Python-$(PYTHON_VER).tar.xz
 		mv Parser/pgen ./hostpgen; \
 		\
 		$(MAKE) distclean; \
-		./configure \
+		./configure $(CONFIGURE_SILENT) \
 			--prefix=$(HOSTPREFIX) \
 			--sysconfdir=$(HOSTPREFIX)/etc \
 			--without-cxx-main \
 			--with-threads \
 		; \
 		$(MAKE) all install; \
-		cp ./hostpgen $(HOSTPREFIX)/bin/pgen; \
+		cp ./hostpgen $(HOSTPREFIX)/bin/pgen
 	$(REMOVE)/Python-$(PYTHON_VER)
 	$(TOUCH)
 
@@ -74,13 +74,13 @@ $(D)/python: $(D)/bootstrap $(D)/host_python $(D)/libncurses $(D)/zlib $(D)/open
 	$(START_BUILD)
 	$(REMOVE)/Python-$(PYTHON_VER)
 	$(UNTAR)/Python-$(PYTHON_VER).tar.xz
-	@set -e; cd $(BUILD_TMP)/Python-$(PYTHON_VER); \
+	set -e; cd $(BUILD_TMP)/Python-$(PYTHON_VER); \
 		$(call post_patch,$(PYTHON_PATCH)); \
 		CONFIG_SITE= \
 		$(BUILDENV) \
 		autoreconf --verbose --install --force Modules/_ctypes/libffi; \
 		autoconf; \
-		./configure \
+		./configure $(CONFIGURE_SILENT) \
 			--build=$(BUILD) \
 			--host=$(TARGET) \
 			--target=$(TARGET) \
@@ -88,6 +88,7 @@ $(D)/python: $(D)/bootstrap $(D)/host_python $(D)/libncurses $(D)/zlib $(D)/open
 			--mandir=/.remove \
 			--sysconfdir=/etc \
 			--enable-shared \
+			--with-lto \
 			--enable-ipv6 \
 			--with-threads \
 			--with-pymalloc \
@@ -141,7 +142,7 @@ $(D)/python_setuptools: $(D)/bootstrap $(D)/python $(ARCHIVE)/setuptools-$(PYTHO
 	$(START_BUILD)
 	$(REMOVE)/setuptools-$(PYTHON_SETUPTOOLS_VER)
 	$(UNTAR)/setuptools-$(PYTHON_SETUPTOOLS_VER).tar.gz
-	@set -e; cd $(BUILD_TMP)/setuptools-$(PYTHON_SETUPTOOLS_VER); \
+	set -e; cd $(BUILD_TMP)/setuptools-$(PYTHON_SETUPTOOLS_VER); \
 		$(PYTHON_INSTALL)
 	$(REMOVE)/setuptools-$(PYTHON_SETUPTOOLS_VER)
 	$(TOUCH)
@@ -158,7 +159,7 @@ $(D)/libxmlccwrap: $(D)/bootstrap $(D)/libxml2_e2 $(D)/libxslt $(ARCHIVE)/libxml
 	$(START_BUILD)
 	$(REMOVE)/libxmlccwrap-$(LIBXMLCCWRAP_VER)
 	$(UNTAR)/libxmlccwrap-$(LIBXMLCCWRAP_VER).tar.gz
-	@set -e; cd $(BUILD_TMP)/libxmlccwrap-$(LIBXMLCCWRAP_VER); \
+	set -e; cd $(BUILD_TMP)/libxmlccwrap-$(LIBXMLCCWRAP_VER); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix=/usr \
@@ -183,7 +184,7 @@ $(D)/python_lxml: $(D)/bootstrap $(D)/python $(D)/libxslt $(D)/python_setuptools
 	$(START_BUILD)
 	$(REMOVE)/lxml-$(PYTHON_LXML_VER)
 	$(UNTAR)/lxml-$(PYTHON_LXML_VER).tgz
-	@set -e; cd $(BUILD_TMP)/lxml-$(PYTHON_LXML_VER); \
+	set -e; cd $(BUILD_TMP)/lxml-$(PYTHON_LXML_VER); \
 		$(PYTHON_BUILD) \
 			--with-xml2-config=$(HOSTPREFIX)/bin/xml2-config \
 			--with-xslt-config=$(HOSTPREFIX)/bin/xslt-config; \
@@ -199,11 +200,11 @@ PYTHON_TWISTED_VER = 16.0.0
 $(ARCHIVE)/Twisted-$(PYTHON_TWISTED_VER).tar.bz2:
 	$(WGET) http://pypi.python.org/packages/source/T/Twisted/Twisted-$(PYTHON_TWISTED_VER).tar.bz2
 
-$(D)/python_twisted: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(ARCHIVE)/Twisted-$(PYTHON_TWISTED_VER).tar.bz2
+$(D)/python_twisted: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(D)/python_zope_interface $(D)/python_pyopenssl $(D)/python_service_identity $(ARCHIVE)/Twisted-$(PYTHON_TWISTED_VER).tar.bz2
 	$(START_BUILD)
 	$(REMOVE)/Twisted-$(PYTHON_TWISTED_VER)
 	$(UNTAR)/Twisted-$(PYTHON_TWISTED_VER).tar.bz2
-	@set -e; cd $(BUILD_TMP)/Twisted-$(PYTHON_TWISTED_VER); \
+	set -e; cd $(BUILD_TMP)/Twisted-$(PYTHON_TWISTED_VER); \
 		$(PYTHON_INSTALL)
 	$(REMOVE)/Twisted-$(PYTHON_TWISTED_VER)
 	$(TOUCH)
@@ -221,7 +222,7 @@ $(D)/python_imaging: $(D)/bootstrap $(D)/libjpeg $(D)/libfreetype $(D)/python $(
 	$(START_BUILD)
 	$(REMOVE)/Imaging-$(PYTHON_IMAGING_VER)
 	$(UNTAR)/Imaging-$(PYTHON_IMAGING_VER).tar.gz
-	@set -e; cd $(BUILD_TMP)/Imaging-$(PYTHON_IMAGING_VER); \
+	set -e; cd $(BUILD_TMP)/Imaging-$(PYTHON_IMAGING_VER); \
 		$(call post_patch,$(PYTHON_IMAGING_PATCH)); \
 		sed -ie "s|"darwin"|"darwinNot"|g" "setup.py"; \
 		sed -ie "s|ZLIB_ROOT = None|ZLIB_ROOT = libinclude(\"${TARGETPREFIX}/usr\")|" "setup.py"; \
@@ -242,7 +243,7 @@ $(D)/python_pycrypto: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(ARCHIV
 	$(START_BUILD)
 	$(REMOVE)/pycrypto-$(PYTHON_PYCRYPTO_VER)
 	$(UNTAR)/pycrypto-$(PYTHON_PYCRYPTO_VER).tar.gz
-	@set -e; cd $(BUILD_TMP)/pycrypto-$(PYTHON_PYCRYPTO_VER); \
+	set -e; cd $(BUILD_TMP)/pycrypto-$(PYTHON_PYCRYPTO_VER); \
 		$(call post_patch,$(PYTHON_PYCRYPTO_PATCH)); \
 		export ac_cv_func_malloc_0_nonnull=yes; \
 		$(CONFIGURE) \
@@ -264,7 +265,7 @@ $(D)/python_pyusb: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(ARCHIVE)/
 	$(START_BUILD)
 	$(REMOVE)/pyusb-$(PYTHON_PYUSB_VER)
 	$(UNTAR)/pyusb-$(PYTHON_PYUSB_VER).tar.gz
-	@set -e; cd $(BUILD_TMP)/pyusb-$(PYTHON_PYUSB_VER); \
+	set -e; cd $(BUILD_TMP)/pyusb-$(PYTHON_PYUSB_VER); \
 		$(PYTHON_INSTALL)
 	$(REMOVE)/pyusb-$(PYTHON_PYUSB_VER)
 	$(TOUCH)
@@ -281,7 +282,7 @@ $(D)/python_six: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(ARCHIVE)/si
 	$(START_BUILD)
 	$(REMOVE)/six-$(PYTHON_SIX_VER)
 	$(UNTAR)/six-$(PYTHON_SIX_VER).tar.gz
-	@set -e; cd $(BUILD_TMP)/six-$(PYTHON_SIX_VER); \
+	set -e; cd $(BUILD_TMP)/six-$(PYTHON_SIX_VER); \
 		$(PYTHON_INSTALL)
 	$(REMOVE)/six-$(PYTHON_SIX_VER)
 	$(TOUCH)
@@ -298,7 +299,7 @@ $(D)/python_cffi: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(ARCHIVE)/c
 	$(START_BUILD)
 	$(REMOVE)/cffi-$(PYTHON_CFFI_VER)
 	$(UNTAR)/cffi-$(PYTHON_CFFI_VER).tar.gz
-	@set -e; cd $(BUILD_TMP)/cffi-$(PYTHON_CFFI_VER); \
+	set -e; cd $(BUILD_TMP)/cffi-$(PYTHON_CFFI_VER); \
 		$(PYTHON_INSTALL)
 	$(REMOVE)/cffi-$(PYTHON_CFFI_VER)
 	$(TOUCH)
@@ -315,7 +316,7 @@ $(D)/python_enum34: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(ARCHIVE)
 	$(START_BUILD)
 	$(REMOVE)/enum34-$(PYTHON_ENUM34_VER)
 	$(UNTAR)/enum34-$(PYTHON_ENUM34_VER).tar.gz
-	@set -e; cd $(BUILD_TMP)/enum34-$(PYTHON_ENUM34_VER); \
+	set -e; cd $(BUILD_TMP)/enum34-$(PYTHON_ENUM34_VER); \
 		$(PYTHON_INSTALL)
 	$(REMOVE)/enum34-$(PYTHON_ENUM34_VER)
 	$(TOUCH)
@@ -332,7 +333,7 @@ $(D)/python_pyasn1_modules: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(
 	$(START_BUILD)
 	$(REMOVE)/pyasn1-modules-$(PYTHON_PYASN1_MODULES_VER)
 	$(UNTAR)/pyasn1-modules-$(PYTHON_PYASN1_MODULES_VER).tar.gz
-	@set -e; cd $(BUILD_TMP)/pyasn1-modules-$(PYTHON_PYASN1_MODULES_VER); \
+	set -e; cd $(BUILD_TMP)/pyasn1-modules-$(PYTHON_PYASN1_MODULES_VER); \
 		$(PYTHON_INSTALL)
 	$(REMOVE)/pyasn1-modules-$(PYTHON_PYASN1_MODULES_VER)
 	$(TOUCH)
@@ -349,7 +350,7 @@ $(D)/python_pyasn1: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(D)/pytho
 	$(START_BUILD)
 	$(REMOVE)/pyasn1-$(PYTHON_PYASN1_VER)
 	$(UNTAR)/pyasn1-$(PYTHON_PYASN1_VER).tar.gz
-	@set -e; cd $(BUILD_TMP)/pyasn1-$(PYTHON_PYASN1_VER); \
+	set -e; cd $(BUILD_TMP)/pyasn1-$(PYTHON_PYASN1_VER); \
 		$(PYTHON_INSTALL)
 	$(REMOVE)/pyasn1-$(PYTHON_PYASN1_VER)
 	$(TOUCH)
@@ -366,7 +367,7 @@ $(D)/python_pycparser: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(D)/py
 	$(START_BUILD)
 	$(REMOVE)/pycparser-$(PYTHON_PYCPARSER_VER)
 	$(UNTAR)/pycparser-$(PYTHON_PYCPARSER_VER).tar.gz
-	@set -e; cd $(BUILD_TMP)/pycparser-$(PYTHON_PYCPARSER_VER); \
+	set -e; cd $(BUILD_TMP)/pycparser-$(PYTHON_PYCPARSER_VER); \
 		$(PYTHON_INSTALL)
 	$(REMOVE)/pycparser-$(PYTHON_PYCPARSER_VER)
 	$(TOUCH)
@@ -383,7 +384,7 @@ $(D)/python_cryptography: $(D)/bootstrap $(D)/libffi $(D)/python $(D)/python_set
 	$(START_BUILD)
 	$(REMOVE)/cryptography-$(PYTHON_CRYPTOGRAPHY_VER)
 	$(UNTAR)/cryptography-$(PYTHON_CRYPTOGRAPHY_VER).tar.gz
-	@set -e; cd $(BUILD_TMP)/cryptography-$(PYTHON_CRYPTOGRAPHY_VER); \
+	set -e; cd $(BUILD_TMP)/cryptography-$(PYTHON_CRYPTOGRAPHY_VER); \
 		$(PYTHON_INSTALL)
 	$(REMOVE)/cryptography-$(PYTHON_CRYPTOGRAPHY_VER)
 	$(TOUCH)
@@ -401,10 +402,65 @@ $(D)/python_pyopenssl: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(ARCHI
 	$(START_BUILD)
 	$(REMOVE)/pyOpenSSL-$(PYTHON_PYOPENSSL_VER)
 	$(UNTAR)/pyOpenSSL-$(PYTHON_PYOPENSSL_VER).tar.gz
-	@set -e; cd $(BUILD_TMP)/pyOpenSSL-$(PYTHON_PYOPENSSL_VER); \
+	set -e; cd $(BUILD_TMP)/pyOpenSSL-$(PYTHON_PYOPENSSL_VER); \
 		$(call post_patch,$(PYTHON_PYOPENSSL_PATCH)); \
 		$(PYTHON_INSTALL)
 	$(REMOVE)/pyOpenSSL-$(PYTHON_PYOPENSSL_VER)
+	$(TOUCH)
+
+#
+# python_service_identity
+#
+PYTHON_SERVICE_IDENTITY_VER = 16.0.0
+PYTHON_SERVICE_IDENTITY_PATCH =
+
+$(ARCHIVE)/service_identity-$(PYTHON_SERVICE_IDENTITY_VER).tar.gz:
+	$(WGET) https://pypi.python.org/packages/source/s/service_identity/service_identity-$(PYTHON_SERVICE_IDENTITY_VER).tar.gz
+
+$(D)/python_service_identity: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(D)/python_attr $(D)/python_attrs $(D)/python_pyasn1 $(ARCHIVE)/service_identity-$(PYTHON_SERVICE_IDENTITY_VER).tar.gz
+	$(START_BUILD)
+	$(REMOVE)/service_identity-$(PYTHON_SERVICE_IDENTITY_VER)
+	$(UNTAR)/service_identity-$(PYTHON_SERVICE_IDENTITY_VER).tar.gz
+	set -e; cd $(BUILD_TMP)/service_identity-$(PYTHON_SERVICE_IDENTITY_VER); \
+		$(call post_patch,$(PYTHON_SERVICE_IDENTITY_PATCH)); \
+		$(PYTHON_INSTALL)
+	$(REMOVE)/service_identity-$(PYTHON_SERVICE_IDENTITY_VER)
+	$(TOUCH)
+
+#
+# python_attr
+#
+PYTHON_ATTR_VER = 0.1.0
+PYTHON_ATTR_PATCH =
+
+$(ARCHIVE)/attr-$(PYTHON_ATTR_VER).tar.gz:
+	$(WGET) http://pypi.python.org/packages/source/a/attr/attr-$(PYTHON_ATTR_VER).tar.gz
+
+$(D)/python_attr: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(ARCHIVE)/attr-$(PYTHON_ATTR_VER).tar.gz
+	$(START_BUILD)
+	$(REMOVE)/attr-$(PYTHON_ATTR_VER)
+	$(UNTAR)/attr-$(PYTHON_ATTR_VER).tar.gz
+	set -e; cd $(BUILD_TMP)/attr-$(PYTHON_ATTR_VER); \
+		$(PYTHON_INSTALL)
+	$(REMOVE)/attr-$(PYTHON_ATTR_VER)
+	$(TOUCH)
+
+#
+# python_attrs
+#
+PYTHON_ATTRS_VER = 16.3.0
+PYTHON_ATTRS_PARCH =
+
+$(ARCHIVE)/attrs-$(PYTHON_ATTRS_VER).tar.gz:
+	$(WGET) https://pypi.io/packages/source/a/attrs/attrs-$(PYTHON_ATTRS_VER).tar.gz
+
+$(D)/python_attrs: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(ARCHIVE)/attrs-$(PYTHON_ATTRS_VER).tar.gz
+	$(START_BUILD)
+	$(REMOVE)/attrs-$(PYTHON_ATTRS_VER)
+	$(UNTAR)/attrs-$(PYTHON_ATTRS_VER).tar.gz
+	set -e; cd $(BUILD_TMP)/attrs-$(PYTHON_ATTRS_VER); \
+		$(PYTHON_INSTALL)
+	$(REMOVE)/attrs-$(PYTHON_ATTRS_VER)
 	$(TOUCH)
 
 #
@@ -419,7 +475,7 @@ $(D)/python_elementtree: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(ARC
 	$(START_BUILD)
 	$(REMOVE)/elementtree-$(PYTHON_ELEMENTTREE_VER)
 	$(UNTAR)/elementtree-$(PYTHON_ELEMENTTREE_VER).tar.gz
-	@set -e; cd $(BUILD_TMP)/elementtree-$(PYTHON_ELEMENTTREE_VER); \
+	set -e; cd $(BUILD_TMP)/elementtree-$(PYTHON_ELEMENTTREE_VER); \
 		$(PYTHON_INSTALL)
 	$(REMOVE)/elementtree-$(PYTHON_ELEMENTTREE_VER)
 	$(TOUCH)
@@ -436,7 +492,7 @@ $(D)/python_wifi: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(ARCHIVE)/p
 	$(START_BUILD)
 	$(REMOVE)/pythonwifi-$(PYTHON_WIFI_VER)
 	$(UNTAR)/pythonwifi-$(PYTHON_WIFI_VER).tar.bz2
-	@set -e; cd $(BUILD_TMP)/pythonwifi-$(PYTHON_WIFI_VER); \
+	set -e; cd $(BUILD_TMP)/pythonwifi-$(PYTHON_WIFI_VER); \
 		$(PYTHON_INSTALL)
 	$(REMOVE)/pythonwifi-$(PYTHON_WIFI_VER)
 	$(TOUCH)
@@ -453,7 +509,7 @@ $(D)/python_cheetah: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(ARCHIVE
 	$(START_BUILD)
 	$(REMOVE)/Cheetah-$(PYTHON_CHEETAH_VER)
 	$(UNTAR)/Cheetah-$(PYTHON_CHEETAH_VER).tar.gz
-	@set -e; cd $(BUILD_TMP)/Cheetah-$(PYTHON_CHEETAH_VER); \
+	set -e; cd $(BUILD_TMP)/Cheetah-$(PYTHON_CHEETAH_VER); \
 		$(PYTHON_INSTALL)
 	$(REMOVE)/Cheetah-$(PYTHON_CHEETAH_VER)
 	$(TOUCH)
@@ -470,7 +526,7 @@ $(D)/python_mechanize: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(ARCHI
 	$(START_BUILD)
 	$(REMOVE)/mechanize-$(PYTHON_MECHANIZE_VER)
 	$(UNTAR)/mechanize-$(PYTHON_MECHANIZE_VER).tar.gz
-	@set -e; cd $(BUILD_TMP)/mechanize-$(PYTHON_MECHANIZE_VER); \
+	set -e; cd $(BUILD_TMP)/mechanize-$(PYTHON_MECHANIZE_VER); \
 		$(PYTHON_INSTALL)
 	$(REMOVE)/mechanize-$(PYTHON_MECHANIZE_VER)
 	$(TOUCH)
@@ -487,7 +543,7 @@ $(D)/python_gdata: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(ARCHIVE)/
 	$(START_BUILD)
 	$(REMOVE)/gdata-$(PYTHON_GDATA_VER)
 	$(UNTAR)/gdata-$(PYTHON_GDATA_VER).tar.gz
-	@set -e; cd $(BUILD_TMP)/gdata-$(PYTHON_GDATA_VER); \
+	set -e; cd $(BUILD_TMP)/gdata-$(PYTHON_GDATA_VER); \
 		$(PYTHON_INSTALL)
 	$(REMOVE)/gdata-$(PYTHON_GDATA_VER)
 	$(TOUCH)
@@ -504,7 +560,7 @@ $(D)/python_zope_interface: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(
 	$(START_BUILD)
 	$(REMOVE)/zope.interface-$(PYTHON_ZOPE_INTERFACE_VER)
 	$(UNTAR)/zope.interface-$(PYTHON_ZOPE_INTERFACE_VER).tar.gz
-	@set -e; cd $(BUILD_TMP)/zope.interface-$(PYTHON_ZOPE_INTERFACE_VER); \
+	set -e; cd $(BUILD_TMP)/zope.interface-$(PYTHON_ZOPE_INTERFACE_VER); \
 		$(PYTHON_INSTALL)
 	$(REMOVE)/zope.interface-$(PYTHON_ZOPE_INTERFACE_VER)
 	$(TOUCH)
@@ -521,7 +577,7 @@ $(D)/python_requests: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(ARCHIV
 	$(START_BUILD)
 	$(REMOVE)/requests-$(PYTHON_REQUESTS_VER)
 	$(UNTAR)/requests-$(PYTHON_REQUESTS_VER).tar.gz
-	@set -e; cd $(BUILD_TMP)/requests-$(PYTHON_REQUESTS_VER); \
+	set -e; cd $(BUILD_TMP)/requests-$(PYTHON_REQUESTS_VER); \
 		$(PYTHON_INSTALL)
 	$(REMOVE)/requests-$(PYTHON_REQUESTS_VER)
 	$(TOUCH)
@@ -538,7 +594,7 @@ $(D)/python_futures: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(ARCHIVE
 	$(START_BUILD)
 	$(REMOVE)/futures-$(PYTHON_FUTURES_VER)
 	$(UNTAR)/futures-$(PYTHON_FUTURES_VER).tar.gz
-	@set -e; cd $(BUILD_TMP)/futures-$(PYTHON_FUTURES_VER); \
+	set -e; cd $(BUILD_TMP)/futures-$(PYTHON_FUTURES_VER); \
 		$(PYTHON_INSTALL)
 	$(REMOVE)/futures-$(PYTHON_FUTURES_VER)
 	$(TOUCH)
@@ -555,7 +611,7 @@ $(D)/python_singledispatch: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(
 	$(START_BUILD)
 	$(REMOVE)/singledispatch-$(PYTHON_SINGLEDISPATCH_VER)
 	$(UNTAR)/singledispatch-$(PYTHON_SINGLEDISPATCH_VER).tar.gz
-	@set -e; cd $(BUILD_TMP)/singledispatch-$(PYTHON_SINGLEDISPATCH_VER); \
+	set -e; cd $(BUILD_TMP)/singledispatch-$(PYTHON_SINGLEDISPATCH_VER); \
 		$(PYTHON_INSTALL)
 	$(REMOVE)/singledispatch-$(PYTHON_SINGLEDISPATCH_VER)
 	$(TOUCH)
@@ -566,12 +622,12 @@ $(D)/python_singledispatch: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(
 $(D)/python_livestreamer: $(D)/bootstrap $(D)/python $(D)/python_setuptools
 	$(START_BUILD)
 	$(REMOVE)/livestreamer
-	@set -e; if [ -d $(ARCHIVE)/livestreamer.git ]; \
+	set -e; if [ -d $(ARCHIVE)/livestreamer.git ]; \
 		then cd $(ARCHIVE)/livestreamer.git; git pull; \
 		else cd $(ARCHIVE); git clone https://github.com/chrippa/livestreamer.git livestreamer.git; \
 		fi
 	cp -ra $(ARCHIVE)/livestreamer.git $(BUILD_TMP)/livestreamer
-	@set -e; cd $(BUILD_TMP)/livestreamer; \
+	set -e; cd $(BUILD_TMP)/livestreamer; \
 		$(PYTHON_INSTALL)
 	$(REMOVE)/livestreamer
 	$(TOUCH)
@@ -582,18 +638,18 @@ $(D)/python_livestreamer: $(D)/bootstrap $(D)/python $(D)/python_setuptools
 $(D)/python_livestreamersrv: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(D)/python_livestreamer
 	$(START_BUILD)
 	$(REMOVE)/livestreamersrv
-	@set -e; if [ -d $(ARCHIVE)/livestreamersrv.git ]; \
+	set -e; if [ -d $(ARCHIVE)/livestreamersrv.git ]; \
 		then cd $(ARCHIVE)/livestreamersrv.git; git pull; \
 		else cd $(ARCHIVE); git clone https://github.com/athoik/livestreamersrv.git livestreamersrv.git; \
 		fi
 	cp -ra $(ARCHIVE)/livestreamersrv.git $(BUILD_TMP)/livestreamersrv
-	@set -e; cd $(BUILD_TMP)/livestreamersrv; \
+	set -e; cd $(BUILD_TMP)/livestreamersrv; \
 		cp -rd livestreamersrv $(TARGETPREFIX)/usr/sbin; \
 		cp -rd offline.mp4 $(TARGETPREFIX)/usr/share
 	$(REMOVE)/livestreamersrv
 	$(TOUCH)
 
-PYTHON_DEPS  = $(D)/host_python $(D)/python $(D)/python_elementtree $(D)/python_lxml $(D)/python_zope_interface $(D)/python_twisted $(D)/python_pyopenssl
+PYTHON_DEPS  = $(D)/host_python $(D)/python $(D)/python_elementtree $(D)/python_lxml $(D)/python_zope_interface $(D)/python_pyopenssl $(D)/python_twisted
 PYTHON_DEPS += $(D)/python_wifi $(D)/python_imaging $(D)/python_pyusb $(D)/python_pycrypto $(D)/python_pyasn1 $(D)/python_mechanize
 PYTHON_DEPS += $(D)/python_six $(D)/python_requests $(D)/python_futures $(D)/python_singledispatch
 PYTHON_DEPS += $(D)/python_livestreamer $(D)/python_livestreamersrv

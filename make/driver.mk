@@ -4,10 +4,9 @@
 driver-clean:
 	$(MAKE) -C $(DRIVER_DIR) ARCH=sh KERNEL_LOCATION=$(KERNEL_DIR) distclean
 	rm -f $(D)/driver
-#	rm -f $(D)/driver-symlink
 
 driver-symlink:
-	@set -e; cd $(DRIVER_DIR); \
+	set -e; cd $(DRIVER_DIR); \
 		rm -f player2 multicom; \
 		ln -s $(PLAYER2_LINK) player2; \
 		ln -s $(MULTICOM_LINK) multicom; \

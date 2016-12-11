@@ -1,6 +1,6 @@
 --- a/gst/subparse/gstsubparse.c
 +++ b/gst/subparse/gstsubparse.c
-@@ -437,6 +437,9 @@
+@@ -443,6 +443,9 @@
    const gchar *encoding;
    GError *err = NULL;
    gchar *ret = NULL;
@@ -10,7 +10,7 @@
  
    *consumed = 0;
  
-@@ -457,11 +460,27 @@
+@@ -463,11 +466,27 @@
  
    /* Otherwise check if it's UTF8 */
    if (self->valid_utf8) {
@@ -40,3 +40,4 @@
      GST_INFO_OBJECT (self, "invalid UTF-8!");
      self->valid_utf8 = FALSE;
    }
+

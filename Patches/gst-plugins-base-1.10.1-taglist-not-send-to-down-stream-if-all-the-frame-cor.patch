@@ -1,6 +1,6 @@
 --- a/gst-libs/gst/audio/gstaudiodecoder.c
 +++ b/gst-libs/gst/audio/gstaudiodecoder.c
-@@ -2279,6 +2279,15 @@
+@@ -2289,6 +2289,15 @@
              ("no valid frames found"));
        }
  
@@ -18,7 +18,7 @@
        if (dec->priv->pending_events)
 --- a/gst-libs/gst/video/gstvideodecoder.c
 +++ b/gst-libs/gst/video/gstvideodecoder.c
-@@ -1176,6 +1176,14 @@
+@@ -1182,6 +1182,14 @@
         * parent class' ::sink_event() until a later time.
         */
        forward_immediate = TRUE;
@@ -33,3 +33,4 @@
        break;
      }
      case GST_EVENT_GAP:
+

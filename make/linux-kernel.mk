@@ -1,6 +1,3 @@
-#
-# IMPORTANT: it is expected that only one define is set
-#
 DEPMOD = $(HOSTPREFIX)/bin/depmod
 
 #
@@ -63,15 +60,19 @@ OCTAGON1008_PATCHES_24 = $(COMMON_PATCHES_24) \
 ATEVIO7500_PATCHES_24 = $(COMMON_PATCHES_24) \
 		linux-sh4-lmb_stm24_$(KERNEL_LABEL).patch \
 		linux-sh4-atevio7500_setup_stm24_$(KERNEL_LABEL).patch \
-		$(if $(ENIGMA2),linux-sh4-atevio7500_mtdconcat_stm24_$(KERNEL_LABEL).patch) \
 		linux-sh4-stmmac_stm24_$(KERNEL_LABEL).patch
+ifeq ($(IMAGE), $(filter $(IMAGE), enigma2 enigma2-wlandriver))
+ATEVIO7500_PATCHES_24 += linux-sh4-atevio7500_mtdconcat_stm24_$(KERNEL_LABEL).patch
+endif
 
 HS7110_PATCHES_24 = $(COMMON_PATCHES_24) \
 		linux-sh4-lmb_stm24_$(KERNEL_LABEL).patch \
 		linux-sh4-hs7110_setup_stm24_$(KERNEL_LABEL).patch \
-		$(if $(NEUTRINO),linux-sh4-hs7110_mtdconcat_stm24_$(KERNEL_LABEL).patch) \
 		linux-sh4-stmmac_stm24_$(KERNEL_LABEL).patch \
 		$(if $(P0209),linux-sh4-i2c-stm-downgrade_stm24_$(KERNEL_LABEL).patch)
+ifeq ($(IMAGE), $(filter $(IMAGE), neutrino neutrino-wlandriver))
+HS7110_PATCHES_24 += linux-sh4-hs7110_mtdconcat_stm24_$(KERNEL_LABEL).patch
+endif
 
 HS7119_PATCHES_24 = $(COMMON_PATCHES_24) \
 		linux-sh4-lmb_stm24_$(KERNEL_LABEL).patch \
@@ -82,9 +83,11 @@ HS7119_PATCHES_24 = $(COMMON_PATCHES_24) \
 HS7420_PATCHES_24 = $(COMMON_PATCHES_24) \
 		linux-sh4-lmb_stm24_$(KERNEL_LABEL).patch \
 		linux-sh4-hs7420_setup_stm24_$(KERNEL_LABEL).patch \
-		$(if $(NEUTRINO),linux-sh4-hs7420_mtdconcat_stm24_$(KERNEL_LABEL).patch) \
 		linux-sh4-stmmac_stm24_$(KERNEL_LABEL).patch \
 		$(if $(P0209),linux-sh4-i2c-stm-downgrade_stm24_$(KERNEL_LABEL).patch)
+ifeq ($(IMAGE), $(filter $(IMAGE), neutrino neutrino-wlandriver))
+HS7420_PATCHES_24 += linux-sh4-hs7420_mtdconcat_stm24_$(KERNEL_LABEL).patch
+endif
 
 HS7429_PATCHES_24 = $(COMMON_PATCHES_24) \
 		linux-sh4-lmb_stm24_$(KERNEL_LABEL).patch \
@@ -95,9 +98,11 @@ HS7429_PATCHES_24 = $(COMMON_PATCHES_24) \
 HS7810A_PATCHES_24 = $(COMMON_PATCHES_24) \
 		linux-sh4-lmb_stm24_$(KERNEL_LABEL).patch \
 		linux-sh4-hs7810a_setup_stm24_$(KERNEL_LABEL).patch \
-		$(if $(NEUTRINO),linux-sh4-hs7810a_mtdconcat_stm24_$(KERNEL_LABEL).patch) \
 		linux-sh4-stmmac_stm24_$(KERNEL_LABEL).patch \
 		$(if $(P0209),linux-sh4-i2c-stm-downgrade_stm24_$(KERNEL_LABEL).patch)
+ifeq ($(IMAGE), $(filter $(IMAGE), neutrino neutrino-wlandriver))
+HS7810A_PATCHES_24 += linux-sh4-hs7810a_mtdconcat_stm24_$(KERNEL_LABEL).patch
+endif
 
 HS7819_PATCHES_24 = $(COMMON_PATCHES_24) \
 		linux-sh4-lmb_stm24_$(KERNEL_LABEL).patch \
@@ -267,8 +272,8 @@ $(D)/linux-kernel.do_prepare: $(PATCHES)/$(BUILD_CONFIG)/$(HOST_KERNEL_CONFIG) \
 			echo -e "==> \033[31mApplying Patch:\033[0m $$i"; \
 			patch -p1 -i $(PATCHES)/$(BUILD_CONFIG)/$$i; \
 		done
-		install -m 644 $(PATCHES)/$(BUILD_CONFIG)/$(HOST_KERNEL_CONFIG) $(KERNEL_DIR)/.config
-		sed -i "s#^\(CONFIG_EXTRA_FIRMWARE_DIR=\).*#\1\"$(CDK_DIR)/integrated_firmware\"#" $(KERNEL_DIR)/.config
+	install -m 644 $(PATCHES)/$(BUILD_CONFIG)/$(HOST_KERNEL_CONFIG) $(KERNEL_DIR)/.config
+	sed -i "s#^\(CONFIG_EXTRA_FIRMWARE_DIR=\).*#\1\"$(BASE_DIR)/integrated_firmware\"#" $(KERNEL_DIR)/.config
 	-rm $(KERNEL_DIR)/localversion*
 	echo "$(KERNEL_STM_LABEL)" > $(KERNEL_DIR)/localversion-stm
 ifeq ($(OPTIMIZATIONS), $(filter $(OPTIMIZATIONS), kerneldebug debug))
@@ -300,11 +305,11 @@ endif
 $(D)/linux-kernel.do_compile: $(D)/linux-kernel.do_prepare
 	$(START_BUILD)
 	set -e; cd $(KERNEL_DIR); \
-	$(MAKE) -C $(KERNEL_DIR) ARCH=sh oldconfig
-	$(MAKE) -C $(KERNEL_DIR) ARCH=sh include/asm
-	$(MAKE) -C $(KERNEL_DIR) ARCH=sh include/linux/version.h
-	$(MAKE) -C $(KERNEL_DIR) ARCH=sh CROSS_COMPILE=$(TARGET)- uImage modules
-	$(MAKE) -C $(KERNEL_DIR) ARCH=sh CROSS_COMPILE=$(TARGET)- DEPMOD=$(DEPMOD) INSTALL_MOD_PATH=$(TARGETPREFIX) modules_install
+		$(MAKE) -C $(KERNEL_DIR) ARCH=sh oldconfig; \
+		$(MAKE) -C $(KERNEL_DIR) ARCH=sh include/asm; \
+		$(MAKE) -C $(KERNEL_DIR) ARCH=sh include/linux/version.h; \
+		$(MAKE) -C $(KERNEL_DIR) ARCH=sh CROSS_COMPILE=$(TARGET)- uImage modules; \
+		$(MAKE) -C $(KERNEL_DIR) ARCH=sh CROSS_COMPILE=$(TARGET)- DEPMOD=$(DEPMOD) INSTALL_MOD_PATH=$(TARGETPREFIX) modules_install
 	$(TOUCH)
 
 $(D)/linux-kernel: $(D)/bootstrap host_u_boot_tools $(D)/linux-kernel.do_compile
@@ -327,12 +332,6 @@ $(D)/kernel-headers: linux-kernel.do_prepare
 		cp -a include/mtd $(TARGETPREFIX)/usr/include
 	$(TOUCH)
 
-$(D)/tfkernel.do_compile:
-	$(START_BUILD)
-	cd $(KERNEL_DIR); \
-		$(MAKE) $(if $(TF7700),TF7700=y) ARCH=sh CROSS_COMPILE=$(target)- uImage
-	$(TOUCH)
-
 linux-kernel-distclean:
 	rm -f $(D)/linux-kernel
 	rm -f $(D)/linux-kernel.do_compile
@@ -344,13 +343,64 @@ linux-kernel-clean:
 	rm -f $(D)/linux-kernel.do_compile
 
 #
+# TF7700 installer
+#
+TFINSTALLER_DIR := $(BASE_DIR)/tfinstaller
+
+tfinstaller: $(D)/bootstrap $(D)/linux-kernel $(TFINSTALLER_DIR)/u-boot.ftfd
+	$(START_BUILD)
+	$(MAKE) $(MAKE_OPTS) -C $(TFINSTALLER_DIR) HOSTPREFIX=$(HOSTPREFIX) BASE_DIR=$(BASE_DIR) KERNEL_DIR=$(KERNEL_DIR)
+	$(TOUCH)
+
+$(TFINSTALLER_DIR)/u-boot.ftfd: $(D)/uboot $(TFINSTALLER_DIR)/tfpacker
+	$(START_BUILD)
+	$(TFINSTALLER_DIR)/tfpacker $(BUILD_TMP)/u-boot-$(U_BOOT_VER)/u-boot.bin $(TFINSTALLER_DIR)/u-boot.ftfd
+	$(TFINSTALLER_DIR)/tfpacker -t $(BUILD_TMP)/u-boot-$(U_BOOT_VER)/u-boot.bin $(TFINSTALLER_DIR)/Enigma_Installer.tfd
+	$(REMOVE)/u-boot-$(U_BOOT_VER)
+	$(TOUCH)
+
+$(TFINSTALLER_DIR)/tfpacker:
+	$(START_BUILD)
+	$(MAKE) -C $(TFINSTALLER_DIR) tfpacker
+	$(TOUCH)
+
+$(D)/tfkernel:
+	$(START_BUILD)
+	cd $(KERNEL_DIR); \
+		$(MAKE) $(if $(TF7700),TF7700=y) ARCH=sh CROSS_COMPILE=$(TARGET)- uImage
+	$(TOUCH)
+
+#
+# u-boot
+#
+U_BOOT_VER = 1.3.1
+U_BOOT_PATCH  =  u-boot-$(U_BOOT_VER).patch
+ifeq ($(BOXTYPE), tf7700)
+U_BOOT_PATCH += u-boot-$(U_BOOT_VER)-tf7700.patch
+endif
+
+$(ARCHIVE)/u-boot-$(U_BOOT_VER).tar.bz2:
+	$(WGET) ftp://ftp.denx.de/pub/u-boot/u-boot-$(U_BOOT_VER).tar.bz2
+
+$(D)/uboot: bootstrap $(ARCHIVE)/u-boot-$(U_BOOT_VER).tar.bz2
+	$(START_BUILD)
+	$(REMOVE)/u-boot-$(U_BOOT_VER)
+	$(UNTAR)/u-boot-$(U_BOOT_VER).tar.bz2
+	set -e; cd $(BUILD_TMP)/u-boot-$(U_BOOT_VER); \
+		$(call post_patch,$(U_BOOT_PATCH)); \
+		$(MAKE) $(BOXTYPE)_config; \
+		$(MAKE)
+#	$(REMOVE)/u-boot-$(U_BOOT_VER)
+	$(TOUCH)
+
+#
 # Helper
 #
 linux-kernel.menuconfig linux-kernel.xconfig: \
 linux-kernel.%:
 	$(MAKE) -C $(KERNEL_DIR) ARCH=sh CROSS_COMPILE=$(TARGET)- $*
 	@echo ""
-	@echo "You have to edit m a n u a l l y $(PATCHES)/$(BUILD_CONFIG)/$(HOST_KERNEL_CONFIG) to make changes permanent !!!"
+	@echo "You have to edit $(PATCHES)/$(BUILD_CONFIG)/$(HOST_KERNEL_CONFIG) m a n u a l l y to make changes permanent !!!"
 	@echo ""
 	diff $(KERNEL_DIR)/.config.old $(KERNEL_DIR)/.config
 	@echo ""
