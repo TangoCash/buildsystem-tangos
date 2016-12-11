@@ -72,7 +72,6 @@ help:
 	@echo
 
 # define package versions first...
-include make/bootstrap.mk
 include make/contrib-libs.mk
 include make/contrib-apps.mk
 include make/linux-kernel.mk
@@ -92,13 +91,13 @@ include make/neutrino-release.mk
 include make/cleantargets.mk
 include make/patches.mk
 include make/oscam.mk
-
+include make/bootstrap.mk
 
 update:
 	@if test -d $(BASE_DIR); then \
 		cd $(BASE_DIR)/; \
 		echo '=============================================================='; \
-		echo '                 updating ddt-cdk git repo                    '; \
+		echo '      updating $(GIT_NAME)-cdk git repo                       '; \
 		echo '=============================================================='; \
 		echo; \
 		$(GIT_PULL); fi
@@ -106,7 +105,7 @@ update:
 	@if test -d $(DRIVER_DIR); then \
 		cd $(DRIVER_DIR)/; \
 		echo '=============================================================='; \
-		echo '                 updating ddt-driver git repo                 '; \
+		echo '      updating $(GIT_NAME_DRIVER)-driver git repo             '; \
 		echo '=============================================================='; \
 		echo; \
 		$(GIT_PULL); fi
@@ -114,7 +113,7 @@ update:
 	@if test -d $(APPS_DIR); then \
 		cd $(APPS_DIR)/; \
 		echo '=============================================================='; \
-		echo '                 updating ddt-apps git repo                   '; \
+		echo '      updating $(GIT_NAME_APPS)-apps git repo                 '; \
 		echo '=============================================================='; \
 		echo; \
 		$(GIT_PULL); fi
@@ -122,7 +121,7 @@ update:
 	@if test -d $(FLASH_DIR); then \
 		cd $(FLASH_DIR)/; \
 		echo '=============================================================='; \
-		echo '                 updating ddt-flash git repo                  '; \
+		echo '      updating $(GIT_NAME_FLASH)-flash git repo               '; \
 		echo '=============================================================='; \
 		echo; \
 		$(GIT_PULL); fi
