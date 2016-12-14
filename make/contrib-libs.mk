@@ -65,6 +65,7 @@ $(D)/gmp: $(D)/bootstrap $(ARCHIVE)/gmp-$(GMP_VER).tar.xz
 	set -e; cd $(BUILD_TMP)/gmp-$(GMP_MAJOR); \
 		$(CONFIGURE) \
 			--prefix=/usr \
+			--infodir=/.remove \
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)
@@ -109,6 +110,7 @@ $(D)/libffi: $(D)/bootstrap $(ARCHIVE)/libffi-$(LIBFFI_VER).tar.gz
 			--target=$(TARGET) \
 			--prefix=/usr \
 			--mandir=/.remove \
+			--infodir=/.remove \
 			--disable-static \
 			--enable-builddir=libffi \
 		; \
@@ -165,11 +167,12 @@ $(D)/glib2: $(D)/bootstrap $(D)/host_glib2_genmarshal $(D)/zlib $(D)/libffi $(AR
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--mandir=/.remove \
+			--datarootdir=/.remove \
+			--with-html-dir=/.remove \
 			--cache-file=config.cache \
 			--disable-gtk-doc \
 			--disable-gtk-doc-html \
 			--with-threads="posix" \
-			--with-html-dir=/.remove \
 			--enable-static \
 		; \
 		$(MAKE) all; \
@@ -237,6 +240,21 @@ LIBARCHIVE_VER = 3.1.2
 $(ARCHIVE)/libarchive-$(LIBARCHIVE_VER).tar.gz:
 	$(WGET) http://www.libarchive.org/downloads/libarchive-$(LIBARCHIVE_VER).tar.gz
 
+$(D)/host_libarchive: $(D)/bootstrap $(ARCHIVE)/libarchive-$(LIBARCHIVE_VER).tar.gz
+	$(START_BUILD)
+	$(REMOVE)/libarchive-$(LIBARCHIVE_VER)
+	$(UNTAR)/libarchive-$(LIBARCHIVE_VER).tar.gz
+	set -e; cd $(BUILD_TMP)/libarchive-$(LIBARCHIVE_VER); \
+		./configure \
+			--build=$(BUILD) \
+			--host=$(BUILD) \
+			--prefix= \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(HOSTPREFIX)
+	$(REMOVE)/libarchive-$(LIBARCHIVE_VER)
+	$(TOUCH)
+
 $(D)/libarchive: $(D)/bootstrap $(ARCHIVE)/libarchive-$(LIBARCHIVE_VER).tar.gz
 	$(START_BUILD)
 	$(REMOVE)/libarchive-$(LIBARCHIVE_VER)
@@ -258,6 +276,7 @@ $(D)/libarchive: $(D)/bootstrap $(ARCHIVE)/libarchive-$(LIBARCHIVE_VER).tar.gz
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libarchive.pc
+	$(REWRITE_LIBTOOL)/libarchive.la
 	$(REMOVE)/libarchive-$(LIBARCHIVE_VER)
 	$(TOUCH)
 
@@ -277,6 +296,8 @@ $(D)/libreadline: $(D)/bootstrap $(ARCHIVE)/readline-$(READLINE_VER).tar.gz
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--mandir=/.remove \
+			--infodir=/.remove \
+			--datadir=/.remove \
 			bash_cv_must_reinstall_sighandlers=no \
 			bash_cv_func_sigsetjmp=present \
 			bash_cv_func_strcoll_broken=no \
@@ -1599,8 +1620,12 @@ $(D)/libsoup: $(D)/bootstrap $(D)/sqlite $(D)/libxml2_e2 $(D)/glib2 $(ARCHIVE)/l
 	set -e; cd $(BUILD_TMP)/libsoup-$(LIBSOUP_VER); \
 		$(CONFIGURE) \
 			--prefix=/usr \
+			--datarootdir=/.remove \
 			--disable-more-warnings \
 			--without-gnome \
+			--disable-gtk-doc \
+			--disable-gtk-doc-html \
+			--disable-gtk-doc-pdf \
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)
@@ -1655,7 +1680,6 @@ $(D)/libflac: $(D)/bootstrap $(ARCHIVE)/flac-$(FLAC_VER).tar.xz
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--mandir=/.remove \
-			--docdir=/.remove \
 			--disable-sse \
 			--disable-asm-optimizations \
 			--disable-doxygen-docs \
@@ -1670,7 +1694,7 @@ $(D)/libflac: $(D)/bootstrap $(ARCHIVE)/flac-$(FLAC_VER).tar.xz
 			--disable-altivec \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGETPREFIX) docdir=/.remove
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/flac.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/flac++.pc
 	$(REWRITE_LIBTOOL)/libFLAC.la
@@ -2471,6 +2495,7 @@ $(D)/gnutls: $(D)/bootstrap $(D)/nettle $(ARCHIVE)/gnutls-$(GNUTLS_VER).tar.xz
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--mandir=/.remove \
+			--infodir=/.remove \
 			--disable-rpath \
 			--with-included-libtasn1 \
 			--enable-local-libopts \

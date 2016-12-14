@@ -17,8 +17,7 @@ $(D)/gstreamer: $(D)/bootstrap $(D)/glib2 $(D)/libxml2_e2 $(D)/glib-networking $
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--libexecdir=/usr/lib \
-			--disable-gtk-doc \
-			--disable-docbook \
+			--datarootdir=/.remove \
 			--disable-dependency-tracking \
 			--disable-check \
 			--disable-gst-debug \
@@ -26,6 +25,7 @@ $(D)/gstreamer: $(D)/bootstrap $(D)/glib2 $(D)/libxml2_e2 $(D)/glib-networking $
 			--disable-benchmarks \
 			--disable-tests \
 			--disable-debug \
+			--disable-docbook \
 			--disable-gtk-doc \
 			--disable-gtk-doc-html \
 			--disable-gtk-doc-pdf \
@@ -61,7 +61,7 @@ GSTREAMER_BASE_PATCH += gst-plugins-base-$(GSTREAMER_BASE_VER)-taglist-not-send-
 $(ARCHIVE)/gst-plugins-base-$(GSTREAMER_BASE_VER).tar.xz:
 	$(WGET) http://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-$(GSTREAMER_BASE_VER).tar.xz
 
-$(D)/gst_plugins_base: $(D)/bootstrap $(D)/glib2 $(D)/orc $(D)/gstreamer $(D)/libogg $(D)/alsa-lib $(ARCHIVE)/gst-plugins-base-$(GSTREAMER_BASE_VER).tar.xz
+$(D)/gst_plugins_base: $(D)/bootstrap $(D)/glib2 $(D)/orc $(D)/gstreamer $(D)/alsa-lib $(D)/libogg $(D)/libvorbis $(ARCHIVE)/gst-plugins-base-$(GSTREAMER_BASE_VER).tar.xz
 	$(START_BUILD)
 	$(REMOVE)/gst-plugins-base-$(GSTREAMER_BASE_VER)
 	$(UNTAR)/gst-plugins-base-$(GSTREAMER_BASE_VER).tar.xz
@@ -69,6 +69,7 @@ $(D)/gst_plugins_base: $(D)/bootstrap $(D)/glib2 $(D)/orc $(D)/gstreamer $(D)/li
 		$(call post_patch,$(GSTREAMER_BASE_PATCH)); \
 		$(CONFIGURE) \
 			--prefix=/usr \
+			--datarootdir=/.remove \
 			--disable-libvisual \
 			--disable-valgrind \
 			--disable-debug \
@@ -136,6 +137,7 @@ $(D)/gst_plugins_good: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base $(D)/
 		$(call post_patch,$(GSTREAMER_GOOD_PATCH)); \
 		$(CONFIGURE) \
 			--prefix=/usr \
+			--datarootdir=/.remove \
 			--enable-oss \
 			--enable-gst_v4l2 \
 			--without-libv4l2 \
@@ -159,6 +161,7 @@ GSTREAMER_BAD_VER = $(GSTREAMER_VER)
 GSTREAMER_BAD_PATCH  = gst-plugins-bad-$(GSTREAMER_BAD_VER)-hls-use-max-playlist-quality.patch
 GSTREAMER_BAD_PATCH += gst-plugins-bad-$(GSTREAMER_BAD_VER)-rtmp-fix-seeking-and-potential-segfault.patch
 GSTREAMER_BAD_PATCH += gst-plugins-bad-$(GSTREAMER_BAD_VER)-mpegtsdemux-only-wait-for-PCR-when-PCR-pid.patch
+GSTREAMER_BAD_PATCH += gst-plugins-bad-$(GSTREAMER_BAD_VER)-dvbapi5-fix-old-kernel.patch
 
 $(ARCHIVE)/gst-plugins-bad-$(GSTREAMER_BAD_VER).tar.xz:
 	$(WGET) http://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-$(GSTREAMER_BAD_VER).tar.xz
@@ -175,6 +178,7 @@ $(D)/gst_plugins_bad: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base $(ARCH
 			--build=$(BUILD) \
 			--host=$(TARGET) \
 			--prefix=/usr \
+			--datarootdir=/.remove \
 			--disable-gtk-doc \
 			--disable-gtk-doc-html \
 			--disable-gtk-doc-pdf \
@@ -225,6 +229,7 @@ $(D)/gst_plugins_bad: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base $(ARCH
 			--disable-voaacenc \
 			--disable-voamrwbenc \
 			--disable-wasapi \
+			--disable-wayland \
 			--disable-wildmidi \
 			--disable-wininet \
 			--disable-winscreencap \
@@ -280,6 +285,7 @@ $(D)/gst_plugins_ugly: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base $(ARC
 		$(call post_patch,$(GSTREAMER_UGLY_PATCH)); \
 		$(CONFIGURE) \
 			--prefix=/usr \
+			--datarootdir=/.remove \
 			--disable-fatal-warnings \
 			--disable-amrnb \
 			--disable-amrwb \
@@ -421,6 +427,7 @@ $(D)/orc: $(D)/bootstrap $(ARCHIVE)/orc-$(ORC_VER).tar.xz
 	set -e; cd $(BUILD_TMP)/orc-$(ORC_VER); \
 		$(call post_patch,$(ORC_PATCH)); \
 		$(CONFIGURE) \
+			--datarootdir=/.remove \
 			--prefix=/usr \
 		; \
 		$(MAKE) all; \
