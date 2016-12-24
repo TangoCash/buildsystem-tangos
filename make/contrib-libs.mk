@@ -740,7 +740,7 @@ $(D)/libjpeg_old: $(D)/bootstrap $(ARCHIVE)/jpegsrc.v$(JPEG_VER).tar.gz
 #
 # libjpeg_turbo
 #
-JPEG_TURBO_VER = 1.5.0
+JPEG_TURBO_VER = 1.5.1
 
 $(ARCHIVE)/libjpeg-turbo-$(JPEG_TURBO_VER).tar.gz:
 	$(WGET) http://sourceforge.net/projects/libjpeg-turbo/files/$(JPEG_TURBO_VER)/libjpeg-turbo-$(JPEG_TURBO_VER).tar.gz
@@ -881,7 +881,7 @@ $(D)/libgif: $(D)/bootstrap $(ARCHIVE)/giflib-$(GIFLIB_VER).tar.bz2
 #
 # libcurl
 #
-CURL_VER = 7.51.0
+CURL_VER = 7.52.0
 CURL_PATCH = libcurl-$(CURL_VER).patch
 
 $(ARCHIVE)/curl-$(CURL_VER).tar.bz2:
@@ -2020,7 +2020,7 @@ $(D)/libusbcompat: $(D)/bootstrap $(D)/libusb $(ARCHIVE)/libusb-compat-$(USBCOMP
 #
 # alsa-lib
 #
-ALSA_VER = 1.1.2
+ALSA_VER = 1.1.3
 ALSA_PATCH  = alsa-lib-$(ALSA_VER).patch
 ALSA_PATCH += alsa-lib-$(ALSA_VER)-link_fix.patch
 
@@ -2049,8 +2049,6 @@ $(D)/alsa-lib: $(D)/bootstrap $(ARCHIVE)/alsa-lib-$(ALSA_VER).tar.bz2
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)
-	for i in `cd $(TARGETPREFIX)/usr/lib/alsa/smixer; echo *.la`; do \
-		$(REWRITE_LIBTOOL)/alsa/smixer/$$i; done
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/alsa.pc
 	$(REWRITE_LIBTOOL)/libasound.la
 	$(REMOVE)/alsa-lib-$(ALSA_VER)
