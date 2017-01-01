@@ -228,17 +228,17 @@ MAKE_OPTS := \
 # kernel
 #
 ifeq ($(KERNEL), p0209)
-KERNEL_VERSION         = 2.6.32.46_stm24_0209
-STM_KERNEL_HEADERS_VER = 2.6.32.46-47
-HOST_KERNEL_REVISION   = 8c676f1a85935a94de1fb103c0de1dd25ff69014
-P0209                  = p0209
+KERNEL_VERSION             = 2.6.32.46_stm24_0209
+STM_KERNEL_HEADERS_VERSION = 2.6.32.46-47
+HOST_KERNEL_REVISION       = 8c676f1a85935a94de1fb103c0de1dd25ff69014
+P0209                      = p0209
 endif
 
 ifeq ($(KERNEL), p0217)
-KERNEL_VERSION         = 2.6.32.71_stm24_0217
-STM_KERNEL_HEADERS_VER = 2.6.32.46-48
-HOST_KERNEL_REVISION   = 3ec500f4212f9e4b4d2537c8be5ea32ebf68c43b
-P0217                  = p0217
+KERNEL_VERSION             = 2.6.32.71_stm24_0217
+STM_KERNEL_HEADERS_VERSION = 2.6.32.46-48
+HOST_KERNEL_REVISION       = 3ec500f4212f9e4b4d2537c8be5ea32ebf68c43b
+P0217                      = p0217
 endif
 
 split_version=$(subst _, ,$(1))
@@ -283,7 +283,7 @@ endif
 #
 # multicom
 #
-ifeq ($(MULTICOM_VER), 324)
+ifeq ($(MULTICOM_VERSION), 324)
 MULTICOM324        = multicom324
 MULTICOM_LINK      = multicom-3.2.4
 else
@@ -294,14 +294,14 @@ endif
 #
 # player 2
 #
-ifeq ($(PLAYER_VER), 191)
+ifeq ($(PLAYER_VERSION), 191)
 PLAYER2            = PLAYER191=player191
 PLAYER191          = 1
 PLAYER2_LINK       = player2_191
-else
-PLAYER2            = PLAYERXXX=playerxxx
-PLAYERXXX          = 1
-PLAYER2_LINK       = player2_xxx
+else ifeq ($(PLAYER_VERSION), 228)
+PLAYER2            = PLAYER228=player228
+PLAYER228          = 1
+PLAYER2_LINK       = player2_228
 endif
 
 #
