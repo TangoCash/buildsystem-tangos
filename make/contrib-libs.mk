@@ -548,11 +548,11 @@ $(D)/libboost: $(D)/bootstrap $(ARCHIVE)/boost_$(BOOST_VERSION).tar.bz2
 #
 # zlib
 #
-ZLIB_VERSION = 1.2.8
+ZLIB_VERSION = 1.2.11
 ZLIB_Patch = zlib-$(ZLIB_VERSION).patch
 
 $(ARCHIVE)/zlib-$(ZLIB_VERSION).tar.xz:
-	$(WGET) http://sourceforge.net/projects/libpng/files/zlib/$(ZLIB_VERSION)/zlib-$(ZLIB_VERSION).tar.xz
+	$(WGET) https://sourceforge.net/projects/libpng/files/zlib/$(ZLIB_VERSION)/zlib-$(ZLIB_VERSION).tar.xz
 
 $(D)/zlib: $(D)/bootstrap $(ARCHIVE)/zlib-$(ZLIB_VERSION).tar.xz
 	$(START_BUILD)
@@ -631,23 +631,23 @@ $(D)/timezone: $(D)/bootstrap find-zic $(ARCHIVE)/tzdata$(TZ_VERSION).tar.gz
 	$(TOUCH)
 
 #
-# libfreetype
+# freetype
 #
-FREETYPE_VERSION = 2.6.5
-FREETYPE_PATCH = libfreetype-$(FREETYPE_VERSION).patch
+FREETYPE_VERSION = 2.7.1
+FREETYPE_PATCH = freetype-$(FREETYPE_VERSION).patch
 
 $(ARCHIVE)/freetype-$(FREETYPE_VERSION).tar.bz2:
 	$(WGET) http://sourceforge.net/projects/freetype/files/freetype2/$(FREETYPE_VERSION)/freetype-$(FREETYPE_VERSION).tar.bz2
 
-$(D)/libfreetype: $(D)/bootstrap $(D)/zlib $(D)/bzip2 $(D)/libpng $(ARCHIVE)/freetype-$(FREETYPE_VERSION).tar.bz2
+$(D)/freetype: $(D)/bootstrap $(D)/zlib $(D)/bzip2 $(D)/libpng $(ARCHIVE)/freetype-$(FREETYPE_VERSION).tar.bz2
 	$(START_BUILD)
 	$(REMOVE)/freetype-$(FREETYPE_VERSION)
 	$(UNTAR)/freetype-$(FREETYPE_VERSION).tar.bz2
 	set -e; cd $(BUILD_TMP)/freetype-$(FREETYPE_VERSION); \
 		$(call post_patch,$(FREETYPE_PATCH)); \
-		sed -ri "s:.*(AUX_MODULES.*valid):\1:" modules.cfg; \
 		sed -r "s:.*(#.*SUBPIXEL_(RENDERING|HINTING  2)) .*:\1:g" \
 			-i include/freetype/config/ftoption.h; \
+		sed -i '/^FONT_MODULES += \(type1\|cid\|pfr\|type42\|pcf\|bdf\)/d' modules.cfg; \
 		$(CONFIGURE) \
 			--prefix=$(TARGETPREFIX)/usr \
 			--mandir=$(TARGETPREFIX)/.remove \
@@ -1195,7 +1195,7 @@ FONTCONFIG_VERSION = 2.11.93
 $(ARCHIVE)/fontconfig-$(FONTCONFIG_VERSION).tar.bz2:
 	$(WGET) http://www.freedesktop.org/software/fontconfig/release/fontconfig-$(FONTCONFIG_VERSION).tar.bz2
 
-$(D)/fontconfig: $(D)/bootstrap $(D)/libfreetype $(D)/libexpat $(ARCHIVE)/fontconfig-$(FONTCONFIG_VERSION).tar.bz2
+$(D)/fontconfig: $(D)/bootstrap $(D)/freetype $(D)/libexpat $(ARCHIVE)/fontconfig-$(FONTCONFIG_VERSION).tar.bz2
 	$(START_BUILD)
 	$(REMOVE)/fontconfig-$(FONTCONFIG_VERSION)
 	$(UNTAR)/fontconfig-$(FONTCONFIG_VERSION).tar.bz2
@@ -1332,7 +1332,7 @@ $(D)/libdreamdvd: $(D)/bootstrap $(D)/libdvdnav
 #
 # ffmpeg
 #
-FFMPEG_VERSION = 2.8.6
+FFMPEG_VERSION = 2.8.10
 FFMPEG_PATCH  = ffmpeg-buffer-size-$(FFMPEG_VERSION).patch
 FFMPEG_PATCH += ffmpeg-hds-libroxml-$(FFMPEG_VERSION).patch
 FFMPEG_PATCH += ffmpeg-aac-$(FFMPEG_VERSION).patch
@@ -1342,12 +1342,12 @@ $(ARCHIVE)/ffmpeg-$(FFMPEG_VERSION).tar.xz:
 	$(WGET) http://www.ffmpeg.org/releases/ffmpeg-$(FFMPEG_VERSION).tar.xz
 
 ifeq ($(IMAGE), enigma2)
-FFMPEG_EXTRA  = --enable-librtmp
+FFMPEG_CONF_OPTS  = --enable-librtmp
 LIBRTMPDUMP = $(D)/librtmpdump
 endif
 
 ifeq ($(IMAGE), neutrino)
-FFMPEG_EXTRA = --disable-iconv
+FFMPEG_CONF_OPTS = --disable-iconv
 endif
 
 $(D)/ffmpeg: $(D)/bootstrap $(D)/openssl $(D)/bzip2 $(D)/libass $(D)/libroxml $(LIBRTMPDUMP) $(ARCHIVE)/ffmpeg-$(FFMPEG_VERSION).tar.xz
@@ -1529,7 +1529,7 @@ $(D)/ffmpeg: $(D)/bootstrap $(D)/openssl $(D)/bzip2 $(D)/libass $(D)/libroxml $(
 			--disable-outdevs \
 			--enable-bzlib \
 			--enable-zlib \
-			$(FFMPEG_EXTRA) \
+			$(FFMPEG_CONF_OPTS) \
 			--disable-static \
 			--enable-openssl \
 			--enable-network \
@@ -1545,6 +1545,9 @@ $(D)/ffmpeg: $(D)/bootstrap $(D)/openssl $(D)/bzip2 $(D)/libass $(D)/libroxml $(
 			--target-os=linux \
 			--arch=sh4 \
 			--prefix=/usr \
+			--mandir=/.remove \
+			--datadir=/.remove \
+			--docdir=/.remove \
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)
@@ -1567,7 +1570,7 @@ LIBASS_PATCH = libass-$(LIBASS_VERSION).patch
 $(ARCHIVE)/libass-$(LIBASS_VERSION).tar.xz:
 	$(WGET) https://github.com/libass/libass/releases/download/$(LIBASS_VERSION)/libass-$(LIBASS_VERSION).tar.xz
 
-$(D)/libass: $(D)/bootstrap $(D)/libfreetype $(D)/libfribidi $(ARCHIVE)/libass-$(LIBASS_VERSION).tar.xz
+$(D)/libass: $(D)/bootstrap $(D)/freetype $(D)/libfribidi $(ARCHIVE)/libass-$(LIBASS_VERSION).tar.xz
 	$(START_BUILD)
 	$(REMOVE)/libass-$(LIBASS_VERSION)
 	$(UNTAR)/libass-$(LIBASS_VERSION).tar.xz
@@ -1591,10 +1594,10 @@ $(D)/libass: $(D)/bootstrap $(D)/libfreetype $(D)/libfribidi $(ARCHIVE)/libass-$
 #
 # sqlite
 #
-SQLITE_VERSION = 3110000
+SQLITE_VERSION = 3160100
 
 $(ARCHIVE)/sqlite-autoconf-$(SQLITE_VERSION).tar.gz:
-	$(WGET) http://www.sqlite.org/2016/sqlite-autoconf-$(SQLITE_VERSION).tar.gz
+	$(WGET) http://www.sqlite.org/2017/sqlite-autoconf-$(SQLITE_VERSION).tar.gz
 
 $(D)/sqlite: $(D)/bootstrap $(ARCHIVE)/sqlite-autoconf-$(SQLITE_VERSION).tar.gz
 	$(START_BUILD)
@@ -1622,7 +1625,7 @@ LIBSOUP_VERSION = $(LIBSOUP_VERSION_MAJOR).$(LIBSOUP_VERSION_MINOR)
 $(ARCHIVE)/libsoup-$(LIBSOUP_VERSION).tar.xz:
 	$(WGET) http://download.gnome.org/sources/libsoup/$(LIBSOUP_VERSION_MAJOR)/libsoup-$(LIBSOUP_VERSION).tar.xz
 
-$(D)/libsoup: $(D)/bootstrap $(D)/sqlite $(D)/libxml2_e2 $(D)/libglib2 $(ARCHIVE)/libsoup-$(LIBSOUP_VERSION).tar.xz
+$(D)/libsoup: $(D)/bootstrap $(D)/sqlite $(D)/libxml2 $(D)/libglib2 $(ARCHIVE)/libsoup-$(LIBSOUP_VERSION).tar.xz
 	$(START_BUILD)
 	$(REMOVE)/libsoup-$(LIBSOUP_VERSION)
 	$(UNTAR)/libsoup-$(LIBSOUP_VERSION).tar.xz
@@ -1689,69 +1692,78 @@ $(D)/libflac: $(D)/bootstrap $(ARCHIVE)/flac-$(FLAC_VERSION).tar.xz
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--mandir=/.remove \
-			--disable-sse \
-			--disable-asm-optimizations \
-			--disable-doxygen-docs \
-			--disable-exhaustive-tests \
-			--disable-thorough-tests \
+			--disable-cpplibs \
 			--disable-debug \
-			--disable-valgrind-testing \
-			--disable-dependency-tracking \
-			--disable-ogg \
-			--disable-xmms-plugin \
-			--disable-thorough-tests \
+			--disable-asm-optimizations \
+			--disable-sse \
+			--disable-3dnow \
 			--disable-altivec \
+			--disable-doxygen-docs \
+			--disable-thorough-tests \
+			--disable-exhaustive-tests \
+			--disable-valgrind-testing \
+			--disable-ogg \
+			--disable-oggtest \
+			--disable-local-xmms-plugin \
+			--disable-xmms-plugin \
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGETPREFIX) docdir=/.remove
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/flac.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/flac++.pc
 	$(REWRITE_LIBTOOL)/libFLAC.la
-	$(REWRITE_LIBTOOL)/libFLAC++.la
-	$(REWRITE_LIBTOOLDEP)/libFLAC++.la
 	$(REMOVE)/flac-$(FLAC_VERSION)
 	$(TOUCH)
 
 #
-# libxml2_e2
+# libxml2
 #
-LIBXML2_E2_VERSION = 2.9.0
-LIBXML2_E2_PATCH = libxml2-$(LIBXML2_E2_VERSION).patch
+LIBXML2_VERSION = 2.9.4
+LIBXML2_PATCH = libxml2-$(LIBXML2_VERSION).patch
 
-$(ARCHIVE)/libxml2-$(LIBXML2_E2_VERSION).tar.gz:
-	$(WGET) ftp://xmlsoft.org/libxml2/libxml2-$(LIBXML2_E2_VERSION).tar.gz
+$(ARCHIVE)/libxml2-$(LIBXML2_VERSION).tar.gz:
+	$(WGET) ftp://xmlsoft.org/libxml2/libxml2-$(LIBXML2_VERSION).tar.gz
 
-$(D)/libxml2_e2: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/libxml2-$(LIBXML2_E2_VERSION).tar.gz
+ifeq ($(IMAGE), enigma2)
+LIBXML2_CONF_OPTS  = --with-python=$(HOSTPREFIX)
+endif
+
+ifeq ($(IMAGE), neutrino)
+LIBXML2_CONF_OPTS  = --without-python
+LIBXML2_CONF_OPTS += --without-iconv
+LIBXML2_CONF_OPTS += --with-minimum
+endif
+
+$(D)/libxml2: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/libxml2-$(LIBXML2_VERSION).tar.gz
 	$(START_BUILD)
-	$(REMOVE)/libxml2-$(LIBXML2_E2_VERSION).tar.gz
-	$(UNTAR)/libxml2-$(LIBXML2_E2_VERSION).tar.gz
-	set -e; cd $(BUILD_TMP)/libxml2-$(LIBXML2_E2_VERSION); \
-		$(call post_patch,$(LIBXML2_E2_PATCH)); \
+	$(REMOVE)/libxml2-$(LIBXML2_VERSION).tar.gz
+	$(UNTAR)/libxml2-$(LIBXML2_VERSION).tar.gz
+	set -e; cd $(BUILD_TMP)/libxml2-$(LIBXML2_VERSION); \
+		$(call post_patch,$(LIBXML2_PATCH)); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix=/usr \
+			--datarootdir=/.remove \
 			--enable-shared \
 			--disable-static \
-			--datarootdir=/.remove \
-			--with-python=$(HOSTPREFIX) \
 			--without-c14n \
 			--without-debug \
 			--without-docbook \
 			--without-mem-debug \
+			$(LIBXML2_CONF_OPTS) \
 		; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGETPREFIX);
 		mv $(TARGETPREFIX)/usr/bin/xml2-config $(HOSTPREFIX)/bin
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libxml-2.0.pc $(HOSTPREFIX)/bin/xml2-config
 	sed -i 's/^\(Libs:.*\)/\1 -lz/' $(PKG_CONFIG_PATH)/libxml-2.0.pc
-		if [ -e "$(TARGETPREFIX)$(PYTHON_DIR)/site-packages/libxml2mod.la" ]; then \
-			sed -e "/^dependency_libs/ s,/usr/lib/libxml2.la,$(TARGETPREFIX)/usr/lib/libxml2.la,g" -i $(TARGETPREFIX)$(PYTHON_DIR)/site-packages/libxml2mod.la; \
-			sed -e "/^libdir/ s,$(PYTHON_DIR)/site-packages,$(TARGETPREFIX)$(PYTHON_DIR)/site-packages,g" -i $(TARGETPREFIX)$(PYTHON_DIR)/site-packages/libxml2mod.la; \
-		fi; \
-		sed -e "/^XML2_LIBDIR/ s,/usr/lib,$(TARGETPREFIX)/usr/lib,g" -i $(TARGETPREFIX)/usr/lib/xml2Conf.sh; \
-		sed -e "/^XML2_INCLUDEDIR/ s,/usr/include,$(TARGETPREFIX)/usr/include,g" -i $(TARGETPREFIX)/usr/lib/xml2Conf.sh
+	if [ -e "$(TARGETPREFIX)$(PYTHON_DIR)/site-packages/libxml2mod.la" ]; then \
+		sed -e "/^dependency_libs/ s,/usr/lib/libxml2.la,$(TARGETPREFIX)/usr/lib/libxml2.la,g" -i $(TARGETPREFIX)$(PYTHON_DIR)/site-packages/libxml2mod.la; \
+		sed -e "/^libdir/ s,$(PYTHON_DIR)/site-packages,$(TARGETPREFIX)$(PYTHON_DIR)/site-packages,g" -i $(TARGETPREFIX)$(PYTHON_DIR)/site-packages/libxml2mod.la; \
+	fi; \
+	sed -e "/^XML2_LIBDIR/ s,/usr/lib,$(TARGETPREFIX)/usr/lib,g" -i $(TARGETPREFIX)/usr/lib/xml2Conf.sh; \
+	sed -e "/^XML2_INCLUDEDIR/ s,/usr/include,$(TARGETPREFIX)/usr/include,g" -i $(TARGETPREFIX)/usr/lib/xml2Conf.sh
 	$(REWRITE_LIBTOOL)/libxml2.la
-	$(REMOVE)/libxml2-$(LIBXML2_E2_VERSION)
+	$(REMOVE)/libxml2-$(LIBXML2_VERSION)
 	$(TOUCH)
 
 #
@@ -1762,7 +1774,7 @@ LIBXSLT_VERSION = 1.1.28
 $(ARCHIVE)/libxslt-$(LIBXSLT_VERSION).tar.gz:
 	$(WGET) ftp://xmlsoft.org/libxml2/libxslt-$(LIBXSLT_VERSION).tar.gz
 
-$(D)/libxslt: $(D)/bootstrap $(D)/libxml2_e2 $(ARCHIVE)/libxslt-$(LIBXSLT_VERSION).tar.gz
+$(D)/libxslt: $(D)/bootstrap $(D)/libxml2 $(ARCHIVE)/libxslt-$(LIBXSLT_VERSION).tar.gz
 	$(START_BUILD)
 	$(REMOVE)/libxslt-$(LIBXSLT_VERSION)
 	$(UNTAR)/libxslt-$(LIBXSLT_VERSION).tar.gz
@@ -1795,43 +1807,6 @@ $(D)/libxslt: $(D)/bootstrap $(D)/libxml2_e2 $(ARCHIVE)/libxslt-$(LIBXSLT_VERSIO
 	$(REWRITE_LIBTOOL)/libxslt.la
 	$(REWRITE_LIBTOOLDEP)/libexslt.la
 	$(REMOVE)/libxslt-$(LIBXSLT_VERSION)
-	$(TOUCH)
-
-#
-# libxml2 neutrino
-#
-LIBXML2_VERSION = 2.8.0
-
-$(ARCHIVE)/libxml2-$(LIBXML2_VERSION).tar.gz:
-	$(WGET) ftp://xmlsoft.org/libxml2/libxml2-$(LIBXML2_VERSION).tar.gz
-
-$(D)/libxml2: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/libxml2-$(LIBXML2_VERSION).tar.gz
-	$(START_BUILD)
-	$(REMOVE)/libxml2-$(LIBXML2_VERSION).tar.gz
-	$(UNTAR)/libxml2-$(LIBXML2_VERSION).tar.gz
-	set -e; cd $(BUILD_TMP)/libxml2-$(LIBXML2_VERSION); \
-		$(CONFIGURE) \
-			--prefix=/usr \
-			--datarootdir=/.remove \
-			--enable-shared \
-			--disable-static \
-			--without-python \
-			--with-minimum \
-			--without-iconv \
-			--without-c14n \
-			--without-debug \
-			--without-docbook \
-			--without-mem-debug \
-		; \
-		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX);
-		mv $(TARGETPREFIX)/usr/bin/xml2-config $(HOSTPREFIX)/bin
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libxml-2.0.pc $(HOSTPREFIX)/bin/xml2-config
-	sed -i 's/^\(Libs:.*\)/\1 -lz/' $(PKG_CONFIG_PATH)/libxml-2.0.pc
-	sed -e "/^XML2_LIBDIR/ s,/usr/lib,$(TARGETPREFIX)/usr/lib,g" -i $(TARGETPREFIX)/usr/lib/xml2Conf.sh
-	sed -e "/^XML2_INCLUDEDIR/ s,/usr/include,$(TARGETPREFIX)/usr/include,g" -i $(TARGETPREFIX)/usr/lib/xml2Conf.sh
-	$(REWRITE_LIBTOOL)/libxml2.la
-	$(REMOVE)/libxml2-$(LIBXML2_VERSION)
 	$(TOUCH)
 
 #
@@ -1893,7 +1868,7 @@ $(D)/pugixml: $(D)/bootstrap $(ARCHIVE)/pugixml-$(PUGIXML_VERSION).tar.gz
 #
 GRAPHLCD_PATCH = graphlcd-base-touchcol.patch
 
-$(D)/graphlcd: $(D)/bootstrap $(D)/libfreetype $(D)/libusb
+$(D)/graphlcd: $(D)/bootstrap $(D)/freetype $(D)/libusb
 	$(START_BUILD)
 	$(REMOVE)/graphlcd
 	set -e; if [ -d $(ARCHIVE)/graphlcd-base-touchcol.git ]; \
@@ -1944,7 +1919,7 @@ GD_VERSION = 2.2.1
 $(ARCHIVE)/libgd-$(GD_VERSION).tar.xz:
 	$(WGET) https://github.com/libgd/libgd/releases/download/gd-$(GD_VERSION)/libgd-$(GD_VERSION).tar.xz
 
-$(D)/libgd: $(D)/bootstrap $(D)/libpng $(D)/libjpeg $(D)/libfreetype $(ARCHIVE)/libgd-$(GD_VERSION).tar.xz
+$(D)/libgd: $(D)/bootstrap $(D)/libpng $(D)/libjpeg $(D)/freetype $(ARCHIVE)/libgd-$(GD_VERSION).tar.xz
 	$(START_BUILD)
 	$(REMOVE)/libgd-$(GD_VERSION)
 	$(UNTAR)/libgd-$(GD_VERSION).tar.xz
@@ -2083,6 +2058,7 @@ $(D)/alsa-utils: $(D)/bootstrap $(D)/alsa-lib $(ARCHIVE)/alsa-utils-$(ALSA_UTILS
 			--disable-alsaloop \
 			--disable-alsamixer \
 			--disable-xmlto \
+			--disable-rst2man \
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)
@@ -2105,7 +2081,7 @@ $(ARCHIVE)/OpenThreads-$(LIBOPENTHREADS_VERSION).zip:
 $(D)/libopenthreads: $(D)/bootstrap $(ARCHIVE)/OpenThreads-$(LIBOPENTHREADS_VERSION).zip
 	$(START_BUILD)
 	$(REMOVE)/OpenThreads-$(LIBOPENTHREADS_VERSION)
-	unzip -qq $(ARCHIVE)/OpenThreads-$(LIBOPENTHREADS_VERSION).zip -d $(BUILD_TMP)
+	unzip -q $(ARCHIVE)/OpenThreads-$(LIBOPENTHREADS_VERSION).zip -d $(BUILD_TMP)
 	set -e; cd $(BUILD_TMP)/OpenThreads-$(LIBOPENTHREADS_VERSION); \
 		$(call post_patch,$(LIBOPENTHREADS_PATCH)); \
 		echo "# dummy file to prevent warning message" > examples/CMakeLists.txt; \
@@ -2411,7 +2387,7 @@ LIBPLIST_VERSION = 1.10
 $(ARCHIVE)/libplist-$(LIBPLIST_VERSION).tar.gz:
 	$(WGET) http://cgit.sukimashita.com/libplist.git/snapshot/libplist-$(LIBPLIST_VERSION).tar.gz
 
-$(D)/libplist: $(D)/bootstrap $(D)/libxml2_e2 $(ARCHIVE)/libplist-$(LIBPLIST_VERSION).tar.gz
+$(D)/libplist: $(D)/bootstrap $(D)/libxml2 $(ARCHIVE)/libplist-$(LIBPLIST_VERSION).tar.gz
 	$(START_BUILD)
 	$(REMOVE)/libplist-$(LIBPLIST_VERSION)
 	$(UNTAR)/libplist-$(LIBPLIST_VERSION).tar.gz

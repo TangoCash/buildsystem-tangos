@@ -1,11 +1,10 @@
 #
 # busybox
 #
-BUSYBOX_VERSION = 1.26.0
+BUSYBOX_VERSION = 1.26.2
 BUSYBOX_PATCH   = busybox-$(BUSYBOX_VERSION)-nandwrite.patch
 BUSYBOX_PATCH  += busybox-$(BUSYBOX_VERSION)-unicode.patch
 BUSYBOX_PATCH  += busybox-$(BUSYBOX_VERSION)-extra.patch
-BUSYBOX_PATCH  += busybox-$(BUSYBOX_VERSION)-Fix-dependency-for-IFUPDOWN_UDHCPC_CMD_OPTIONS.patch
 
 $(ARCHIVE)/busybox-$(BUSYBOX_VERSION).tar.bz2:
 	$(WGET) http://busybox.net/downloads/busybox-$(BUSYBOX_VERSION).tar.bz2
@@ -1443,7 +1442,7 @@ $(D)/udpxy: $(D)/bootstrap $(ARCHIVE)/udpxy.$(UDPXY_VERSION)-prod.tar.gz
 #
 # openvpn
 #
-OPENVPN_VERSION = 2.3.14
+OPENVPN_VERSION = 2.4.0
 
 $(ARCHIVE)/openvpn-$(OPENVPN_VERSION).tar.xz:
 	$(WGET) http://swupdate.openvpn.org/community/releases/openvpn-$(OPENVPN_VERSION).tar.xz
