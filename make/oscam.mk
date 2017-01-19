@@ -8,9 +8,9 @@ $(D)/oscam-modern.do_prepare:
 	cp -ra $(ARCHIVE)/oscam-svn-modern $(SOURCE_DIR)/oscam-svn;\
 	cp -ra $(SOURCE_DIR)/oscam-svn $(SOURCE_DIR)/oscam-svn.org;\
 	cd $(SOURCE_DIR)/oscam-svn; \
-	[ -e "$(CDK_DIR)/Patches/oscam.config" ] && \
-	cp -ra "$(CDK_DIR)/Patches/oscam.config" config.h; \
-	[ -e "$(CDK_DIR)/Patches/oscam.config" ] || \
+	[ -e "$(PATCHES)/oscam.config" ] && \
+	cp -ra "$(PATCHES)/oscam.config" config.h; \
+	[ -e "$(PATCHES)/oscam.config" ] || \
 	$(MAKE) config
 	touch $@
 
@@ -27,9 +27,9 @@ $(D)/oscam-emu.do_prepare:
 	wget https://github.com/oscam-emu/oscam-emu/raw/master/oscam-emu.patch; \
 	patch -p0 < ./oscam-emu.patch; \
 	wget -O SoftCam.Key http://www.uydu.ws/deneme6.php?file=SoftCam.Key ;\
-	[ -e "$(CDK_DIR)/Patches/oscam.config" ] && \
-	cp -ra "$(CDK_DIR)/Patches/oscam.config" config.h; \
-	[ -e "$(CDK_DIR)/Patches/oscam.config" ] || \
+	[ -e "$(PATCHES)/oscam.config" ] && \
+	cp -ra "$(PATCHES)/oscam.config" config.h; \
+	[ -e "$(PATCHES)/oscam.config" ] || \
 	$(MAKE) config
 	touch $@
 
@@ -43,9 +43,9 @@ $(D)/oscam.do_prepare:
 	cp -ra $(ARCHIVE)/oscam-svn $(SOURCE_DIR)/oscam-svn;\
 	cp -ra $(SOURCE_DIR)/oscam-svn $(SOURCE_DIR)/oscam-svn.org;\
 	cd $(SOURCE_DIR)/oscam-svn; \
-	[ -e "$(CDK_DIR)/Patches/oscam.config" ] && \
-	cp -ra "$(CDK_DIR)/Patches/oscam.config" config.h; \
-	[ -e "$(CDK_DIR)/Patches/oscam.config" ] || \
+	[ -e "$(PATCHES)/oscam.config" ] && \
+	cp -ra "$(PATCHES)/oscam.config" config.h; \
+	[ -e "$(PATCHES)/oscam.config" ] || \
 	$(MAKE) config
 	touch $@
 
