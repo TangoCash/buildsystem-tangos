@@ -1,8 +1,8 @@
 #
 # enigma2-tc-deps
 #
-ENIGMA2_TC_DEPS  = bootstrap libncurses libcurl libpng libjpeg libgif libfreetype libfribidi libsigc++ libreadline alsa-lib
-ENIGMA2_TC_DEPS += libexpat libdvbsi++ python libxml2_e2 libxslt python_elementtree python_lxml python_zope_interface
+ENIGMA2_TC_DEPS  = bootstrap libncurses libcurl libpng libjpeg libgif freetype libfribidi libsigc libreadline alsa-lib
+ENIGMA2_TC_DEPS += libexpat libdvbsi++ python libxml2 libxslt python_elementtree python_lxml python_zope_interface
 ENIGMA2_TC_DEPS += python_twisted python_pyopenssl python_imaging python_pyusb python_pycrypto python_pyasn1 python_mechanize python_six
 ENIGMA2_TC_DEPS += python_requests python_futures python_singledispatch python_livestreamer python_livestreamersrv
 ENIGMA2_TC_DEPS += libdreamdvd tuxtxt32bpp hotplug_e2 opkg ethtool
@@ -18,14 +18,17 @@ E2_REPO="https://github.com/TangoCash/tangos-enigma2.git"
 yaud-enigma2-tangos: yaud-none host_python enigma2-tangos enigma2-plugins release_enigma2
 	$(TUXBOX_YAUD_CUSTOMIZE)
 
-
+$(D)/enigma2-tangos.do_rebuild: python
+	rm -rf $(D)/libxml2; \
+	$(MAKE) IMAGE=enigma2 libxml2
+	
 $(D)/enigma2-tangos.do_prepare: | $(ENIGMA2_TC_DEPS)
 	rm -rf $(SOURCE_DIR)/enigma2-tangos; \
 	rm -rf $(SOURCE_DIR)/enigma2-tangos.org; \
 	[ -d "$(ARCHIVE)/enigma2-tangos.git" ] && \
 	(cd $(ARCHIVE)/enigma2-tangos.git; git pull; git checkout "$$BRANCH"; git checkout HEAD; git pull; cd "$(buildprefix)";); \
 	[ -d "$(ARCHIVE)/enigma2-tangos.git" ] || \
-	git clone -b $$E2_BRANCH $$E2_REPO $(ARCHIVE)/enigma2-tangos.git; \
+	git clone -b $(E2_BRANCH) $(E2_REPO) $(ARCHIVE)/enigma2-tangos.git; \
 	cp -ra $(ARCHIVE)/enigma2-tangos.git $(SOURCE_DIR)/enigma2-tangos; \
 	cp -ra $(SOURCE_DIR)/enigma2-tangos $(SOURCE_DIR)/enigma2-tangos.org;
 	touch $@
@@ -72,7 +75,7 @@ $(D)/enigma2-tangos.do_compile: $(D)/enigma2-tangos.config.status $(SOURCE_DIR)/
 		$(MAKE) -C $(E2_OBJDIR) all
 	touch $@
 
-$(D)/enigma2-tangos: enigma2-tangos.do_prepare enigma2-tangos.do_compile
+$(D)/enigma2-tangos: enigma2-tangos.do_rebuild enigma2-tangos.do_prepare enigma2-tangos.do_compile
 	$(MAKE) -C $(E2_OBJDIR) install DESTDIR=$(TARGETPREFIX)
 	touch $@
 
