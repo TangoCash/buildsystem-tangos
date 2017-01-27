@@ -63,7 +63,7 @@ $(D)/release_enigma2_small:
 #
 # python2.7
 #
-	if [ $(PYTHON_VERSION) == 2.7 ]; then \
+	if [ $(PYTHON_VERSION_MAJOR) == 2.7 ]; then \
 		install -d $(RELEASE_DIR)/usr/include; \
 		install -d $(RELEASE_DIR)$(PYTHON_INCLUDE_DIR); \
 		cp $(TARGETPREFIX)$(PYTHON_INCLUDE_DIR)/pyconfig.h $(RELEASE_DIR)$(PYTHON_INCLUDE_DIR); \
@@ -135,7 +135,7 @@ $(D)/release_enigma2_small:
 	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/site-packages/twisted/trial/test
 	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/site-packages/twisted/web/test
 	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/site-packages/twisted/words/test
-	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/site-packages/*-py$(PYTHON_VERSION).egg-info
+	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/site-packages/*-py$(PYTHON_VERSION_MAJOR).egg-info
 
 #
 # Dont remove pyo files, remove pyc instead
@@ -146,6 +146,7 @@ $(D)/release_enigma2_small:
 	find $(RELEASE_DIR)/usr/lib/enigma2/ -name '*.o' -exec rm -f {} \;
 	find $(RELEASE_DIR)/usr/lib/enigma2/ -name '*.la' -exec rm -f {} \;
 
+#
 	find $(RELEASE_DIR)$(PYTHON_DIR)/ -name '*.pyc' -exec rm -f {} \;
 #	find $(RELEASE_DIR)$(PYTHON_DIR)/ -name '*.py' -exec rm -f {} \;
 	find $(RELEASE_DIR)$(PYTHON_DIR)/ -name '*.a' -exec rm -f {} \;
