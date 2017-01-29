@@ -24,7 +24,8 @@ $(D)/release_enigma2_small:
 	cp -p $(TARGETPREFIX)/usr/sbin/ethtool $(RELEASE_DIR)/usr/sbin/ && \
 	cp -p $(TARGETPREFIX)/usr/sbin/livestreamersrv $(RELEASE_DIR)/usr/sbin/ && \
 	cp -p $(TARGETPREFIX)/usr/lib/libdvdnav.* $(RELEASE_DIR)/usr/lib/ && \
-	cp -p $(TARGETPREFIX)/usr/lib/libdvdread* $(RELEASE_DIR)/usr/lib/
+	cp -p $(TARGETPREFIX)/usr/lib/libdvdread* $(RELEASE_DIR)/usr/lib/ && \
+	cp -p $(TARGETPREFIX)/usr/lib/libopkg* $(RELEASE_DIR)/usr/lib/
 
 #
 # lib usr/lib
