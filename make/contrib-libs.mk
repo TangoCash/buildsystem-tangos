@@ -55,7 +55,7 @@ GMP_VERSION_MAJOR = 6.0.0
 GMP_VERSION_MINOR = a
 GMP_VERSION = $(GMP_VERSION_MAJOR)$(GMP_VERSION_MINOR)
 
-$(ARCHIVE)/gmp-$(GMP_VERSION)$(GMP_SUBVER).tar.xz:
+$(ARCHIVE)/gmp-$(GMP_VERSION).tar.xz:
 	$(WGET) ftp://ftp.gmplib.org/pub/gmp-$(GMP_VERSION_MAJOR)/gmp-$(GMP_VERSION).tar.xz
 
 $(D)/gmp: $(D)/bootstrap $(ARCHIVE)/gmp-$(GMP_VERSION).tar.xz
@@ -313,20 +313,22 @@ $(D)/libreadline: $(D)/bootstrap $(ARCHIVE)/readline-$(READLINE_VERSION).tar.gz
 #
 # openssl
 #
-OPENSSL_VERSION = 1.0.2
-OPENSSL_SUBVER = j
+OPENSSL_MAJOR = 1.0.2
+OPENSSL_MINOR = k
+OPENSSL_VERSION = $(OPENSSL_MAJOR)$(OPENSSL_MINOR)
+
 OPENSSL_PATCH  = openssl-$(OPENSSL_VERSION)-optimize-for-size.patch
 OPENSSL_PATCH += openssl-$(OPENSSL_VERSION)-makefile-dirs.patch
 OPENSSL_PATCH += openssl-$(OPENSSL_VERSION)-disable_doc_tests.patch
 
-$(ARCHIVE)/openssl-$(OPENSSL_VERSION)$(OPENSSL_SUBVER).tar.gz:
-	$(WGET) http://www.openssl.org/source/openssl-$(OPENSSL_VERSION)$(OPENSSL_SUBVER).tar.gz
+$(ARCHIVE)/openssl-$(OPENSSL_VERSION).tar.gz:
+	$(WGET) http://www.openssl.org/source/openssl-$(OPENSSL_VERSION).tar.gz
 
-$(D)/openssl: $(D)/bootstrap $(ARCHIVE)/openssl-$(OPENSSL_VERSION)$(OPENSSL_SUBVER).tar.gz
+$(D)/openssl: $(D)/bootstrap $(ARCHIVE)/openssl-$(OPENSSL_VERSION).tar.gz
 	$(START_BUILD)
-	$(REMOVE)/openssl-$(OPENSSL_VERSION)$(OPENSSL_SUBVER)
-	$(UNTAR)/openssl-$(OPENSSL_VERSION)$(OPENSSL_SUBVER).tar.gz
-	set -e; cd $(BUILD_TMP)/openssl-$(OPENSSL_VERSION)$(OPENSSL_SUBVER); \
+	$(REMOVE)/openssl-$(OPENSSL_VERSION)
+	$(UNTAR)/openssl-$(OPENSSL_VERSION).tar.gz
+	set -e; cd $(BUILD_TMP)/openssl-$(OPENSSL_VERSION); \
 		$(call post_patch,$(OPENSSL_PATCH)); \
 		$(BUILDENV) \
 		./Configure \
@@ -346,7 +348,7 @@ $(D)/openssl: $(D)/bootstrap $(ARCHIVE)/openssl-$(OPENSSL_VERSION)$(OPENSSL_SUBV
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libcrypto.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libssl.pc
 	cd $(TARGETPREFIX) && rm -rf etc/ssl/man usr/bin/openssl
-	$(REMOVE)/openssl-$(OPENSSL_VERSION)$(OPENSSL_SUBVER)
+	$(REMOVE)/openssl-$(OPENSSL_VERSION)
 	$(TOUCH)
 
 #
@@ -412,7 +414,7 @@ $(D)/lua: $(D)/bootstrap $(D)/libncurses $(ARCHIVE)/lua-$(LUA_VERSION).tar.gz
 		sed -i 's/<config.h>/"config.h"/' src/posix.c; \
 		sed -i '/^#define/d' src/lua52compat.h; \
 		sed -i 's|man/man1|/.remove|' Makefile; \
-		$(MAKE) linux CC=$(TARGET)-gcc CPPFLAGS="$(TARGET_CPPFLAGS)" LDFLAGS="-L$(TARGETPREFIX)/usr/lib" BUILDMODE=dynamic PKG_VERSIONSION=$(LUA_VERSION); \
+		$(MAKE) linux CC=$(TARGET)-gcc CPPFLAGS="$(TARGET_CPPFLAGS)" LDFLAGS="-L$(TARGETPREFIX)/usr/lib" BUILDMODE=dynamic PKG_VERSION=$(LUA_VERSION); \
 		$(MAKE) install INSTALL_TOP=$(TARGETPREFIX)/usr INSTALL_MAN=$(TARGETPREFIX)/.remove
 	cd $(TARGETPREFIX)/usr && rm bin/lua bin/luac
 	$(REMOVE)/lua-$(LUA_VERSION)
