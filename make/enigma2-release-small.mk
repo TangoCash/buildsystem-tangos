@@ -157,6 +157,15 @@ $(D)/release_enigma2_small:
 	find $(RELEASE_DIR)$(PYTHON_DIR)/ -name '*.la' -exec rm -f {} \;
 
 #
+# FOR YOUR OWN CHANGES use these folder in cdk/own_build/enigma2
+#
+#	default for all receiver
+	find $(OWN_BUILD)/enigma2/ -mindepth 1 -maxdepth 1 -exec cp -at$(RELEASE_DIR)/ -- {} +
+#	receiver specific (only if directory exist)
+	[ -d "$(OWN_BUILD)/enigma2.$(BOXTYPE)" ] && find $(OWN_BUILD)/enigma2.$(BOXTYPE)/ -mindepth 1 -maxdepth 1 -exec cp -at$(RELEASE_DIR)/ -- {} + || true
+	echo $(BOXTYPE) > $(RELEASE_DIR)/etc/model
+	rm -f $(RELEASE_DIR)/for_your_own_changes
+#
 # sh4-linux-strip all
 #
 	find $(RELEASE_DIR)/ -name '*' -exec sh4-linux-strip --strip-unneeded {} &>/dev/null \;
