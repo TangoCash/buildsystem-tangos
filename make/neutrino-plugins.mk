@@ -105,7 +105,7 @@ neutrino-mp-plugins-distclean:
 #
 XUPNPD_PATCH = xupnpd.patch
 
-$(D)/xupnpd: $(D)/bootstrap $(D)/plugins-scripts-lua
+$(D)/xupnpd: $(D)/bootstrap $(D)/lua $(D)/openssl $(D)/plugins-scripts-lua
 	$(START_BUILD)
 	$(REMOVE)/xupnpd
 	set -e; if [ -d $(ARCHIVE)/xupnpd.git ]; \
@@ -117,13 +117,13 @@ $(D)/xupnpd: $(D)/bootstrap $(D)/plugins-scripts-lua
 		$(call post_patch,$(XUPNPD_PATCH))
 	set -e; cd $(BUILD_TMP)/xupnpd/src; \
 		$(BUILDENV) \
-		$(MAKE) TARGET=$(TARGET) PKG_CONFIG=$(PKG_CONFIG) sh4; \
+		$(MAKE) sh4 TARGET=$(TARGET) PKG_CONFIG=$(PKG_CONFIG); \
 		$(MAKE) install DESTDIR=$(TARGETPREFIX)
 	install -m 755 $(SKEL_ROOT)/etc/init.d/xupnpd $(TARGETPREFIX)/etc/init.d/
-	install -m 644 $(ARCHIVE)/cst-public-plugins-scripts-lua.git/xupnpd/xupnpd_18plus.lua ${TARGETPREFIX}/usr/share/xupnpd/plugins/
-	install -m 644 $(ARCHIVE)/cst-public-plugins-scripts-lua.git/xupnpd/xupnpd_cczwei.lua ${TARGETPREFIX}/usr/share/xupnpd/plugins/
-	: install -m 644 $(ARCHIVE)/cst-public-plugins-scripts-lua.git/xupnpd/xupnpd_coolstream.lua ${TARGETPREFIX}/usr/share/xupnpd/plugins/
-	install -m 644 $(ARCHIVE)/cst-public-plugins-scripts-lua.git/xupnpd/xupnpd_youtube.lua ${TARGETPREFIX}/usr/share/xupnpd/plugins/
+	install -m 644 $(ARCHIVE)/plugins-scripts-lua.git/xupnpd/xupnpd_18plus.lua ${TARGETPREFIX}/usr/share/xupnpd/plugins/
+	install -m 644 $(ARCHIVE)/plugins-scripts-lua.git/xupnpd/xupnpd_cczwei.lua ${TARGETPREFIX}/usr/share/xupnpd/plugins/
+	: install -m 644 $(ARCHIVE)/plugins-scripts-lua.git/xupnpd/xupnpd_coolstream.lua ${TARGETPREFIX}/usr/share/xupnpd/plugins/
+	install -m 644 $(ARCHIVE)/plugins-scripts-lua.git/xupnpd/xupnpd_youtube.lua ${TARGETPREFIX}/usr/share/xupnpd/plugins/
 	$(REMOVE)/xupnpd
 	$(TOUCH)
 
@@ -133,11 +133,11 @@ $(D)/xupnpd: $(D)/bootstrap $(D)/plugins-scripts-lua
 $(D)/plugins-scripts-lua: $(D)/bootstrap $(D)/xupnpd
 	$(START_BUILD)
 	$(REMOVE)/plugins-scripts-lua
-	set -e; if [ -d $(ARCHIVE)/cst-public-plugins-scripts-lua.git ]; \
-		then cd $(ARCHIVE)/cst-public-plugins-scripts-lua.git; git pull; \
-		else cd $(ARCHIVE); git clone https://github.com/coolstreamtech/cst-public-plugins-scripts-lua.git cst-public-plugins-scripts-lua.git; \
+	set -e; if [ -d $(ARCHIVE)/plugins-scripts-lua.git ]; \
+		then cd $(ARCHIVE)/plugins-scripts-lua.git; git pull; \
+		else cd $(ARCHIVE); git clone https://github.com/tuxbox-neutrino/plugin-scripts-lua.git plugins-scripts-lua.git; \
 		fi
-	cp -ra $(ARCHIVE)/cst-public-plugins-scripts-lua.git/plugins $(BUILD_TMP)/plugins-scripts-lua
+	cp -ra $(ARCHIVE)/plugins-scripts-lua.git/plugins $(BUILD_TMP)/plugins-scripts-lua
 	set -e; cd $(BUILD_TMP)/plugins-scripts-lua; \
 		install -d $(TARGETPREFIX)/var/tuxbox/plugins
 		cp -R $(BUILD_TMP)/plugins-scripts-lua/ard_mediathek/* $(TARGETPREFIX)/var/tuxbox/plugins/
