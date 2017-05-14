@@ -19,7 +19,7 @@ yaud-enigma2-tangos: yaud-none host_python enigma2-tangos enigma2-plugins releas
 	$(TUXBOX_YAUD_CUSTOMIZE)
 
 $(D)/enigma2-tangos.do_rebuild: python
-	rm -rf $(D)/libxml2; \
+	[ -d "$(D)/libxml2" ] || rm -rf $(D)/libxml2; \
 	$(MAKE) IMAGE=enigma2 libxml2
 	
 $(D)/enigma2-tangos.do_prepare: | $(ENIGMA2_TC_DEPS)
@@ -76,6 +76,7 @@ $(D)/enigma2-tangos.do_compile: $(D)/enigma2-tangos.config.status $(SOURCE_DIR)/
 	touch $@
 
 $(D)/enigma2-tangos: enigma2-tangos.do_rebuild enigma2-tangos.do_prepare enigma2-tangos.do_compile
+	$(TARGET)-strip --strip-unneeded $(E2_OBJDIR)/main/enigma2
 	$(MAKE) -C $(E2_OBJDIR) install DESTDIR=$(TARGETPREFIX)
 	touch $@
 
