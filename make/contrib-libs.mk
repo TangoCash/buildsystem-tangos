@@ -914,7 +914,7 @@ $(D)/libgif: $(D)/bootstrap $(ARCHIVE)/$(GIFLIB_SOURCE)
 #
 # libcurl
 #
-CURL_VERSION = 7.53.0
+CURL_VERSION = 7.54.0
 CURL_SOURCE = curl-$(CURL_VERSION).tar.bz2
 CURL_PATCH = libcurl-$(CURL_VERSION).patch
 
@@ -2235,7 +2235,7 @@ $(D)/libmodplug: $(D)/bootstrap $(ARCHIVE)/$(LIBMODPLUG_SOURCE)
 #
 # lzo
 #
-LZO_VERSION = 2.09
+LZO_VERSION = 2.10
 LZO_SOURCE = lzo-$(LZO_VERSION).tar.gz
 
 $(ARCHIVE)/$(LZO_SOURCE):

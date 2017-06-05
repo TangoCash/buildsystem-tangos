@@ -3,10 +3,10 @@
 #
 BUSYBOX_VERSION = 1.26.2
 BUSYBOX_SOURCE = busybox-$(BUSYBOX_VERSION).tar.bz2
-BUSYBOX_PATCH   = busybox-$(BUSYBOX_VERSION)-nandwrite.patch
-BUSYBOX_PATCH  += busybox-$(BUSYBOX_VERSION)-unicode.patch
-BUSYBOX_PATCH  += busybox-$(BUSYBOX_VERSION)-extra.patch
-BUSYBOX_PATCH  += busybox-$(BUSYBOX_VERSION)-wget_fix_for_brain-damaged_HTTP_servers.patch
+BUSYBOX_PATCH  = busybox-$(BUSYBOX_VERSION)-nandwrite.patch
+BUSYBOX_PATCH += busybox-$(BUSYBOX_VERSION)-unicode.patch
+BUSYBOX_PATCH += busybox-$(BUSYBOX_VERSION)-extra.patch
+BUSYBOX_PATCH += busybox-$(BUSYBOX_VERSION)-wget_fix_for_brain-damaged_HTTP_servers.patch
 
 $(ARCHIVE)/$(BUSYBOX_SOURCE):
 	$(WGET) http://busybox.net/downloads/$(BUSYBOX_SOURCE)
@@ -1492,7 +1492,7 @@ $(D)/udpxy: $(D)/bootstrap $(ARCHIVE)/$(UDPXY_SOURCE)
 #
 # openvpn
 #
-OPENVPN_VERSION = 2.4.0
+OPENVPN_VERSION = 2.4.2
 OPENVPN_SOURCE = openvpn-$(OPENVPN_VERSION).tar.xz
 
 $(ARCHIVE)/$(OPENVPN_SOURCE):
@@ -1524,7 +1524,7 @@ $(D)/openvpn: $(D)/bootstrap $(D)/openssl $(D)/lzo $(ARCHIVE)/$(OPENVPN_SOURCE)
 #
 # openssh
 #
-OPENSSH_VERSION = 7.2p2
+OPENSSH_VERSION = 7.5p1
 OPENSSH_SOURCE = openssh-$(OPENSSH_VERSION).tar.gz
 
 $(ARCHIVE)/$(OPENSSH_SOURCE):
