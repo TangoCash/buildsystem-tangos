@@ -52,9 +52,9 @@ $(D)/enigma2-tangos.config.status:
 			--enable-libeplayer3 \
 			--enable-sigc2 \
 			--with-alsa \
-			PKG_CONFIG=$(HOSTPREFIX)/bin/$(TARGET)-pkg-config \
-			PKG_CONFIG_PATH=$(TARGETPREFIX)/usr/lib/pkgconfig \
-			PY_PATH=$(TARGETPREFIX)/usr \
+			PKG_CONFIG=$(HOST_DIR)/bin/$(TARGET)-pkg-config \
+			PKG_CONFIG_PATH=$(TARGET_DIR)/usr/lib/pkgconfig \
+			PY_PATH=$(TARGET_DIR)/usr \
 			$(PLATFORM_CPPFLAGS)
 
 $(SOURCE_DIR)/enigma2-tangos/main/version.h:
@@ -77,7 +77,7 @@ $(D)/enigma2-tangos.do_compile: $(D)/enigma2-tangos.config.status $(SOURCE_DIR)/
 
 $(D)/enigma2-tangos: enigma2-tangos.do_rebuild enigma2-tangos.do_prepare enigma2-tangos.do_compile
 	$(TARGET)-strip --strip-unneeded $(E2_OBJDIR)/main/enigma2
-	$(MAKE) -C $(E2_OBJDIR) install DESTDIR=$(TARGETPREFIX)
+	$(MAKE) -C $(E2_OBJDIR) install DESTDIR=$(TARGET_DIR)
 	touch $@
 
 enigma2-tangos-clean:

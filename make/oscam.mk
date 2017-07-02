@@ -68,33 +68,33 @@ $(D)/oscam-libusb.do_compile: libusb
 	touch $@
 
 $(D)/oscam: bootstrap oscam.do_prepare oscam.do_compile
-	rm -rf $(TARGETPREFIX)/../OScam
-	mkdir $(TARGETPREFIX)/../OScam
-	cp -pR $(SOURCE_DIR)/oscam-svn/Distribution/* $(TARGETPREFIX)/../OScam/ 
+	rm -rf $(TARGET_DIR)/../OScam
+	mkdir $(TARGET_DIR)/../OScam
+	cp -pR $(SOURCE_DIR)/oscam-svn/Distribution/* $(TARGET_DIR)/../OScam/ 
 	touch $@
 
 $(D)/oscam-ssl: bootstrap oscam.do_prepare oscam-ssl.do_compile
-	rm -rf $(TARGETPREFIX)/../OScam
-	mkdir $(TARGETPREFIX)/../OScam
-	cp -pR $(SOURCE_DIR)/oscam-svn/Distribution/* $(TARGETPREFIX)/../OScam/ 
+	rm -rf $(TARGET_DIR)/../OScam
+	mkdir $(TARGET_DIR)/../OScam
+	cp -pR $(SOURCE_DIR)/oscam-svn/Distribution/* $(TARGET_DIR)/../OScam/ 
 	touch $@
 
 $(D)/oscam-libusb: bootstrap oscam.do_prepare oscam-libusb.do_compile
-	rm -rf $(TARGETPREFIX)/../OScam
-	mkdir $(TARGETPREFIX)/../OScam
-	cp -pR $(SOURCE_DIR)/oscam-svn/Distribution/* $(TARGETPREFIX)/../OScam/ 
+	rm -rf $(TARGET_DIR)/../OScam
+	mkdir $(TARGET_DIR)/../OScam
+	cp -pR $(SOURCE_DIR)/oscam-svn/Distribution/* $(TARGET_DIR)/../OScam/ 
 	touch $@
 
 $(D)/oscam-modern: bootstrap oscam-modern.do_prepare oscam.do_compile
-	rm -rf $(TARGETPREFIX)/../OScam
-	mkdir $(TARGETPREFIX)/../OScam
-	cp -pR $(SOURCE_DIR)/oscam-svn/Distribution/* $(TARGETPREFIX)/../OScam/ 
+	rm -rf $(TARGET_DIR)/../OScam
+	mkdir $(TARGET_DIR)/../OScam
+	cp -pR $(SOURCE_DIR)/oscam-svn/Distribution/* $(TARGET_DIR)/../OScam/ 
 	touch $@
 
 $(D)/oscam-emu: bootstrap oscam-emu.do_prepare oscam.do_compile
-	rm -rf $(TARGETPREFIX)/../OScam
-	mkdir $(TARGETPREFIX)/../OScam
-	cp -pR $(SOURCE_DIR)/oscam-svn/Distribution/* $(TARGETPREFIX)/../OScam/ 
+	rm -rf $(TARGET_DIR)/../OScam
+	mkdir $(TARGET_DIR)/../OScam
+	cp -pR $(SOURCE_DIR)/oscam-svn/Distribution/* $(TARGET_DIR)/../OScam/ 
 	touch $@
 
 oscam-clean:

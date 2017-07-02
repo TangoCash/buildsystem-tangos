@@ -38,10 +38,10 @@ $(D)/libncurses: $(D)/bootstrap $(ARCHIVE)/$(NCURSES_SOURCE)
 			HOSTCC=gcc \
 			HOSTCCFLAGS="$(CFLAGS) -DHAVE_CONFIG_H -I../ncurses -DNDEBUG -D_GNU_SOURCE -I../include" \
 			HOSTLDFLAGS="$(LDFLAGS)"; \
-		$(MAKE) install.libs DESTDIR=$(TARGETPREFIX); \
-		install -D -m 0755 misc/ncurses-config $(HOSTPREFIX)/bin/ncurses5-config; \
-		rm -f $(TARGETPREFIX)/usr/bin/ncurses5-config
-	$(REWRITE_PKGCONF) $(HOSTPREFIX)/bin/ncurses5-config
+		$(MAKE) install.libs DESTDIR=$(TARGET_DIR); \
+		install -D -m 0755 misc/ncurses-config $(HOST_DIR)/bin/ncurses5-config; \
+		rm -f $(TARGET_DIR)/usr/bin/ncurses5-config
+	$(REWRITE_PKGCONF) $(HOST_DIR)/bin/ncurses5-config
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/form.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/menu.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/ncurses.pc
@@ -70,7 +70,7 @@ $(D)/gmp: $(D)/bootstrap $(ARCHIVE)/$(GMP_SOURCE)
 			--infodir=/.remove \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libgmp.la
 	$(REMOVE)/gmp-$(GMP_VERSION_MAJOR)
 	$(TOUCH)
@@ -91,7 +91,7 @@ $(D)/host_libffi: $(ARCHIVE)/$(LIBFFI_SOURCE)
 	$(UNTAR)/$(LIBFFI_SOURCE)
 	set -e; cd $(BUILD_TMP)/libffi-$(LIBFFI_VERSION); \
 		./configure $(CONFIGURE_SILENT) \
-			--prefix=$(HOSTPREFIX) \
+			--prefix=$(HOST_DIR) \
 			--disable-static \
 		; \
 		$(MAKE); \
@@ -117,7 +117,7 @@ $(D)/libffi: $(D)/bootstrap $(ARCHIVE)/$(LIBFFI_SOURCE)
 			--enable-builddir=libffi \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libffi.pc
 	$(REWRITE_LIBTOOL)/libffi.la
 	$(REMOVE)/libffi-$(LIBFFI_VERSION)
@@ -141,7 +141,7 @@ $(D)/host_libglib2_genmarshal: $(D)/host_libffi $(ARCHIVE)/$(LIBGLIB2_SOURCE)
 	$(REMOVE)/glib-$(LIBGLIB2_VERSION)
 	$(UNTAR)/$(LIBGLIB2_SOURCE)
 	export PKG_CONFIG=/usr/bin/pkg-config; \
-	export PKG_CONFIG_PATH=$(HOSTPREFIX)/lib/pkgconfig; \
+	export PKG_CONFIG_PATH=$(HOST_DIR)/lib/pkgconfig; \
 	set -e; cd $(BUILD_TMP)/glib-$(LIBGLIB2_VERSION); \
 		./configure $(CONFIGURE_SILENT) \
 			--enable-static=yes \
@@ -149,7 +149,7 @@ $(D)/host_libglib2_genmarshal: $(D)/host_libffi $(ARCHIVE)/$(LIBGLIB2_SOURCE)
 			--prefix=`pwd`/out \
 		; \
 		$(MAKE) install; \
-		cp -a out/bin/glib-* $(HOSTPREFIX)/bin
+		cp -a out/bin/glib-* $(HOST_DIR)/bin
 	$(REMOVE)/glib-$(LIBGLIB2_VERSION)
 	$(TOUCH)
 
@@ -179,7 +179,7 @@ $(D)/libglib2: $(D)/bootstrap $(D)/host_libglib2_genmarshal $(D)/zlib $(D)/libff
 			--enable-static \
 		; \
 		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/glib-2.0.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gmodule-2.0.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gio-2.0.pc
@@ -222,9 +222,9 @@ $(D)/libpcre: $(D)/bootstrap $(ARCHIVE)/$(LIBPCRE_SOURCE)
 			--enable-unicode-properties \
 		; \
 		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
-		mv $(TARGETPREFIX)/usr/bin/pcre-config $(HOSTPREFIX)/bin/pcre-config
-	$(REWRITE_PKGCONF) $(HOSTPREFIX)/bin/pcre-config
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+		mv $(TARGET_DIR)/usr/bin/pcre-config $(HOST_DIR)/bin/pcre-config
+	$(REWRITE_PKGCONF) $(HOST_DIR)/bin/pcre-config
 	$(REWRITE_LIBTOOL)/libpcre.la
 	$(REWRITE_LIBTOOL)/libpcrecpp.la
 	$(REWRITE_LIBTOOL)/libpcreposix.la
@@ -257,7 +257,7 @@ $(D)/host_libarchive: $(D)/bootstrap $(ARCHIVE)/$(LIBARCHIVE_SOURCE)
 			--without-xml2 \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(HOSTPREFIX)
+		$(MAKE) install DESTDIR=$(HOST_DIR)
 	$(REMOVE)/libarchive-$(LIBARCHIVE_VERSION)
 	$(TOUCH)
 
@@ -283,7 +283,7 @@ $(D)/libarchive: $(D)/bootstrap $(ARCHIVE)/$(LIBARCHIVE_SOURCE)
 			--without-expat \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libarchive.pc
 	$(REWRITE_LIBTOOL)/libarchive.la
 	$(REMOVE)/libarchive-$(LIBARCHIVE_VERSION)
@@ -314,7 +314,7 @@ $(D)/libreadline: $(D)/bootstrap $(ARCHIVE)/$(READLINE_SOURCE)
 			bash_cv_have_mbstate_t=yes \
 		; \
 		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REMOVE)/readline-$(READLINE_VERSION)
 	$(TOUCH)
 
@@ -350,12 +350,14 @@ $(D)/openssl: $(D)/bootstrap $(ARCHIVE)/$(OPENSSL_SOURCE)
 		sed -i 's|MAKEDEPPROG=makedepend|MAKEDEPPROG=$(CROSS_DIR)/bin/$$(CC) -M|' Makefile; \
 		make depend; \
 		$(MAKE) all; \
-		$(MAKE) install_sw INSTALL_PREFIX=$(TARGETPREFIX)
-	chmod 0755 $(TARGETPREFIX)/usr/lib/lib{crypto,ssl}.so.*
+		$(MAKE) install_sw INSTALL_PREFIX=$(TARGET_DIR)
+	chmod 0755 $(TARGET_DIR)/usr/lib/lib{crypto,ssl}.so.*
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/openssl.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libcrypto.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libssl.pc
-	cd $(TARGETPREFIX) && rm -rf etc/ssl/man usr/bin/openssl
+	cd $(TARGET_DIR) && rm -rf etc/ssl/man usr/bin/openssl
+	ln -sf libcrypto.so.1.0.0 $(TARGET_DIR)/usr/lib/libcrypto.so.0.9.8
+	ln -sf libssl.so.1.0.0 $(TARGET_DIR)/usr/lib/libssl.so.0.9.8
 	$(REMOVE)/openssl-$(OPENSSL_VERSION)
 	$(TOUCH)
 
@@ -390,7 +392,7 @@ $(D)/libbluray: $(D)/bootstrap $(ARCHIVE)/$(LIBBLURAY_SOURCE)
 			--without-freetype \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libbluray.pc
 	$(REWRITE_LIBTOOL)/libbluray.la
 	$(REMOVE)/libbluray-$(LIBBLURAY_VERSION)
@@ -402,127 +404,139 @@ $(D)/libbluray: $(D)/bootstrap $(ARCHIVE)/$(LIBBLURAY_SOURCE)
 LUA_VERSION = 5.2.4
 LUA_VERSION_SHORT = 5.2
 LUA_SOURCE = lua-$(LUA_VERSION).tar.gz
-LUAPOSIX_VERSION = 31
-LUAPOSIX_PATCH = lua-$(LUA_VERSION)-luaposix-$(LUAPOSIX_VERSION).patch
+
+LUA_POSIX_VERSION = 31
+LUA_POSIX_SOURCE = luaposix-$(LUA_POSIX_VERSION).tar.bz2
+LUA_POSIX_URL = git://github.com/luaposix/luaposix.git
+LUA_POSIX_PATCH = lua-$(LUA_VERSION)-luaposix-$(LUA_POSIX_VERSION).patch
 
 $(ARCHIVE)/$(LUA_SOURCE):
 	$(WGET) http://www.lua.org/ftp/$(LUA_SOURCE)
 
-$(D)/lua: $(D)/bootstrap $(D)/libncurses $(ARCHIVE)/$(LUA_SOURCE)
+$(ARCHIVE)/$(LUA_POSIX_SOURCE):
+	get-git-archive.sh $(LUA_POSIX_URL) release-v$(LUA_POSIX_VERSION) $(notdir $@) $(ARCHIVE)
+
+$(D)/lua: $(D)/bootstrap $(D)/libncurses $(ARCHIVE)/$(LUA_POSIX_SOURCE) $(ARCHIVE)/$(LUA_SOURCE)
 	$(START_BUILD)
 	$(REMOVE)/lua-$(LUA_VERSION)
-	set -e; if [ ! -d $(ARCHIVE)/luaposix.git ]; \
-		then cd $(ARCHIVE); git clone -b release-v$(LUAPOSIX_VERSION) git://github.com/luaposix/luaposix.git luaposix.git; \
-		fi
-	mkdir -p $(TARGETPREFIX)/usr/share/lua/$(LUA_VERSION_SHORT)
+	mkdir -p $(TARGET_DIR)/usr/share/lua/$(LUA_VERSION_SHORT)
 	$(UNTAR)/$(LUA_SOURCE)
 	set -e; cd $(BUILD_TMP)/lua-$(LUA_VERSION); \
-		$(call post_patch,$(LUAPOSIX_PATCH)); \
-		cp -r $(ARCHIVE)/luaposix.git .; \
-		cd luaposix.git/ext; cp posix/posix.c include/lua52compat.h ../../src/; cd ../..; \
-		cd luaposix.git/lib; cp *.lua $(TARGETPREFIX)/usr/share/lua/$(LUA_VERSION_SHORT); cd ../..; \
+		$(call post_patch,$(LUA_POSIX_PATCH)); \
+		tar xf $(ARCHIVE)/$(LUA_POSIX_SOURCE); \
+		cd luaposix-$(LUA_POSIX_VERSION)/ext; cp posix/posix.c include/lua52compat.h ../../src/; cd ../..; \
+		cd luaposix-$(LUA_POSIX_VERSION)/lib; cp *.lua $(TARGET_DIR)/usr/share/lua/$(LUA_VERSION_SHORT); cd ../..; \
 		sed -i 's/<config.h>/"config.h"/' src/posix.c; \
 		sed -i '/^#define/d' src/lua52compat.h; \
 		sed -i 's|man/man1|/.remove|' Makefile; \
-		$(MAKE) linux CC=$(TARGET)-gcc CPPFLAGS="$(TARGET_CPPFLAGS)" LDFLAGS="-L$(TARGETPREFIX)/usr/lib" BUILDMODE=dynamic PKG_VERSION=$(LUA_VERSION); \
-		$(MAKE) install INSTALL_TOP=$(TARGETPREFIX)/usr INSTALL_MAN=$(TARGETPREFIX)/.remove
-	cd $(TARGETPREFIX)/usr && rm bin/lua bin/luac
+		$(MAKE) linux CC=$(TARGET)-gcc CPPFLAGS="$(TARGET_CPPFLAGS)" LDFLAGS="-L$(TARGET_DIR)/usr/lib" BUILDMODE=dynamic PKG_VERSION=$(LUA_VERSION); \
+		$(MAKE) install INSTALL_TOP=$(TARGET_DIR)/usr INSTALL_MAN=$(TARGET_DIR)/.remove
+	cd $(TARGET_DIR)/usr && rm bin/lua bin/luac
 	$(REMOVE)/lua-$(LUA_VERSION)
 	$(TOUCH)
 
 #
 # luacurl
 #
-$(D)/luacurl: $(D)/bootstrap $(D)/libcurl $(D)/lua
+LUA_CURL_VERSION = 9ac72c7
+LUA_CURL_SOURCE = luacurl-$(LUA_CURL_VERSION).tar.bz2
+LUA_CURL_URL = git://github.com/Lua-cURL/Lua-cURLv3.git
+
+$(ARCHIVE)/$(LUA_CURL_SOURCE):
+	get-git-archive.sh $(LUA_CURL_URL) $(LUA_CURL_VERSION) $(notdir $@) $(ARCHIVE)
+
+$(D)/luacurl: $(D)/bootstrap $(D)/libcurl $(D)/lua $(ARCHIVE)/$(LUA_CURL_SOURCE)
 	$(START_BUILD)
-	$(REMOVE)/luacurl
-	set -e; if [ -d $(ARCHIVE)/luacurl.git ]; \
-		then cd $(ARCHIVE)/luacurl.git; git pull; \
-		else cd $(ARCHIVE); git clone git://github.com/Lua-cURL/Lua-cURLv3.git luacurl.git; \
-		fi
-	cp -ra $(ARCHIVE)/luacurl.git $(BUILD_TMP)/luacurl
-	set -e; cd $(BUILD_TMP)/luacurl; \
-		$(MAKE) CC=$(TARGET)-gcc LDFLAGS="-L$(TARGETPREFIX)/usr/lib" \
-			LIBDIR=$(TARGETPREFIX)/usr/lib \
-			LUA_INC=$(TARGETPREFIX)/usr/include; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX) LUA_CMOD=/usr/lib/lua/$(LUA_VERSION_SHORT) LUA_LMOD=/usr/share/lua/$(LUA_VERSION_SHORT)
-	$(REMOVE)/luacurl
+	$(REMOVE)/luacurl-$(LUA_CURL_VERSION)
+	$(UNTAR)/$(LUA_CURL_SOURCE)
+	set -e; cd $(BUILD_TMP)/luacurl-$(LUA_CURL_VERSION); \
+		$(MAKE) CC=$(TARGET)-gcc LDFLAGS="-L$(TARGET_DIR)/usr/lib" \
+			LIBDIR=$(TARGET_DIR)/usr/lib \
+			LUA_INC=$(TARGET_DIR)/usr/include; \
+		$(MAKE) install DESTDIR=$(TARGET_DIR) LUA_CMOD=/usr/lib/lua/$(LUA_VERSION_SHORT) LUA_LMOD=/usr/share/lua/$(LUA_VERSION_SHORT)
+	$(REMOVE)/luacurl-$(LUA_CURL_VERSION)
 	$(TOUCH)
 
 #
 # luaexpat
 #
-LUAEXPAT_VERSION = 1.3.0
-LUAEXPAT_SOURCE = luaexpat-$(LUAEXPAT_VERSION).tar.gz
-LUAEXPAT_PATCH = luaexpat-$(LUAEXPAT_VERSION).patch
+LUA_EXPAT_VERSION = 1.3.0
+LUA_EXPAT_SOURCE = luaexpat-$(LUA_EXPAT_VERSION).tar.gz
+LUA_EXPAT_PATCH = luaexpat-$(LUA_EXPAT_VERSION).patch
 
-$(ARCHIVE)/$(LUAEXPAT_SOURCE):
-	$(WGET) http://matthewwild.co.uk/projects/luaexpat/$(LUAEXPAT_SOURCE)
+$(ARCHIVE)/$(LUA_EXPAT_SOURCE):
+	$(WGET) http://matthewwild.co.uk/projects/luaexpat/$(LUA_EXPAT_SOURCE)
 
-$(D)/luaexpat: $(D)/bootstrap $(D)/lua $(D)/libexpat $(ARCHIVE)/$(LUAEXPAT_SOURCE)
+$(D)/luaexpat: $(D)/bootstrap $(D)/lua $(D)/libexpat $(ARCHIVE)/$(LUA_EXPAT_SOURCE)
 	$(START_BUILD)
-	$(REMOVE)/luaexpat-$(LUAEXPAT_VERSION)
-	$(UNTAR)/$(LUAEXPAT_SOURCE)
-	set -e; cd $(BUILD_TMP)/luaexpat-$(LUAEXPAT_VERSION); \
-		$(call post_patch,$(LUAEXPAT_PATCH)); \
-		$(MAKE) CC=$(TARGET)-gcc LDFLAGS="-L$(TARGETPREFIX)/usr/lib" PREFIX=$(TARGETPREFIX)/usr; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)/usr
-	$(REMOVE)/luaexpat-$(LUAEXPAT_VERSION)
+	$(REMOVE)/luaexpat-$(LUA_EXPAT_VERSION)
+	$(UNTAR)/$(LUA_EXPAT_SOURCE)
+	set -e; cd $(BUILD_TMP)/luaexpat-$(LUA_EXPAT_VERSION); \
+		$(call post_patch,$(LUA_EXPAT_PATCH)); \
+		$(MAKE) CC=$(TARGET)-gcc LDFLAGS="-L$(TARGET_DIR)/usr/lib" PREFIX=$(TARGET_DIR)/usr; \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)/usr
+	$(REMOVE)/luaexpat-$(LUA_EXPAT_VERSION)
 	$(TOUCH)
 
 #
 # luasocket
 #
-$(D)/luasocket: $(D)/bootstrap $(D)/lua
+LUA_SOCKET_VERSION = 5a17f79
+LUA_SOCKET_SOURCE = luasocket-$(LUA_SOCKET_VERSION).tar.bz2
+LUA_SOCKET_URL = git://github.com/diegonehab/luasocket.git
+
+$(ARCHIVE)/$(LUA_SOCKET_SOURCE):
+	get-git-archive.sh $(LUA_SOCKET_URL) $(LUA_SOCKET_VERSION) $(notdir $@) $(ARCHIVE)
+
+$(D)/luasocket: $(D)/bootstrap $(D)/lua $(ARCHIVE)/$(LUA_SOCKET_SOURCE)
 	$(START_BUILD)
-	$(REMOVE)/luasocket
-	set -e; if [ -d $(ARCHIVE)/luasocket.git ]; \
-		then cd $(ARCHIVE)/luasocket.git; git pull; \
-		else cd $(ARCHIVE); git clone git://github.com/diegonehab/luasocket.git luasocket.git; \
-		fi
-	cp -ra $(ARCHIVE)/luasocket.git $(BUILD_TMP)/luasocket
-	set -e; cd $(BUILD_TMP)/luasocket; \
-		sed -i -e "s@LD_linux=gcc@LD_LINUX=$(TARGET)-gcc@" -e "s@CC_linux=gcc@CC_LINUX=$(TARGET)-gcc -L$(TARGETPREFIX)/usr/lib@" -e "s@DESTDIR?=@DESTDIR?=$(TARGETPREFIX)/usr@" src/makefile; \
-		$(MAKE) CC=$(TARGET)-gcc LD=$(TARGET)-gcc LUAV=$(LUA_VERSION_SHORT) PLAT=linux COMPAT=COMPAT LUAINC_linux=$(TARGETPREFIX)/usr/include LUAPREFIX_linux=; \
+	$(REMOVE)/luasocket-$(LUA_SOCKET_VERSION)
+	$(UNTAR)/$(LUA_SOCKET_SOURCE)
+	set -e; cd $(BUILD_TMP)/luasocket-$(LUA_SOCKET_VERSION); \
+		sed -i -e "s@LD_linux=gcc@LD_LINUX=$(TARGET)-gcc@" -e "s@CC_linux=gcc@CC_LINUX=$(TARGET)-gcc -L$(TARGET_DIR)/usr/lib@" -e "s@DESTDIR?=@DESTDIR?=$(TARGET_DIR)/usr@" src/makefile; \
+		$(MAKE) CC=$(TARGET)-gcc LD=$(TARGET)-gcc LUAV=$(LUA_VERSION_SHORT) PLAT=linux COMPAT=COMPAT LUAINC_linux=$(TARGET_DIR)/usr/include LUAPREFIX_linux=; \
 		$(MAKE) install LUAPREFIX_linux= LUAV=$(LUA_VERSION_SHORT)
-	$(REMOVE)/luasocket
+	$(REMOVE)/luasocket-$(LUA_SOCKET_VERSION)
 	$(TOUCH)
 
 #
-# lua-feedparser
+# luafeedparser
 #
-$(D)/lua-feedparser: $(D)/bootstrap $(D)/lua $(D)/luasocket $(D)/luaexpat
+LUA_FEEDPARSER_VERSION = 9b284bc
+LUA_FEEDPARSER_SOURCE = luafeedparser-$(LUA_FEEDPARSER_VERSION).tar.bz2
+LUA_FEEDPARSER_URL = git://github.com/slact/lua-feedparser.git
+
+$(ARCHIVE)/$(LUA_FEEDPARSER_SOURCE):
+	get-git-archive.sh $(LUA_FEEDPARSER_URL) $(LUA_FEEDPARSER_VERSION) $(notdir $@) $(ARCHIVE)
+
+$(D)/luafeedparser: $(D)/bootstrap $(D)/lua $(D)/luasocket $(D)/luaexpat $(ARCHIVE)/$(LUA_FEEDPARSER_SOURCE)
 	$(START_BUILD)
-	$(REMOVE)/lua-feedparser
-	set -e; if [ -d $(ARCHIVE)/lua-feedparser.git ]; \
-		then cd $(ARCHIVE)/lua-feedparser.git; git pull; \
-		else cd $(ARCHIVE); git clone git://github.com/slact/lua-feedparser.git lua-feedparser.git; \
-		fi
-	cp -ra $(ARCHIVE)/lua-feedparser.git $(BUILD_TMP)/lua-feedparser
-	set -e; cd $(BUILD_TMP)/lua-feedparser; \
+	$(REMOVE)/luafeedparser-$(LUA_FEEDPARSER_VERSION)
+	$(UNTAR)/$(LUA_FEEDPARSER_SOURCE)
+	set -e; cd $(BUILD_TMP)/luafeedparser-$(LUA_FEEDPARSER_VERSION); \
 		sed -i -e "s/^PREFIX.*//" -e "s/^LUA_DIR.*//" Makefile ; \
-		$(BUILDENV) $(MAKE) install  LUA_DIR=$(TARGETPREFIX)/usr/share/lua/$(LUA_VERSION_SHORT)
-	$(REMOVE)/lua-feedparser
+		$(BUILDENV) $(MAKE) install  LUA_DIR=$(TARGET_DIR)/usr/share/lua/$(LUA_VERSION_SHORT)
+	$(REMOVE)/luafeedparser-$(LUA_FEEDPARSER_VERSION)
 	$(TOUCH)
 
 #
 # luasoap
 #
-LUASOAP_VERSION = 3.0
-LUASOAP_SOURCE = luasoap-$(LUASOAP_VERSION).tar.gz
-LUASOAP_PATCH = luasoap-$(LUASOAP_VERSION).patch
+LUA_SOAP_VERSION = 3.0
+LUA_SOAP_SOURCE = luasoap-$(LUA_SOAP_VERSION).tar.gz
+LUA_SOAP_PATCH = luasoap-$(LUA_SOAP_VERSION).patch
 
-$(ARCHIVE)/$(LUASOAP_SOURCE):
-	$(WGET) https://github.com/downloads/tomasguisasola/luasoap/$(LUASOAP_SOURCE)
+$(ARCHIVE)/$(LUA_SOAP_SOURCE):
+	$(WGET) https://github.com/downloads/tomasguisasola/luasoap/$(LUA_SOAP_SOURCE)
 
-$(D)/luasoap: $(D)/bootstrap $(D)/lua $(D)/luasocket $(D)/luaexpat $(ARCHIVE)/$(LUASOAP_SOURCE)
+$(D)/luasoap: $(D)/bootstrap $(D)/lua $(D)/luasocket $(D)/luaexpat $(ARCHIVE)/$(LUA_SOAP_SOURCE)
 	$(START_BUILD)
-	$(REMOVE)/luasoap-$(LUASOAP_VERSION)
-	$(UNTAR)/$(LUASOAP_SOURCE)
-	set -e; cd $(BUILD_TMP)/luasoap-$(LUASOAP_VERSION); \
+	$(REMOVE)/luasoap-$(LUA_SOAP_VERSION)
+	$(UNTAR)/$(LUA_SOAP_SOURCE)
+	set -e; cd $(BUILD_TMP)/luasoap-$(LUA_SOAP_VERSION); \
 		$(call post_patch,$(LUASOAP_PATCH)); \
-		$(MAKE) install LUA_DIR=$(TARGETPREFIX)/usr/share/lua/$(LUA_VERSION_SHORT)
-	$(REMOVE)/luasoap-$(LUASOAP_VERSION)
+		$(MAKE) install LUA_DIR=$(TARGET_DIR)/usr/share/lua/$(LUA_VERSION_SHORT)
+	$(REMOVE)/luasoap-$(LUA_SOAP_VERSION)
 	$(TOUCH)
 
 #
@@ -533,7 +547,7 @@ $(ARCHIVE)/json.lua:
 
 $(D)/luajson: $(D)/bootstrap $(D)/lua $(ARCHIVE)/json.lua
 	$(START_BUILD)
-	cp $(ARCHIVE)/json.lua $(TARGETPREFIX)/usr/share/lua/$(LUA_VERSION_SHORT)/json.lua
+	cp $(ARCHIVE)/json.lua $(TARGET_DIR)/usr/share/lua/$(LUA_VERSION_SHORT)/json.lua
 	$(TOUCH)
 
 #
@@ -556,8 +570,8 @@ $(D)/libboost: $(D)/bootstrap $(ARCHIVE)/$(BOOST_SOURCE)
 	$(UNTAR)/$(BOOST_SOURCE)
 	set -e; cd $(BUILD_TMP)/boost_$(BOOST_VERSION); \
 		$(call post_patch,$(BOOST_PATCH)); \
-		rm -rf $(TARGETPREFIX)/usr/include/boost; \
-		mv $(BUILD_TMP)/boost_$(BOOST_VERSION)/boost $(TARGETPREFIX)/usr/include/boost
+		rm -rf $(TARGET_DIR)/usr/include/boost; \
+		mv $(BUILD_TMP)/boost_$(BOOST_VERSION)/boost $(TARGET_DIR)/usr/include/boost
 	$(REMOVE)/boost_$(BOOST_VERSION)
 	$(TOUCH)
 
@@ -577,7 +591,7 @@ $(D)/zlib: $(D)/bootstrap $(ARCHIVE)/$(ZLIB_SOURCE)
 	$(UNTAR)/$(ZLIB_SOURCE)
 	set -e; cd $(BUILD_TMP)/zlib-$(ZLIB_VERSION); \
 		$(call post_patch,$(ZLIB_Patch)); \
-		CC=$(TARGET)-gcc mandir=$(TARGETPREFIX)/.remove CFLAGS="$(TARGET_CFLAGS)" \
+		CC=$(TARGET)-gcc mandir=$(TARGET_DIR)/.remove CFLAGS="$(TARGET_CFLAGS)" \
 		./configure \
 			--prefix=/usr \
 			--shared \
@@ -585,7 +599,7 @@ $(D)/zlib: $(D)/bootstrap $(ARCHIVE)/$(ZLIB_SOURCE)
 		; \
 		$(MAKE); \
 		ln -sf /bin/true ldconfig; \
-		$(MAKE) install prefix=$(TARGETPREFIX)/usr
+		$(MAKE) install prefix=$(TARGET_DIR)/usr
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/zlib.pc
 	$(REMOVE)/zlib-$(ZLIB_VERSION)
 	$(TOUCH)
@@ -609,8 +623,8 @@ $(D)/bzip2: $(D)/bootstrap $(ARCHIVE)/$(BZIP2_SOURCE)
 		mv Makefile-libbz2_so Makefile; \
 		CC=$(TARGET)-gcc AR=$(TARGET)-ar RANLIB=$(TARGET)-ranlib \
 		$(MAKE) all; \
-		$(MAKE) install PREFIX=$(TARGETPREFIX)/usr
-	cd $(TARGETPREFIX) && rm -f usr/bin/bzip2
+		$(MAKE) install PREFIX=$(TARGET_DIR)/usr
+	cd $(TARGET_DIR) && rm -f usr/bin/bzip2
 	$(REMOVE)/bzip2-$(BZIP2_VERSION)
 	$(TOUCH)
 
@@ -638,14 +652,14 @@ $(D)/timezone: $(D)/bootstrap find-zic $(ARCHIVE)/$(TZDATA_SOURCE)
 			: zic -d zoneinfo/posix -L /dev/null -y yearistype.sh $$zone ; \
 			: zic -d zoneinfo/right -L leapseconds -y yearistype.sh $$zone ; \
 		done; \
-		install -d -m 0755 $(TARGETPREFIX)/usr/share $(TARGETPREFIX)/etc; \
-		cp -a zoneinfo $(TARGETPREFIX)/usr/share/; \
-		cp -v zone.tab iso3166.tab $(TARGETPREFIX)/usr/share/zoneinfo/; \
+		install -d -m 0755 $(TARGET_DIR)/usr/share $(TARGET_DIR)/etc; \
+		cp -a zoneinfo $(TARGET_DIR)/usr/share/; \
+		cp -v zone.tab iso3166.tab $(TARGET_DIR)/usr/share/zoneinfo/; \
 		# Install default timezone
-		if [ -e $(TARGETPREFIX)/usr/share/zoneinfo/$(DEFAULT_TIMEZONE) ]; then \
-			echo ${DEFAULT_TIMEZONE} > $(TARGETPREFIX)/etc/timezone; \
+		if [ -e $(TARGET_DIR)/usr/share/zoneinfo/$(DEFAULT_TIMEZONE) ]; then \
+			echo ${DEFAULT_TIMEZONE} > $(TARGET_DIR)/etc/timezone; \
 		fi; \
-	install -m 0644 $(SKEL_ROOT)/etc/timezone.xml $(TARGETPREFIX)/etc/
+	install -m 0644 $(SKEL_ROOT)/etc/timezone.xml $(TARGET_DIR)/etc/
 	$(REMOVE)/timezone
 	$(TOUCH)
 
@@ -669,8 +683,8 @@ $(D)/freetype: $(D)/bootstrap $(D)/zlib $(D)/libpng $(ARCHIVE)/$(FREETYPE_SOURCE
 			-i include/freetype/config/ftoption.h; \
 		sed -i '/^FONT_MODULES += \(type1\|cid\|pfr\|type42\|pcf\|bdf\|winfonts\|cff\)/d' modules.cfg; \
 		$(CONFIGURE) \
-			--prefix=$(TARGETPREFIX)/usr \
-			--mandir=$(TARGETPREFIX)/.remove \
+			--prefix=$(TARGET_DIR)/usr \
+			--mandir=$(TARGET_DIR)/.remove \
 			--disable-static \
 			--enable-shared \
 			--with-png \
@@ -680,10 +694,10 @@ $(D)/freetype: $(D)/bootstrap $(D)/zlib $(D)/libpng $(ARCHIVE)/$(FREETYPE_SOURCE
 		; \
 		$(MAKE) all; \
 		$(MAKE) install
-		if [ ! -e $(TARGETPREFIX)/usr/include/freetype ] ; then \
-			ln -sf freetype2 $(TARGETPREFIX)/usr/include/freetype; \
+		if [ ! -e $(TARGET_DIR)/usr/include/freetype ] ; then \
+			ln -sf freetype2 $(TARGET_DIR)/usr/include/freetype; \
 		fi; \
-		mv $(TARGETPREFIX)/usr/bin/freetype-config $(HOSTPREFIX)/bin/freetype-config
+		mv $(TARGET_DIR)/usr/bin/freetype-config $(HOST_DIR)/bin/freetype-config
 	$(REWRITE_LIBTOOL)/libfreetype.la
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/freetype2.pc
 	$(REMOVE)/freetype-$(FREETYPE_VERSION)
@@ -733,7 +747,7 @@ $(D)/lirc: $(D)/bootstrap $(ARCHIVE)/$(LIRC_SOURCE)
 			--enable-sandboxed \
 		; \
 		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/liblirc_client.la
 	$(REMOVE)/lirc-$(LIRC_VERSION)
 	$(TOUCH)
@@ -760,7 +774,7 @@ $(D)/libjpeg_old: $(D)/bootstrap $(ARCHIVE)/$(JPEG_SOURCE)
 			--mandir=/.remove \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libjpeg.la
 	$(REMOVE)/jpeg-$(JPEG_VERSION)
 	$(TOUCH)
@@ -799,7 +813,7 @@ $(D)/libjpeg_turbo: $(D)/bootstrap $(ARCHIVE)/$(JPEG_TURBO_SOURCE)
 			--disable-static \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR); \
 		make clean; \
 		$(CONFIGURE) \
 			--prefix=/usr \
@@ -809,23 +823,23 @@ $(D)/libjpeg_turbo: $(D)/bootstrap $(ARCHIVE)/$(JPEG_TURBO_SOURCE)
 			--bindir=/.remove \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libjpeg.la
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libjpeg.pc
-	rm -f $(TARGETPREFIX)/usr/lib/libturbojpeg* $(TARGETPREFIX)/usr/include/turbojpeg.h $(PKG_CONFIG_PATH)/libturbojpeg.pc
+	rm -f $(TARGET_DIR)/usr/lib/libturbojpeg* $(TARGET_DIR)/usr/include/turbojpeg.h $(PKG_CONFIG_PATH)/libturbojpeg.pc
 	$(REMOVE)/libjpeg-turbo-$(JPEG_TURBO_VERSION)
 	$(TOUCH)
 
 #
 # libpng
 #
-PNG_VERSION = 1.6.25
+PNG_VERSION = 1.6.29
 PNG_VERSION_X = 16
 PNG_SOURCE = libpng-$(PNG_VERSION).tar.xz
 PNG_PATCH = libpng-$(PNG_VERSION)-disable-tools.patch
 
 $(ARCHIVE)/$(PNG_SOURCE):
-	$(WGET) https://sourceforge.net/projects/libpng/files/libpng$(PNG_VERSION_X)/older-releases/$(PNG_VERSION)/$(PNG_SOURCE)
+	$(WGET) https://sourceforge.net/projects/libpng/files/libpng$(PNG_VERSION_X)/$(PNG_VERSION)/$(PNG_SOURCE)
 
 $(D)/libpng: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/$(PNG_SOURCE)
 	$(START_BUILD)
@@ -834,9 +848,9 @@ $(D)/libpng: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/$(PNG_SOURCE)
 	set -e; cd $(BUILD_TMP)/libpng-$(PNG_VERSION); \
 		$(call post_patch,$(PNG_PATCH)); \
 		$(CONFIGURE) \
-			--prefix=$(TARGETPREFIX)/usr \
-			--mandir=$(TARGETPREFIX)/.remove \
-			--bindir=$(HOSTPREFIX)/bin \
+			--prefix=$(TARGET_DIR)/usr \
+			--mandir=$(TARGET_DIR)/.remove \
+			--bindir=$(HOST_DIR)/bin \
 		; \
 		ECHO=echo $(MAKE) all; \
 		$(MAKE) install
@@ -857,7 +871,7 @@ $(D)/png++: $(D)/bootstrap $(D)/libpng $(ARCHIVE)/$(PNGPP_SOURCE)
 	$(REMOVE)/png++-$(PNGPP_VERSION)
 	$(UNTAR)/$(PNGPP_SOURCE)
 	set -e; cd $(BUILD_TMP)/png++-$(PNGPP_VERSION); \
-		$(MAKE) install-headers PREFIX=$(TARGETPREFIX)/usr
+		$(MAKE) install-headers PREFIX=$(TARGET_DIR)/usr
 	$(REMOVE)/png++-$(PNGPP_VERSION)
 	$(TOUCH)
 
@@ -881,7 +895,7 @@ $(D)/libungif: $(D)/bootstrap $(ARCHIVE)/$(UNGIF_SOURCE)
 			--without-x \
 		; \
 		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libungif.la
 	$(REMOVE)/libungif-$(UNGIF_VERSION)
 	$(TOUCH)
@@ -906,7 +920,7 @@ $(D)/libgif: $(D)/bootstrap $(ARCHIVE)/$(GIFLIB_SOURCE)
 			--bindir=/.remove \
 		; \
 		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libgif.la
 	$(REMOVE)/giflib-$(GIFLIB_VERSION)
 	$(TOUCH)
@@ -914,7 +928,7 @@ $(D)/libgif: $(D)/bootstrap $(ARCHIVE)/$(GIFLIB_SOURCE)
 #
 # libcurl
 #
-CURL_VERSION = 7.54.0
+CURL_VERSION = 7.54.1
 CURL_SOURCE = curl-$(CURL_VERSION).tar.bz2
 CURL_PATCH = libcurl-$(CURL_VERSION).patch
 
@@ -945,16 +959,16 @@ $(D)/libcurl: $(D)/bootstrap $(D)/openssl $(D)/zlib $(ARCHIVE)/$(CURL_SOURCE)
 			--without-libidn \
 			--without-libpsl \
 			--with-random \
-			--with-ssl=$(TARGETPREFIX) \
+			--with-ssl=$(TARGET_DIR) \
 		; \
 		$(MAKE) all; \
-		sed -e "s,^prefix=,prefix=$(TARGETPREFIX)," < curl-config > $(HOSTPREFIX)/bin/curl-config; \
-		chmod 755 $(HOSTPREFIX)/bin/curl-config; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
-		rm -f $(TARGETPREFIX)/usr/bin/curl-config
+		sed -e "s,^prefix=,prefix=$(TARGET_DIR)," < curl-config > $(HOST_DIR)/bin/curl-config; \
+		chmod 755 $(HOST_DIR)/bin/curl-config; \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+		rm -f $(TARGET_DIR)/usr/bin/curl-config
 	$(REWRITE_LIBTOOL)/libcurl.la
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libcurl.pc
-	cd $(TARGETPREFIX) && rm usr/bin/curl
+	cd $(TARGET_DIR) && rm usr/bin/curl
 	$(REMOVE)/curl-$(CURL_VERSION)
 	$(TOUCH)
 
@@ -983,10 +997,10 @@ $(D)/libfribidi: $(D)/bootstrap $(ARCHIVE)/$(FRIBIDI_SOURCE)
 			--with-glib=no \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/fribidi.pc
 	$(REWRITE_LIBTOOL)/libfribidi.la
-	cd $(TARGETPREFIX) && rm usr/bin/fribidi
+	cd $(TARGET_DIR) && rm usr/bin/fribidi
 	$(REMOVE)/fribidi-$(FRIBIDI_VERSION)
 	$(TOUCH)
 
@@ -1012,7 +1026,7 @@ $(D)/libsigc_e2: $(D)/bootstrap $(ARCHIVE)/$(LIBSIGC_E2_SOURCE)
 			--disable-checks \
 		; \
 		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/sigc++-1.2.pc
 	$(REWRITE_LIBTOOL)/libsigc-1.2.la
 	$(REMOVE)/libsigc++-$(LIBSIGC_E2_VERSION)
@@ -1041,12 +1055,12 @@ $(D)/libsigc: $(D)/bootstrap $(ARCHIVE)/$(LIBSIGC_SOURCE)
 			--disable-documentation \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX); \
-		if [ -d $(TARGETPREFIX)/usr/include/sigc++-2.0/sigc++ ] ; then \
-			ln -sf ./sigc++-2.0/sigc++ $(TARGETPREFIX)/usr/include/sigc++; \
+		$(MAKE) install DESTDIR=$(TARGET_DIR); \
+		if [ -d $(TARGET_DIR)/usr/include/sigc++-2.0/sigc++ ] ; then \
+			ln -sf ./sigc++-2.0/sigc++ $(TARGET_DIR)/usr/include/sigc++; \
 		fi;
-		mv $(TARGETPREFIX)/usr/lib/sigc++-2.0/include/sigc++config.h $(TARGETPREFIX)/usr/include; \
-		rm -fr $(TARGETPREFIX)/usr/lib/sigc++-2.0
+		mv $(TARGET_DIR)/usr/lib/sigc++-2.0/include/sigc++config.h $(TARGET_DIR)/usr/include; \
+		rm -fr $(TARGET_DIR)/usr/lib/sigc++-2.0
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/sigc++-2.0.pc
 	$(REWRITE_LIBTOOL)/libsigc-2.0.la
 	$(REMOVE)/libsigc++-$(LIBSIGC_VERSION)
@@ -1078,7 +1092,7 @@ $(D)/libmad: $(D)/bootstrap $(ARCHIVE)/$(MAD_SOURCE)
 			--enable-sso \
 		; \
 		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/mad.pc
 	$(REWRITE_LIBTOOL)/libmad.la
 	$(REMOVE)/libmad-$(MAD_VERSION)
@@ -1107,7 +1121,7 @@ $(D)/libid3tag: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/$(ID3TAG_SOURCE)
 			--enable-shared=yes \
 		; \
 		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/id3tag.pc
 	$(REWRITE_LIBTOOL)/libid3tag.la
 	$(REMOVE)/libid3tag-$(ID3TAG_VERSION)
@@ -1134,7 +1148,7 @@ $(D)/libvorbis: $(D)/bootstrap $(D)/libogg $(ARCHIVE)/$(VORBIS_SOURCE)
 			--disable-examples \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/vorbis.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/vorbisenc.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/vorbisfile.pc
@@ -1165,10 +1179,10 @@ $(D)/libvorbisidec: $(D)/bootstrap $(D)/libogg $(ARCHIVE)/$(VORBISIDEC_SOURCE)
 	$(UNTAR)/$(VORBISIDEC_SOURCE)
 	set -e; cd $(BUILD_TMP)/libvorbisidec-$(VORBISIDEC_VERSION); \
 		$(call post_patch,$(VORBISIDEC_PATCH)); \
-		ACLOCAL_FLAGS="-I . -I $(TARGETPREFIX)/usr/share/aclocal" \
+		ACLOCAL_FLAGS="-I . -I $(TARGET_DIR)/usr/share/aclocal" \
 		$(BUILDENV) ./autogen.sh $(CONFIGURE_OPTS) --prefix=/usr; \
 		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/vorbisidec.pc
 	$(REWRITE_LIBTOOL)/libvorbisidec.la
 	$(REMOVE)/libvorbisidec-$(VORBISIDEC_VERSION)
@@ -1197,8 +1211,8 @@ $(D)/libiconv: $(D)/bootstrap $(ARCHIVE)/$(ICONV_SOURCE)
 			--disable-shared \
 		; \
 		$(MAKE); \
-		cp ./srcm4/* $(HOSTPREFIX)/share/aclocal/ ; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		cp ./srcm4/* $(HOST_DIR)/share/aclocal/ ; \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libiconv.la
 	$(REMOVE)/libiconv-$(ICONV_VERSION)
 	$(TOUCH)
@@ -1223,7 +1237,7 @@ $(D)/libexpat: $(D)/bootstrap $(ARCHIVE)/$(EXPAT_SOURCE)
 			--bindir=/.remove \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/expat.pc
 	$(REWRITE_LIBTOOL)/libexpat.la
 	$(REMOVE)/expat-$(EXPAT_VERSION)
@@ -1245,14 +1259,14 @@ $(D)/fontconfig: $(D)/bootstrap $(D)/freetype $(D)/libexpat $(ARCHIVE)/$(FONTCON
 	set -e; cd $(BUILD_TMP)/fontconfig-$(FONTCONFIG_VERSION); \
 		$(CONFIGURE) \
 			--prefix=/usr \
-			--with-freetype-config=$(hostprefix)/bin/freetype-config \
-			--with-expat-includes=$(TARGETPREFIX)/usr/include \
-			--with-expat-lib=$(TARGETPREFIX)/usr/lib \
+			--with-freetype-config=$(HOST_DIR)/bin/freetype-config \
+			--with-expat-includes=$(TARGET_DIR)/usr/include \
+			--with-expat-lib=$(TARGET_DIR)/usr/lib \
 			--sysconfdir=/etc \
 			--disable-docs \
 		; \
 		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libfontconfig.la
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/fontconfig.pc
 	$(REMOVE)/fontconfig-$(FONTCONFIG_VERSION)
@@ -1277,7 +1291,7 @@ $(D)/libdvdcss: $(D)/bootstrap $(ARCHIVE)/$(LIBDVDCSS_SOURCE)
 			--disable-doc \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libdvdcss.pc
 	$(REWRITE_LIBTOOL)/libdvdcss.la
 	$(REMOVE)/libdvdcss-$(LIBDVDCSS_VERSION)
@@ -1309,7 +1323,7 @@ $(D)/libdvdnav: $(D)/bootstrap $(D)/libdvdread $(ARCHIVE)/$(LIBDVDNAV_SOURCE)
 			--enable-shared \
 		; \
 		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/dvdnav.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/dvdnavmini.pc
 	$(REWRITE_LIBTOOL)/libdvdnav.la
@@ -1339,7 +1353,7 @@ $(D)/libdvdread: $(D)/bootstrap $(ARCHIVE)/$(LIBDVDREAD_SOURCE)
 			--enable-shared \
 		; \
 		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/dvdread.pc
 	$(REWRITE_LIBTOOL)/libdvdread.la
 	$(REMOVE)/libdvdread-$(LIBDVDREAD_VERSION)
@@ -1369,7 +1383,7 @@ $(D)/libdreamdvd: $(D)/bootstrap $(D)/libdvdnav
 			--prefix=/usr \
 		; \
 		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libdreamdvd.pc
 	$(REWRITE_LIBTOOL)/libdreamdvd.la
 	$(REMOVE)/libdreamdvd
@@ -1587,8 +1601,8 @@ $(D)/ffmpeg: $(D)/bootstrap $(D)/openssl $(D)/bzip2 $(D)/libass $(D)/libroxml $(
 			--disable-runtime-cpudetect \
 			--enable-cross-compile \
 			--cross-prefix=$(TARGET)- \
-			--extra-cflags="-I$(TARGETPREFIX)/usr/include -ffunction-sections -fdata-sections" \
-			--extra-ldflags="-L$(TARGETPREFIX)/usr/lib -Wl,--gc-sections,-lrt" \
+			--extra-cflags="-I$(TARGET_DIR)/usr/include -ffunction-sections -fdata-sections" \
+			--extra-ldflags="-L$(TARGET_DIR)/usr/lib -Wl,--gc-sections,-lrt" \
 			--target-os=linux \
 			--arch=sh4 \
 			--prefix=/usr \
@@ -1597,7 +1611,7 @@ $(D)/ffmpeg: $(D)/bootstrap $(D)/openssl $(D)/bzip2 $(D)/libass $(D)/libroxml $(
 			--docdir=/.remove \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libavcodec.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libavdevice.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libavfilter.pc
@@ -1633,7 +1647,7 @@ $(D)/libass: $(D)/bootstrap $(D)/freetype $(D)/libfribidi $(ARCHIVE)/$(LIBASS_SO
 			--disable-enca \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libass.pc
 	$(REWRITE_LIBTOOL)/libass.la
 	$(REMOVE)/libass-$(LIBASS_VERSION)
@@ -1658,7 +1672,7 @@ $(D)/sqlite: $(D)/bootstrap $(ARCHIVE)/$(SQLITE_SOURCE)
 			--mandir=/.remove \
 		; \
 		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/sqlite3.pc
 	$(REWRITE_LIBTOOL)/libsqlite3.la
 	$(REMOVE)/sqlite-autoconf-$(SQLITE_VERSION)
@@ -1690,7 +1704,7 @@ $(D)/libsoup: $(D)/bootstrap $(D)/sqlite $(D)/libxml2 $(D)/libglib2 $(ARCHIVE)/$
 			--disable-gtk-doc-pdf \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libsoup-2.4.pc
 	$(REWRITE_LIBTOOL)/libsoup-2.4.la
 	$(REMOVE)/libsoup-$(LIBSOUP_VERSION)
@@ -1717,7 +1731,7 @@ $(D)/libogg: $(D)/bootstrap $(ARCHIVE)/$(OGG_SOURCE)
 			--disable-static \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/ogg.pc
 	$(REWRITE_LIBTOOL)/libogg.la
 	$(REMOVE)/libogg-$(OGG_VERSION)
@@ -1760,7 +1774,7 @@ $(D)/libflac: $(D)/bootstrap $(ARCHIVE)/$(FLAC_SOURCE)
 			--disable-xmms-plugin \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX) docdir=/.remove
+		$(MAKE) install DESTDIR=$(TARGET_DIR) docdir=/.remove
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/flac.pc
 	$(REWRITE_LIBTOOL)/libFLAC.la
 	$(REMOVE)/flac-$(FLAC_VERSION)
@@ -1777,7 +1791,7 @@ $(ARCHIVE)/$(LIBXML2_SOURCE):
 	$(WGET) ftp://xmlsoft.org/libxml2/$(LIBXML2_SOURCE)
 
 ifeq ($(IMAGE), enigma2)
-LIBXML2_CONF_OPTS  = --with-python=$(HOSTPREFIX)
+LIBXML2_CONF_OPTS  = --with-python=$(HOST_DIR)
 LIBXML2_CONF_OPTS += --with-python-install-dir=$(PYTHON_DIR)/site-packages
 endif
 
@@ -1806,16 +1820,16 @@ $(D)/libxml2: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/$(LIBXML2_SOURCE)
 			$(LIBXML2_CONF_OPTS) \
 		; \
 		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX);
-		mv $(TARGETPREFIX)/usr/bin/xml2-config $(HOSTPREFIX)/bin
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libxml-2.0.pc $(HOSTPREFIX)/bin/xml2-config
+		$(MAKE) install DESTDIR=$(TARGET_DIR);
+		mv $(TARGET_DIR)/usr/bin/xml2-config $(HOST_DIR)/bin
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libxml-2.0.pc $(HOST_DIR)/bin/xml2-config
 	sed -i 's/^\(Libs:.*\)/\1 -lz/' $(PKG_CONFIG_PATH)/libxml-2.0.pc
-	if [ -e "$(TARGETPREFIX)$(PYTHON_DIR)/site-packages/libxml2mod.la" ]; then \
-		sed -e "/^dependency_libs/ s,/usr/lib/libxml2.la,$(TARGETPREFIX)/usr/lib/libxml2.la,g" -i $(TARGETPREFIX)$(PYTHON_DIR)/site-packages/libxml2mod.la; \
-		sed -e "/^libdir/ s,$(PYTHON_DIR)/site-packages,$(TARGETPREFIX)$(PYTHON_DIR)/site-packages,g" -i $(TARGETPREFIX)$(PYTHON_DIR)/site-packages/libxml2mod.la; \
+	if [ -e "$(TARGET_DIR)$(PYTHON_DIR)/site-packages/libxml2mod.la" ]; then \
+		sed -e "/^dependency_libs/ s,/usr/lib/libxml2.la,$(TARGET_DIR)/usr/lib/libxml2.la,g" -i $(TARGET_DIR)$(PYTHON_DIR)/site-packages/libxml2mod.la; \
+		sed -e "/^libdir/ s,$(PYTHON_DIR)/site-packages,$(TARGET_DIR)$(PYTHON_DIR)/site-packages,g" -i $(TARGET_DIR)$(PYTHON_DIR)/site-packages/libxml2mod.la; \
 	fi; \
-	sed -e "/^XML2_LIBDIR/ s,/usr/lib,$(TARGETPREFIX)/usr/lib,g" -i $(TARGETPREFIX)/usr/lib/xml2Conf.sh; \
-	sed -e "/^XML2_INCLUDEDIR/ s,/usr/include,$(TARGETPREFIX)/usr/include,g" -i $(TARGETPREFIX)/usr/lib/xml2Conf.sh
+	sed -e "/^XML2_LIBDIR/ s,/usr/lib,$(TARGET_DIR)/usr/lib,g" -i $(TARGET_DIR)/usr/lib/xml2Conf.sh; \
+	sed -e "/^XML2_INCLUDEDIR/ s,/usr/include,$(TARGET_DIR)/usr/include,g" -i $(TARGET_DIR)/usr/lib/xml2Conf.sh
 	$(REWRITE_LIBTOOL)/libxml2.la
 	$(REMOVE)/libxml2-$(LIBXML2_VERSION)
 	$(TOUCH)
@@ -1835,28 +1849,28 @@ $(D)/libxslt: $(D)/bootstrap $(D)/libxml2 $(ARCHIVE)/$(LIBXSLT_SOURCE)
 	$(UNTAR)/$(LIBXSLT_SOURCE)
 	set -e; cd $(BUILD_TMP)/libxslt-$(LIBXSLT_VERSION); \
 		$(CONFIGURE) \
-			CPPFLAGS="$(CPPFLAGS) -I$(TARGETPREFIX)/usr/include/libxml2" \
+			CPPFLAGS="$(CPPFLAGS) -I$(TARGET_DIR)/usr/include/libxml2" \
 			--prefix=/usr \
-			--with-libxml-prefix="$(HOSTPREFIX)" \
-			--with-libxml-include-prefix="$(TARGETPREFIX)/usr/include" \
-			--with-libxml-libs-prefix="$(TARGETPREFIX)/usr/lib" \
-			--with-python=$(HOSTPREFIX) \
+			--with-libxml-prefix="$(HOST_DIR)" \
+			--with-libxml-include-prefix="$(TARGET_DIR)/usr/include" \
+			--with-libxml-libs-prefix="$(TARGET_DIR)/usr/lib" \
+			--with-python=$(HOST_DIR) \
 			--without-crypto \
 			--without-debug \
 			--without-mem-debug \
 		; \
 		$(MAKE) all; \
-		sed -e "s,^prefix=,prefix=$(TARGETPREFIX)," < xslt-config > $(HOSTPREFIX)/bin/xslt-config; \
-		chmod 755 $(HOSTPREFIX)/bin/xslt-config; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
-		if [ -e "$(TARGETPREFIX)$(PYTHON_DIR)/site-packages/libxsltmod.la" ]; then \
-			sed -e "/^dependency_libs/ s,/usr/lib/libexslt.la,$(TARGETPREFIX)/usr/lib/libexslt.la,g" -i $(TARGETPREFIX)$(PYTHON_DIR)/site-packages/libxsltmod.la; \
-			sed -e "/^dependency_libs/ s,/usr/lib/libxslt.la,$(TARGETPREFIX)/usr/lib/libxslt.la,g" -i $(TARGETPREFIX)$(PYTHON_DIR)/site-packages/libxsltmod.la; \
-			sed -e "/^libdir/ s,$(PYTHON_DIR)/site-packages,$(TARGETPREFIX)$(PYTHON_DIR)/site-packages,g" -i $(TARGETPREFIX)$(PYTHON_DIR)/site-packages/libxsltmod.la; \
+		sed -e "s,^prefix=,prefix=$(TARGET_DIR)," < xslt-config > $(HOST_DIR)/bin/xslt-config; \
+		chmod 755 $(HOST_DIR)/bin/xslt-config; \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+		if [ -e "$(TARGET_DIR)$(PYTHON_DIR)/site-packages/libxsltmod.la" ]; then \
+			sed -e "/^dependency_libs/ s,/usr/lib/libexslt.la,$(TARGET_DIR)/usr/lib/libexslt.la,g" -i $(TARGET_DIR)$(PYTHON_DIR)/site-packages/libxsltmod.la; \
+			sed -e "/^dependency_libs/ s,/usr/lib/libxslt.la,$(TARGET_DIR)/usr/lib/libxslt.la,g" -i $(TARGET_DIR)$(PYTHON_DIR)/site-packages/libxsltmod.la; \
+			sed -e "/^libdir/ s,$(PYTHON_DIR)/site-packages,$(TARGET_DIR)$(PYTHON_DIR)/site-packages,g" -i $(TARGET_DIR)$(PYTHON_DIR)/site-packages/libxsltmod.la; \
 		fi; \
-		sed -e "/^XSLT_LIBDIR/ s,/usr/lib,$(TARGETPREFIX)/usr/lib,g" -i $(TARGETPREFIX)/usr/lib/xsltConf.sh; \
-		sed -e "/^XSLT_INCLUDEDIR/ s,/usr/include,$(TARGETPREFIX)/usr/include,g" -i $(TARGETPREFIX)/usr/lib/xsltConf.sh
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libexslt.pc $(HOSTPREFIX)/bin/xslt-config
+		sed -e "/^XSLT_LIBDIR/ s,/usr/lib,$(TARGET_DIR)/usr/lib,g" -i $(TARGET_DIR)/usr/lib/xsltConf.sh; \
+		sed -e "/^XSLT_INCLUDEDIR/ s,/usr/include,$(TARGET_DIR)/usr/include,g" -i $(TARGET_DIR)/usr/lib/xsltConf.sh
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libexslt.pc $(HOST_DIR)/bin/xslt-config
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libxslt.pc
 	$(REWRITE_LIBTOOL)/libexslt.la
 	$(REWRITE_LIBTOOL)/libxslt.la
@@ -1885,7 +1899,7 @@ $(D)/libroxml: $(D)/bootstrap $(ARCHIVE)/$(LIBROXML_SOURCE)
 			--disable-roxml \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libroxml.pc
 	$(REWRITE_LIBTOOL)/libroxml.la
 	$(REMOVE)/libroxml-$(LIBROXML_VERSION)
@@ -1916,30 +1930,32 @@ $(D)/pugixml: $(D)/bootstrap $(ARCHIVE)/$(PUGIXML_SOURCE)
 		-DCMAKE_CXX_FLAGS="-pipe -Os" \
 		scripts; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REMOVE)/pugixml-$(PUGIXML_VERSION)
 	$(TOUCH)
 
 #
 # graphlcd
 #
+GRAPHLCD_VERSION = 7958e1b
+GRAPHLCD_SOURCE = graphlcd-$(GRAPHLCD_VERSION).tar.bz2
+GRAPHLCD_URL = git://projects.vdr-developer.org/graphlcd-base.git
 GRAPHLCD_PATCH = graphlcd-base-touchcol.patch
 
-$(D)/graphlcd: $(D)/bootstrap $(D)/freetype $(D)/libusb
+$(ARCHIVE)/$(GRAPHLCD_SOURCE):
+	get-git-archive.sh $(GRAPHLCD_URL) $(GRAPHLCD_VERSION) $(notdir $@) $(ARCHIVE)
+
+$(D)/graphlcd: $(D)/bootstrap $(D)/freetype $(D)/libusb $(ARCHIVE)/$(GRAPHLCD_SOURCE)
 	$(START_BUILD)
-	$(REMOVE)/graphlcd
-	set -e; if [ -d $(ARCHIVE)/graphlcd-base-touchcol.git ]; \
-		then cd $(ARCHIVE)/graphlcd-base-touchcol.git; git pull; \
-		else cd $(ARCHIVE); git clone -b touchcol git://projects.vdr-developer.org/graphlcd-base.git graphlcd-base-touchcol.git; \
-		fi
-	cp -ra $(ARCHIVE)/graphlcd-base-touchcol.git $(BUILD_TMP)/graphlcd
-	set -e; cd $(BUILD_TMP)/graphlcd; \
+	$(REMOVE)/graphlcd-$(GRAPHLCD_VERSION)
+	$(UNTAR)/$(GRAPHLCD_SOURCE)
+	set -e; cd $(BUILD_TMP)/graphlcd-$(GRAPHLCD_VERSION); \
 		$(call post_patch,$(GRAPHLCD_PATCH)); \
 		export TARGET=$(TARGET)-; \
 		$(BUILDENV) \
-		$(MAKE) DESTDIR=$(TARGETPREFIX); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
-	$(REMOVE)/graphlcd
+		$(MAKE) DESTDIR=$(TARGET_DIR); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REMOVE)/graphlcd-$(GRAPHLCD_VERSION)
 	$(TOUCH)
 
 #
@@ -1962,9 +1978,9 @@ $(D)/lcd4linux: $(D)/bootstrap $(D)/libusb_compat $(D)/libgd $(D)/libusb
 			--without-ncurses \
 		; \
 		$(MAKE) vcs_version all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
-	install -m 755 $(SKEL_ROOT)/etc/init.d/lcd4linux $(TARGETPREFIX)/etc/init.d/
-	install -D -m 0600 $(SKEL_ROOT)/etc/lcd4linux_ni.conf $(TARGETPREFIX)/etc/lcd4linux.conf
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	install -m 755 $(SKEL_ROOT)/etc/init.d/lcd4linux $(TARGET_DIR)/etc/init.d/
+	install -D -m 0600 $(SKEL_ROOT)/etc/lcd4linux_ni.conf $(TARGET_DIR)/etc/lcd4linux.conf
 	$(REMOVE)/lcd4linux
 	$(TOUCH)
 
@@ -1989,7 +2005,7 @@ $(D)/libgd: $(D)/bootstrap $(D)/libpng $(D)/libjpeg $(D)/freetype $(ARCHIVE)/$(G
 			--disable-shared \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libgd.la
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gdlib.pc
 	$(REMOVE)/libgd-$(GD_VERSION)
@@ -2021,7 +2037,7 @@ $(D)/libusb: $(D)/bootstrap $(ARCHIVE)/$(LIBUSB_SOURCE)
 			--disable-examples-build \
 		; \
 		$(MAKE) ; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libusb-1.0.la
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libusb-1.0.pc
 	$(REMOVE)/libusb-$(LIBUSB_VERSION)
@@ -2048,8 +2064,8 @@ $(D)/libusb_compat: $(D)/bootstrap $(D)/libusb $(ARCHIVE)/$(LIBUSB_COMPAT_SOURCE
 			--disable-examples-build \
 		; \
 		$(MAKE) ; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
-	rm -f $(TARGETPREFIX)/usr/bin/libusb-config
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	rm -f $(TARGET_DIR)/usr/bin/libusb-config
 	$(REWRITE_LIBTOOL)/libusb.la
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libusb.pc
 	$(REMOVE)/libusb-compat-$(LIBUSB_COMPAT_VERSION)
@@ -2058,7 +2074,7 @@ $(D)/libusb_compat: $(D)/bootstrap $(D)/libusb $(ARCHIVE)/$(LIBUSB_COMPAT_SOURCE
 #
 # alsa-lib
 #
-ALSA_LIB_VERSION = 1.1.3
+ALSA_LIB_VERSION = 1.1.4.1
 ALSA_LIB_SOURCE = alsa-lib-$(ALSA_LIB_VERSION).tar.bz2
 ALSA_LIB_PATCH  = alsa-lib-$(ALSA_LIB_VERSION).patch
 ALSA_LIB_PATCH += alsa-lib-$(ALSA_LIB_VERSION)-link_fix.patch
@@ -2087,7 +2103,7 @@ $(D)/alsa-lib: $(D)/bootstrap $(ARCHIVE)/$(ALSA_LIB_SOURCE)
 			--disable-python \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/alsa.pc
 	$(REWRITE_LIBTOOL)/libasound.la
 	$(REMOVE)/alsa-lib-$(ALSA_LIB_VERSION)
@@ -2096,7 +2112,7 @@ $(D)/alsa-lib: $(D)/bootstrap $(ARCHIVE)/$(ALSA_LIB_SOURCE)
 #
 # alsa-utils
 #
-ALSA_UTILS_VERSION = $(ALSA_LIB_VERSION)
+ALSA_UTILS_VERSION = 1.1.4
 ALSA_UTILS_SOURCE = alsa-utils-$(ALSA_UTILS_VERSION).tar.bz2
 
 $(ARCHIVE)/$(ALSA_UTILS_SOURCE):
@@ -2108,7 +2124,7 @@ $(D)/alsa-utils: $(D)/bootstrap $(D)/alsa-lib $(ARCHIVE)/$(ALSA_UTILS_SOURCE)
 	$(UNTAR)/$(ALSA_UTILS_SOURCE)
 	set -e; cd $(BUILD_TMP)/alsa-utils-$(ALSA_UTILS_VERSION); \
 		sed -ir -r "s/(alsamixer|amidi|aplay|iecset|speaker-test|seq|alsactl|alsaucm|topology)//g" Makefile.am ;\
-		autoreconf -fi -I $(TARGETPREFIX)/usr/share/aclocal; \
+		autoreconf -fi -I $(TARGET_DIR)/usr/share/aclocal; \
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--mandir=/.remove \
@@ -2123,12 +2139,12 @@ $(D)/alsa-utils: $(D)/bootstrap $(D)/alsa-lib $(ARCHIVE)/$(ALSA_UTILS_SOURCE)
 			--disable-rst2man \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REMOVE)/alsa-utils-$(ALSA_UTILS_VERSION)
-	install -m 755 $(SKEL_ROOT)/etc/init.d/amixer $(TARGETPREFIX)/etc/init.d/amixer
-	install -m 644 $(SKEL_ROOT)/etc/amixer.conf $(TARGETPREFIX)/etc/amixer.conf
-	install -m 644 $(SKEL_ROOT)/etc/asound.conf $(TARGETPREFIX)/etc/asound.conf
-	cd $(TARGETPREFIX) && rm -f usr/bin/aserver
+	install -m 755 $(SKEL_ROOT)/etc/init.d/amixer $(TARGET_DIR)/etc/init.d/amixer
+	install -m 644 $(SKEL_ROOT)/etc/amixer.conf $(TARGET_DIR)/etc/amixer.conf
+	install -m 644 $(SKEL_ROOT)/etc/asound.conf $(TARGET_DIR)/etc/asound.conf
+	cd $(TARGET_DIR) && rm -f usr/bin/aserver
 	$(TOUCH)
 
 #
@@ -2158,7 +2174,7 @@ $(D)/libopenthreads: $(D)/bootstrap $(ARCHIVE)/$(LIBOPENTHREADS_SOURCE)
 		find . -name cmake_install.cmake -print0 | xargs -0 \
 		sed -i 's@SET(CMAKE_INSTALL_PREFIX "/usr/local")@SET(CMAKE_INSTALL_PREFIX "")@'; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)/usr
+		$(MAKE) install DESTDIR=$(TARGET_DIR)/usr
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/openthreads.pc
 	$(REMOVE)/OpenThreads-$(LIBOPENTHREADS_VERSION)
 	$(TOUCH)
@@ -2166,46 +2182,50 @@ $(D)/libopenthreads: $(D)/bootstrap $(ARCHIVE)/$(LIBOPENTHREADS_SOURCE)
 #
 # librtmpdump
 #
+LIBRTMPDUMP_VERSION = ad70c64
+LIBRTMPDUMP_SOURCE = librtmpdump-$(LIBRTMPDUMP_VERSION).tar.bz2
+LIBRTMPDUMP_URL = git://github.com/oe-alliance/rtmpdump.git
 LIBRTMPDUMP_PATCH = rtmpdump-2.4.patch
 
-$(D)/librtmpdump: $(D)/bootstrap $(D)/zlib $(D)/openssl
+$(ARCHIVE)/$(LIBRTMPDUMP_SOURCE):
+	get-git-archive.sh $(LIBRTMPDUMP_URL) $(LIBRTMPDUMP_VERSION) $(notdir $@) $(ARCHIVE)
+
+$(D)/librtmpdump: $(D)/bootstrap $(D)/zlib $(D)/openssl $(ARCHIVE)/$(LIBRTMPDUMP_SOURCE)
 	$(START_BUILD)
-	$(REMOVE)/librtmpdump
-	set -e; if [ -d $(ARCHIVE)/rtmpdump.git ]; \
-		then cd $(ARCHIVE)/rtmpdump.git; git pull; \
-		else cd $(ARCHIVE); git clone git://github.com/oe-alliance/rtmpdump.git rtmpdump.git; \
-		fi
-	cp -ra $(ARCHIVE)/rtmpdump.git $(BUILD_TMP)/librtmpdump
-	set -e; cd $(BUILD_TMP)/librtmpdump; \
+	$(REMOVE)/librtmpdump-$(LIBRTMPDUMP_VERSION)
+	$(UNTAR)/$(LIBRTMPDUMP_SOURCE)
+	set -e; cd $(BUILD_TMP)/librtmpdump-$(LIBRTMPDUMP_VERSION); \
 		$(call post_patch,$(LIBRTMPDUMP_PATCH)); \
 		$(BUILDENV) \
 		$(MAKE) CROSS_COMPILE=$(TARGET)- ; \
-		$(MAKE) install prefix=/usr DESTDIR=$(TARGETPREFIX) MANDIR=$(TARGETPREFIX)/.remove
+		$(MAKE) install prefix=/usr DESTDIR=$(TARGET_DIR) MANDIR=$(TARGET_DIR)/.remove
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/librtmp.pc
-	$(REMOVE)/librtmpdump
+	$(REMOVE)/librtmpdump-$(LIBRTMPDUMP_VERSION)
 	$(TOUCH)
 
 #
 # libdvbsi++
 #
+LIBDVBSI++_VERSION = ff57e58
+LIBDVBSI++_SOURCE = libdvbsi++-$(LIBDVBSI++_VERSION).tar.bz2
+LIBDVBSI++_URL = git://git.opendreambox.org/git/obi/libdvbsi++.git
 LIBDVBSI++_PATCH = libdvbsi++-git.patch
 
-$(D)/libdvbsi++: $(D)/bootstrap
+$(ARCHIVE)/$(LIBDVBSI++_SOURCE):
+	get-git-archive.sh $(LIBDVBSI++_URL) $(LIBDVBSI++_VERSION) $(notdir $@) $(ARCHIVE)
+
+$(D)/libdvbsi++: $(D)/bootstrap $(ARCHIVE)/$(LIBDVBSI++_SOURCE)
 	$(START_BUILD)
-	$(REMOVE)/libdvbsi++
-	set -e; if [ -d $(ARCHIVE)/libdvbsi++.git ]; \
-		then cd $(ARCHIVE)/libdvbsi++.git; git pull; \
-		else cd $(ARCHIVE); git clone git://git.opendreambox.org/git/obi/libdvbsi++.git libdvbsi++.git; \
-		fi
-	cp -ra $(ARCHIVE)/libdvbsi++.git $(BUILD_TMP)/libdvbsi++
-	set -e; cd $(BUILD_TMP)/libdvbsi++; \
+	$(REMOVE)/libdvbsi++-$(LIBDVBSI++_VERSION)
+	$(UNTAR)/$(LIBDVBSI++_SOURCE)
+	set -e; cd $(BUILD_TMP)/libdvbsi++-$(LIBDVBSI++_VERSION); \
 		$(call post_patch,$(LIBDVBSI++_PATCH)); \
 		$(CONFIGURE) \
-			--prefix=$(TARGETPREFIX)/usr \
+			--prefix=$(TARGET_DIR)/usr \
 		; \
 		$(MAKE); \
 		$(MAKE) install
-	$(REMOVE)/libdvbsi++
+	$(REMOVE)/libdvbsi++-$(LIBDVBSI++_VERSION)
 	$(TOUCH)
 
 #
@@ -2226,7 +2246,7 @@ $(D)/libmodplug: $(D)/bootstrap $(ARCHIVE)/$(LIBMODPLUG_SOURCE)
 			--prefix=/usr \
 		; \
 		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libmodplug.pc
 	$(REWRITE_LIBTOOL)/libmodplug.la
 	$(REMOVE)/libmodplug-$(LIBMODPLUG_VERSION)
@@ -2251,7 +2271,7 @@ $(D)/lzo: $(D)/bootstrap $(ARCHIVE)/$(LZO_SOURCE)
 			--docdir=/.remove \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/liblzo2.la
 	$(REMOVE)/lzo-$(LZO_VERSION)
 	$(TOUCH)
@@ -2277,7 +2297,7 @@ $(D)/minidlna: $(D)/bootstrap $(D)/zlib $(D)/sqlite $(D)/libexif $(D)/libjpeg $(
 			--prefix=/usr \
 		; \
 		$(MAKE); \
-		$(MAKE) install prefix=/usr DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install prefix=/usr DESTDIR=$(TARGET_DIR)
 	$(REMOVE)/minidlna-$(MINIDLNA_VERSION)
 	$(TOUCH)
 
@@ -2299,7 +2319,7 @@ $(D)/libexif: $(D)/bootstrap $(ARCHIVE)/$(LIBEXIF_SOURCE)
 			--prefix=/usr \
 		; \
 		$(MAKE); \
-		$(MAKE) install prefix=/usr DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install prefix=/usr DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libexif.pc
 	$(REWRITE_LIBTOOL)/libexif.la
 	$(REMOVE)/libexif-$(LIBEXIF_VERSION)
@@ -2323,7 +2343,7 @@ $(D)/djmount: $(D)/bootstrap $(D)/fuse $(ARCHIVE)/$(DJMOUNT_SOURCE)
 			--prefix=/usr \
 		; \
 		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REMOVE)/djmount-$(DJMOUNT_VERSION)
 	$(TOUCH)
 
@@ -2345,7 +2365,7 @@ $(D)/libupnp: $(D)/bootstrap $(ARCHIVE)/$(LIBUPNP_SOURCE)
 			--prefix=/usr \
 		; \
 		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libupnp.pc
 	$(REWRITE_LIBTOOL)/libixml.la
 	$(REWRITE_LIBTOOL)/libthreadutil.la
@@ -2375,7 +2395,7 @@ $(D)/rarfs: $(D)/bootstrap $(D)/fuse $(ARCHIVE)/$(RARFS_SOURCE)
 			--prefix=/usr \
 		; \
 		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REMOVE)/rarfs-$(RARFS_VERSION)
 	$(TOUCH)
 
@@ -2397,7 +2417,7 @@ $(D)/sshfs: $(D)/bootstrap $(D)/libglib2 $(D)/fuse $(ARCHIVE)/$(SSHFS_SOURCE)
 			--prefix=/usr \
 		; \
 		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REMOVE)/sshfs-fuse-$(SSHFS_VERSION)
 	$(TOUCH)
 
@@ -2420,7 +2440,7 @@ $(D)/howl: $(D)/bootstrap $(ARCHIVE)/$(HOWL_SOURCE)
 			--prefix=/usr \
 		; \
 		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/howl.pc
 	$(REWRITE_LIBTOOL)/libhowl.la
 	$(REMOVE)/howl-$(HOWL_VERSION)
@@ -2446,7 +2466,7 @@ $(D)/libdaemon: $(D)/bootstrap $(ARCHIVE)/$(LIBDAEMON_SOURCE)
 			--disable-static \
 		; \
 		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libdaemon.pc
 	$(REWRITE_LIBTOOL)/libdaemon.la
 	$(REMOVE)/libdaemon-$(LIBDAEMON_VERSION)
@@ -2473,12 +2493,12 @@ $(D)/libplist: $(D)/bootstrap $(D)/libxml2 $(ARCHIVE)/$(LIBPLIST_SOURCE)
 			-DCMAKE_INSTALL_PREFIX="/usr" \
 			-DCMAKE_C_COMPILER="$(TARGET)-gcc" \
 			-DCMAKE_CXX_COMPILER="$(TARGET)-g++" \
-			-DCMAKE_INCLUDE_PATH="$(TARGETPREFIX)/usr/include" \
+			-DCMAKE_INCLUDE_PATH="$(TARGET_DIR)/usr/include" \
 		; \
 		find . -name cmake_install.cmake -print0 | xargs -0 \
 		sed -i 's@SET(CMAKE_INSTALL_PREFIX "/usr/local")@SET(CMAKE_INSTALL_PREFIX "")@'; \
 		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libplist.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libplist++.pc
 	$(REMOVE)/libplist-$(LIBPLIST_VERSION)
@@ -2506,7 +2526,7 @@ $(D)/libao: $(D)/bootstrap $(D)/alsa-lib $(ARCHIVE)/$(LIBAO_SOURCE)
 			--enable-alsa-mmap \
 		; \
 		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/ao.pc
 	$(REWRITE_LIBTOOL)/libao.la
 	$(REMOVE)/libao-$(LIBAO_VERSION)
@@ -2533,7 +2553,7 @@ $(D)/nettle: $(D)/bootstrap $(D)/gmp $(ARCHIVE)/$(NETTLE_SOURCE)
 			--disable-documentation \
 		; \
 		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/hogweed.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/nettle.pc
 	$(REMOVE)/nettle-$(NETTLE_VERSION)
@@ -2562,14 +2582,14 @@ $(D)/gnutls: $(D)/bootstrap $(D)/nettle $(ARCHIVE)/$(GNUTLS_SOURCE)
 			--disable-rpath \
 			--with-included-libtasn1 \
 			--enable-local-libopts \
-			--with-libpthread-prefix=$(TARGETPREFIX)/usr \
-			--with-libz-prefix=$(TARGETPREFIX)/usr \
+			--with-libpthread-prefix=$(TARGET_DIR)/usr \
+			--with-libz-prefix=$(TARGET_DIR)/usr \
 			--disable-guile \
 			--disable-crywrap \
 			--without-p11-kit \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGETPREFIX)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gnutls.pc
 	$(REWRITE_LIBTOOL)/libgnutls.la
 	$(REWRITE_LIBTOOL)/libgnutlsxx.la
@@ -2600,6 +2620,6 @@ $(D)/glib-networking: $(D)/bootstrap $(D)/gnutls $(D)/libglib2 $(ARCHIVE)/$(GLIB
 			--localedir=/.remove \
 		; \
 		$(MAKE); \
-		$(MAKE) install prefix=$(TARGETPREFIX) giomoduledir=$(TARGETPREFIX)/usr/lib/gio/modules
+		$(MAKE) install prefix=$(TARGET_DIR) giomoduledir=$(TARGET_DIR)/usr/lib/gio/modules
 	$(REMOVE)/glib-networking-$(GLIB_NETWORKING_VERSION)
 	$(TOUCH)

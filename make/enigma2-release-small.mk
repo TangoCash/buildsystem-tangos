@@ -19,13 +19,13 @@ $(D)/release_enigma2_small:
 	cp $(SKEL_ROOT)/root_enigma2/etc/tuxbox/cables.xml $(RELEASE_DIR)/var/etc/tuxbox/ && \
 	cp $(SKEL_ROOT)/root_enigma2/etc/tuxbox/terrestrial.xml $(RELEASE_DIR)/var/etc/tuxbox/ && \
 	cp $(SKEL_ROOT)/root_enigma2/etc/tuxtxt/tuxtxt2.conf $(RELEASE_DIR)/var/etc/tuxtxt/ && \
-	cp -p $(TARGETPREFIX)/usr/bin/opkg-cl $(RELEASE_DIR)/usr/bin/opkg && \
-	cp -dp $(TARGETPREFIX)/usr/bin/python* $(RELEASE_DIR)/usr/bin/ && \
-	cp -p $(TARGETPREFIX)/usr/sbin/ethtool $(RELEASE_DIR)/usr/sbin/ && \
-	cp -p $(TARGETPREFIX)/usr/sbin/livestreamersrv $(RELEASE_DIR)/usr/sbin/ && \
-	cp -p $(TARGETPREFIX)/usr/lib/libdvdnav.* $(RELEASE_DIR)/usr/lib/ && \
-	cp -p $(TARGETPREFIX)/usr/lib/libdvdread* $(RELEASE_DIR)/usr/lib/ && \
-	cp -p $(TARGETPREFIX)/usr/lib/libopkg* $(RELEASE_DIR)/usr/lib/
+	cp -p $(TARGET_DIR)/usr/bin/opkg-cl $(RELEASE_DIR)/usr/bin/opkg && \
+	cp -dp $(TARGET_DIR)/usr/bin/python* $(RELEASE_DIR)/usr/bin/ && \
+	cp -p $(TARGET_DIR)/usr/sbin/ethtool $(RELEASE_DIR)/usr/sbin/ && \
+	cp -p $(TARGET_DIR)/usr/sbin/livestreamersrv $(RELEASE_DIR)/usr/sbin/ && \
+	cp -p $(TARGET_DIR)/usr/lib/libdvdnav.* $(RELEASE_DIR)/usr/lib/ && \
+	cp -p $(TARGET_DIR)/usr/lib/libdvdread* $(RELEASE_DIR)/usr/lib/ && \
+	cp -p $(TARGET_DIR)/usr/lib/libopkg* $(RELEASE_DIR)/usr/lib/
 
 #
 # lib usr/lib
@@ -36,29 +36,29 @@ $(D)/release_enigma2_small:
 #
 # fonts
 #
-	cp -p $(TARGETPREFIX)/usr/local/share/fonts/* $(RELEASE_DIR)/usr/share/fonts;
+	cp -p $(TARGET_DIR)/usr/local/share/fonts/* $(RELEASE_DIR)/usr/share/fonts;
 	cp -n $(SKEL_ROOT)/root_enigma2/usr/share/fonts/valis_enigma.ttf $(RELEASE_DIR)/usr/share/fonts;
 
 #
 # enigma2
 #
-	if [ -e $(TARGETPREFIX)/usr/bin/enigma2 ]; then \
-		cp -f $(TARGETPREFIX)/usr/bin/enigma2 $(RELEASE_DIR)/usr/local/bin/enigma2; \
+	if [ -e $(TARGET_DIR)/usr/bin/enigma2 ]; then \
+		cp -f $(TARGET_DIR)/usr/bin/enigma2 $(RELEASE_DIR)/usr/local/bin/enigma2; \
 	fi
 
-	if [ -e $(TARGETPREFIX)/usr/local/bin/enigma2 ]; then \
-		cp -f $(TARGETPREFIX)/usr/local/bin/enigma2 $(RELEASE_DIR)/usr/local/bin/enigma2; \
+	if [ -e $(TARGET_DIR)/usr/local/bin/enigma2 ]; then \
+		cp -f $(TARGET_DIR)/usr/local/bin/enigma2 $(RELEASE_DIR)/usr/local/bin/enigma2; \
 	fi
 
-	cp -a $(TARGETPREFIX)/usr/local/share/enigma2/* $(RELEASE_DIR)/usr/share/enigma2
+	cp -a $(TARGET_DIR)/usr/local/share/enigma2/* $(RELEASE_DIR)/usr/share/enigma2
 	cp $(SKEL_ROOT)/root_enigma2/etc/enigma2/* $(RELEASE_DIR)/var/etc/enigma2
 	ln -sf /etc/timezone.xml $(RELEASE_DIR)/var/etc/tuxbox/timezone.xml
 
 	install -d $(RELEASE_DIR)/usr/lib/enigma2
-	cp -a $(TARGETPREFIX)/usr/lib/enigma2/* $(RELEASE_DIR)/usr/lib/enigma2/
+	cp -a $(TARGET_DIR)/usr/lib/enigma2/* $(RELEASE_DIR)/usr/lib/enigma2/
 
-	if test -d $(TARGETPREFIX)/usr/local/lib/enigma2; then \
-		cp -a $(TARGETPREFIX)/usr/local/lib/enigma2/* $(RELEASE_DIR)/usr/lib/enigma2; \
+	if test -d $(TARGET_DIR)/usr/local/lib/enigma2; then \
+		cp -a $(TARGET_DIR)/usr/local/lib/enigma2/* $(RELEASE_DIR)/usr/lib/enigma2; \
 	fi
 
 #
@@ -67,24 +67,24 @@ $(D)/release_enigma2_small:
 	if [ $(PYTHON_VERSION_MAJOR) == 2.7 ]; then \
 		install -d $(RELEASE_DIR)/usr/include; \
 		install -d $(RELEASE_DIR)$(PYTHON_INCLUDE_DIR); \
-		cp $(TARGETPREFIX)$(PYTHON_INCLUDE_DIR)/pyconfig.h $(RELEASE_DIR)$(PYTHON_INCLUDE_DIR); \
+		cp $(TARGET_DIR)$(PYTHON_INCLUDE_DIR)/pyconfig.h $(RELEASE_DIR)$(PYTHON_INCLUDE_DIR); \
 	fi
 
 #
 # tuxtxt
 #
-	if [ -e $(TARGETPREFIX)/usr/bin/tuxtxt ]; then \
-		cp -p $(TARGETPREFIX)/usr/bin/tuxtxt $(RELEASE_DIR)/usr/bin/; \
+	if [ -e $(TARGET_DIR)/usr/bin/tuxtxt ]; then \
+		cp -p $(TARGET_DIR)/usr/bin/tuxtxt $(RELEASE_DIR)/usr/bin/; \
 	fi
 
 #
 # hotplug
 #
-	if [ -e $(TARGETPREFIX)/usr/bin/hotplug_e2_helper ]; then \
-		cp -dp $(TARGETPREFIX)/usr/bin/hotplug_e2_helper $(RELEASE_DIR)/sbin/hotplug; \
-		cp -dp $(TARGETPREFIX)/usr/bin/bdpoll $(RELEASE_DIR)/sbin/; \
+	if [ -e $(TARGET_DIR)/usr/bin/hotplug_e2_helper ]; then \
+		cp -dp $(TARGET_DIR)/usr/bin/hotplug_e2_helper $(RELEASE_DIR)/sbin/hotplug; \
+		cp -dp $(TARGET_DIR)/usr/bin/bdpoll $(RELEASE_DIR)/sbin/; \
 	else \
-		cp -dp $(TARGETPREFIX)/sbin/hotplug $(RELEASE_DIR)/sbin/; \
+		cp -dp $(TARGET_DIR)/sbin/hotplug $(RELEASE_DIR)/sbin/; \
 	fi
 
 #
@@ -101,7 +101,7 @@ $(D)/release_enigma2_small:
 	rm -rf $(RELEASE_DIR)/usr/lib/enigma2/python/Plugins/Extensions/FileManager
 	rm -rf $(RELEASE_DIR)/usr/lib/enigma2/python/Plugins/Extensions/TuxboxPlugins
 	install -d $(RELEASE_DIR)$(PYTHON_DIR)
-	cp -a $(TARGETPREFIX)$(PYTHON_DIR)/* $(RELEASE_DIR)$(PYTHON_DIR)/
+	cp -a $(TARGET_DIR)$(PYTHON_DIR)/* $(RELEASE_DIR)$(PYTHON_DIR)/
 	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/{bsddb,compiler,curses,distutils,lib-old,lib-tk,plat-linux3,test}
 	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/ctypes/test
 	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/email/test
