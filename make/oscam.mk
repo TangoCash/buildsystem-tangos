@@ -25,7 +25,8 @@ $(D)/oscam-emu.do_prepare:
 	cp -ra $(SOURCE_DIR)/oscam-svn $(SOURCE_DIR)/oscam-svn.org;\
 	cd $(SOURCE_DIR)/oscam-svn; \
 	wget https://github.com/oscam-emu/oscam-emu/raw/master/oscam-emu.patch; \
-	sed -i 's/SoftCam.Key/oscam.keys/g' oscam-emu.patch; \
+	sed -i 's/SoftCam\.Key/oscam.keys/ig' oscam-emu.patch; \
+	sed -i 's/SoftCam_Key/oscam_keys/ig' oscam-emu.patch; \
 	patch -p0 < ./oscam-emu.patch; \
 	wget -O oscam.keys http://enigma.satupdate.net/SoftCam.txt ;\
 	[ -e "$(PATCHES)/oscam.config" ] && \
