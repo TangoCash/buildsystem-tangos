@@ -48,6 +48,7 @@ N_CONFIG_OPTS += --enable-ffmpegdec
 #N_CONFIG_OPTS += --enable-pip
 #N_CONFIG_OPTS += --disable-webif
 N_CONFIG_OPTS += --enable-pugixml
+#N_CONFIG_OPTS += --enable-reschange
 
 ifeq ($(EXTERNAL_LCD), externallcd)
 N_CONFIG_OPTS += --enable-graphlcd
@@ -740,6 +741,7 @@ $(D)/neutrino-mp-tangos.do_compile: $(D)/neutrino-mp-tangos.config.status $(SOUR
 
 $(D)/neutrino-mp-tangos: $(D)/neutrino-mp-tangos.do_prepare $(D)/neutrino-mp-tangos.do_compile
 	$(START_BUILD)
+	$(TARGET)-strip --strip-unneeded $(N_OBJDIR)/src/neutrino
 	$(MAKE) -C $(N_OBJDIR) install DESTDIR=$(TARGET_DIR); \
 	rm -f $(TARGET_DIR)/var/etc/.version
 	make $(TARGET_DIR)/var/etc/.version
