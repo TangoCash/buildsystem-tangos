@@ -1,7 +1,7 @@
 #
 # enigma2-tc-deps
 #
-ENIGMA2_TC_DEPS  = bootstrap libncurses libcurl libpng libjpeg libgif freetype libfribidi libsigc libreadline alsa-lib
+ENIGMA2_TC_DEPS  = bootstrap libncurses libcurl libpng libjpeg giflib freetype libfribidi libsigc libreadline alsa-lib
 ENIGMA2_TC_DEPS += libexpat libdvbsi++ python libxml2 libxslt python_elementtree python_lxml python_zope_interface
 ENIGMA2_TC_DEPS += python_twisted python_pyopenssl python_imaging python_pyusb python_pycrypto python_pyasn1 python_mechanize python_six
 ENIGMA2_TC_DEPS += python_requests python_futures python_singledispatch python_livestreamer python_livestreamersrv

@@ -226,7 +226,7 @@ $(D)/sysvinit: $(D)/bootstrap $(ARCHIVE)/$(SYSVINIT_SOURCE)
 		$(BUILDENV) \
 		$(MAKE) -C src SULOGINLIBS=-lcrypt; \
 		$(MAKE) install ROOT=$(TARGET_DIR) MANDIR=/.remove
-	cd $(TARGET_DIR) && rm sbin/fstab-decode sbin/runlevel sbin/telinit
+	rm -f $(addprefix $(TARGET_DIR)/sbin/,fstab-decode runlevel telinit)
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), fortis_hdbox octagon1008 cuberevo cuberevo_mini2 cuberevo_2000hd))
 	install -m 644 $(SKEL_ROOT)/etc/inittab_ttyAS1 $(TARGET_DIR)/etc/inittab
 else
@@ -383,9 +383,9 @@ $(D)/e2fsprogs: $(D)/bootstrap $(D)/util-linux $(ARCHIVE)/$(E2FSPROGS_SOURCE)
 		$(MAKE) -C lib/blkid install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/uuid.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/blkid.pc
-	cd $(TARGET_DIR) && rm sbin/badblocks sbin/dumpe2fs sbin/logsave \
-				 sbin/e2undo usr/sbin/filefrag usr/sbin/e2freefrag \
-				 usr/bin/chattr usr/bin/lsattr usr/bin/uuidgen
+	rm -f $(addprefix $(TARGET_DIR)/sbin/,badblocks dumpe2fs logsave e2undo)
+	rm -f $(addprefix $(TARGET_DIR)/usr/sbin/,filefrag e2freefrag mklost+found uuidd)
+	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,chattr lsattr uuidgen)
 	$(REMOVE)/e2fsprogs-$(E2FSPROGS_VERSION)
 	$(TOUCH)
 
@@ -440,7 +440,7 @@ $(D)/jfsutils: $(D)/bootstrap $(D)/e2fsprogs $(ARCHIVE)/$(JFSUTILS_SOURCE)
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	cd $(TARGET_DIR) && rm sbin/jfs_debugfs sbin/jfs_fscklog sbin/jfs_logdump
+	rm -f $(addprefix $(TARGET_DIR)/sbin/,jfs_debugfs jfs_fscklog jfs_logdump)
 	$(REMOVE)/jfsutils-$(JFSUTILS_VERSION)
 	$(TOUCH)
 
@@ -877,6 +877,7 @@ $(D)/autofs: $(D)/bootstrap $(D)/e2fsprogs $(ARCHIVE)/$(AUTOFS_SOURCE)
 	install -m 644 $(SKEL_ROOT)/etc/auto.master $(TARGET_DIR)/etc/
 	install -m 644 $(SKEL_ROOT)/etc/auto.misc $(TARGET_DIR)/etc/
 	install -m 644 $(SKEL_ROOT)/etc/auto.network $(TARGET_DIR)/etc/
+	ln -sf ../usr/sbin/automount $(TARGET_DIR)/sbin/automount
 	$(REMOVE)/autofs-$(AUTOFS_VERSION)
 	$(TOUCH)
 
@@ -1162,8 +1163,8 @@ $(D)/nfs_utils: $(D)/bootstrap $(D)/e2fsprogs $(ARCHIVE)/$(NFSUTILS_SOURCE)
 	install -m 755 $(SKEL_ROOT)/etc/init.d/nfs-common $(TARGET_DIR)/etc/init.d/
 	install -m 755 $(SKEL_ROOT)/etc/init.d/nfs-kernel-server $(TARGET_DIR)/etc/init.d/
 	install -m 644 $(SKEL_ROOT)/etc/exports $(TARGET_DIR)/etc/
-	cd $(TARGET_DIR) && rm -f sbin/mount.nfs sbin/mount.nfs4 sbin/umount.nfs sbin/umount.nfs4 \
-				 sbin/osd_login
+	rm -f $(addprefix $(TARGET_DIR)/sbin/,mount.nfs mount.nfs4 umount.nfs umount.nfs4 osd_login)
+	rm -f $(addprefix $(TARGET_DIR)/usr/sbin/,mountstats nfsiostat nfsstat rpcdebug showmount sm-notify start-statd)
 	$(REMOVE)/nfs-utils-$(NFSUTILS_VERSION)
 	$(TOUCH)
 

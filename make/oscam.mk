@@ -25,8 +25,9 @@ $(D)/oscam-emu.do_prepare:
 	cp -ra $(SOURCE_DIR)/oscam-svn $(SOURCE_DIR)/oscam-svn.org;\
 	cd $(SOURCE_DIR)/oscam-svn; \
 	wget https://github.com/oscam-emu/oscam-emu/raw/master/oscam-emu.patch; \
+	sed -i 's/SoftCam.Key/oscam.keys/g' oscam-emu.patch; \
 	patch -p0 < ./oscam-emu.patch; \
-	wget -O SoftCam.Key http://www.uydu.ws/deneme6.php?file=SoftCam.Key ;\
+	wget -O oscam.keys http://enigma.satupdate.net/SoftCam.txt ;\
 	[ -e "$(PATCHES)/oscam.config" ] && \
 	cp -ra "$(PATCHES)/oscam.config" config.h; \
 	[ -e "$(PATCHES)/oscam.config" ] || \
@@ -55,16 +56,22 @@ $(D)/oscam.do_compile:
 		$(MAKE) CROSS=sh4-linux- CONF_DIR=/var/keys
 	touch $@
 
+$(D)/oscam-emu.do_compile:
+	cd $(SOURCE_DIR)/oscam-svn && \
+		$(BUILDENV) \
+		$(MAKE) CROSS=sh4-linux- CONF_DIR=/var/keys VER=emu_svn
+	touch $@
+
 $(D)/oscam-ssl.do_compile: openssl
 	cd $(SOURCE_DIR)/oscam-svn && \
 		$(BUILDENV) \
-		$(MAKE) CROSS=sh4-linux- USE_SSL=1 CONF_DIR=/var/keys
+		$(MAKE) CROSS=sh4-linux- USE_SSL=1 CONF_DIR=/var/keys VER=ssl_svn
 	touch $@
 
 $(D)/oscam-libusb.do_compile: libusb
 	cd $(SOURCE_DIR)/oscam-svn && \
 		$(BUILDENV) \
-		$(MAKE) CROSS=sh4-linux- USE_LIBUSB=1 CONF_DIR=/var/keys
+		$(MAKE) CROSS=sh4-linux- USE_LIBUSB=1 CONF_DIR=/var/keys VER=libusb_svn
 	touch $@
 
 $(D)/oscam: bootstrap oscam.do_prepare oscam.do_compile
@@ -91,9 +98,10 @@ $(D)/oscam-modern: bootstrap oscam-modern.do_prepare oscam.do_compile
 	cp -pR $(SOURCE_DIR)/oscam-svn/Distribution/* $(TARGET_DIR)/../OScam/ 
 	touch $@
 
-$(D)/oscam-emu: bootstrap oscam-emu.do_prepare oscam.do_compile
+$(D)/oscam-emu: bootstrap oscam-emu.do_prepare oscam-emu.do_compile
 	rm -rf $(TARGET_DIR)/../OScam
 	mkdir $(TARGET_DIR)/../OScam
+	cp -pR $(SOURCE_DIR)/oscam-svn/oscam.keys $(TARGET_DIR)/../OScam/
 	cp -pR $(SOURCE_DIR)/oscam-svn/Distribution/* $(TARGET_DIR)/../OScam/ 
 	touch $@
 

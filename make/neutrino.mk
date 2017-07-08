@@ -12,8 +12,8 @@ $(TARGET_DIR)/var/etc/.version:
 
 LOCAL_NEUTRINO_DEPS =
 
-NEUTRINO_DEPS  = $(D)/bootstrap $(D)/libncurses $(D)/lirc $(D)/libcurl
-NEUTRINO_DEPS += $(D)/libpng $(D)/libjpeg $(D)/libgif $(D)/freetype
+NEUTRINO_DEPS  = $(D)/bootstrap $(D)/libncurses $(LIRC) $(D)/libcurl
+NEUTRINO_DEPS += $(D)/libpng $(D)/libjpeg $(D)/giflib $(D)/freetype
 NEUTRINO_DEPS += $(D)/alsa-utils $(D)/ffmpeg
 NEUTRINO_DEPS += $(D)/libfribidi  $(D)/libsigc $(D)/libdvbsi++ $(D)/libusb
 NEUTRINO_DEPS += $(D)/pugixml $(D)/libopenthreads
