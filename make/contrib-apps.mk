@@ -1599,3 +1599,31 @@ $(D)/usb-modeswitch: $(D)/bootstrap $(D)/libusb $(D)/usb-modeswitch-data $(ARCHI
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REMOVE)/usb-modeswitch-$(USB_MODESWITCH_VERSION)
 	$(TOUCH)
+
+#
+# ntfs-3g_ntfsprogs
+#
+NTFS_3G_VERSION = 2017.3.23
+NTFS_3G_SOURCE = ntfs-3g_ntfsprogs-$(NTFS_3G_VERSION).tgz
+NTFS_3G_PATCH =
+
+$(ARCHIVE)/$(NTFS_3G_SOURCE):
+	$(WGET) https://tuxera.com/opensource/$(NTFS_3G_SOURCE)
+
+$(D)/ntfs-3g: $(D)/bootstrap $(ARCHIVE)/$(NTFS_3G_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/ntfs-3g_ntfsprogs-$(NTFS_3G_VERSION)
+	$(UNTAR)/$(NTFS_3G_SOURCE)
+	set -e; cd $(BUILD_TMP)/ntfs-3g_ntfsprogs-$(NTFS_3G_VERSION); \
+		$(call post_patch,$(NTFS_3G_PATCH)); \
+		./configure $(CONFIGURE_SILENT) \
+			$(CONFIGURE_OPTS) \
+			--prefix=/usr \
+			--mandir=/.remove \
+			--docdir=/.remove \
+			--disable-ldconfig \
+			--disable-ntfsprogs \
+			--disable-static; \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REMOVE)/ntfs-3g_ntfsprogs-$(NTFS_3G_VERSION)
+	$(TOUCH)
