@@ -30,19 +30,7 @@ endif
 	-$(MAKE) -C $(APPS_DIR)/tools/ustslave distclean
 	-$(MAKE) -C $(APPS_DIR)/tools/vfdctl distclean
 	-$(MAKE) -C $(APPS_DIR)/tools/wait4button distclean
-	-$(MAKE) -C $(APPS_DIR)/tools/minimon distclean
 
-#
-# minimon
-#
-$(D)/tools-minimon: $(D)/bootstrap $(D)/libjpeg_turbo
-	set -e; cd $(APPS_DIR)/tools/minimon; \
-		$(CONFIGURE_TOOLS) \
-			--prefix= \
-		; \
-		$(MAKE) KERNEL_DIR=$(KERNEL_DIR) TARGET=$(TARGET) TARGET_DIR=$(TARGET_DIR); \
-		$(MAKE) install KERNEL_DIR=$(KERNEL_DIR) TARGET=$(TARGET) TARGET_DIR=$(TARGET_DIR) DESTDIR=$(TARGET_DIR)
-	touch $@
 #
 # aio-grab
 #
