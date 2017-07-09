@@ -227,6 +227,7 @@ $(D)/sysvinit: $(D)/bootstrap $(ARCHIVE)/$(SYSVINIT_SOURCE)
 		$(MAKE) -C src SULOGINLIBS=-lcrypt; \
 		$(MAKE) install ROOT=$(TARGET_DIR) MANDIR=/.remove
 	rm -f $(addprefix $(TARGET_DIR)/sbin/,fstab-decode runlevel telinit)
+	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,lastb)
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), fortis_hdbox octagon1008 cuberevo cuberevo_mini2 cuberevo_2000hd))
 	install -m 644 $(SKEL_ROOT)/etc/inittab_ttyAS1 $(TARGET_DIR)/etc/inittab
 else
@@ -442,6 +443,43 @@ $(D)/jfsutils: $(D)/bootstrap $(D)/e2fsprogs $(ARCHIVE)/$(JFSUTILS_SOURCE)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	rm -f $(addprefix $(TARGET_DIR)/sbin/,jfs_debugfs jfs_fscklog jfs_logdump)
 	$(REMOVE)/jfsutils-$(JFSUTILS_VERSION)
+	$(TOUCH)
+
+#
+# ntfs-3g
+#
+NTFS_3G_VERSION = 2017.3.23
+NTFS_3G_SOURCE = ntfs-3g_ntfsprogs-$(NTFS_3G_VERSION).tgz
+
+$(ARCHIVE)/$(NTFS_3G_SOURCE):
+	$(WGET) http://tuxera.com/opensource/$(NTFS_3G_SOURCE)
+
+$(D)/ntfs-3g: $(D)/bootstrap $(ARCHIVE)/$(NTFS_3G_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/ntfs-3g_ntfsprogs-$(NTFS_3G_VERSION)
+	$(UNTAR)/$(NTFS_3G_SOURCE)
+	set -e; cd $(BUILD_TMP)/ntfs-3g_ntfsprogs-$(NTFS_3G_VERSION); \
+		CFLAGS="-pipe -O2 -g" ./configure \
+			--build=$(BUILD) \
+			--host=$(TARGET) \
+			--prefix=/usr \
+			--exec-prefix=/usr \
+			--bindir=/usr/bin \
+			--mandir=/.remove \
+			--docdir=/.remove \
+			--disable-ldconfig \
+			--disable-ntfsprogs \
+			--disable-static \
+			--with-fuse=internal \
+			--enable-silent-rules \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libntfs-3g.pc
+	$(REWRITE_LIBTOOL)/libntfs-3g.la
+	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,lowntfs-3g ntfs-3g.probe)
+	rm -f $(addprefix $(TARGET_DIR)/sbin/,mount.lowntfs-3g)
+	$(REMOVE)/ntfs-3g_ntfsprogs-$(NTFS_3G_VERSION)
 	$(TOUCH)
 
 #
@@ -1521,6 +1559,7 @@ $(D)/openvpn: $(D)/bootstrap $(D)/openssl $(D)/lzo $(ARCHIVE)/$(OPENVPN_SOURCE)
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	install -m 755 $(SKEL_ROOT)/etc/init.d/openvpn $(TARGET_DIR)/etc/init.d/
+	install -d $(TARGET_DIR)/etc/openvpn
 	$(REMOVE)/openvpn-$(OPENVPN_VERSION)
 	$(TOUCH)
 
