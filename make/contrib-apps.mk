@@ -26,7 +26,7 @@ $(D)/busybox: $(D)/bootstrap $(ARCHIVE)/$(BUSYBOX_SOURCE) $(PATCHES)/$(BUSYBOX_C
 		sed -i -e 's#^CONFIG_PREFIX.*#CONFIG_PREFIX="$(TARGET_DIR)"#' .config; \
 		$(BUILDENV) $(MAKE) busybox CROSS_COMPILE=$(TARGET)- CFLAGS_EXTRA="$(TARGET_CFLAGS)"; \
 		$(MAKE) install CROSS_COMPILE=$(TARGET)- CFLAGS_EXTRA="$(TARGET_CFLAGS)" CONFIG_PREFIX=$(TARGET_DIR)
-#	$(REMOVE)/busybox-$(BUSYBOX_VERSION)
+	$(REMOVE)/busybox-$(BUSYBOX_VERSION)
 	$(TOUCH)
 
 #
@@ -459,7 +459,7 @@ $(D)/ntfs-3g: $(D)/bootstrap $(ARCHIVE)/$(NTFS_3G_SOURCE)
 	$(REMOVE)/ntfs-3g_ntfsprogs-$(NTFS_3G_VERSION)
 	$(UNTAR)/$(NTFS_3G_SOURCE)
 	set -e; cd $(BUILD_TMP)/ntfs-3g_ntfsprogs-$(NTFS_3G_VERSION); \
-		CFLAGS="-pipe -Os -g" ./configure \
+		CFLAGS="-pipe -Os" ./configure \
 			--build=$(BUILD) \
 			--host=$(TARGET) \
 			--prefix=/usr \
