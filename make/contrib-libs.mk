@@ -1658,6 +1658,7 @@ $(D)/sqlite: $(D)/bootstrap $(ARCHIVE)/$(SQLITE_SOURCE)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/sqlite3.pc
 	$(REWRITE_LIBTOOL)/libsqlite3.la
+	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,sqlite3)
 	$(REMOVE)/sqlite-autoconf-$(SQLITE_VERSION)
 	$(TOUCH)
 
@@ -2545,6 +2546,7 @@ $(D)/nettle: $(D)/bootstrap $(D)/gmp $(ARCHIVE)/$(NETTLE_SOURCE)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/hogweed.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/nettle.pc
+	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,sexp-conv nettle-hash nettle-pbkdf2 nettle-lfib-stream pkcs1-conv)
 	$(REMOVE)/nettle-$(NETTLE_VERSION)
 	$(TOUCH)
 
@@ -2583,6 +2585,7 @@ $(D)/gnutls: $(D)/bootstrap $(D)/nettle $(ARCHIVE)/$(GNUTLS_SOURCE)
 	$(REWRITE_LIBTOOL)/libgnutls.la
 	$(REWRITE_LIBTOOL)/libgnutlsxx.la
 	$(REWRITE_LIBTOOLDEP)/libgnutlsxx.la
+	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,psktool gnutls-cli-debug certtool srptool ocsptool gnutls-serv gnutls-cli)
 	$(REMOVE)/gnutls-$(GNUTLS_VERSION)
 	$(TOUCH)
 

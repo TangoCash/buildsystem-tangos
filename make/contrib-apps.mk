@@ -16,7 +16,7 @@ else
 BUSYBOX_CONFIG = busybox-$(BUSYBOX_VERSION).config
 endif
 
-$(D)/busybox: $(D)/bootstrap $(ARCHIVE)/$(BUSYBOX_SOURCE) $(PATCHES)/$(BUSYBOX_CONFIG)
+$(D)/busybox: $(D)/bootstrap $(D)/module_init_tools $(ARCHIVE)/$(BUSYBOX_SOURCE) $(PATCHES)/$(BUSYBOX_CONFIG)
 	$(START_BUILD)
 	$(REMOVE)/busybox-$(BUSYBOX_VERSION)
 	$(UNTAR)/$(BUSYBOX_SOURCE)
@@ -732,11 +732,12 @@ $(D)/sdparm: $(D)/bootstrap $(ARCHIVE)/$(SDPARM_SOURCE)
 	set -e; cd $(BUILD_TMP)/sdparm-$(SDPARM_VERSION); \
 		$(CONFIGURE) \
 			--prefix= \
-			--exec-prefix=/usr \
+			--bindir=/sbin \
 			--mandir=/.remove \
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	rm -f $(addprefix $(TARGET_DIR)/sbin/,sas_disk_blink scsi_ch_swp)
 	$(REMOVE)/sdparm-$(SDPARM_VERSION)
 	$(TOUCH)
 
@@ -1019,6 +1020,7 @@ $(D)/dbus: $(D)/bootstrap $(D)/libexpat $(ARCHIVE)/$(DBUS_SOURCE)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/dbus-1.pc
 	$(REWRITE_LIBTOOL)/libdbus-1.la
+	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,dbus-cleanup-sockets dbus-daemon dbus-launch dbus-monitor)
 	$(REMOVE)/dbus-$(DBUS_VERSION)
 	$(TOUCH)
 
