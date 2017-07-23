@@ -703,7 +703,7 @@ $(D)/neutrino-mp-tangos.config.status:
 			--with-luaplugindir=/var/tuxbox/plugins \
 			--with-localedir=/usr/share/tuxbox/neutrino/locale \
 			--with-localedir_var=/var/tuxbox/locale \
-			--with-plugindir=/var/tuxbox/plugins \
+			--with-plugindir=/lib/tuxbox/plugins \
 			--with-plugindir_var=/var/tuxbox/plugins \
 			--with-private_httpddir=/usr/share/tuxbox/neutrino/httpd \
 			--with-themesdir=/usr/share/tuxbox/neutrino/themes \
