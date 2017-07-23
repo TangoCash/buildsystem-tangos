@@ -1,7 +1,7 @@
 #
 # busybox
 #
-BUSYBOX_VERSION = 1.27.0
+BUSYBOX_VERSION = 1.27.1
 BUSYBOX_SOURCE = busybox-$(BUSYBOX_VERSION).tar.bz2
 BUSYBOX_PATCH  = busybox-$(BUSYBOX_VERSION)-nandwrite.patch
 BUSYBOX_PATCH += busybox-$(BUSYBOX_VERSION)-unicode.patch
@@ -94,6 +94,78 @@ $(D)/mtd_utils: $(D)/bootstrap $(D)/zlib $(D)/lzo $(D)/e2fsprogs $(ARCHIVE)/$(MT
 		$(MAKE) PREFIX= CC=$(TARGET)-gcc LD=$(TARGET)-ld STRIP=$(TARGET)-strip WITHOUT_XATTR=1 DESTDIR=$(TARGET_DIR); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REMOVE)/mtd-utils-$(MTD_UTILS_VERSION)
+	$(TOUCH)
+
+#
+# host_mkcramfs
+#
+MKCRAMFS_VERSION = 1.1
+MKCRAMFS_SOURCE = cramfs-$(MKCRAMFS_VERSION).tar.gz
+
+$(ARCHIVE)/$(MKCRAMFS_SOURCE):
+	$(WGET) https://sourceforge.net/projects/cramfs/files/cramfs/$(MKCRAMFS_VERSION)/$(MKCRAMFS_SOURCE)
+
+$(D)/host_mkcramfs: directories $(ARCHIVE)/$(MKCRAMFS_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/cramfs-$(MKCRAMFS_VERSION)
+	$(UNTAR)/$(MKCRAMFS_SOURCE)
+	set -e; cd $(BUILD_TMP)/cramfs-$(MKCRAMFS_VERSION); \
+		$(MAKE) all
+		cp $(BUILD_TMP)/cramfs-$(MKCRAMFS_VERSION)/mkcramfs $(HOST_DIR)/bin
+		cp $(BUILD_TMP)/cramfs-$(MKCRAMFS_VERSION)/cramfsck $(HOST_DIR)/bin
+	$(REMOVE)/cramfs-$(MKCRAMFS_VERSION)
+	$(TOUCH)
+
+#
+# host_mksquashfs3
+#
+MKSQUASHFS3_VERSION = 3.3
+MKSQUASHFS3_SOURCE = squashfs$(MKSQUASHFS3_VERSION).tar.gz
+
+$(ARCHIVE)/$(MKSQUASHFS3_SOURCE):
+	$(WGET) https://sourceforge.net/projects/squashfs/files/OldFiles/$(MKSQUASHFS3_SOURCE)
+
+$(D)/host_mksquashfs3: directories $(ARCHIVE)/$(MKSQUASHFS3_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/squashfs$(MKSQUASHFS3_VERSION)
+	$(UNTAR)/$(MKSQUASHFS3_SOURCE)
+	set -e; cd $(BUILD_TMP)/squashfs$(MKSQUASHFS3_VERSION)/squashfs-tools; \
+		$(MAKE) CC=gcc all
+		mv $(BUILD_TMP)/squashfs$(MKSQUASHFS3_VERSION)/squashfs-tools/mksquashfs $(HOST_DIR)/bin/mksquashfs3.3
+		mv $(BUILD_TMP)/squashfs$(MKSQUASHFS3_VERSION)/squashfs-tools/unsquashfs $(HOST_DIR)/bin/unsquashfs3.3
+	$(REMOVE)/squashfs$(MKSQUASHFS3_VERSION)
+	$(TOUCH)
+
+#
+# host_mksquashfs with LZMA support
+#
+MKSQUASHFS_VERSION = 4.2
+MKSQUASHFS_SOURCE = squashfs$(MKSQUASHFS_VERSION).tar.gz
+
+LZMA_VERSION = 4.65
+LZMA_SOURCE = lzma-$(LZMA_VERSION).tar.bz2
+
+$(ARCHIVE)/$(MKSQUASHFS_SOURCE):
+	$(WGET) https://sourceforge.net/projects/squashfs/files/squashfs/squashfs$(MKSQUASHFS_VERSION)/$(MKSQUASHFS_SOURCE)
+
+$(ARCHIVE)/$(LZMA_SOURCE):
+	$(WGET) http://downloads.openwrt.org/sources/$(LZMA_SOURCE)
+
+$(D)/host_mksquashfs: directories $(ARCHIVE)/$(LZMA_SOURCE) $(ARCHIVE)/$(MKSQUASHFS_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/lzma-$(LZMA_VERSION)
+	$(UNTAR)/$(LZMA_SOURCE)
+	$(REMOVE)/squashfs$(MKSQUASHFS_VERSION)
+	$(UNTAR)/$(MKSQUASHFS_SOURCE)
+	set -e; cd $(BUILD_TMP)/squashfs$(MKSQUASHFS_VERSION); \
+		$(MAKE) -C squashfs-tools \
+			LZMA_SUPPORT=1 \
+			LZMA_DIR=$(BUILD_TMP)/lzma-$(LZMA_VERSION) \
+			XATTR_SUPPORT=0 \
+			XATTR_DEFAULT=0 \
+			install INSTALL_DIR=$(HOST_DIR)/bin
+	$(REMOVE)/lzma-$(LZMA_VERSION)
+	$(REMOVE)/squashfs$(MKSQUASHFS_VERSION)
 	$(TOUCH)
 
 #
