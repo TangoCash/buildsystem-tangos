@@ -26,7 +26,6 @@ SOURCE_DIR            = $(BASE_DIR)/source
 TARGET               ?= sh4-linux
 BOXARCH              ?= sh4
 
-
 GIT_PROTOCOL         ?= http
 ifneq ($(GIT_PROTOCOL), http)
 GITHUB               ?= git://github.com
@@ -98,14 +97,16 @@ PATH                 := $(HOST_DIR)/bin:$(CROSS_DIR)/bin:$(PATH):/sbin:/usr/sbin
 
 TERM_BOLD            := $(shell tput smso 2>/dev/null)
 TERM_RESET           := $(shell tput rmso 2>/dev/null)
+TERM_GREEN_BOLD      := \033[01;32m
+TERM_RED             := \033[31m
+TERM_NORMAL          := \033[0m
 
-# Adjust according to the number CPU cores to use for parallel build.
-# Default: Number of processors in /proc/cpuinfo, if present, or 1.
 MAKEFLAGS            += --no-print-directory
 ifndef VERBOSE
-VERBOSE               = 1
+VERBOSE               = 0
 endif
-ifeq ($(VERBOSE), 1)
+ifneq ($(VERBOSE), 1)
+SILENT                = @
 MAKEFLAGS            += --silent
 CONFIGURE_SILENT      = -q
 endif
@@ -123,8 +124,9 @@ REWRITE_PKGCONF_OPT   = sed -i "s,^prefix=.*,prefix='$(TARGET_DIR)/opt/pkg',"
 export RM=$(shell which rm) -f
 
 # unpack tarballs, clean up
-UNTAR                 = tar -C $(BUILD_TMP) -xf $(ARCHIVE)
-REMOVE                = rm -rf $(BUILD_TMP)
+UNTAR                 = $(SILENT)tar -C $(BUILD_TMP) -xf $(ARCHIVE)
+SET                   = $(SILENT)set
+REMOVE                = $(SILENT)rm -rf $(BUILD_TMP)
 RM_PKGPREFIX          = rm -rf $(PKGPREFIX)
 PATCH                 = patch -p1 -i $(PATCHES)
 APATCH                = patch -p1 -i
@@ -136,20 +138,20 @@ define post_patch
 		if [ -d $$i ] ; then \
 			for p in $$i/*; do \
 				if [ $${p:0:1} == "/" ]; then \
-					echo -e "==> \033[31mApplying Patch:\033[0m $$p"; $(APATCH) $$p; \
+					echo -e "==> $(TERM_RED)Applying Patch:$(TERM_NORMAL) $$p"; $(APATCH) $$p; \
 				else \
-					echo -e "==> \033[31mApplying Patch:\033[0m $$p"; $(PATCH)/$$p; \
+					echo -e "==> $(TERM_RED)Applying Patch:$(TERM_NORMAL) $$p"; $(PATCH)/$$p; \
 				fi; \
 			done; \
 		else \
 			if [ $${i:0:1} == "/" ]; then \
-				echo -e "==> \033[31mApplying Patch:\033[0m $$i"; $(APATCH) $$i; \
+				echo -e "==> $(TERM_RED)Applying Patch:$(TERM_NORMAL) $$i"; $(APATCH) $$i; \
 			else \
-				echo -e "==> \033[31mApplying Patch:\033[0m $$i"; $(PATCH)/$$i; \
+				echo -e "==> $(TERM_RED)Applying Patch:$(TERM_NORMAL) $$i"; $(PATCH)/$$i; \
 			fi; \
 		fi; \
 	done; \
-	echo -e "Patch of \033[01;32m$(subst $(BASE_DIR)/.deps/,,$@)\033[0m completed."; \
+	echo -e "Patching $(TERM_GREEN_BOLD)$(subst $(BASE_DIR)/.deps/,,$@)$(TERM_NORMAL) completed."; \
 	echo
 endef
 
@@ -243,7 +245,7 @@ KERNEL_UPSTREAM    =$(word 1,$(call split_version,$(KERNEL_VERSION)))
 KERNEL_STM        :=$(word 2,$(call split_version,$(KERNEL_VERSION)))
 KERNEL_LABEL      :=$(word 3,$(call split_version,$(KERNEL_VERSION)))
 KERNEL_RELEASE    :=$(subst ^0,,^$(KERNEL_LABEL))
-KERNEL_STM_LABEL  := _$(KERNEL_STM)_$(KERNEL_LABEL)
+KERNEL_STM_LABEL  :=_$(KERNEL_STM)_$(KERNEL_LABEL)
 KERNEL_DIR         =$(BUILD_TMP)/linux-sh4-$(KERNEL_VERSION)
 
 #
@@ -522,8 +524,3 @@ endif
 
 #
 PLATFORM_CPPFLAGS := CPPFLAGS="$(PLATFORM_CPPFLAGS)"
-#
-
-#V ?= 0
-#export V
-

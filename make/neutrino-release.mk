@@ -493,6 +493,7 @@ release_neutrino_base:
 	install -d $(RELEASE_DIR)/media/{dvd,nfs,usb,sda1,sdb1}
 	ln -sf /hdd $(RELEASE_DIR)/media/hdd
 	install -d $(RELEASE_DIR)/mnt/{hdd,nfs,usb}
+	install -d $(RELEASE_DIR)/mnt/mnt{0..7}
 	install -d $(RELEASE_DIR)/usr/{bin,lib,local,sbin,share}
 	install -d $(RELEASE_DIR)/usr/local/{bin,sbin}
 	install -d $(RELEASE_DIR)/usr/share/{fonts,tuxbox,udhcpc,zoneinfo}
@@ -526,6 +527,7 @@ release_neutrino_base:
 	ln -sf ../sbin/MAKEDEV $(RELEASE_DIR)/dev/MAKEDEV
 	ln -sf ../../sbin/MAKEDEV $(RELEASE_DIR)/lib/udev/MAKEDEV
 	cp -aR $(SKEL_ROOT)/etc/mdev/* $(RELEASE_DIR)/etc/mdev/
+	cp -aR $(SKEL_ROOT)/etc/mdev.conf $(RELEASE_DIR)/etc/mdev.conf
 	cp -aR $(SKEL_ROOT)/usr/share/udhcpc/* $(RELEASE_DIR)/usr/share/udhcpc/
 	cp -aR $(SKEL_ROOT)/usr/share/zoneinfo/* $(RELEASE_DIR)/usr/share/zoneinfo/
 	cp $(SKEL_ROOT)/bin/autologin $(RELEASE_DIR)/bin/
@@ -544,8 +546,6 @@ endif
 # player
 #
 	[ -e $(TARGET_DIR)/lib/modules/$(KERNEL_VERSION)/extra/stgfb/stmfb/stm_v4l2.ko ] && cp $(TARGET_DIR)/lib/modules/$(KERNEL_VERSION)/extra/stgfb/stmfb/stm_v4l2.ko $(RELEASE_DIR)/lib/modules/ || true
-	[ -e $(TARGET_DIR)/lib/modules/$(KERNEL_VERSION)/extra/stgfb/stmfb/stmvbi.ko ] && cp $(TARGET_DIR)/lib/modules/$(KERNEL_VERSION)/extra/stgfb/stmfb/stmvbi.ko $(RELEASE_DIR)/lib/modules/ || true
-	[ -e $(TARGET_DIR)/lib/modules/$(KERNEL_VERSION)/extra/stgfb/stmfb/stmvout.ko ] && cp $(TARGET_DIR)/lib/modules/$(KERNEL_VERSION)/extra/stgfb/stmfb/stmvout.ko $(RELEASE_DIR)/lib/modules/ || true
 	[ -e $(TARGET_DIR)/lib/modules/$(KERNEL_VERSION)/extra/stgfb/stmfb/stmfb.ko ] && cp $(TARGET_DIR)/lib/modules/$(KERNEL_VERSION)/extra/stgfb/stmfb/stmfb.ko $(RELEASE_DIR)/lib/modules/ || true
 	cd $(TARGET_DIR)/lib/modules/$(KERNEL_VERSION)/extra && \
 	for mod in \
@@ -793,7 +793,6 @@ endif
 	rm -f $(RELEASE_DIR)/lib/libSegFault*
 	rm -f $(RELEASE_DIR)/lib/libthread_db*
 	rm -f $(RELEASE_DIR)/lib/libanl*
-	rm -f $(RELEASE_DIR)/lib/modules/lzo*.ko
 	rm -rf $(RELEASE_DIR)/lib/modules/$(KERNEL_VERSION)
 	rm -rf $(RELEASE_DIR)/usr/lib/alsa
 	rm -f $(RELEASE_DIR)/usr/lib/libc.so
@@ -813,6 +812,9 @@ endif
 	rm -f $(RELEASE_DIR)/usr/lib/libanl*
 	rm -f $(RELEASE_DIR)/usr/lib/libopkg*
 	rm -f $(RELEASE_DIR)/bin/gitVCInfo
+	rm -f $(RELEASE_DIR)/bin/evtest
+	rm -f $(RELEASE_DIR)/bin/meta
+	rm -f $(RELEASE_DIR)/bin/streamproxy
 	rm -f $(RELEASE_DIR)/bin/libstb-hal-test
 	rm -f $(RELEASE_DIR)/sbin/ldconfig
 #
