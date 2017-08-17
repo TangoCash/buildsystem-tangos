@@ -46,7 +46,17 @@ $(D)/links: $(D)/bootstrap $(D)/libpng $(D)/openssl $(ARCHIVE)/links-$(LINKS_VER
 	$(TOUCH)
 
 #
-# neutrino-mp plugins
+# neutrino plugins
+#
+NEUTRINO_PLUGINS  = $(D)/neutrino-mp-plugins
+NEUTRINO_PLUGINS += $(D)/neutrino-mp-plugins-scripts-lua
+NEUTRINO_PLUGINS += $(D)/xupnpd
+
+$(D)/neutrino-plugins: $(NEUTRINO_PLUGINS)
+	@touch $@
+
+#
+# neutrino-mp-plugins
 #
 $(D)/neutrino-mp-plugins.do_prepare:
 	$(START_BUILD)
@@ -56,10 +66,9 @@ $(D)/neutrino-mp-plugins.do_prepare:
 		else cd $(ARCHIVE); git clone https://github.com/Duckbox-Developers/neutrino-mp-plugins.git neutrino-mp-plugins.git; \
 		fi
 	cp -ra $(ARCHIVE)/neutrino-mp-plugins.git $(SOURCE_DIR)/neutrino-mp-plugins
-	$(TOUCH)
+	@touch $@
 
-$(SOURCE_DIR)/neutrino-mp-plugins/config.status: $(D)/bootstrap $(D)/xupnpd
-	$(START_BUILD)
+$(D)/neutrino-mp-plugins.config.status: $(D)/bootstrap
 	cd $(SOURCE_DIR)/neutrino-mp-plugins; \
 		./autogen.sh && automake --add-missing; \
 		$(BUILDENV) \
@@ -79,15 +88,14 @@ $(SOURCE_DIR)/neutrino-mp-plugins/config.status: $(D)/bootstrap $(D)/xupnpd
 			PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 			CPPFLAGS="$(N_CPPFLAGS) -DMARTII -DNEW_LIBCURL" \
 			LDFLAGS="$(TARGET_LDFLAGS) -L$(SOURCE_DIR)/neutrino-mp-plugins/fx2/lib/.libs"
+	@touch $@
 
-$(D)/neutrino-mp-plugins.do_compile: $(SOURCE_DIR)/neutrino-mp-plugins/config.status
-	$(START_BUILD)
+$(D)/neutrino-mp-plugins.do_compile: $(D)/neutrino-mp-plugins.config.status
 	cd $(SOURCE_DIR)/neutrino-mp-plugins; \
 		$(MAKE)
-	$(TOUCH)
+	@touch $@
 
-$(D)/neutrino-mp-plugins: neutrino-mp-plugins.do_prepare neutrino-mp-plugins.do_compile
-	$(START_BUILD)
+$(D)/neutrino-mp-plugins: $(D)/neutrino-mp-plugins.do_prepare $(D)/neutrino-mp-plugins.do_compile
 	$(MAKE) -C $(SOURCE_DIR)/neutrino-mp-plugins install DESTDIR=$(TARGET_DIR)
 	$(TOUCH)
 
@@ -99,13 +107,14 @@ neutrino-mp-plugins-clean:
 neutrino-mp-plugins-distclean:
 	rm -f $(D)/neutrino-mp-plugins.do_prepare
 	rm -f $(D)/neutrino-mp-plugins.do_compile
+	rm -f $(D)/neutrino-mp-plugins.config.status
 
 #
 # xupnpd
 #
 XUPNPD_PATCH = xupnpd.patch
 
-$(D)/xupnpd: $(D)/bootstrap $(D)/lua $(D)/openssl $(D)/plugins-scripts-lua
+$(D)/xupnpd: $(D)/bootstrap $(D)/lua $(D)/openssl $(D)/neutrino-mp-plugins-scripts-lua
 	$(START_BUILD)
 	$(REMOVE)/xupnpd
 	set -e; if [ -d $(ARCHIVE)/xupnpd.git ]; \
@@ -128,23 +137,23 @@ $(D)/xupnpd: $(D)/bootstrap $(D)/lua $(D)/openssl $(D)/plugins-scripts-lua
 	$(TOUCH)
 
 #
-# plugins-scripts-lua
+# neutrino-plugins-scripts-lua
 #
-$(D)/plugins-scripts-lua: $(D)/bootstrap $(D)/xupnpd
+$(D)/neutrino-mp-plugins-scripts-lua: $(D)/bootstrap
 	$(START_BUILD)
-	$(REMOVE)/plugins-scripts-lua
+	$(REMOVE)/neutrino-mp-plugins-scripts-lua
 	set -e; if [ -d $(ARCHIVE)/plugins-scripts-lua.git ]; \
 		then cd $(ARCHIVE)/plugins-scripts-lua.git; git pull; \
 		else cd $(ARCHIVE); git clone https://github.com/tuxbox-neutrino/plugin-scripts-lua.git plugins-scripts-lua.git; \
 		fi
-	cp -ra $(ARCHIVE)/plugins-scripts-lua.git/plugins $(BUILD_TMP)/plugins-scripts-lua
-	set -e; cd $(BUILD_TMP)/plugins-scripts-lua; \
+	cp -ra $(ARCHIVE)/plugins-scripts-lua.git/plugins $(BUILD_TMP)/neutrino-mp-plugins-scripts-lua
+	set -e; cd $(BUILD_TMP)/neutrino-mp-plugins-scripts-lua; \
 		install -d $(TARGET_DIR)/var/tuxbox/plugins
-		cp -R $(BUILD_TMP)/plugins-scripts-lua/ard_mediathek/* $(TARGET_DIR)/var/tuxbox/plugins/
-		cp -R $(BUILD_TMP)/plugins-scripts-lua/favorites2bin/* $(TARGET_DIR)/var/tuxbox/plugins/
-		cp -R $(BUILD_TMP)/plugins-scripts-lua/mtv/* $(TARGET_DIR)/var/tuxbox/plugins/
-		cp -R $(BUILD_TMP)/plugins-scripts-lua/netzkino/* $(TARGET_DIR)/var/tuxbox/plugins/
-	$(REMOVE)/plugins-scripts-lua
+		cp -R $(BUILD_TMP)/neutrino-mp-plugins-scripts-lua/ard_mediathek/* $(TARGET_DIR)/var/tuxbox/plugins/
+		cp -R $(BUILD_TMP)/neutrino-mp-plugins-scripts-lua/favorites2bin/* $(TARGET_DIR)/var/tuxbox/plugins/
+		cp -R $(BUILD_TMP)/neutrino-mp-plugins-scripts-lua/mtv/* $(TARGET_DIR)/var/tuxbox/plugins/
+		cp -R $(BUILD_TMP)/neutrino-mp-plugins-scripts-lua/netzkino/* $(TARGET_DIR)/var/tuxbox/plugins/
+	$(REMOVE)/neutrino-mp-plugins-scripts-lua
 	$(TOUCH)
 
 #
@@ -156,14 +165,11 @@ $(D)/neutrino-hd2-plugins.do_prepare:
 	$(START_BUILD)
 	rm -rf $(SOURCE_DIR)/neutrino-hd2-plugins
 	ln -s $(SOURCE_DIR)/neutrino-hd2.git/plugins $(SOURCE_DIR)/neutrino-hd2-plugins
-	cd $(SOURCE_DIR)/neutrino-hd2-plugins && find ./ -name "Makefile.am" -exec sed -i -e "s/\/..\/nhd2-exp//g" {} \;
-	cd $(SOURCE_DIR)/neutrino-hd2.git && git add --all
 	set -e; cd $(SOURCE_DIR)/neutrino-hd2-plugins; \
 		$(call post_patch,$(NEUTRINO_HD2_PLUGINS_PATCHES))
-	$(TOUCH)
+	@touch $@
 
 $(SOURCE_DIR)/neutrino-hd2-plugins/config.status: $(D)/bootstrap neutrino-hd2
-	$(START_BUILD)
 	cd $(SOURCE_DIR)/neutrino-hd2-plugins; \
 		./autogen.sh; \
 		$(BUILDENV) \
@@ -176,19 +182,18 @@ $(SOURCE_DIR)/neutrino-hd2-plugins/config.status: $(D)/bootstrap neutrino-hd2
 			--with-plugindir=/var/tuxbox/plugins \
 			--with-datadir=/usr/share/tuxbox \
 			--with-fontdir=/usr/share/fonts \
+			--enable-silent-rules \
 			PKG_CONFIG=$(PKG_CONFIG) \
 			PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 			CPPFLAGS="$(CPPFLAGS) -I$(driverdir) -I$(KERNEL_DIR)/include -I$(TARGET_DIR)/include" \
 			LDFLAGS="$(TARGET_LDFLAGS)"
 
 $(D)/neutrino-hd2-plugins.do_compile: $(SOURCE_DIR)/neutrino-hd2-plugins/config.status
-	$(START_BUILD)
 	cd $(SOURCE_DIR)/neutrino-hd2-plugins; \
 	$(MAKE) top_srcdir=$(SOURCE_DIR)/neutrino-hd2
-	$(TOUCH)
+	@touch $@
 
 $(D)/neutrino-hd2-plugins: neutrino-hd2-plugins.do_prepare neutrino-hd2-plugins.do_compile
-	$(START_BUILD)
 	$(MAKE) -C $(SOURCE_DIR)/neutrino-hd2-plugins install DESTDIR=$(TARGET_DIR) top_srcdir=$(SOURCE_DIR)/neutrino-hd2
 	$(TOUCH)
 
