@@ -59,7 +59,12 @@ D                     = $(BASE_DIR)/.deps
 # backwards compatibility
 DEPDIR                = $(D)
 
+ifneq ($(SUDOPASSWD),)
+SUDOCMD               = fakeroot
+else
 SUDOCMD               = echo $(SUDOPASSWD) | sudo -S
+endif
+
 
 WHOAMI               := $(shell id -un)
 #MAINTAINER           ?= $(shell getent passwd $(WHOAMI)|awk -F: '{print $$5}')
