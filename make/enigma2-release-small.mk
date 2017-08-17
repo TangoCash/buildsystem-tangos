@@ -2,13 +2,13 @@
 # Build Dual Image
 #
 yaud-nmp-e2-tangos: yaud-none \
-		neutrino-mp-tangos neutrino-mp-plugins enigma2-tangos enigma2-plugins release_neutrino release_enigma2_small
+		neutrino-mp-tangos neutrino-plugins enigma2-tangos enigma2-plugins neutrino_release enigma2_small_release
 	$(TUXBOX_YAUD_CUSTOMIZE)
 
 #
-# release_common_utils
+# release_small
 #
-$(D)/release_enigma2_small:
+$(D)/enigma2_small_release:
 	install -d $(RELEASE_DIR)/share && \
 	install -d $(RELEASE_DIR)/var/etc/{enigma2,tuxbox,tuxtxt,opkg} && \
 	install -d $(RELEASE_DIR)/usr/share/{enigma2,keymaps} && \
@@ -66,10 +66,9 @@ $(D)/release_enigma2_small:
 #
 	if [ $(PYTHON_VERSION_MAJOR) == 2.7 ]; then \
 		install -d $(RELEASE_DIR)/usr/include; \
-		install -d $(RELEASE_DIR)$(PYTHON_INCLUDE_DIR); \
-		cp $(TARGET_DIR)$(PYTHON_INCLUDE_DIR)/pyconfig.h $(RELEASE_DIR)$(PYTHON_INCLUDE_DIR); \
+		install -d $(RELEASE_DIR)/$(PYTHON_INCLUDE_DIR); \
+		cp $(TARGET_DIR)/$(PYTHON_INCLUDE_DIR)/pyconfig.h $(RELEASE_DIR)/$(PYTHON_INCLUDE_DIR); \
 	fi
-
 #
 # tuxtxt
 #
@@ -86,75 +85,88 @@ $(D)/release_enigma2_small:
 	else \
 		cp -dp $(TARGET_DIR)/sbin/hotplug $(RELEASE_DIR)/sbin/; \
 	fi
-
 #
 # delete unnecessary files
 #
+	rm -f $(RELEASE_DIR)/usr/bin/avahi-*
+	rm -f $(RELEASE_DIR)/usr/bin/easy_install*
+	rm -f $(RELEASE_DIR)/usr/bin/glib-*
+	rm -f $(addprefix $(RELEASE_DIR)/usr/bin/,dvdnav-config gio-querymodules gobject-query gtester gtester-report)
+	rm -f $(addprefix $(RELEASE_DIR)/usr/bin/,livestreamer mailmail manhole opkg-check-config opkg-cl)
 	rm -rf $(RELEASE_DIR)/lib/autofs
 	rm -rf $(RELEASE_DIR)/usr/lib/m4-nofpu/
 	rm -rf $(RELEASE_DIR)/lib/modules/$(KERNEL_VERSION)
 	rm -rf $(RELEASE_DIR)/usr/lib/gcc
 	rm -f $(RELEASE_DIR)/usr/lib/libc.so
+#
+# delete unnecessary files python
+#
+	install -d $(RELEASE_DIR)/$(PYTHON_DIR)
+	cp -a $(TARGET_DIR)/$(PYTHON_DIR)/* $(RELEASE_DIR)/$(PYTHON_DIR)/
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/{bsddb,compiler,curses,distutils,lib-old,lib-tk,plat-linux3,test}
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/ctypes/test
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/email/test
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/json/tests
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/lib2to3/tests
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/sqlite3/test
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/unittest/test
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/twisted/{test,conch,mail,names,news,words,flow,lore,pair,runner}
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/Cheetah/Tests
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/livestreamer_cli
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/lxml
+	rm -f $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/libxml2mod.so
+	rm -f $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/libxsltmod.so
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/OpenSSL/test
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/setuptools
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/zope/interface/tests
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/twisted/application/test
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/twisted/conch/test
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/twisted/internet/test
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/twisted/lore/test
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/twisted/mail/test
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/twisted/manhole/test
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/twisted/names/test
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/twisted/news/test
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/twisted/pair/test
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/twisted/persisted/test
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/twisted/protocols/test
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/twisted/python/test
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/twisted/runner/test
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/twisted/scripts/test
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/twisted/test
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/twisted/trial/test
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/twisted/web/test
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/twisted/words/test
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/*-py$(PYTHON_VERSION_MAJOR).egg-info
 	rm -rf $(RELEASE_DIR)/usr/lib/enigma2/python/Plugins/DemoPlugins
 	rm -rf $(RELEASE_DIR)/usr/lib/enigma2/python/Plugins/SystemPlugins/FrontprocessorUpgrade
 	rm -rf $(RELEASE_DIR)/usr/lib/enigma2/python/Plugins/SystemPlugins/NFIFlash
 	rm -rf $(RELEASE_DIR)/usr/lib/enigma2/python/Plugins/Extensions/FileManager
 	rm -rf $(RELEASE_DIR)/usr/lib/enigma2/python/Plugins/Extensions/TuxboxPlugins
-	install -d $(RELEASE_DIR)$(PYTHON_DIR)
-	cp -a $(TARGET_DIR)$(PYTHON_DIR)/* $(RELEASE_DIR)$(PYTHON_DIR)/
-	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/{bsddb,compiler,curses,distutils,lib-old,lib-tk,plat-linux3,test}
-	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/ctypes/test
-	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/email/test
-	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/json/tests
-	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/lib2to3/tests
-	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/sqlite3/test
-	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/unittest/test
-	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/site-packages/twisted/{test,conch,mail,names,news,words,flow,lore,pair,runner}
-	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/site-packages/Cheetah/Tests
-	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/site-packages/livestreamer_cli
-	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/site-packages/lxml
-	rm -f $(RELEASE_DIR)$(PYTHON_DIR)/site-packages/libxml2mod.so
-	rm -f $(RELEASE_DIR)$(PYTHON_DIR)/site-packages/libxsltmod.so
-	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/site-packages/OpenSSL/test
-	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/site-packages/setuptools
-	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/site-packages/zope/interface/tests
-	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/site-packages/twisted/application/test
-	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/site-packages/twisted/conch/test
-	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/site-packages/twisted/internet/test
-	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/site-packages/twisted/lore/test
-	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/site-packages/twisted/mail/test
-	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/site-packages/twisted/manhole/test
-	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/site-packages/twisted/names/test
-	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/site-packages/twisted/news/test
-	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/site-packages/twisted/pair/test
-	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/site-packages/twisted/persisted/test
-	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/site-packages/twisted/protocols/test
-	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/site-packages/twisted/python/test
-	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/site-packages/twisted/runner/test
-	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/site-packages/twisted/scripts/test
-	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/site-packages/twisted/test
-	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/site-packages/twisted/trial/test
-	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/site-packages/twisted/web/test
-	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/site-packages/twisted/words/test
-	rm -rf $(RELEASE_DIR)$(PYTHON_DIR)/site-packages/*-py$(PYTHON_VERSION_MAJOR).egg-info
-
 #
-# Dont remove pyo files, remove pyc instead
+# Do not remove pyo files, remove pyc instead
 #
 	find $(RELEASE_DIR)/usr/lib/enigma2/ -name '*.pyc' -exec rm -f {} \;
-#	find $(RELEASE_DIR)/usr/lib/enigma2/ -not -name 'mytest.py' -name '*.py' -exec rm -f {} \;
+ifeq ($(OPTIMIZATIONS), size)
+ifneq ($(BOXTYPE), atevio7500)
+	find $(RELEASE_DIR)/usr/lib/enigma2/ -not -name 'mytest.py' -name '*.py' -exec rm -f {} \;
+else
+	find $(RELEASE_DIR)/usr/lib/enigma2/ -not -name 'mytest.py' -not -name 'Language.py' -name '*.py' -exec rm -f {} \;
+endif
+endif
 	find $(RELEASE_DIR)/usr/lib/enigma2/ -name '*.a' -exec rm -f {} \;
 	find $(RELEASE_DIR)/usr/lib/enigma2/ -name '*.o' -exec rm -f {} \;
 	find $(RELEASE_DIR)/usr/lib/enigma2/ -name '*.la' -exec rm -f {} \;
-
-#
-	find $(RELEASE_DIR)$(PYTHON_DIR)/ -name '*.pyc' -exec rm -f {} \;
-#	find $(RELEASE_DIR)$(PYTHON_DIR)/ -name '*.py' -exec rm -f {} \;
-	find $(RELEASE_DIR)$(PYTHON_DIR)/ -name '*.a' -exec rm -f {} \;
-	find $(RELEASE_DIR)$(PYTHON_DIR)/ -name '*.c' -exec rm -f {} \;
-	find $(RELEASE_DIR)$(PYTHON_DIR)/ -name '*.pyx' -exec rm -f {} \;
-	find $(RELEASE_DIR)$(PYTHON_DIR)/ -name '*.o' -exec rm -f {} \;
-	find $(RELEASE_DIR)$(PYTHON_DIR)/ -name '*.la' -exec rm -f {} \;
+	find $(RELEASE_DIR)/$(PYTHON_DIR)/ -name '*.pyc' -exec rm -f {} \;
+ifeq ($(OPTIMIZATIONS), size)
+# Keep them for now
+#	find $(RELEASE_DIR)/$(PYTHON_DIR)/ -name '*.py' -exec rm -f {} \;
+endif
+	find $(RELEASE_DIR)/$(PYTHON_DIR)/ -name '*.a' -exec rm -f {} \;
+	find $(RELEASE_DIR)/$(PYTHON_DIR)/ -name '*.c' -exec rm -f {} \;
+	find $(RELEASE_DIR)/$(PYTHON_DIR)/ -name '*.pyx' -exec rm -f {} \;
+	find $(RELEASE_DIR)/$(PYTHON_DIR)/ -name '*.o' -exec rm -f {} \;
+	find $(RELEASE_DIR)/$(PYTHON_DIR)/ -name '*.la' -exec rm -f {} \;
 
 #
 # FOR YOUR OWN CHANGES use these folder in cdk/own_build/enigma2
@@ -167,6 +179,13 @@ $(D)/release_enigma2_small:
 #
 # sh4-linux-strip all
 #
-	find $(RELEASE_DIR)/ -name '*' -exec sh4-linux-strip --strip-unneeded {} &>/dev/null \;
+ifneq ($(OPTIMIZATIONS), $(filter $(OPTIMIZATIONS), kerneldebug debug))
+	find $(RELEASE_DIR)/ -name '*' -exec $(TARGET)-strip --strip-unneeded {} &>/dev/null \;
+endif
+	@echo "***************************************************************"
+	@echo -e "\033[01;32m"
+	@echo " Build of Enigma2 for $(BOXTYPE) successfully completed."
+	@echo -e "\033[00m"
+	@echo "***************************************************************"
 
 	touch $@
