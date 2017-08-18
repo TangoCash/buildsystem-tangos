@@ -2514,12 +2514,12 @@ $(D)/libplist: $(D)/bootstrap $(D)/libxml2 $(ARCHIVE)/$(LIBPLIST_SOURCE)
 # libao
 #
 LIBAO_VERSION = 1.1.0
-LIBAO_SOURCE = ibao-$(LIBAO_VERSION).tar.gz
+LIBAO_SOURCE = libao-$(LIBAO_VERSION).tar.gz
 
 $(ARCHIVE)/$(LIBAO_SOURCE):
 	$(WGET) https://ftp.osuosl.org/pub/xiph/releases/ao/$(LIBAO_SOURCE)
 
-$(D)/libao: $(D)/bootstrap $(D)/alsa-lib $(ARCHIVE)/$(LIBAO_SOURCE)
+$(D)/libao: $(D)/bootstrap $(D)/alsa_lib $(ARCHIVE)/$(LIBAO_SOURCE)
 	$(START_BUILD)
 	$(REMOVE)/libao-$(LIBAO_VERSION)
 	$(UNTAR)/$(LIBAO_SOURCE)
