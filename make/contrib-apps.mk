@@ -1081,14 +1081,15 @@ $(D)/shairplay: $(D)/bootstrap $(D)/libao
 		PKG_CONFIG=$(PKG_CONFIG) \
 		$(BUILDENV) \
 		$(CONFIGURE) \
-			--prefix=$(TARGET_DIR)/usr \
+			--prefix=/usr \
 			--enable-shared \
 			--disable-static \
 		; \
 		$(MAKE); \
 		mkdir -p $(TARGET_DIR)/usr/share/shairplay ; \
 		install -m 644 airport.key $(TARGET_DIR)/usr/share/shairplay/airport.key ; \
-		$(MAKE) install
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+		$(REWRITE_LIBTOOL)/libshairplay.la
 		rm -f $(addprefix $(TARGET_DIR)/usr/bin/,shairplay)
 	$(REMOVE)/shairplay
 	$(TOUCH)
