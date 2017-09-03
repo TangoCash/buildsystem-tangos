@@ -18,6 +18,7 @@ COMMON_PATCHES_24 = \
 		linux-ftdi_sio.c_stm24_$(KERNEL_LABEL).patch \
 		linux-sh4-lzma-fix_stm24_$(KERNEL_LABEL).patch \
 		linux-tune_stm24.patch \
+		linux-net_stm24.patch \
 		linux-sh4-permit_gcc_command_line_sections_stm24.patch \
 		linux-sh4-mmap_stm24.patch \
 		linux-defined_is_deprecated_timeconst.pl_stm24_$(KERNEL_LABEL).patch \
@@ -251,13 +252,13 @@ ARIVALINK200_PATCHES_24 = $(COMMON_PATCHES_24) \
 		linux-sh4-ipbox_dvb_ca_stm24_$(KERNEL_LABEL).patch
 
 #
-# HOST-KERNEL
+# KERNEL
 #
-HOST_KERNEL_PATCHES = $(KERNEL_PATCHES_24)
-HOST_KERNEL_CONFIG = linux-sh4-$(subst _stm24_,_,$(KERNEL_VERSION))_$(BOXTYPE).config
+KERNEL_PATCHES = $(KERNEL_PATCHES_24)
+KERNEL_CONFIG = linux-sh4-$(subst _stm24_,_,$(KERNEL_VER))_$(BOXTYPE).config
 
-$(D)/linux-kernel.do_prepare: $(PATCHES)/$(BUILD_CONFIG)/$(HOST_KERNEL_CONFIG) \
-	$(if $(HOST_KERNEL_PATCHES),$(HOST_KERNEL_PATCHES:%=$(PATCHES)/$(BUILD_CONFIG)/%))
+$(D)/kernel.do_prepare: $(PATCHES)/$(BUILD_CONFIG)/$(KERNEL_CONFIG) \
+	$(if $(KERNEL_PATCHES),$(KERNEL_PATCHES:%=$(PATCHES)/$(BUILD_CONFIG)/%))
 	$(START_BUILD)
 	rm -rf $(KERNEL_DIR)
 	REPO=https://github.com/Duckbox-Developers/linux-sh4-2.6.32.71.git;protocol=https;branch=stmicro; \
@@ -266,13 +267,13 @@ $(D)/linux-kernel.do_prepare: $(PATCHES)/$(BUILD_CONFIG)/$(HOST_KERNEL_CONFIG) \
 	[ -d "$(ARCHIVE)/linux-sh4-2.6.32.71.git" ] || \
 	(echo "Getting STlinux kernel source"; git clone -n $$REPO $(ARCHIVE)/linux-sh4-2.6.32.71.git); \
 	(echo "Copying kernel source code to build environment"; cp -ra $(ARCHIVE)/linux-sh4-2.6.32.71.git $(KERNEL_DIR)); \
-	(echo "Applying patch level P$(KERNEL_LABEL)"; cd $(KERNEL_DIR); git checkout -q $(HOST_KERNEL_REVISION))
+	(echo "Applying patch level P$(KERNEL_LABEL)"; cd $(KERNEL_DIR); git checkout -q $(KERNEL_REVISION))
 	set -e; cd $(KERNEL_DIR); \
-		for i in $(HOST_KERNEL_PATCHES); do \
+		for i in $(KERNEL_PATCHES); do \
 			echo -e "==> $(TERM_RED)Applying Patch:$(TERM_NORMAL) $$i"; \
 			$(PATCH)/$(BUILD_CONFIG)/$$i; \
 		done
-	install -m 644 $(PATCHES)/$(BUILD_CONFIG)/$(HOST_KERNEL_CONFIG) $(KERNEL_DIR)/.config
+	install -m 644 $(PATCHES)/$(BUILD_CONFIG)/$(KERNEL_CONFIG) $(KERNEL_DIR)/.config
 	sed -i "s#^\(CONFIG_EXTRA_FIRMWARE_DIR=\).*#\1\"$(BASE_DIR)/integrated_firmware\"#" $(KERNEL_DIR)/.config
 	-rm $(KERNEL_DIR)/localversion*
 	echo "$(KERNEL_STM_LABEL)" > $(KERNEL_DIR)/localversion-stm
@@ -302,7 +303,7 @@ ifeq ($(IMAGE), $(filter $(IMAGE), enigma2-wlandriver neutrino-wlandriver))
 endif
 	@touch $@
 
-$(D)/linux-kernel.do_compile: $(D)/linux-kernel.do_prepare
+$(D)/kernel.do_compile: $(D)/kernel.do_prepare
 	set -e; cd $(KERNEL_DIR); \
 		$(MAKE) -C $(KERNEL_DIR) ARCH=sh oldconfig
 		$(MAKE) -C $(KERNEL_DIR) ARCH=sh include/asm
@@ -311,16 +312,16 @@ $(D)/linux-kernel.do_compile: $(D)/linux-kernel.do_prepare
 		$(MAKE) -C $(KERNEL_DIR) ARCH=sh CROSS_COMPILE=$(TARGET)- DEPMOD=$(DEPMOD) INSTALL_MOD_PATH=$(TARGET_DIR) modules_install
 	@touch $@
 
-$(D)/linux-kernel: $(D)/bootstrap host_u_boot_tools $(D)/linux-kernel.do_compile
+$(D)/kernel: $(D)/bootstrap host_u_boot_tools $(D)/kernel.do_compile
 	install -m 644 $(KERNEL_DIR)/arch/sh/boot/uImage $(BOOT_DIR)/vmlinux.ub
-	install -m 644 $(KERNEL_DIR)/vmlinux $(TARGET_DIR)/boot/vmlinux-sh4-$(KERNEL_VERSION)
-	install -m 644 $(KERNEL_DIR)/System.map $(TARGET_DIR)/boot/System.map-sh4-$(KERNEL_VERSION)
+	install -m 644 $(KERNEL_DIR)/vmlinux $(TARGET_DIR)/boot/vmlinux-sh4-$(KERNEL_VER)
+	install -m 644 $(KERNEL_DIR)/System.map $(TARGET_DIR)/boot/System.map-sh4-$(KERNEL_VER)
 	cp $(KERNEL_DIR)/arch/sh/boot/uImage $(TARGET_DIR)/boot/
-	rm $(TARGET_DIR)/lib/modules/$(KERNEL_VERSION)/build || true
-	rm $(TARGET_DIR)/lib/modules/$(KERNEL_VERSION)/source || true
+	rm $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/build || true
+	rm $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/source || true
 	$(TOUCH)
 
-$(D)/kernel-headers: $(D)/linux-kernel.do_prepare
+$(D)/kernel-headers: $(D)/kernel.do_prepare
 	$(START_BUILD)
 	cd $(KERNEL_DIR); \
 		install -d $(TARGET_DIR)/usr/include
@@ -330,31 +331,31 @@ $(D)/kernel-headers: $(D)/linux-kernel.do_prepare
 		cp -a include/mtd $(TARGET_DIR)/usr/include
 	$(TOUCH)
 
-linux-kernel-distclean:
-	rm -f $(D)/linux-kernel
-	rm -f $(D)/linux-kernel.do_compile
-	rm -f $(D)/linux-kernel.do_prepare
+kernel-distclean:
+	rm -f $(D)/kernel
+	rm -f $(D)/kernel.do_compile
+	rm -f $(D)/kernel.do_prepare
 
-linux-kernel-clean:
+kernel-clean:
 	-$(MAKE) -C $(KERNEL_DIR) clean
-	rm -f $(D)/linux-kernel
-	rm -f $(D)/linux-kernel.do_compile
+	rm -f $(D)/kernel
+	rm -f $(D)/kernel.do_compile
 
 #
 # TF7700 installer
 #
 TFINSTALLER_DIR := $(BASE_DIR)/tfinstaller
 
-tfinstaller: $(D)/bootstrap $(TFINSTALLER_DIR)/u-boot.ftfd $(D)/linux-kernel
+tfinstaller: $(D)/bootstrap $(TFINSTALLER_DIR)/u-boot.ftfd $(D)/kernel
 	$(START_BUILD)
 	$(MAKE) $(MAKE_OPTS) -C $(TFINSTALLER_DIR) HOST_DIR=$(HOST_DIR) BASE_DIR=$(BASE_DIR) KERNEL_DIR=$(KERNEL_DIR)
 	$(TOUCH)
 
 $(TFINSTALLER_DIR)/u-boot.ftfd: $(D)/uboot $(TFINSTALLER_DIR)/tfpacker
 	$(START_BUILD)
-	$(TFINSTALLER_DIR)/tfpacker $(BUILD_TMP)/u-boot-$(U_BOOT_VERSION)/u-boot.bin $(TFINSTALLER_DIR)/u-boot.ftfd
-	$(TFINSTALLER_DIR)/tfpacker -t $(BUILD_TMP)/u-boot-$(U_BOOT_VERSION)/u-boot.bin $(TFINSTALLER_DIR)/Enigma_Installer.tfd
-	$(REMOVE)/u-boot-$(U_BOOT_VERSION)
+	$(TFINSTALLER_DIR)/tfpacker $(BUILD_TMP)/u-boot-$(U_BOOT_VER)/u-boot.bin $(TFINSTALLER_DIR)/u-boot.ftfd
+	$(TFINSTALLER_DIR)/tfpacker -t $(BUILD_TMP)/u-boot-$(U_BOOT_VER)/u-boot.bin $(TFINSTALLER_DIR)/Enigma_Installer.tfd
+	$(REMOVE)/u-boot-$(U_BOOT_VER)
 	$(TOUCH)
 
 $(TFINSTALLER_DIR)/tfpacker:
@@ -371,34 +372,34 @@ $(D)/tfkernel:
 #
 # u-boot
 #
-UBOOT_VERSION = 1.3.1
-UBOOT_PATCH  =  u-boot-$(UBOOT_VERSION).patch
+UBOOT_VER = 1.3.1
+UBOOT_PATCH  =  u-boot-$(UBOOT_VER).patch
 ifeq ($(BOXTYPE), tf7700)
-UBOOT_PATCH += u-boot-$(UBOOT_VERSION)-tf7700.patch
+UBOOT_PATCH += u-boot-$(UBOOT_VER)-tf7700.patch
 endif
 
-$(ARCHIVE)/u-boot-$(UBOOT_VERSION).tar.bz2:
-	$(WGET) ftp://ftp.denx.de/pub/u-boot/u-boot-$(U_BOOT_VERSION).tar.bz2
+$(ARCHIVE)/u-boot-$(UBOOT_VER).tar.bz2:
+	$(WGET) ftp://ftp.denx.de/pub/u-boot/u-boot-$(U_BOOT_VER).tar.bz2
 
-$(D)/uboot: bootstrap $(ARCHIVE)/u-boot-$(UBOOT_VERSION).tar.bz2
+$(D)/uboot: bootstrap $(ARCHIVE)/u-boot-$(UBOOT_VER).tar.bz2
 	$(START_BUILD)
-	$(REMOVE)/u-boot-$(UBOOT_VERSION)
-	$(UNTAR)/u-boot-$(UBOOT_VERSION).tar.bz2
-	set -e; cd $(BUILD_TMP)/u-boot-$(UBOOT_VERSION); \
+	$(REMOVE)/u-boot-$(UBOOT_VER)
+	$(UNTAR)/u-boot-$(UBOOT_VER).tar.bz2
+	set -e; cd $(BUILD_TMP)/u-boot-$(UBOOT_VER); \
 		$(call post_patch,$(UBOOT_PATCH)); \
 		$(MAKE) $(BOXTYPE)_config; \
 		$(MAKE)
-#	$(REMOVE)/u-boot-$(UBOOT_VERSION)
+#	$(REMOVE)/u-boot-$(UBOOT_VER)
 	$(TOUCH)
 
 #
 # Helper
 #
-linux-kernel.menuconfig linux-kernel.xconfig: \
-linux-kernel.%:
+kernel.menuconfig kernel.xconfig: \
+kernel.%:
 	$(MAKE) -C $(KERNEL_DIR) ARCH=sh CROSS_COMPILE=$(TARGET)- $*
 	@echo ""
-	@echo "You have to edit $(PATCHES)/$(BUILD_CONFIG)/$(HOST_KERNEL_CONFIG) m a n u a l l y to make changes permanent !!!"
+	@echo "You have to edit $(PATCHES)/$(BUILD_CONFIG)/$(KERNEL_CONFIG) m a n u a l l y to make changes permanent !!!"
 	@echo ""
 	diff $(KERNEL_DIR)/.config.old $(KERNEL_DIR)/.config
 	@echo ""

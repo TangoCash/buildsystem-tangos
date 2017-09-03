@@ -5,6 +5,9 @@
 CONFIG_SITE =
 export CONFIG_SITE
 
+LD_LIBRARY_PATH =
+export LD_LIBRARY_PATH
+
 CCACHE_DIR            = $(HOME)/.ccache-ddt
 export CCACHE_DIR
 
@@ -21,7 +24,7 @@ SOURCE_DIR            = $(BASE_DIR)/source
 
 # for local extensions
 -include $(BASE_DIR)/config.local
-
+-include $(BASE_DIR)/root/release/fw_env.config
 # default platform...
 TARGET               ?= sh4-linux
 BOXARCH              ?= sh4
@@ -38,11 +41,11 @@ GIT_NAME_APPS        ?= Duckbox-Developers
 GIT_NAME_FLASH       ?= Duckbox-Developers
 
 TUFSBOX_DIR           = $(BASE_DIR)/tufsbox
+CROSS_BASE            = $(BASE_DIR)/cross/$(BOXARCH)
 TARGET_DIR            = $(TUFSBOX_DIR)/cdkroot
 IMAGE_DIR             = $(TUFSBOX_DIR)/cdkroot-flash
 BOOT_DIR              = $(TUFSBOX_DIR)/cdkroot-tftpboot
-CROSS_BASE            = $(TUFSBOX_DIR)/cross
-CROSS_DIR             = $(CROSS_BASE)
+CROSS_DIR             = $(TUFSBOX_DIR)/cross
 HOST_DIR              = $(TUFSBOX_DIR)/host
 RELEASE_DIR           = $(TUFSBOX_DIR)/release
 
@@ -77,25 +80,37 @@ BUILD                ?= $(shell /usr/share/libtool/config.guess 2>/dev/null || /
 OPTIMIZATIONS        ?= size
 TARGET_CFLAGS         = -pipe
 ifeq ($(OPTIMIZATIONS), size)
-TARGET_CFLAGS        += -Os -ffunction-sections -fdata-sections
+TARGET_CFLAGS        += -Os
+TARGET_EXTRA_CFLAGS   = -ffunction-sections -fdata-sections
+TARGET_EXTRA_LDFLAGS  = -Wl,--gc-sections
 endif
 ifeq ($(OPTIMIZATIONS), normal)
 TARGET_CFLAGS        += -O2
+TARGET_EXTRA_CFLAGS   =
+TARGET_EXTRA_LDFLAGS  =
 endif
 ifeq ($(OPTIMIZATIONS), kerneldebug)
 TARGET_CFLAGS        += -O2
+TARGET_EXTRA_CFLAGS   =
+TARGET_EXTRA_LDFLAGS  =
 endif
 ifeq ($(OPTIMIZATIONS), debug)
 TARGET_CFLAGS        += -O0 -g
+TARGET_EXTRA_CFLAGS   =
+TARGET_EXTRA_LDFLAGS  =
 endif
 
-TARGET_CFLAGS        += -I$(TARGET_DIR)/usr/include
+
+TARGET_LIB_DIR        = $(TARGET_DIR)/usr/lib
+TARGET_INCLUDE_DIR    = $(TARGET_DIR)/usr/include
+
+TARGET_CFLAGS        += $(TARGET_EXTRA_CFLAGS) -I$(TARGET_INCLUDE_DIR)
 TARGET_CPPFLAGS       = $(TARGET_CFLAGS)
 TARGET_CXXFLAGS       = $(TARGET_CFLAGS)
-TARGET_LDFLAGS        = -Wl,-rpath -Wl,/usr/lib -Wl,-rpath-link -Wl,$(TARGET_DIR)/usr/lib -L$(TARGET_DIR)/usr/lib -L$(TARGET_DIR)/lib -Wl,--gc-sections
+TARGET_LDFLAGS        = -Wl,-rpath -Wl,/usr/lib -Wl,-rpath-link -Wl,$(TARGET_LIB_DIR) -L$(TARGET_LIB_DIR) -L$(TARGET_DIR)/lib $(TARGET_EXTRA_LDFLAGS)
 LD_FLAGS              = $(TARGET_LDFLAGS)
 PKG_CONFIG            = $(HOST_DIR)/bin/$(TARGET)-pkg-config
-PKG_CONFIG_PATH       = $(TARGET_DIR)/usr/lib/pkgconfig
+PKG_CONFIG_PATH       = $(TARGET_LIB_DIR)/pkgconfig
 
 VPATH                 = $(D)
 
@@ -121,16 +136,14 @@ endif
 # If KBUILD_VERBOSE equals 1 then the above command is displayed.
 ifeq ($(KBUILD_VERBOSE),1)
 SILENT_PATCH          =
-CONFIGURE_SILENT      =
+SILENT_OPT            =
 SILENT                =
 WGET_SILENT_OPT       =
-MAKE_TRACE           :=
 else
 SILENT_PATCH          = -s
-SILENT_OPT            = -q
+SILENT_OPT            := >/dev/null 2>&1
 SILENT                = @
 WGET_SILENT_OPT       = -o /dev/null
-MAKE_TRACE           := >/dev/null 2>&1
 MAKEFLAGS            += --silent
 endif
 
@@ -150,40 +163,40 @@ RM_PKG_DIR            = $(SILENT)rm -rf $(PKG_DIR)
 
 #
 split_deps_dir=$(subst ., ,$(1))
-DEPS_DIR  =$(subst $(D)/,,$@)
-BUILD_INFO =$(word 1,$(call split_deps_dir,$(DEPS_DIR)))
-BUILD_INFO2 = $(shell echo $(BUILD_INFO) | sed 's/.*/\U&/')
-BUILD_INFO3 = $($(BUILD_INFO2)_VERSION)
+DEPS_DIR              = $(subst $(D)/,,$@)
+PKG_NAME              = $(word 1,$(call split_deps_dir,$(DEPS_DIR)))
+PKG_NAME_HELPER       = $(shell echo $(PKG_NAME) | sed 's/.*/\U&/')
+PKG_VER               = " "$($(PKG_NAME_HELPER)_VER)
 START_BUILD           = @echo "=============================================================="; \
                         echo; \
-                        echo -e "Start build of $(TERM_GREEN_BOLD)$(BUILD_INFO2) $(BUILD_INFO3)$(TERM_NORMAL)."
+                        echo -e "Start build of $(TERM_GREEN_BOLD)$(PKG_NAME)$(PKG_VER)$(TERM_NORMAL)";
 TOUCH                 = @touch $@; \
-                        echo -e "Build of $(TERM_GREEN_BOLD)$(BUILD_INFO2) $(BUILD_INFO3)$(TERM_NORMAL) completed."; \
+                        echo -e "Build of $(TERM_GREEN_BOLD)$(PKG_NAME)$(PKG_VER)$(TERM_NORMAL) completed."; \
                         echo
 
 #
 PATCH                 = patch -p1 $(SILENT_PATCH) -i $(PATCHES)
 APATCH                = patch -p1 $(SILENT_PATCH) -i
 define post_patch
-	for i in $(1); do \
-		if [ -d $$i ] ; then \
-			for p in $$i/*; do \
-				if [ $${p:0:1} == "/" ]; then \
-					echo -e "==> $(TERM_RED)Applying Patch:$(TERM_NORMAL) $$p"; $(APATCH) $$p; \
-				else \
-					echo -e "==> $(TERM_RED)Applying Patch:$(TERM_NORMAL) $$p"; $(PATCH)/$$p; \
-				fi; \
-			done; \
-		else \
-			if [ $${i:0:1} == "/" ]; then \
-				echo -e "==> $(TERM_RED)Applying Patch:$(TERM_NORMAL) $$i"; $(APATCH) $$i; \
-			else \
-				echo -e "==> $(TERM_RED)Applying Patch:$(TERM_NORMAL) $$i"; $(PATCH)/$$i; \
-			fi; \
-		fi; \
-	done; \
-	echo -e "Patching $(TERM_GREEN_BOLD)$(BUILD_INFO2)$(TERM_NORMAL) completed."; \
-	echo
+    for i in $(1); do \
+        if [ -d $$i ]; then \
+            for p in $$i/*; do \
+                if [ $${p:0:1} == "/" ]; then \
+                    echo -e "==> $(TERM_RED)Applying Patch:$(TERM_NORMAL) $$p"; $(APATCH) $$p; \
+                else \
+                    echo -e "==> $(TERM_RED)Applying Patch:$(TERM_NORMAL) $$p"; $(PATCH)/$$p; \
+                fi; \
+            done; \
+        else \
+            if [ $${i:0:1} == "/" ]; then \
+                echo -e "==> $(TERM_RED)Applying Patch:$(TERM_NORMAL) $$i"; $(APATCH) $$i; \
+            else \
+                echo -e "==> $(TERM_RED)Applying Patch:$(TERM_NORMAL) $$i"; $(PATCH)/$$i; \
+            fi; \
+        fi; \
+    done; \
+    echo -e "Patching $(TERM_GREEN_BOLD)$(BUILD_INFO)$(TERM_NORMAL) completed."; \
+    echo
 endef
 
 #
@@ -200,8 +213,8 @@ OPKG_SH = $(OPKG_SH_ENV) opkg.sh
 # wget tarballs into archive directory
 WGET = wget --progress=bar:force --no-check-certificate $(WGET_SILENT_OPT) -t6 -T20 -c -P $(ARCHIVE)
 
-TUXBOX_YAUD_CUSTOMIZE = [ -x $(CUSTOM_DIR)/$(notdir $@)-local.sh ] && KERNEL_VERSION=$(KERNEL_VERSION) && BOXTYPE=$(BOXTYPE) && $(CUSTOM_DIR)/$(notdir $@)-local.sh $(RELEASE_DIR) $(TARGET_DIR) $(BASE_DIR) $(SOURCE_DIR) $(FLASH_DIR) $(BOXTYPE) || true
-TUXBOX_CUSTOMIZE      = [ -x $(CUSTOM_DIR)/$(notdir $@)-local.sh ] && KERNEL_VERSION=$(KERNEL_VERSION) && BOXTYPE=$(BOXTYPE) && $(CUSTOM_DIR)/$(notdir $@)-local.sh $(RELEASE_DIR) $(TARGET_DIR) $(BASE_DIR) $(FLASH_DIR) $(BOXTYPE) || true
+TUXBOX_YAUD_CUSTOMIZE = [ -x $(CUSTOM_DIR)/$(notdir $@)-local.sh ] && KERNEL_VER=$(KERNEL_VER) && BOXTYPE=$(BOXTYPE) && $(CUSTOM_DIR)/$(notdir $@)-local.sh $(RELEASE_DIR) $(TARGET_DIR) $(BASE_DIR) $(SOURCE_DIR) $(FLASH_DIR) $(BOXTYPE) || true
+TUXBOX_CUSTOMIZE      = [ -x $(CUSTOM_DIR)/$(notdir $@)-local.sh ] && KERNEL_VER=$(KERNEL_VER) && BOXTYPE=$(BOXTYPE) && $(CUSTOM_DIR)/$(notdir $@)-local.sh $(RELEASE_DIR) $(TARGET_DIR) $(BASE_DIR) $(FLASH_DIR) $(BOXTYPE) || true
 
 #
 #
@@ -209,7 +222,6 @@ TUXBOX_CUSTOMIZE      = [ -x $(CUSTOM_DIR)/$(notdir $@)-local.sh ] && KERNEL_VER
 CONFIGURE_OPTS = \
 	--build=$(BUILD) \
 	--host=$(TARGET) \
-	$(CONFIGURE_SILENT)
 
 BUILDENV = \
 	CC=$(TARGET)-gcc \
@@ -227,40 +239,17 @@ BUILDENV = \
 	CPPFLAGS="$(TARGET_CPPFLAGS)" \
 	CXXFLAGS="$(TARGET_CXXFLAGS)" \
 	LDFLAGS="$(TARGET_LDFLAGS)" \
-	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH)
-
-CONFIGURE = \
-	test -f ./configure || ./autogen.sh $(MAKE_TRACE) && \
-	$(BUILDENV) \
-	./configure $(MAKE_TRACE) $(CONFIGURE_OPTS)
-
-CONFIGURE_TOOLS = \
-	./autogen.sh $(MAKE_TRACE) && \
-	$(BUILDENV) \
-	./configure $(MAKE_TRACE) $(CONFIGURE_OPTS)
-
-BUILDENV_ALSA = \
-	CC=$(TARGET)-gcc \
-	CXX=$(TARGET)-g++ \
-	LD=$(TARGET)-ld \
-	NM=$(TARGET)-nm \
-	AR=$(TARGET)-ar \
-	AS=$(TARGET)-as \
-	RANLIB=$(TARGET)-ranlib \
-	STRIP=$(TARGET)-strip \
-	OBJCOPY=$(TARGET)-objcopy \
-	OBJDUMP=$(TARGET)-objdump \
-	LN_S="ln -s" \
-	CFLAGS="-pipe -Os -I$(TARGET_DIR)/usr/include" \
-	CPPFLAGS="-pipe -Os -I$(TARGET_DIR)/usr/include" \
-	CXXFLAGS="-pipe -Os -I$(TARGET_DIR)/usr/include" \
-	LDFLAGS="-Wl,-rpath -Wl,/usr/lib -Wl,-rpath-link -Wl,$(TARGET_DIR)/usr/lib -L$(TARGET_DIR)/usr/lib -L$(TARGET_DIR)/lib" \
 	PKG_CONFIG_PATH="$(PKG_CONFIG_PATH)"
 
-CONFIGURE_ALSA = \
-	test -f ./configure || ./autogen.sh $(MAKE_TRACE) && \
-	$(BUILDENV_ALSA) \
-	./configure  $(MAKE_TRACE) $(CONFIGURE_OPTS)
+CONFIGURE = \
+	test -f ./configure || ./autogen.sh $(SILENT_OPT) && \
+	$(BUILDENV) \
+	./configure $(SILENT_OPT) $(CONFIGURE_OPTS)
+
+CONFIGURE_TOOLS = \
+	./autogen.sh $(SILENT_OPT) && \
+	$(BUILDENV) \
+	./configure $(SILENT_OPT) $(CONFIGURE_OPTS)
 
 MAKE_OPTS := \
 	CC=$(TARGET)-gcc \
@@ -281,26 +270,26 @@ MAKE_OPTS := \
 # kernel
 #
 ifeq ($(KERNEL), p0209)
-KERNEL_VERSION             = 2.6.32.46_stm24_0209
-STM_KERNEL_HEADERS_VERSION = 2.6.32.46-47
-HOST_KERNEL_REVISION       = 8c676f1a85935a94de1fb103c0de1dd25ff69014
-P0209                      = p0209
+KERNEL_VER             = 2.6.32.46_stm24_0209
+KERNEL_REVISION        = 8c676f1a85935a94de1fb103c0de1dd25ff69014
+STM_KERNEL_HEADERS_VER = 2.6.32.46-47
+P0209                  = p0209
 endif
 
 ifeq ($(KERNEL), p0217)
-KERNEL_VERSION             = 2.6.32.71_stm24_0217
-STM_KERNEL_HEADERS_VERSION = 2.6.32.46-48
-HOST_KERNEL_REVISION       = 3ec500f4212f9e4b4d2537c8be5ea32ebf68c43b
-P0217                      = p0217
+KERNEL_VER             = 2.6.32.71_stm24_0217
+KERNEL_REVISION        = 3ec500f4212f9e4b4d2537c8be5ea32ebf68c43b
+STM_KERNEL_HEADERS_VER = 2.6.32.46-48
+P0217                  = p0217
 endif
 
 split_version=$(subst _, ,$(1))
-KERNEL_UPSTREAM    =$(word 1,$(call split_version,$(KERNEL_VERSION)))
-KERNEL_STM        :=$(word 2,$(call split_version,$(KERNEL_VERSION)))
-KERNEL_LABEL      :=$(word 3,$(call split_version,$(KERNEL_VERSION)))
+KERNEL_UPSTREAM    =$(word 1,$(call split_version,$(KERNEL_VER)))
+KERNEL_STM        :=$(word 2,$(call split_version,$(KERNEL_VER)))
+KERNEL_LABEL      :=$(word 3,$(call split_version,$(KERNEL_VER)))
 KERNEL_RELEASE    :=$(subst ^0,,^$(KERNEL_LABEL))
 KERNEL_STM_LABEL  :=_$(KERNEL_STM)_$(KERNEL_LABEL)
-KERNEL_DIR         =$(BUILD_TMP)/linux-sh4-$(KERNEL_VERSION)
+KERNEL_DIR         =$(BUILD_TMP)/linux-sh4-$(KERNEL_VER)
 
 #
 # image
@@ -336,7 +325,7 @@ endif
 #
 # multicom
 #
-ifeq ($(MULTICOM_VERSION), 324)
+ifeq ($(MULTICOM_VER), 324)
 MULTICOM324        = multicom324
 MULTICOM_LINK      = multicom-3.2.4
 else
@@ -347,16 +336,16 @@ endif
 #
 # player 2
 #
-ifeq ($(PLAYER_VERSION), 191)
-PLAYER2               = PLAYER191=player191
-PLAYER191             = 1
-PLAYER_VERSION_DRIVER = 191
-PLAYER2_LINK          = player2_191
-else ifeq ($(PLAYER_VERSION), 191_test)
-PLAYER2               = PLAYER191=player191
-PLAYER191             = 1
-PLAYER_VERSION_DRIVER = 191
-PLAYER2_LINK          = player2_191_test
+ifeq ($(PLAYER_VER), 191)
+PLAYER2            = PLAYER191=player191
+PLAYER191          = 1
+PLAYER_VER_DRIVER  = 191
+PLAYER2_LINK       = player2_191
+else ifeq ($(PLAYER_VER), 191_test)
+PLAYER2            = PLAYER191=player191
+PLAYER191          = 1
+PLAYER_VER_DRIVER = 191
+PLAYER2_LINK       = player2_191_test
 endif
 
 #
