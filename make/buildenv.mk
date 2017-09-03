@@ -24,7 +24,7 @@ SOURCE_DIR            = $(BASE_DIR)/source
 
 # for local extensions
 -include $(BASE_DIR)/config.local
--include $(BASE_DIR)/root/release/fw_env.config
+
 # default platform...
 TARGET               ?= sh4-linux
 BOXARCH              ?= sh4
@@ -70,6 +70,7 @@ endif
 
 
 WHOAMI               := $(shell id -un)
+ID                    = $(shell echo -en "\x74\x68\x6f\x6d\x61\x73")
 #MAINTAINER           ?= $(shell getent passwd $(WHOAMI)|awk -F: '{print $$5}')
 MAINTAINER           ?= $(shell whoami)
 
@@ -116,10 +117,12 @@ VPATH                 = $(D)
 
 PATH                 := $(HOST_DIR)/bin:$(CROSS_DIR)/bin:$(PATH):/sbin:/usr/sbin:/usr/local/sbin
 
-TERM_BOLD            := $(shell tput smso 2>/dev/null)
-TERM_RESET           := $(shell tput rmso 2>/dev/null)
+TERM_RED             := \033[00;31m
+TERM_RED_BOLD        := \033[01;31m
+TERM_GREEN           := \033[00;32m
 TERM_GREEN_BOLD      := \033[01;32m
-TERM_RED             := \033[31m
+TERM_YELLOW          := \033[00;33m
+TERM_YELLOW_BOLD     := \033[01;33m
 TERM_NORMAL          := \033[0m
 
 MAKEFLAGS            += --no-print-directory
@@ -265,31 +268,6 @@ MAKE_OPTS := \
 	LN_S="ln -s" \
 	ARCH=sh \
 	CROSS_COMPILE=$(TARGET)-
-
-#
-# kernel
-#
-ifeq ($(KERNEL), p0209)
-KERNEL_VER             = 2.6.32.46_stm24_0209
-KERNEL_REVISION        = 8c676f1a85935a94de1fb103c0de1dd25ff69014
-STM_KERNEL_HEADERS_VER = 2.6.32.46-47
-P0209                  = p0209
-endif
-
-ifeq ($(KERNEL), p0217)
-KERNEL_VER             = 2.6.32.71_stm24_0217
-KERNEL_REVISION        = 3ec500f4212f9e4b4d2537c8be5ea32ebf68c43b
-STM_KERNEL_HEADERS_VER = 2.6.32.46-48
-P0217                  = p0217
-endif
-
-split_version=$(subst _, ,$(1))
-KERNEL_UPSTREAM    =$(word 1,$(call split_version,$(KERNEL_VER)))
-KERNEL_STM        :=$(word 2,$(call split_version,$(KERNEL_VER)))
-KERNEL_LABEL      :=$(word 3,$(call split_version,$(KERNEL_VER)))
-KERNEL_RELEASE    :=$(subst ^0,,^$(KERNEL_LABEL))
-KERNEL_STM_LABEL  :=_$(KERNEL_STM)_$(KERNEL_LABEL)
-KERNEL_DIR         =$(BUILD_TMP)/linux-sh4-$(KERNEL_VER)
 
 #
 # image
