@@ -14,3 +14,4 @@ config*
 *~
 Makefile.local
 config.local
+cross/
