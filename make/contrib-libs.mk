@@ -1829,8 +1829,10 @@ endif
 
 ifeq ($(IMAGE), neutrino)
 LIBXML2_CONF_OPTS  = --without-python
+ifeq ($(BOXARCH), sh4)
 LIBXML2_CONF_OPTS += --without-iconv
 LIBXML2_CONF_OPTS += --with-minimum
+endif
 endif
 
 $(D)/libxml2: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/$(LIBXML2_SOURCE)
