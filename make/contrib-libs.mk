@@ -878,6 +878,7 @@ $(D)/libpng: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/$(LIBPNG_SOURCE)
 		mv $(TARGET_DIR)/usr/bin/libpng*-config $(HOST_DIR)/bin/
 	$(REWRITE_LIBTOOL)/libpng16.la
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libpng$(LIBPNG_VER_X).pc
+	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,pngfix png-fix-itxt)
 	$(REMOVE)/libpng-$(LIBPNG_VER)
 	$(TOUCH)
 
@@ -1170,11 +1171,12 @@ $(D)/libvorbis: $(D)/bootstrap $(D)/libogg $(ARCHIVE)/$(LIBVORBIS_SOURCE)
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--docdir=/.remove \
+			--mandir=/.remove \
 			--disable-docs \
 			--disable-examples \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
+		$(MAKE) install DESTDIR=$(TARGET_DIR) docdir=/.remove
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/vorbis.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/vorbisenc.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/vorbisfile.pc
@@ -1736,7 +1738,7 @@ $(D)/libsoup: $(D)/bootstrap $(D)/sqlite $(D)/libxml2 $(D)/libglib2 $(ARCHIVE)/$
 			--disable-gtk-doc-pdf \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
+		$(MAKE) install DESTDIR=$(TARGET_DIR) itlocaledir=$(TARGET_DIR)/.remove
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libsoup-2.4.pc
 	$(REWRITE_LIBTOOL)/libsoup-2.4.la
 	$(REMOVE)/libsoup-$(LIBSOUP_VER)
@@ -1822,12 +1824,12 @@ LIBXML2_PATCH = libxml2-$(LIBXML2_VER).patch
 $(ARCHIVE)/$(LIBXML2_SOURCE):
 	$(WGET) ftp://xmlsoft.org/libxml2/$(LIBXML2_SOURCE)
 
-ifeq ($(IMAGE), enigma2)
+ifeq ($(IMAGE), $(filter $(IMAGE), enigma2 enigma2-wlandriver))
 LIBXML2_CONF_OPTS  = --with-python=$(HOST_DIR)
 LIBXML2_CONF_OPTS += --with-python-install-dir=/$(PYTHON_DIR)/site-packages
 endif
 
-ifeq ($(IMAGE), neutrino)
+ifeq ($(IMAGE), $(filter $(IMAGE), neutrino neutrino-wlandriver))
 LIBXML2_CONF_OPTS  = --without-python
 ifeq ($(BOXARCH), sh4)
 LIBXML2_CONF_OPTS += --without-iconv
@@ -2651,6 +2653,7 @@ $(D)/gnutls: $(D)/bootstrap $(D)/nettle $(ARCHIVE)/$(GNUTLS_SOURCE)
 			--prefix=/usr \
 			--mandir=/.remove \
 			--infodir=/.remove \
+			--datarootdir=/.remove \
 			--disable-rpath \
 			--with-included-libtasn1 \
 			--enable-local-libopts \
@@ -2693,6 +2696,6 @@ $(D)/glib_networking: $(D)/bootstrap $(D)/gnutls $(D)/libglib2 $(ARCHIVE)/$(GLIB
 			--localedir=/.remove \
 		; \
 		$(MAKE); \
-		$(MAKE) install prefix=$(TARGET_DIR) giomoduledir=$(TARGET_DIR)/usr/lib/gio/modules
+		$(MAKE) install prefix=$(TARGET_DIR) giomoduledir=$(TARGET_DIR)/usr/lib/gio/modules itlocaledir=$(TARGET_DIR)/.remove
 	$(REMOVE)/glib-networking-$(GLIB_NETWORKING_VER)
 	$(TOUCH)
