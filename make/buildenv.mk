@@ -103,7 +103,6 @@ TARGET_EXTRA_CFLAGS   =
 TARGET_EXTRA_LDFLAGS  =
 endif
 
-MAKEFLAGS            += --no-print-directory
 
 TARGET_LIB_DIR        = $(TARGET_DIR)/usr/lib
 TARGET_INCLUDE_DIR    = $(TARGET_DIR)/usr/include
@@ -128,6 +127,31 @@ TERM_YELLOW          := \033[00;33m
 TERM_YELLOW_BOLD     := \033[01;33m
 TERM_NORMAL          := \033[0m
 
+MAKEFLAGS            += --no-print-directory
+# To put more focus on warnings, be less verbose as default
+# Use 'make V=1' to see the full commands
+ifeq ("$(origin V)", "command line")
+KBUILD_VERBOSE        = $(V)
+endif
+ifndef KBUILD_VERBOSE
+KBUILD_VERBOSE        = 0
+endif
+
+# If KBUILD_VERBOSE equals 0 then the above command will be hidden.
+# If KBUILD_VERBOSE equals 1 then the above command is displayed.
+ifeq ($(KBUILD_VERBOSE),1)
+SILENT_PATCH          =
+SILENT_OPT            =
+SILENT                =
+WGET_SILENT_OPT       =
+else
+SILENT_PATCH          = -s
+SILENT_OPT           := >/dev/null 2>&1
+SILENT                = @
+WGET_SILENT_OPT       = -o /dev/null
+MAKEFLAGS            += --silent
+endif
+
 # helper-"functions":
 REWRITE_LIBTOOL       = sed -i "s,^libdir=.*,libdir='$(TARGET_DIR)/usr/lib'," $(TARGET_DIR)/usr/lib
 REWRITE_LIBTOOLDEP    = sed -i -e "s,\(^dependency_libs='\| \|-L\|^dependency_libs='\)/usr/lib,\ $(TARGET_DIR)/usr/lib,g" $(TARGET_DIR)/usr/lib
@@ -138,9 +162,9 @@ REWRITE_PKGCONF_OPT   = sed -i "s,^prefix=.*,prefix='$(TARGET_DIR)/opt/pkg',"
 export RM=$(shell which rm) -f
 
 # unpack tarballs, clean up
-UNTAR                 = tar -C $(BUILD_TMP) -xf $(ARCHIVE)
-REMOVE                = rm -rf $(BUILD_TMP)
-RM_PKG_DIR            = rm -rf $(PKG_DIR)
+UNTAR                 = $(SILENT)tar -C $(BUILD_TMP) -xf $(ARCHIVE)
+REMOVE                = $(SILENT)rm -rf $(BUILD_TMP)
+RM_PKG_DIR            = $(SILENT)rm -rf $(PKG_DIR)
 
 #
 split_deps_dir=$(subst ., ,$(1))
@@ -167,8 +191,8 @@ TOUCH                 = @touch $@; \
                         echo
 
 #
-PATCH                 = patch -p1 -i $(PATCHES)
-APATCH                = patch -p1 -i
+PATCH                 = patch -p1 $(SILENT_PATCH) -i $(PATCHES)
+APATCH                = patch -p1 $(SILENT_PATCH) -i
 define post_patch
     for i in $(1); do \
         if [ -d $$i ]; then \
@@ -207,7 +231,7 @@ OPKG_SH_ENV += BUILD_TMP=$(BUILD_TMP)
 OPKG_SH = $(OPKG_SH_ENV) opkg.sh
 
 # wget tarballs into archive directory
-WGET = wget --no-check-certificate -t6 -T20 -c -P $(ARCHIVE)
+WGET = wget --progress=bar:force --no-check-certificate $(WGET_SILENT_OPT) -t6 -T20 -c -P $(ARCHIVE)
 
 TUXBOX_YAUD_CUSTOMIZE = [ -x $(CUSTOM_DIR)/$(notdir $@)-local.sh ] && KERNEL_VER=$(KERNEL_VER) && BOXTYPE=$(BOXTYPE) && $(CUSTOM_DIR)/$(notdir $@)-local.sh $(RELEASE_DIR) $(TARGET_DIR) $(BASE_DIR) $(SOURCE_DIR) $(FLASH_DIR) $(BOXTYPE) || true
 TUXBOX_CUSTOMIZE      = [ -x $(CUSTOM_DIR)/$(notdir $@)-local.sh ] && KERNEL_VER=$(KERNEL_VER) && BOXTYPE=$(BOXTYPE) && $(CUSTOM_DIR)/$(notdir $@)-local.sh $(RELEASE_DIR) $(TARGET_DIR) $(BASE_DIR) $(FLASH_DIR) $(BOXTYPE) || true
@@ -216,7 +240,8 @@ TUXBOX_CUSTOMIZE      = [ -x $(CUSTOM_DIR)/$(notdir $@)-local.sh ] && KERNEL_VER
 #
 #
 CONFIGURE_OPTS = \
-	--build=$(BUILD) --host=$(TARGET)
+	--build=$(BUILD) \
+	--host=$(TARGET) \
 
 BUILDENV = \
 	CC=$(TARGET)-gcc \
@@ -234,17 +259,17 @@ BUILDENV = \
 	CPPFLAGS="$(TARGET_CPPFLAGS)" \
 	CXXFLAGS="$(TARGET_CXXFLAGS)" \
 	LDFLAGS="$(TARGET_LDFLAGS)" \
-	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH)
+	PKG_CONFIG_PATH="$(PKG_CONFIG_PATH)"
 
 CONFIGURE = \
-	test -f ./configure || ./autogen.sh && \
+	test -f ./configure || ./autogen.sh $(SILENT_OPT) && \
 	$(BUILDENV) \
-	./configure $(CONFIGURE_OPTS)
+	./configure $(SILENT_OPT) $(CONFIGURE_OPTS)
 
 CONFIGURE_TOOLS = \
-	./autogen.sh && \
+	./autogen.sh $(SILENT_OPT) && \
 	$(BUILDENV) \
-	./configure $(CONFIGURE_OPTS)
+	./configure $(SILENT_OPT) $(CONFIGURE_OPTS)
 
 MAKE_OPTS := \
 	CC=$(TARGET)-gcc \
