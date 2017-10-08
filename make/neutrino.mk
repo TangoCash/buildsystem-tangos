@@ -745,7 +745,7 @@ $(D)/neutrino-mp-tangos.config.status:
 			--with-stb-hal-build=$(LH_OBJDIR) \
 			PKG_CONFIG=$(PKG_CONFIG) \
 			PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
-			CPPFLAGS="$(N_CPPFLAGS)"
+			CFLAGS="$(N_CFLAGS)" CXXFLAGS="$(N_CFLAGS)" CPPFLAGS="$(N_CPPFLAGS)"
 
 $(SOURCE_DIR)/neutrino-mp-tangos/src/gui/version.h:
 	@rm -f $@; \
