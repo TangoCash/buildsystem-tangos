@@ -70,7 +70,9 @@ N_CONFIG_OPTS += --enable-ffmpegdec
 #N_CONFIG_OPTS += --enable-pip
 #N_CONFIG_OPTS += --disable-webif
 N_CONFIG_OPTS += --enable-pugixml
-#N_CONFIG_OPTS += --enable-reschange
+ifeq ($(BOXARCH), arm)
+N_CONFIG_OPTS += --enable-reschange
+endif
 
 ifeq ($(EXTERNAL_LCD), externallcd)
 N_CONFIG_OPTS += --enable-graphlcd
