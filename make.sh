@@ -13,7 +13,7 @@ fi
 ##############################################
 
 if [ "$1" == -h ] || [ "$1" == --help ]; then
-	echo "Parameter 1: target system (1-36)"
+	echo "Parameter 1: target system (1-38)"
 	echo "Parameter 2: kernel (1-2)"
 	echo "Parameter 3: optimization (1-4)"
 	echo "Parameter 4: player (1-2)"
@@ -45,7 +45,7 @@ echo
 ##############################################
 
 case $1 in
-	[1-9] | 1[0-9] | 2[0-9] | 3[0-7]) REPLY=$1;;
+	[1-9] | 1[0-9] | 2[0-9] | 3[0-8]) REPLY=$1;;
 	*)
 		echo "Target receivers:"
 		echo
@@ -85,7 +85,7 @@ case $1 in
 		echo "   37)  Mutant HD51"
 		echo "   38)  VU Solo 4k"
 		echo
-		read -p "Select target (1-37)? ";;
+		read -p "Select target (1-38)? ";;
 esac
 
 case "$REPLY" in
