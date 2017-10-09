@@ -52,6 +52,10 @@ NEUTRINO_PLUGINS  = $(D)/neutrino-mp-plugins
 NEUTRINO_PLUGINS += $(D)/neutrino-mp-plugins-scripts-lua
 NEUTRINO_PLUGINS += $(D)/xupnpd
 
+ifeq ($(BOXARCH), sh4)
+EXTRA_CPPFLAGS_MP_PLUGINS = -DMARTII
+endif
+
 $(D)/neutrino-plugins: $(NEUTRINO_PLUGINS)
 	@touch $@
 
@@ -72,7 +76,7 @@ $(SOURCE_DIR)/neutrino-mp-plugins/config.status: $(D)/bootstrap
 	cd $(SOURCE_DIR)/neutrino-mp-plugins; \
 		./autogen.sh && automake --add-missing; \
 		$(BUILDENV) \
-		./configure $(SILENT_OPT) \
+		./configure --enable-silent-rules \
 			--host=$(TARGET) \
 			--build=$(BUILD) \
 			--prefix= \
@@ -86,7 +90,7 @@ $(SOURCE_DIR)/neutrino-mp-plugins/config.status: $(D)/bootstrap
 			--with-fontdir=/usr/share/fonts \
 			PKG_CONFIG=$(PKG_CONFIG) \
 			PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
-			CPPFLAGS="$(N_CPPFLAGS) -DMARTII -DNEW_LIBCURL" \
+			CPPFLAGS="$(N_CPPFLAGS) $(EXTRA_CPPFLAGS_MP_PLUGINS) -DNEW_LIBCURL" \
 			LDFLAGS="$(TARGET_LDFLAGS) -L$(SOURCE_DIR)/neutrino-mp-plugins/fx2/lib/.libs"
 
 $(D)/neutrino-mp-plugins.do_compile: $(SOURCE_DIR)/neutrino-mp-plugins/config.status
@@ -172,7 +176,7 @@ $(SOURCE_DIR)/neutrino-hd2-plugins/config.status: $(D)/bootstrap neutrino-hd2
 	cd $(SOURCE_DIR)/neutrino-hd2-plugins; \
 		./autogen.sh; \
 		$(BUILDENV) \
-		./configure $(SILENT_OPT) \
+		./configure \
 			--host=$(TARGET) \
 			--build=$(BUILD) \
 			--prefix= \
