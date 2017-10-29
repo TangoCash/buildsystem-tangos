@@ -26,7 +26,7 @@ crosstool: crosstool-ng
 $(ARCHIVE)/$(CROSSTOOL_NG_SOURCE):
 	get-git-archive.sh $(CROSSTOOL_NG_URL) $(CROSSTOOL_NG_VER) $(notdir $@) $(ARCHIVE)
 
-crosstool-ng: $(D)/bootstrap directories $(ARCHIVE)/$(CROSSTOOL_NG_SOURCE)
+crosstool-ng: directories $(ARCHIVE)/$(CROSSTOOL_NG_SOURCE)
 	make $(BUILD_TMP)
 	if [ ! -e $(CROSS_BASE) ]; then \
 		mkdir -p $(CROSS_BASE); \
