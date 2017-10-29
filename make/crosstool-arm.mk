@@ -57,7 +57,7 @@ crosstool-ng: $(D)/bootstrap directories $(ARCHIVE)/$(CROSSTOOL_NG_SOURCE)
 	$(REMOVE)/crosstool-ng-$(CROSSTOOL_NG_VER)
 endif
 
-crossmenuconfig: directories $(ARCHIVE)/$(CROSSTOOL_NG_SOURCE)
+crossmenuconfig: $(D)/bootstrap directories $(ARCHIVE)/$(CROSSTOOL_NG_SOURCE)
 	$(REMOVE)/crosstool-ng-$(CROSSTOOL_NG_VER)
 	$(UNTAR)/$(CROSSTOOL_NG_SOURCE)
 	set -e; unset CONFIG_SITE; cd $(BUILD_TMP)/crosstool-ng-$(CROSSTOOL_NG_VER); \
