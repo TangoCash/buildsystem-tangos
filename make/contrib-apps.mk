@@ -1606,3 +1606,17 @@ $(D)/aio-grab: $(D)/bootstrap $(D)/zlib $(D)/libpng $(D)/libjpeg
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REMOVE)/aio-grab
 	$(TOUCH)
+
+$(ARCHIVE)/showiframe.c:
+	$(WGET) https://github.com/oe-alliance/oe-alliance-core/raw/4.1/meta-oe/recipes-multimedia/showiframe/showiframe/showiframe.c
+
+$(D)/showiframe: $(D)/bootstrap $(ARCHIVE)/showiframe.c
+	$(START_BUILD)
+	$(REMOVE)/showiframe
+	mkdir $(BUILD_TMP)/showiframe
+	set -e; cd $(BUILD_TMP)/showiframe; \
+	cp $(ARCHIVE)/showiframe.c . ; \
+	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) showiframe.c -o showiframe
+	install -m 755 $(BUILD_TMP)/showiframe/showiframe $(TARGET_DIR)/bin
+	$(REMOVE)/showiframe
+	$(TOUCH)
