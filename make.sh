@@ -112,6 +112,10 @@ esac
 echo "BOXARCH=$BOXARCH" > config
 echo "BOXTYPE=$BOXTYPE" >> config
 
+if [ $BOXARCH == 'arm' ]; then
+	echo "KBUILD_VERBOSE=1" >> config
+fi
+
 ##############################################
 
 if [ $BOXARCH == "sh4" ]; then
