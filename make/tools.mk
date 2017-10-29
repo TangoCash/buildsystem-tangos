@@ -23,6 +23,7 @@ ifeq ($(IMAGE), $(filter $(IMAGE), enigma2 enigma2-wlandriver))
 	-$(MAKE) -C $(APPS_DIR)/tools/libmme_image distclean
 endif
 	-$(MAKE) -C $(APPS_DIR)/tools/minimon distclean
+	-$(MAKE) -C $(APPS_DIR)/tools/satfind distclean
 	-$(MAKE) -C $(APPS_DIR)/tools/showiframe distclean
 	-$(MAKE) -C $(APPS_DIR)/tools/spf_tool distclean
 	-$(MAKE) -C $(APPS_DIR)/tools/stfbcontrol distclean
@@ -192,8 +193,6 @@ $(D)/tools-libmme_host: $(D)/bootstrap $(D)/driver
 	set -e; cd $(APPS_DIR)/tools/libmme_host; \
 		$(CONFIGURE_TOOLS) \
 			--prefix= \
-			$(if $(MULTICOM324), --enable-multicom324) \
-			$(if $(MULTICOM406), --enable-multicom406) \
 		; \
 		$(MAKE) DRIVER_TOPDIR=$(DRIVER_DIR); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR) DRIVER_TOPDIR=$(DRIVER_DIR)
@@ -223,6 +222,19 @@ $(D)/tools-minimon: $(D)/bootstrap $(D)/libjpeg_turbo
 		; \
 		$(MAKE) KERNEL_DIR=$(KERNEL_DIR) TARGET=$(TARGET) TARGET_DIR=$(TARGET_DIR); \
 		$(MAKE) install KERNEL_DIR=$(KERNEL_DIR) TARGET=$(TARGET) TARGET_DIR=$(TARGET_DIR) DESTDIR=$(TARGET_DIR)
+	$(TOUCH)
+
+#
+# satfind
+#
+$(D)/tools-satfind: $(D)/bootstrap
+	$(START_BUILD)
+	set -e; cd $(APPS_DIR)/tools/satfind; \
+		$(CONFIGURE_TOOLS) \
+			--prefix= \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(TOUCH)
 
 #
@@ -373,6 +385,7 @@ TOOLS += $(D)/tools-hotplug
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), ipbox55 ipbox99 ipbox9900 cuberevo cuberevo_mini cuberevo_mini2 cuberevo_250hd cuberevo_2000hd cuberevo_3000hd))
 TOOLS += $(D)/tools-ipbox_eeprom
 endif
+TOOLS += $(D)/tools-satfind
 TOOLS += $(D)/tools-showiframe
 TOOLS += $(D)/tools-stfbcontrol
 TOOLS += $(D)/tools-streamproxy

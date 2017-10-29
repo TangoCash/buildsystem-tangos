@@ -16,10 +16,9 @@ if [ "$1" == -h ] || [ "$1" == --help ]; then
 	echo "Parameter 1: target system (1-38)"
 	echo "Parameter 2: kernel (1-2)"
 	echo "Parameter 3: optimization (1-4)"
-	echo "Parameter 4: player (1-2)"
-	echo "Parameter 5: Media Framework (1-4)"
+	echo "Parameter 4: Media Framework (1-4)"
+	echo "Parameter 5: Image (Enigma=1/2 Neutrino=3/4 (1-4)"
 	echo "Parameter 6: External LCD support (1-3)"
-	echo "Parameter 7: Image (Enigma=1/2 Neutrino=3/4 (1-4)"
 	exit
 fi
 
@@ -134,6 +133,7 @@ echo "BOXTYPE=$BOXTYPE" >> config
 
 ##############################################
 
+if [ $BOXARCH="sh4" ]; then
 case $2 in
 	[1-2]) REPLY=$2;;
 	*)	echo -e "\nKernel:"
@@ -148,6 +148,7 @@ case "$REPLY" in
 	*)  KERNEL_STM="p0217";;
 esac
 echo "KERNEL_STM=$KERNEL_STM" >> config
+fi
 
 ##############################################
 
@@ -173,27 +174,7 @@ echo "OPTIMIZATIONS=$OPTIMIZATIONS" >> config
 ##############################################
 
 case $4 in
-	[1-2]) REPLY=$4;;
-	*)	echo -e "\nPlayer:"
-		echo "   1)  Player 191 (stmfb-3.1_stm24_0104, for internal testing)"
-		echo "   2)  Player 191 (stmfb-3.1_stm24_0104, recommended)"
-		read -p "Select player (1-2)? ";;
-esac
-
-case "$REPLY" in
-	1)	echo "PLAYER_VER=191_test" >> config
-		echo "MULTICOM_VER=324" >> config
-		;;
-	2)	echo "PLAYER_VER=191" >> config
-		echo "MULTICOM_VER=324" >> config
-		;;
-	*) ;;
-esac
-
-##############################################
-
-case $5 in
-	[1-4]) REPLY=$5;;
+	[1-4]) REPLY=$4;;
 	*)	echo -e "\nMedia Framework:"
 		echo "   1) eplayer3"
 		echo "   2) gstreamer"
@@ -210,6 +191,27 @@ case "$REPLY" in
 	*) MEDIAFW="buildinplayer";;
 esac
 echo "MEDIAFW=$MEDIAFW" >> config
+
+##############################################
+
+case $5 in
+	[1-4]) REPLY=$5;;
+	*)	echo -e "\nWhich Image do you want to build:"
+		echo "   1)  Enigma2"
+		echo "   2)  Enigma2  (includes WLAN drivers)"
+		echo "   3)  Neutrino"
+		echo "   4)  Neutrino (includes WLAN drivers)"
+		read -p "Select Image to build (1-4)? ";;
+esac
+
+case "$REPLY" in
+	1) IMAGE="enigma2";;
+	2) IMAGE="enigma2-wlandriver";;
+	3) IMAGE="neutrino";;
+	4) IMAGE="neutrino-wlandriver";;
+	*) IMAGE="neutrino";;
+esac
+echo "IMAGE=$IMAGE" >> config
 
 ##############################################
 
@@ -231,27 +233,6 @@ esac
 echo "EXTERNAL_LCD=$EXTERNAL_LCD" >> config
 
 ##############################################
-
-case $7 in
-	[1-4]) REPLY=$7;;
-	*)	echo -e "\nWhich Image do you want to build:"
-		echo "   1)  Enigma2"
-		echo "   2)  Enigma2  (includes WLAN drivers)"
-		echo "   3)  Neutrino"
-		echo "   4)  Neutrino (includes WLAN drivers)"
-		read -p "Select Image to build (1-4)? ";;
-esac
-
-case "$REPLY" in
-	1) IMAGE="enigma2";;
-	2) IMAGE="enigma2-wlandriver";;
-	3) IMAGE="neutrino";;
-	4) IMAGE="neutrino-wlandriver";;
-	*) IMAGE="neutrino";;
-esac
-echo "IMAGE=$IMAGE" >> config
-
-##############################################
 echo " "
 make printenv
 echo " "
@@ -262,12 +243,13 @@ case "$IMAGE" in
 		neutrino*)
 		echo "  make yaud-neutrino-mp-cst-next"
 		echo "  make yaud-neutrino-mp-cst-next-plugins"
-		echo "  make yaud-neutrino-mp-cst-next-ni"
-		echo "  make yaud-neutrino-mp-cst-next-ni-plugins"
+		echo "  make yaud-neutrino-mp-tangos"
+		echo "  make yaud-neutrino-mp-tangos-plugins"
 		echo "  make yaud-neutrino-hd2"
 		echo "  make yaud-neutrino-hd2-plugins";;
 		enigma2*)
 		echo "  make yaud-enigma2";;
 		*)
+		echo "  make flashimage";;
 esac
 echo " "
