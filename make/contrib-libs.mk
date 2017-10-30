@@ -2699,3 +2699,10 @@ $(D)/glib_networking: $(D)/bootstrap $(D)/gnutls $(D)/libglib2 $(ARCHIVE)/$(GLIB
 		$(MAKE) install prefix=$(TARGET_DIR) giomoduledir=$(TARGET_DIR)/usr/lib/gio/modules itlocaledir=$(TARGET_DIR)/.remove
 	$(REMOVE)/glib-networking-$(GLIB_NETWORKING_VER)
 	$(TOUCH)
+
+$(ARCHIVE)/cacert.pem:
+	$(WGET) https://curl.haxx.se/ca/cacert.pem
+
+$(D)/ca-bundle: $(ARCHIVE)/cacert.pem
+	install -D -m 644 $(ARCHIVE)/cacert.pem $(TARGET_DIR)/etc/ssl/certs/ca-certificates.crt
+	$(TOUCH)
