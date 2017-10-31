@@ -953,14 +953,21 @@ $(D)/libconfig: $(D)/bootstrap $(ARCHIVE)/$(LIBCONFIG_SOURCE)
 #
 # libcurl
 #
-LIBCURL_VER = 7.54.1
+LIBCURL_VER = 7.56.1
 LIBCURL_SOURCE = curl-$(LIBCURL_VER).tar.bz2
 LIBCURL_PATCH = libcurl-$(LIBCURL_VER).patch
+
+$(ARCHIVE)/cacert.pem:
+	$(WGET) https://curl.haxx.se/ca/cacert.pem
+
+$(D)/ca-bundle: $(ARCHIVE)/cacert.pem
+	install -D -m 644 $(ARCHIVE)/cacert.pem $(TARGET_DIR)/$(CA_BUNDLE_DIR)/$(CA_BUNDLE)
+	$(TOUCH)
 
 $(ARCHIVE)/$(LIBCURL_SOURCE):
 	$(WGET) https://curl.haxx.se/download/$(LIBCURL_SOURCE)
 
-$(D)/libcurl: $(D)/bootstrap $(D)/openssl $(D)/zlib $(ARCHIVE)/$(LIBCURL_SOURCE)
+$(D)/libcurl: $(D)/bootstrap $(D)/zlib $(D)/openssl $(D)/ca-bundle $(ARCHIVE)/$(LIBCURL_SOURCE)
 	$(START_BUILD)
 	$(REMOVE)/curl-$(LIBCURL_VER)
 	$(UNTAR)/$(LIBCURL_SOURCE)
@@ -983,7 +990,8 @@ $(D)/libcurl: $(D)/bootstrap $(D)/openssl $(D)/zlib $(ARCHIVE)/$(LIBCURL_SOURCE)
 			--disable-ldap \
 			--without-libidn \
 			--without-libpsl \
-			--with-random \
+			--with-ca-bundle=$(CA_BUNDLE_DIR)/$(CA_BUNDLE) \
+			--with-random=/dev/urandom \
 			--with-ssl=$(TARGET_DIR) \
 		; \
 		$(MAKE) all; \
@@ -2636,8 +2644,8 @@ $(D)/nettle: $(D)/bootstrap $(D)/gmp $(ARCHIVE)/$(NETTLE_SOURCE)
 #
 # gnutls
 #
-GNUTLS_VER_MAJOR = 3.4
-GNUTLS_VER_MINOR = 3
+GNUTLS_VER_MAJOR = 3.6
+GNUTLS_VER_MINOR = 0
 GNUTLS_VER = $(GNUTLS_VER_MAJOR).$(GNUTLS_VER_MINOR)
 GNUTLS_SOURCE = gnutls-$(GNUTLS_VER).tar.xz
 
@@ -2654,13 +2662,13 @@ $(D)/gnutls: $(D)/bootstrap $(D)/nettle $(ARCHIVE)/$(GNUTLS_SOURCE)
 			--mandir=/.remove \
 			--infodir=/.remove \
 			--datarootdir=/.remove \
-			--disable-rpath \
 			--with-included-libtasn1 \
 			--enable-local-libopts \
 			--with-libpthread-prefix=$(TARGET_DIR)/usr \
 			--with-libz-prefix=$(TARGET_DIR)/usr \
+			--with-included-unistring \
+			--with-default-trust-store-dir=$(CA_BUNDLE_DIR)/ \
 			--disable-guile \
-			--disable-crywrap \
 			--without-p11-kit \
 		; \
 		$(MAKE); \
@@ -2698,11 +2706,4 @@ $(D)/glib_networking: $(D)/bootstrap $(D)/gnutls $(D)/libglib2 $(ARCHIVE)/$(GLIB
 		$(MAKE); \
 		$(MAKE) install prefix=$(TARGET_DIR) giomoduledir=$(TARGET_DIR)/usr/lib/gio/modules itlocaledir=$(TARGET_DIR)/.remove
 	$(REMOVE)/glib-networking-$(GLIB_NETWORKING_VER)
-	$(TOUCH)
-
-$(ARCHIVE)/cacert.pem:
-	$(WGET) https://curl.haxx.se/ca/cacert.pem
-
-$(D)/ca-bundle: $(ARCHIVE)/cacert.pem
-	install -D -m 644 $(ARCHIVE)/cacert.pem $(TARGET_DIR)/etc/ssl/certs/ca-certificates.crt
 	$(TOUCH)
