@@ -1005,8 +1005,8 @@ $(D)/avahi: $(D)/bootstrap $(D)/expat $(D)/libdaemon $(D)/dbus $(ARCHIVE)/$(AVAH
 #
 # wget
 #
-WGET_VER = 1.19.1
-WGET_SOURCE = wget-$(WGET_VER).tar.xz
+WGET_VER = 1.19.2
+WGET_SOURCE = wget-$(WGET_VER).tar.gz
 
 $(ARCHIVE)/$(WGET_SOURCE):
 	$(WGET) https://ftp.gnu.org/gnu/wget/$(WGET_SOURCE)
@@ -1085,7 +1085,7 @@ $(D)/smartmontools: $(D)/bootstrap $(ARCHIVE)/$(SMARTMONTOOLS_SOURCE)
 #
 # nfs_utils
 #
-NFS_UTILS_VER = 2.1.1
+NFS_UTILS_VER = 2.2.1
 NFS_UTILS_SOURCE = nfs-utils-$(NFS_UTILS_VER).tar.bz2
 NFS_UTILS_PATCH = nfs-utils-$(NFS_UTILS_VER).patch
 
@@ -1573,6 +1573,9 @@ $(D)/usb_modeswitch: $(D)/bootstrap $(D)/libusb $(D)/usb_modeswitch_data $(ARCHI
 	$(REMOVE)/usb-modeswitch-$(USB_MODESWITCH_VER)
 	$(TOUCH)
 
+#
+# ofgwrite
+#
 $(D)/ofgwrite: $(D)/bootstrap
 	$(START_BUILD)
 	$(REMOVE)/ofgwrite
@@ -1587,16 +1590,25 @@ $(D)/ofgwrite: $(D)/bootstrap
 	$(REMOVE)/ofgwrite
 	$(TOUCH)
 
-$(D)/aio-grab: $(D)/bootstrap $(D)/zlib $(D)/libpng $(D)/libjpeg
+#
+# aio_grab
+#
+AIO_GRAB_VER = 9e4e986
+AIO_GRAB_SOURCE = aio_grab-$(AIO_GRAB_VER).tar.bz2
+AIO_GRAB_URL = git://github.com/oe-alliance/aio-grab.git
+
+$(ARCHIVE)/$(AIO_GRAB_SOURCE):
+	get-git-archive.sh $(AIO_GRAB_URL) $(AIO_GRAB_VER) $(notdir $@) $(ARCHIVE)
+
+$(D)/aio_grab: $(D)/bootstrap $(D)/zlib $(D)/libpng $(D)/libjpeg $(ARCHIVE)/$(AIO_GRAB_SOURCE)
 	$(START_BUILD)
-	$(REMOVE)/aio-grab
-	set -e; cd $(BUILD_TMP); \
-	git clone git://github.com/oe-alliance/aio-grab.git aio-grab; \
-	cd aio-grab; \
-		aclocal --force -I m4  $(SILENT_OPT); \
-		libtoolize --copy --ltdl --force $(SILENT_OPT); \
-		autoconf --force $(SILENT_OPT); \
-		automake --add-missing --copy --force-missing --foreign $(SILENT_OPT); \
+	$(REMOVE)/aio_grab-$(AIO_GRAB_VER)
+	$(UNTAR)/$(AIO_GRAB_SOURCE)
+	set -e; cd $(BUILD_TMP)/aio_grab-$(AIO_GRAB_VER); \
+		aclocal --force -I m4; \
+		libtoolize --copy --ltdl --force; \
+		autoconf --force; \
+		automake --add-missing --copy --force-missing --foreign; \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix= \
@@ -1604,19 +1616,5 @@ $(D)/aio-grab: $(D)/bootstrap $(D)/zlib $(D)/libpng $(D)/libjpeg
 		; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/aio-grab
-	$(TOUCH)
-
-$(ARCHIVE)/showiframe.c:
-	$(WGET) https://github.com/oe-alliance/oe-alliance-core/raw/4.1/meta-oe/recipes-multimedia/showiframe/showiframe/showiframe.c
-
-$(D)/showiframe: $(D)/bootstrap $(ARCHIVE)/showiframe.c
-	$(START_BUILD)
-	$(REMOVE)/showiframe
-	mkdir $(BUILD_TMP)/showiframe
-	set -e; cd $(BUILD_TMP)/showiframe; \
-	cp $(ARCHIVE)/showiframe.c . ; \
-	$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) showiframe.c -o showiframe
-	install -m 755 $(BUILD_TMP)/showiframe/showiframe $(TARGET_DIR)/bin
-	$(REMOVE)/showiframe
+	$(REMOVE)/aio_grab-$(AIO_GRAB_VER)
 	$(TOUCH)

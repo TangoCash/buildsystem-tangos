@@ -204,8 +204,7 @@ $(D)/host_resize2fs: $(ARCHIVE)/$(HOST_E2FSPROGS_SOURCE)
 #
 #
 $(HOST_DIR)/bin/unpack%.sh \
-$(HOST_DIR)/bin/get%.sh \
-$(HOST_DIR)/bin/opkg%sh: | directories
+$(HOST_DIR)/bin/get%.sh: | directories
 	ln -sf $(SCRIPTS_DIR)/$(shell basename $@) $(HOST_DIR)/bin
 
 #
