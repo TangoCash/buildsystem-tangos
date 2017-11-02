@@ -29,8 +29,6 @@ endif
 ifeq ($(BOXARCH), arm)
 NEUTRINO_DEPS += $(D)/gst_plugins_dvbmediasink
 NEUTRINO_DEPS += $(D)/ntfs_3g
-NEUTRINO_DEPS += $(D)/aio_grab
-NEUTRINO_DEPS += $(D)/neutrino-mediathek
 endif
 
 ifeq ($(IMAGE), neutrino-wlandriver)
@@ -317,11 +315,11 @@ libstb-hal-cst-next-ni-distclean:
 #
 # neutrino-mp-cst-next-ni
 #
-yaud-neutrino-mp-cst-next-ni: $(D)/bootstrap yaud-none \
+yaud-neutrino-mp-cst-next-ni: yaud-none \
 		neutrino-mp-cst-next-ni $(D)/neutrino_release
 	$(TUXBOX_YAUD_CUSTOMIZE)
 
-yaud-neutrino-mp-cst-next-ni-plugins: $(D)/bootstrap yaud-none \
+yaud-neutrino-mp-cst-next-ni-plugins: yaud-none \
 		$(D)/neutrino-mp-cst-next-ni $(D)/neutrino-plugins $(D)/neutrino_release
 	$(TUXBOX_YAUD_CUSTOMIZE)
 
@@ -588,15 +586,15 @@ libstb-hal-cst-next-tangos-distclean:
 #
 # yaud-neutrino-mp-tangos
 #
-yaud-neutrino-mp-tangos: $(D)/bootstrap yaud-none \
+yaud-neutrino-mp-tangos: yaud-none \
 		$(D)/neutrino-mp-tangos $(D)/neutrino_release
 	$(TUXBOX_YAUD_CUSTOMIZE)
 
-yaud-neutrino-mp-tangos-plugins: $(D)/bootstrap yaud-none \
+yaud-neutrino-mp-tangos-plugins: yaud-none \
 		$(D)/neutrino-mp-tangos $(D)/neutrino-plugins $(D)/neutrino_release
 	$(TUXBOX_YAUD_CUSTOMIZE)
 
-yaud-neutrino-mp-tangos-all: $(D)/bootstrap yaud-none \
+yaud-neutrino-mp-tangos-all: yaud-none \
 		$(D)/neutrino-mp-tangos $(D)/neutrino-plugins $(D)/shairport $(D)/neutrino_release
 	$(TUXBOX_YAUD_CUSTOMIZE)
 

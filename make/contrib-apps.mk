@@ -84,7 +84,7 @@ SYSVINIT_VER = 2.88dsf
 SYSVINIT_SOURCE = sysvinit_$(SYSVINIT_VER).orig.tar.gz
 
 $(ARCHIVE)/$(SYSVINIT_SOURCE):
-	$(WGET) ftp://ftp.debian.org/debian/pool/main/s/sysvinit/$(SYSVINIT_SOURCE)
+	$(WGET) http://ftp.debian.org/debian/pool/main/s/sysvinit/$(SYSVINIT_SOURCE)
 
 $(D)/sysvinit: $(D)/bootstrap $(ARCHIVE)/$(SYSVINIT_SOURCE)
 	$(START_BUILD)
@@ -506,7 +506,7 @@ $(D)/util_linux: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/$(UTIL_LINUX_SOURCE)
 #
 # mc
 #
-MC_VER = 4.8.14
+MC_VER = 4.8.19
 MC_SOURCE = mc-$(MC_VER).tar.xz
 
 $(ARCHIVE)/$(MC_SOURCE):
@@ -519,18 +519,17 @@ $(D)/mc: $(D)/bootstrap $(D)/ncurses $(D)/libglib2 $(ARCHIVE)/$(MC_SOURCE)
 	set -e; cd $(BUILD_TMP)/mc-$(MC_VER); \
 		autoreconf -fi; \
 		$(BUILDENV) \
-		./configure $(SILENT_OPT) \
-			--build=$(BUILD) \
-			--host=$(TARGET) \
+		$(CONFIGURE) \
 			--prefix=/usr \
 			--mandir=/.remove \
+			--sysconfdir=/etc \
+			--with-homedir=/var/tuxbox/config/mc \
 			--without-gpm-mouse \
 			--disable-doxygen-doc \
 			--disable-doxygen-dot \
+			--disable-doxygen-html \
 			--enable-charset \
 			--with-screen=ncurses \
-			--sysconfdir=/etc \
-			--with-homedir=/var/tuxbox/config/mc \
 			--without-x \
 		; \
 		$(MAKE) all; \
@@ -1588,33 +1587,4 @@ $(D)/ofgwrite: $(D)/bootstrap
 	install -m 755 $(BUILD_TMP)/ofgwrite/ofgwrite $(TARGET_DIR)/bin
 	sed -i "s,/usr/bin/,/bin/," $(TARGET_DIR)/bin/ofgwrite
 	$(REMOVE)/ofgwrite
-	$(TOUCH)
-
-#
-# aio_grab
-#
-AIO_GRAB_VER = 9e4e986
-AIO_GRAB_SOURCE = aio_grab-$(AIO_GRAB_VER).tar.bz2
-AIO_GRAB_URL = git://github.com/oe-alliance/aio-grab.git
-
-$(ARCHIVE)/$(AIO_GRAB_SOURCE):
-	get-git-archive.sh $(AIO_GRAB_URL) $(AIO_GRAB_VER) $(notdir $@) $(ARCHIVE)
-
-$(D)/aio_grab: $(D)/bootstrap $(D)/zlib $(D)/libpng $(D)/libjpeg $(ARCHIVE)/$(AIO_GRAB_SOURCE)
-	$(START_BUILD)
-	$(REMOVE)/aio_grab-$(AIO_GRAB_VER)
-	$(UNTAR)/$(AIO_GRAB_SOURCE)
-	set -e; cd $(BUILD_TMP)/aio_grab-$(AIO_GRAB_VER); \
-		aclocal --force -I m4; \
-		libtoolize --copy --ltdl --force; \
-		autoconf --force; \
-		automake --add-missing --copy --force-missing --foreign; \
-		$(CONFIGURE) \
-			--target=$(TARGET) \
-			--prefix= \
-			--enable-silent-rules \
-		; \
-		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/aio_grab-$(AIO_GRAB_VER)
 	$(TOUCH)
