@@ -742,7 +742,7 @@ libstb-hal-max-clean:
 	cd $(LH_OBJDIR); \
 		$(MAKE) -C $(LH_OBJDIR) distclean
 
-libstb-hal-cst-distclean:
+libstb-hal-max-distclean:
 	rm -rf $(LH_OBJDIR)
 	rm -f $(D)/libstb-hal-max.do_prepare
 	rm -f $(D)/libstb-hal-max.do_compile
@@ -770,7 +770,7 @@ $(D)/neutrino-mp.do_prepare: | $(NEUTRINO_DEPS) $(D)/libstb-hal-max
 	[ -d "$(ARCHIVE)/gui-neutrino-mp.git" ] && \
 	(cd $(ARCHIVE)/gui-neutrino-mp.git; git pull; cd "$(BUILD_TMP)";); \
 	[ -d "$(ARCHIVE)/gui-neutrino-mp.git" ] || \
-	git clone /home/max/buildsystem-ddt/Makefile.local $(ARCHIVE)/gui-neutrino-mp.git; \
+	git clone https://bitbucket.org/max_10/gui-neutrino-mp.git $(ARCHIVE)/gui-neutrino-mp.git; \
 	cp -ra $(ARCHIVE)/gui-neutrino-mp.git $(SOURCE_DIR)/neutrino-mp; \
 	cp -ra $(SOURCE_DIR)/neutrino-mp $(SOURCE_DIR)/neutrino-mp.org
 	set -e; cd $(SOURCE_DIR)/neutrino-mp; \
