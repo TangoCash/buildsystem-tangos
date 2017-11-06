@@ -462,7 +462,7 @@ neutrino_release_base:
 	rm -rf $(RELEASE_DIR) || true
 	install -d $(RELEASE_DIR)
 	install -d $(RELEASE_DIR)/{autofs,bin,boot,dev,dev.static,etc,hdd,lib,media,mnt,proc,ram,root,sbin,swap,sys,tmp,usr,var}
-	install -d $(RELEASE_DIR)/etc/{init.d,network,mdev,pem,ssl}
+	install -d $(RELEASE_DIR)/etc/{init.d,network,mdev,ssl}
 	install -d $(RELEASE_DIR)/etc/network/if-{post-{up,down},pre-{up,down},up,down}.d
 	install -d $(RELEASE_DIR)/lib/{modules,udev,firmware,tuxbox}
 	install -d $(RELEASE_DIR)/lib/tuxbox/plugins
@@ -764,6 +764,7 @@ ifeq ($(BOXTYPE), $(filter $(BOXTYPE), ufs910 ufs922))
 	rm -f $(RELEASE_DIR)/sbin/jfs_mkfs
 	rm -f $(RELEASE_DIR)/sbin/mkfs.jfs
 	rm -f $(RELEASE_DIR)/sbin/jfs_tune
+	rm -f $(RELEASE_DIR)/etc/ssl/certs/ca-certificates.crt
 endif
 	rm -f $(RELEASE_DIR)/usr/lib/lua/5.2/*.la
 	rm -rf $(RELEASE_DIR)/lib/autofs
@@ -841,6 +842,10 @@ $(D)/%neutrino_release: neutrino_release_base neutrino_release_$(BOXTYPE)
 	rm -f $(RELEASE_DIR)/bin/pic2m2v
 	rm -f $(RELEASE_DIR)/usr/lib/*.py
 	rm -f $(RELEASE_DIR)/usr/share/tuxbox/neutrino/httpd/images/rc_cst_v?.*
+ifneq ($(BOXTYPE), $(filter $(BOXTYPE), hd51))
+	rm -f $(RELEASE_DIR)/usr/share/tuxbox/neutrino/httpd/images/rc_ax_hd51.png
+	rm -f $(RELEASE_DIR)/usr/share/tuxbox/neutrino/httpd/images/rc_mutant_hd51.png
+endif
 ifneq ($(BOXTYPE), $(filter $(BOXTYPE), spark spark7162))
 	rm -f $(RELEASE_DIR)/usr/share/tuxbox/neutrino/httpd/images/rc_spark_new.jpg
 	rm -f $(RELEASE_DIR)/usr/share/tuxbox/neutrino/httpd/images/rc_spark_old.jpg
