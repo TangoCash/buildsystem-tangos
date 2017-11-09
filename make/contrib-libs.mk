@@ -42,9 +42,9 @@ $(D)/ncurses: $(D)/bootstrap $(ARCHIVE)/$(NCURSES_SOURCE)
 			HOSTCCFLAGS="$(CFLAGS) -DHAVE_CONFIG_H -I../ncurses -DNDEBUG -D_GNU_SOURCE -I../include" \
 			HOSTLDFLAGS="$(LDFLAGS)"; \
 		$(MAKE) install.libs DESTDIR=$(TARGET_DIR); \
-		install -D -m 0755 misc/ncurses-config $(HOST_DIR)/bin/ncurses5-config; \
-		rm -f $(TARGET_DIR)/usr/bin/ncurses5-config
-	$(REWRITE_PKGCONF) $(HOST_DIR)/bin/ncurses5-config
+		install -D -m 0755 misc/ncurses-config $(HOST_DIR)/bin/ncurses6-config; \
+		rm -f $(TARGET_DIR)/usr/bin/ncurses6-config
+	$(REWRITE_PKGCONF) $(HOST_DIR)/bin/ncurses6-config
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/form.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/menu.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/ncurses.pc
@@ -127,16 +127,15 @@ $(D)/libffi: $(D)/bootstrap $(ARCHIVE)/$(LIBFFI_SOURCE)
 	$(TOUCH)
 
 #
-# host_glib2_genmarshal
+# host_libglib2_genmarshal
 #
 LIBGLIB2_VER_MAJOR = 2
-LIBGLIB2_VER_MINOR = 45
-LIBGLIB2_VER_MICRO = 4
+LIBGLIB2_VER_MINOR = 54
+LIBGLIB2_VER_MICRO = 0
 LIBGLIB2_VER = $(LIBGLIB2_VER_MAJOR).$(LIBGLIB2_VER_MINOR).$(LIBGLIB2_VER_MICRO)
 LIBGLIB2_SOURCE = glib-$(LIBGLIB2_VER).tar.xz
-LIBGLIB2_HOST_PATCH = libglib2-$(LIBGLIB2_VER)-gdate-suppress-string-format-literal-warning.patch
-LIBGLIB2_PATCH  = libglib2-$(LIBGLIB2_VER)-disable-tests.patch
-LIBGLIB2_PATCH += libglib2-$(LIBGLIB2_VER)-gdate-suppress-string-format-literal-warning.patch
+LIBGLIB2_HOST_PATCH =
+LIBGLIB2_PATCH =
 
 $(ARCHIVE)/$(LIBGLIB2_SOURCE):
 	$(WGET) https://ftp.gnome.org/pub/gnome/sources/glib/$(LIBGLIB2_VER_MAJOR).$(LIBGLIB2_VER_MINOR)/$(LIBGLIB2_SOURCE)
@@ -153,6 +152,7 @@ $(D)/host_libglib2_genmarshal: $(D)/bootstrap $(D)/host_libffi $(ARCHIVE)/$(LIBG
 			--enable-static=yes \
 			--enable-shared=no \
 			--disable-fam \
+			--disable-libmount \
 			--prefix=`pwd`/out \
 		; \
 		$(MAKE) install; \
@@ -180,9 +180,13 @@ $(D)/libglib2: $(D)/bootstrap $(D)/host_libglib2_genmarshal $(D)/zlib $(D)/libff
 			--prefix=/usr \
 			--mandir=/.remove \
 			--cache-file=config.cache \
+			--disable-fam \
 			--disable-gtk-doc \
 			--disable-gtk-doc-html \
+			--disable-libmount \
 			--with-threads="posix" \
+			--with-html-dir=/.remove \
+			--with-pcre=internal \
 			--enable-static \
 		; \
 		$(MAKE) all; \
@@ -297,7 +301,7 @@ $(D)/libarchive: $(D)/bootstrap $(ARCHIVE)/$(LIBARCHIVE_SOURCE)
 	$(TOUCH)
 
 #
-# libreadline
+# readline
 #
 READLINE_VER = 6.2
 READLINE_SOURCE = readline-$(READLINE_VER).tar.gz
@@ -566,7 +570,7 @@ $(D)/luajson: $(D)/bootstrap $(D)/lua $(ARCHIVE)/json.lua
 	$(TOUCH)
 
 #
-# libboost
+# boost
 #
 BOOST_VER_MAJOR = 1
 BOOST_VER_MINOR = 61
@@ -1809,7 +1813,6 @@ $(D)/flac: $(D)/bootstrap $(ARCHIVE)/$(FLAC_SOURCE)
 			--disable-debug \
 			--disable-asm-optimizations \
 			--disable-sse \
-			--disable-3dnow \
 			--disable-altivec \
 			--disable-doxygen-docs \
 			--disable-thorough-tests \
@@ -1930,7 +1933,7 @@ $(D)/libxslt: $(D)/bootstrap $(D)/libxml2 $(ARCHIVE)/$(LIBXSLT_SOURCE)
 	$(TOUCH)
 
 #
-#libpopt
+# libpopt
 #
 LIBPOPT_VER = 1.16
 LIBPOPT_SOURCE = popt-$(LIBPOPT_VER).tar.gz
@@ -1955,7 +1958,7 @@ $(D)/libpopt: $(D)/bootstrap $(ARCHIVE)/$(LIBPOPT_SOURCE)
 	$(TOUCH)
 
 #
-#libroxml
+# libroxml
 #
 LIBROXML_VER = 2.3.0
 LIBROXML_SOURCE = libroxml-$(LIBROXML_VER).tar.gz
