@@ -521,6 +521,7 @@ $(D)/util_linux: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/$(UTIL_LINUX_SOURCE)
 #
 MC_VER = 4.8.19
 MC_SOURCE = mc-$(MC_VER).tar.xz
+MC_PATCH = mc-$(MC_VER).patch
 
 $(ARCHIVE)/$(MC_SOURCE):
 	$(WGET) ftp.midnight-commander.org/$(MC_SOURCE)
@@ -530,6 +531,7 @@ $(D)/mc: $(D)/bootstrap $(D)/ncurses $(D)/libglib2 $(ARCHIVE)/$(MC_SOURCE)
 	$(REMOVE)/mc-$(MC_VER)
 	$(UNTAR)/$(MC_SOURCE)
 	set -e; cd $(BUILD_TMP)/mc-$(MC_VER); \
+		$(call post_patch,$(MC_PATCH)); \
 		autoreconf -fi; \
 		$(BUILDENV) \
 		$(CONFIGURE) \
@@ -547,6 +549,8 @@ $(D)/mc: $(D)/bootstrap $(D)/ncurses $(D)/libglib2 $(ARCHIVE)/$(MC_SOURCE)
 		; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	rm -rf $(TARGET_DIR)/usr/share/mc/examples
+	find $(TARGET_DIR)/usr/share/mc/skins -type f ! -name default.ini | xargs --no-run-if-empty rm
 	$(REMOVE)/mc-$(MC_VER)
 	$(TOUCH)
 
@@ -1433,7 +1437,7 @@ DVBSNOOP_SOURCE = dvbsnoop-$(DVBSNOOP_VER).tar.bz2
 DVBSNOOP_URL = https://github.com/cotdp/dvbsnoop.git
 
 $(ARCHIVE)/$(DVBSNOOP_SOURCE):
-	get-git-archive.sh $(DVBSNOOP_URL) $(DVBSNOOP_VER) $(notdir $@) $(ARCHIVE)
+	$(SCRIPTS_DIR)/get-git-archive.sh $(DVBSNOOP_URL) $(DVBSNOOP_VER) $(notdir $@) $(ARCHIVE)
 
 $(D)/dvbsnoop: $(D)/bootstrap $(ARCHIVE)/$(DVBSNOOP_SOURCE)
 	$(START_BUILD)
