@@ -390,6 +390,8 @@ $(D)/gst_plugin_subsink: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base $(D
 #
 ifeq ($(EXPERIMENTAL), 1)
 	GSTLIBAV = $(D)/gst_libav
+else
+	GSTLIBAV =
 endif
 
 #
