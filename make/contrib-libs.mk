@@ -1439,7 +1439,11 @@ $(D)/libdreamdvd: $(D)/bootstrap $(D)/libdvdnav
 #
 # ffmpeg
 #
+ifeq ($(EXPERIMENTAL), 1)
+FFMPEG_VER = 3.4
+else
 FFMPEG_VER = 2.8.10
+endif
 FFMPEG_SOURCE = ffmpeg-$(FFMPEG_VER).tar.xz
 FFMPEG_PATCH  = ffmpeg-buffer-size-$(FFMPEG_VER).patch
 FFMPEG_PATCH += ffmpeg-hds-libroxml-$(FFMPEG_VER).patch

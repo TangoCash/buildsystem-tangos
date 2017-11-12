@@ -262,26 +262,8 @@ $(D)/gst_libav: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base $(ARCHIVE)/$
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--disable-fatal-warnings \
-			\
-			--with-libav-extra-configure=" \
-			--enable-gpl \
-			--enable-static \
-			--enable-pic \
-			--disable-protocols \
-			--disable-devices \
-			--disable-network \
-			--disable-hwaccels \
-			--disable-filters \
-			--disable-doc \
-			--enable-optimizations \
-			--enable-cross-compile \
-			--target-os=linux \
-			--arch=$(BOXARCH) \
-			--cross-prefix=$(TARGET)- \
-			\
-			--disable-everything \
-			--enable-decoder=wmalossless --enable-decoder=wmapro --enable-decoder=wmav1 --enable-decoder=wmav2 --enable-decoder=wmavoice \
-			--enable-decoder=truehd --enable-decoder=dca --enable-decoder=mlp" \
+			--with-system-libav \
+			--with-html-dir=/.remove \
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
