@@ -386,18 +386,6 @@ $(D)/gst_plugin_subsink: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base $(D
 	$(TOUCH)
 
 #
-<<<<<<< HEAD
-# EXPERIMENTAL
-#
-ifeq ($(EXPERIMENTAL), 1)
-	GSTLIBAV = $(D)/gst_libav
-else
-	GSTLIBAV =
-endif
-
-#
-=======
->>>>>>> parent of 548390b... build gst-libav with enabled ffmpeg 3.4
 # gst_plugins_dvbmediasink
 #
 GST_PLUGINS_DVBMEDIASINK_VER = 1.0
