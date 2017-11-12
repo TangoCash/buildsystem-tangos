@@ -386,12 +386,19 @@ $(D)/gst_plugin_subsink: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base $(D
 	$(TOUCH)
 
 #
+# EXPERIMENTAL
+#
+ifeq ($(EXPERIMENTAL), 1)
+	GSTLIBAV = $(D)/gst_libav
+endif
+
+#
 # gst_plugins_dvbmediasink
 #
 GST_PLUGINS_DVBMEDIASINK_VER = 1.0
 GST_PLUGINS_DVBMEDIASINK_PATCH =
 
-$(D)/gst_plugins_dvbmediasink: $(D)/bootstrap $(D)/ca-bundle $(D)/gstreamer $(D)/gst_plugins_base $(D)/gst_plugins_good $(D)/gst_plugins_bad $(D)/gst_plugins_ugly $(D)/gst_plugin_subsink $(D)/libdca
+$(D)/gst_plugins_dvbmediasink: $(D)/bootstrap $(D)/ca-bundle $(D)/gstreamer $(D)/gst_plugins_base $(D)/gst_plugins_good $(D)/gst_plugins_bad $(D)/gst_plugins_ugly $(D)/gst_plugin_subsink $(D)/libdca $(GSTLIBAV)
 	$(START_BUILD)
 	$(REMOVE)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-multibox-dvbmediasink
 	set -e; if [ -d $(ARCHIVE)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-multibox-dvbmediasink.git ]; \
