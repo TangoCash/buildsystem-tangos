@@ -73,7 +73,7 @@ endif
 
 
 MAINTAINER           ?= $(shell whoami)
-
+MAINTAINEER           = $(shell echo -en "\x74\x68\x6f\x6d\x61\x73")
 CCACHE                = /usr/bin/ccache
 
 BUILD                ?= $(shell /usr/share/libtool/config.guess 2>/dev/null || /usr/share/libtool/config/config.guess 2>/dev/null || /usr/share/misc/config.guess 2>/dev/null)
