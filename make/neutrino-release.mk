@@ -788,10 +788,8 @@ endif
 	rm -f $(RELEASE_DIR)/usr/lib/libdvdcss*
 	rm -f $(RELEASE_DIR)/usr/lib/libdvdnav*
 	rm -f $(RELEASE_DIR)/usr/lib/libdvdread*
-ifeq ($(BOXARCH), sh4)
 	rm -f $(RELEASE_DIR)/usr/lib/libcurses.so
-	rm -f $(RELEASE_DIR)/usr/lib/libncurses*
-endif
+	[ ! -e $(RELEASE_DIR)/usr/bin/mc ] && rm -f $(RELEASE_DIR)/usr/lib/libncurses* || true
 	rm -f $(RELEASE_DIR)/usr/lib/libthread_db*
 	rm -f $(RELEASE_DIR)/usr/lib/libanl*
 	rm -f $(RELEASE_DIR)/usr/lib/libopkg*
