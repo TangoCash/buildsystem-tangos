@@ -1021,7 +1021,7 @@ LIBFRIBIDI_SOURCE = fribidi-$(LIBFRIBIDI_VER).tar.bz2
 LIBFRIBIDI_PATCH = libfribidi-$(LIBFRIBIDI_VER).patch
 
 $(ARCHIVE)/$(LIBFRIBIDI_SOURCE):
-	$(WGET) https://fribidi.org/download/$(LIBFRIBIDI_SOURCE)
+	$(WGET) https://download.videolan.org/contrib/fribidi/$(LIBFRIBIDI_SOURCE)
 
 $(D)/libfribidi: $(D)/bootstrap $(ARCHIVE)/$(LIBFRIBIDI_SOURCE)
 	$(START_BUILD)
@@ -2072,7 +2072,7 @@ $(D)/lcd4linux: $(D)/bootstrap $(D)/libusb_compat $(D)/gd $(D)/libusb
 #
 # gd
 #
-GD_VER = 2.2.1
+GD_VER = 2.2.5
 GD_SOURCE = libgd-$(GD_VER).tar.xz
 
 $(ARCHIVE)/$(GD_SOURCE):
@@ -2086,8 +2086,9 @@ $(D)/gd: $(D)/bootstrap $(D)/libpng $(D)/libjpeg $(D)/freetype $(ARCHIVE)/$(GD_S
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--bindir=/.remove \
-			--enable-static \
-			--disable-shared \
+			--without-fontconfig \
+			--without-xpm \
+			--without-x \
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -2099,9 +2100,8 @@ $(D)/gd: $(D)/bootstrap $(D)/libpng $(D)/libjpeg $(D)/freetype $(ARCHIVE)/$(GD_S
 #
 # libusb
 #
+LIBUSB_VER = 1.0.21
 LIBUSB_VER_MAJOR = 1.0
-LIBUSB_VER_MINOR = 9
-LIBUSB_VER = $(LIBUSB_VER_MAJOR).$(LIBUSB_VER_MINOR)
 LIBUSB_SOURCE = libusb-$(LIBUSB_VER).tar.bz2
 LIBUSB_PATCH = libusb-$(LIBUSB_VER).patch
 
@@ -2119,6 +2119,7 @@ $(D)/libusb: $(D)/bootstrap $(ARCHIVE)/$(LIBUSB_SOURCE)
 			--enable-static \
 			--disable-log \
 			--disable-debug-log \
+			--disable-udev \
 			--disable-examples-build \
 		; \
 		$(MAKE) ; \
@@ -2159,7 +2160,7 @@ $(D)/libusb_compat: $(D)/bootstrap $(D)/libusb $(ARCHIVE)/$(LIBUSB_COMPAT_SOURCE
 #
 # alsa_lib
 #
-ALSA_LIB_VER = 1.1.4.1
+ALSA_LIB_VER = 1.1.5
 ALSA_LIB_SOURCE = alsa-lib-$(ALSA_LIB_VER).tar.bz2
 ALSA_LIB_PATCH  = alsa-lib-$(ALSA_LIB_VER).patch
 ALSA_LIB_PATCH += alsa-lib-$(ALSA_LIB_VER)-link_fix.patch
@@ -2238,17 +2239,17 @@ $(D)/alsa_utils: $(D)/bootstrap $(D)/alsa_lib $(ARCHIVE)/$(ALSA_UTILS_SOURCE)
 #
 # libopenthreads
 #
-LIBOPENTHREADS_VER = 2.6.0
-LIBOPENTHREADS_SOURCE = OpenThreads-$(LIBOPENTHREADS_VER).zip
+LIBOPENTHREADS_VER = 3.2
+LIBOPENTHREADS_SOURCE = OpenThreads-$(LIBOPENTHREADS_VER).tar.gz
 LIBOPENTHREADS_PATCH = libopenthreads-$(LIBOPENTHREADS_VER).patch
 
 $(ARCHIVE)/$(LIBOPENTHREADS_SOURCE):
-	$(WGET) https://trac.openscenegraph.org/downloads/developer_releases/$(LIBOPENTHREADS_SOURCE)
+	$(WGET) https://sourceforge.net/projects/mxedeps/files/$(LIBOPENTHREADS_SOURCE)
 
 $(D)/libopenthreads: $(D)/bootstrap $(ARCHIVE)/$(LIBOPENTHREADS_SOURCE)
 	$(START_BUILD)
 	$(REMOVE)/OpenThreads-$(LIBOPENTHREADS_VER)
-	unzip -q $(ARCHIVE)/$(LIBOPENTHREADS_SOURCE) -d $(BUILD_TMP)
+	$(UNTAR)/$(LIBOPENTHREADS_SOURCE)
 	set -e; cd $(BUILD_TMP)/OpenThreads-$(LIBOPENTHREADS_VER); \
 		$(call post_patch,$(LIBOPENTHREADS_PATCH)); \
 		echo "# dummy file to prevent warning message" > examples/CMakeLists.txt; \
@@ -2421,6 +2422,13 @@ $(D)/libexif: $(D)/bootstrap $(ARCHIVE)/$(LIBEXIF_SOURCE)
 #
 DJMOUNT_VER = 0.71
 DJMOUNT_SOURCE = djmount-$(DJMOUNT_VER).tar.gz
+DJMOUNT_PATCH  = djmount-$(DJMOUNT_VER)-fix-hang-with-asset-upnp.patch
+DJMOUNT_PATCH += djmount-$(DJMOUNT_VER)-fix-incorrect-range-when-retrieving-content-via-HTTP.patch
+DJMOUNT_PATCH += djmount-$(DJMOUNT_VER)-fix-new-autotools.patch
+DJMOUNT_PATCH += djmount-$(DJMOUNT_VER)-fixed-crash-when-using-UTF-8-charset.patch
+DJMOUNT_PATCH += djmount-$(DJMOUNT_VER)-fixed-crash.patch
+DJMOUNT_PATCH += djmount-$(DJMOUNT_VER)-support-fstab-mounting.patch
+DJMOUNT_PATCH += djmount-$(DJMOUNT_VER)-support-seeking-in-large-2gb-files.patch
 
 $(ARCHIVE)/$(DJMOUNT_SOURCE):
 	$(WGET) https://sourceforge.net/projects/djmount/files/djmount/$(DJMOUNT_VER)/$(DJMOUNT_SOURCE)
@@ -2430,11 +2438,15 @@ $(D)/djmount: $(D)/bootstrap $(D)/fuse $(ARCHIVE)/$(DJMOUNT_SOURCE)
 	$(REMOVE)/djmount-$(DJMOUNT_VER)
 	$(UNTAR)/$(DJMOUNT_SOURCE)
 	set -e; cd $(BUILD_TMP)/djmount-$(DJMOUNT_VER); \
-		$(CONFIGURE) \
+		touch libupnp/config.aux/config.rpath; \
+		$(call post_patch,$(DJMOUNT_PATCH)); \
+		autoreconf -fi; \
+		$(CONFIGURE) -C \
 			--prefix=/usr \
+			--disable-debug \
 		; \
-		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
+		make; \
+		make install DESTDIR=$(TARGET_DIR)
 	$(REMOVE)/djmount-$(DJMOUNT_VER)
 	$(TOUCH)
 
@@ -2695,8 +2707,8 @@ $(D)/gnutls: $(D)/bootstrap $(D)/nettle $(ARCHIVE)/$(GNUTLS_SOURCE)
 #
 # glib-networking
 #
-GLIB_NETWORKING_VER_MAJOR = 2.45
-GLIB_NETWORKING_VER_MINOR = 1
+GLIB_NETWORKING_VER_MAJOR = 2.50
+GLIB_NETWORKING_VER_MINOR = 0
 GLIB_NETWORKING_VER = $(GLIB_NETWORKING_VER_MAJOR).$(GLIB_NETWORKING_VER_MINOR)
 GLIB_NETWORKING_SOURCE = glib-networking-$(GLIB_NETWORKING_VER).tar.xz
 

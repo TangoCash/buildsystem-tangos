@@ -737,7 +737,7 @@ endif
 	if [ -e $(RELEASE_DIR)/var/tuxbox/plugins/tuxwetter.so ]; then \
 		cp -rf $(TARGET_DIR)/var/tuxbox/config/tuxwetter $(RELEASE_DIR)/var/tuxbox/config; \
 	fi
-	if [ -e $(RELEASE_DIR)/var/tuxbox/plugins/soko.so ]; then \
+	if [ -e $(RELEASE_DIR)/var/tuxbox/plugins/sokoban.so ]; then \
 		cp -rf $(TARGET_DIR)/usr/share/tuxbox/sokoban $(RELEASE_DIR)/var/tuxbox/plugins; \
 		ln -s /var/tuxbox/plugins/sokoban $(RELEASE_DIR)/usr/share/tuxbox/sokoban; \
 	fi
@@ -844,15 +844,6 @@ $(D)/%neutrino_release: neutrino_release_base neutrino_release_$(BOXTYPE)
 #
 	rm -f $(RELEASE_DIR)/bin/pic2m2v
 	rm -f $(RELEASE_DIR)/usr/lib/*.py
-	rm -f $(RELEASE_DIR)/usr/share/tuxbox/neutrino/httpd/images/rc_cst_v?.*
-ifneq ($(BOXTYPE), $(filter $(BOXTYPE), hd51))
-	rm -f $(RELEASE_DIR)/usr/share/tuxbox/neutrino/httpd/images/rc_ax_hd51.png
-	rm -f $(RELEASE_DIR)/usr/share/tuxbox/neutrino/httpd/images/rc_mutant_hd51.png
-endif
-ifneq ($(BOXTYPE), $(filter $(BOXTYPE), spark spark7162))
-	rm -f $(RELEASE_DIR)/usr/share/tuxbox/neutrino/httpd/images/rc_spark_new.jpg
-	rm -f $(RELEASE_DIR)/usr/share/tuxbox/neutrino/httpd/images/rc_spark_old.jpg
-endif
 #
 # sh4-linux-strip all
 #
