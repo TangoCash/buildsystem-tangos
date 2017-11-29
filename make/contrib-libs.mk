@@ -684,9 +684,9 @@ $(D)/timezone: $(D)/bootstrap find-zic $(ARCHIVE)/$(TZDATA_SOURCE)
 #
 # freetype
 #
-FREETYPE_VER = 2.7.1
+FREETYPE_VER = 2.8.1
 FREETYPE_SOURCE = freetype-$(FREETYPE_VER).tar.bz2
-FREETYPE_PATCH = freetype-$(FREETYPE_VER).patch
+FREETYPE_PATCH  = freetype-$(FREETYPE_VER).patch
 
 $(ARCHIVE)/$(FREETYPE_SOURCE):
 	$(WGET) https://sourceforge.net/projects/freetype/files/freetype2/$(FREETYPE_VER)/$(FREETYPE_SOURCE)
@@ -811,7 +811,7 @@ $(D)/jpeg: $(D)/bootstrap $(ARCHIVE)/$(JPEG_SOURCE)
 #
 # jpeg_turbo
 #
-JPEG_TURBO_VER = 1.5.1
+JPEG_TURBO_VER = 1.5.2
 JPEG_TURBO_SOURCE = libjpeg-turbo-$(JPEG_TURBO_VER).tar.gz
 
 $(ARCHIVE)/$(JPEG_TURBO_SOURCE):
@@ -1679,7 +1679,7 @@ $(D)/ffmpeg: $(D)/bootstrap $(D)/openssl $(D)/bzip2 $(D)/libass $(D)/libroxml $(
 #
 # libass
 #
-LIBASS_VER = 0.12.3
+LIBASS_VER = 0.14.0
 LIBASS_SOURCE = libass-$(LIBASS_VER).tar.xz
 LIBASS_PATCH = libass-$(LIBASS_VER).patch
 
@@ -1698,7 +1698,7 @@ $(D)/libass: $(D)/bootstrap $(D)/freetype $(D)/libfribidi $(ARCHIVE)/$(LIBASS_SO
 			--disable-test \
 			--disable-fontconfig \
 			--disable-harfbuzz \
-			--disable-enca \
+			--disable-require-system-font-provider \
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -1837,7 +1837,7 @@ $(D)/flac: $(D)/bootstrap $(ARCHIVE)/$(FLAC_SOURCE)
 #
 # libxml2
 #
-LIBXML2_VER = 2.9.4
+LIBXML2_VER = 2.9.7
 LIBXML2_SOURCE = libxml2-$(LIBXML2_VER).tar.gz
 LIBXML2_PATCH = libxml2-$(LIBXML2_VER).patch
 
@@ -1869,10 +1869,14 @@ $(D)/libxml2: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/$(LIBXML2_SOURCE)
 			--datarootdir=/.remove \
 			--enable-shared \
 			--disable-static \
-			--without-c14n \
 			--without-debug \
+			--without-c14n \
+			--without-legacy \
+			--without-catalog \
 			--without-docbook \
 			--without-mem-debug \
+			--without-lzma \
+			--without-schematron \
 			$(LIBXML2_CONF_OPTS) \
 		; \
 		$(MAKE) all; \
@@ -2201,7 +2205,7 @@ $(D)/alsa_lib: $(D)/bootstrap $(ARCHIVE)/$(ALSA_LIB_SOURCE)
 #
 # alsa-utils
 #
-ALSA_UTILS_VER = 1.1.4
+ALSA_UTILS_VER = 1.1.5
 ALSA_UTILS_SOURCE = alsa-utils-$(ALSA_UTILS_VER).tar.bz2
 
 $(ARCHIVE)/$(ALSA_UTILS_SOURCE):
