@@ -138,9 +138,9 @@ $(D)/libstb-hal-ddt.config.status: | $(NEUTRINO_DEPS)
 	rm -rf $(LH_OBJDIR); \
 	test -d $(LH_OBJDIR) || mkdir -p $(LH_OBJDIR); \
 	cd $(LH_OBJDIR); \
-		$(SOURCE_DIR)/libstb-hal-ddt/autogen.sh; \
+		$(SOURCE_DIR)/libstb-hal-ddt/autogen.sh $(SILENT_OPT); \
 		$(BUILDENV) \
-		$(SOURCE_DIR)/libstb-hal-ddt/configure \
+		$(SOURCE_DIR)/libstb-hal-ddt/configure $(SILENT_OPT)\
 			--enable-silent-rules \
 			--host=$(TARGET) \
 			--build=$(BUILD) \
@@ -198,9 +198,9 @@ $(D)/neutrino-mp-ddt.config.status:
 	rm -rf $(N_OBJDIR)
 	test -d $(N_OBJDIR) || mkdir -p $(N_OBJDIR); \
 	cd $(N_OBJDIR); \
-		$(SOURCE_DIR)/neutrino-mp-ddt/autogen.sh; \
+		$(SOURCE_DIR)/neutrino-mp-ddt/autogen.sh $(SILENT_OPT); \
 		$(BUILDENV) \
-		$(SOURCE_DIR)/neutrino-mp-ddt/configure \
+		$(SOURCE_DIR)/neutrino-mp-ddt/configure $(SILENT_OPT)\
 			--enable-silent-rules \
 			--build=$(BUILD) \
 			--host=$(TARGET) \
@@ -290,9 +290,9 @@ $(D)/libstb-hal-ni.config.status: | $(NEUTRINO_DEPS)
 	rm -rf $(LH_OBJDIR); \
 	test -d $(LH_OBJDIR) || mkdir -p $(LH_OBJDIR); \
 	cd $(LH_OBJDIR); \
-		$(SOURCE_DIR)/libstb-hal-ni/autogen.sh; \
+		$(SOURCE_DIR)/libstb-hal-ni/autogen.sh $(SILENT_OPT); \
 		$(BUILDENV) \
-		$(SOURCE_DIR)/libstb-hal-ni/configure \
+		$(SOURCE_DIR)/libstb-hal-ni/configure $(SILENT_OPT)\
 			--enable-silent-rules \
 			--host=$(TARGET) \
 			--build=$(BUILD) \
@@ -348,9 +348,9 @@ $(D)/neutrino-mp-ni.config.status:
 	rm -rf $(N_OBJDIR)
 	test -d $(N_OBJDIR) || mkdir -p $(N_OBJDIR); \
 	cd $(N_OBJDIR); \
-		$(SOURCE_DIR)/neutrino-mp-ni/autogen.sh; \
+		$(SOURCE_DIR)/neutrino-mp-ni/autogen.sh $(SILENT_OPT); \
 		$(BUILDENV) \
-		$(SOURCE_DIR)/neutrino-mp-ni/configure \
+		$(SOURCE_DIR)/neutrino-mp-ni/configure $(SILENT_OPT)\
 			--enable-silent-rules \
 			--build=$(BUILD) \
 			--host=$(TARGET) \
@@ -440,9 +440,9 @@ $(D)/libstb-hal-tangos.config.status: | $(NEUTRINO_DEPS)
 	rm -rf $(LH_OBJDIR); \
 	test -d $(LH_OBJDIR) || mkdir -p $(LH_OBJDIR); \
 	cd $(LH_OBJDIR); \
-		$(SOURCE_DIR)/libstb-hal-tangos/autogen.sh; \
+		$(SOURCE_DIR)/libstb-hal-tangos/autogen.sh $(SILENT_OPT); \
 		$(BUILDENV) \
-		$(SOURCE_DIR)/libstb-hal-tangos/configure \
+		$(SOURCE_DIR)/libstb-hal-tangos/configure $(SILENT_OPT)\
 			--enable-silent-rules \
 			--host=$(TARGET) \
 			--build=$(BUILD) \
@@ -498,9 +498,9 @@ $(D)/neutrino-mp-tangos.config.status:
 	rm -rf $(N_OBJDIR)
 	test -d $(N_OBJDIR) || mkdir -p $(N_OBJDIR); \
 	cd $(N_OBJDIR); \
-		$(SOURCE_DIR)/neutrino-mp-tangos/autogen.sh; \
+		$(SOURCE_DIR)/neutrino-mp-tangos/autogen.sh $(SILENT_OPT); \
 		$(BUILDENV) \
-		$(SOURCE_DIR)/neutrino-mp-tangos/configure \
+		$(SOURCE_DIR)/neutrino-mp-tangos/configure $(SILENT_OPT)\
 			--enable-silent-rules \
 			--build=$(BUILD) \
 			--host=$(TARGET) \
@@ -597,11 +597,11 @@ $(D)/libstb-hal-max.config.status: | $(NEUTRINO_DEPS)
 	rm -rf $(LH_OBJDIR); \
 	test -d $(LH_OBJDIR) || mkdir -p $(LH_OBJDIR); \
 	cd $(LH_OBJDIR); \
-		$(SOURCE_DIR)/libstb-hal-max/autogen.sh; \
+		$(SOURCE_DIR)/libstb-hal-max/autogen.sh $(SILENT_OPT); \
 		export PKG_CONFIG=$(PKG_CONFIG); \
 		export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH); \
 		$(BUILDENV) \
-		$(SOURCE_DIR)/libstb-hal-max/configure \
+		$(SOURCE_DIR)/libstb-hal-max/configure $(SILENT_OPT)\
 			--enable-silent-rules \
 			--host=$(TARGET) \
 			--build=$(BUILD) \
@@ -655,9 +655,9 @@ $(D)/neutrino-mp-max.config.status:
 	rm -rf $(N_OBJDIR)
 	test -d $(N_OBJDIR) || mkdir -p $(N_OBJDIR); \
 	cd $(N_OBJDIR); \
-		$(SOURCE_DIR)/neutrino-mp-max/autogen.sh; \
+		$(SOURCE_DIR)/neutrino-mp-max/autogen.sh $(SILENT_OPT); \
 		$(BUILDENV) \
-		$(SOURCE_DIR)/neutrino-mp-max/configure \
+		$(SOURCE_DIR)/neutrino-mp-max/configure $(SILENT_OPT)\
 			--enable-silent-rules \
 			--build=$(BUILD) \
 			--host=$(TARGET) \
@@ -750,9 +750,9 @@ $(D)/neutrino-hd2.do_prepare: | $(NEUTRINO_DEPS) $(NEUTRINO_DEPS2)
 
 $(SOURCE_DIR)/neutrino-hd2/config.status:
 	cd $(SOURCE_DIR)/neutrino-hd2; \
-		./autogen.sh; \
+		./autogen.sh $(SILENT_OPT); \
 		$(BUILDENV) \
-		./configure \
+		./configure $(SILENT_OPT)\
 			--build=$(BUILD) \
 			--host=$(TARGET) \
 			--enable-silent-rules \
