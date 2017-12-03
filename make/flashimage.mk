@@ -4,25 +4,25 @@
 
 flashimage:
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), fortis_hdbox octagon1008 ufs910 ufs922 ipbox55 ipbox99 ipbox9900 cuberevo cuberevo_mini cuberevo_mini2 cuberevo_250hd cuberevo_2000hd cuberevo_3000hd))
-	cd $(BASE_DIR)/flash/nor_flash && $(SUDOCMD) ./make_flash.sh
+	cd $(BASE_DIR)/flash/nor_flash && $(SUDOCMD) ./make_flash.sh $(MAINTAINER)
 endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), spark spark7162))
-	cd $(BASE_DIR)/flash/$(BOXTYPE) && $(SUDOCMD) ./$(BOXTYPE).sh
+	cd $(BASE_DIR)/flash/$(BOXTYPE) && $(SUDOCMD) ./$(BOXTYPE).sh $(MAINTAINER)
 endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), atevio7500))
-	cd $(BASE_DIR)/flash/$(BOXTYPE) && $(SUDOCMD) ./$(BOXTYPE).sh
+	cd $(BASE_DIR)/flash/$(BOXTYPE) && $(SUDOCMD) ./$(BOXTYPE).sh $(MAINTAINER)
 endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), ufs912))
-	cd $(BASE_DIR)/flash/$(BOXTYPE) && $(SUDOCMD) ./$(BOXTYPE).sh
+	cd $(BASE_DIR)/flash/$(BOXTYPE) && $(SUDOCMD) ./$(BOXTYPE).sh $(MAINTAINER)
 endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), ufs913))
-	cd $(BASE_DIR)/flash/$(BOXTYPE) && $(SUDOCMD) ./$(BOXTYPE).sh
+	cd $(BASE_DIR)/flash/$(BOXTYPE) && $(SUDOCMD) ./$(BOXTYPE).sh $(MAINTAINER)
 endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), ufc960))
-	cd $(BASE_DIR)/flash/$(BOXTYPE) && $(SUDOCMD) ./$(BOXTYPE).sh
+	cd $(BASE_DIR)/flash/$(BOXTYPE) && $(SUDOCMD) ./$(BOXTYPE).sh $(MAINTAINER)
 endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), tf7700))
-	cd $(BASE_DIR)/flash/$(BOXTYPE) && $(SUDOCMD) ./$(BOXTYPE).sh
+	cd $(BASE_DIR)/flash/$(BOXTYPE) && $(SUDOCMD) ./$(BOXTYPE).sh $(MAINTAINER)
 endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51))
 	$(MAKE) flash-image-hd51-multi-disk flash-image-hd51-multi-rootfs
@@ -141,6 +141,6 @@ flash-image-hd51-multi-rootfs:
 	bzip2 $(HD51_BUILD_TMP)/$(BOXTYPE)/rootfs.tar
 	echo $(BOXTYPE)_DDT_usb_$(shell date '+%d%m%Y-%H%M%S') > $(HD51_BUILD_TMP)/$(BOXTYPE)/imageversion
 	cd $(HD51_BUILD_TMP) && \
-	zip -r $(BASE_DIR)/$(BOXTYPE)_multi_usb_$(shell date '+%d%m%Y-%H%M%S').zip $(BOXTYPE)/rootfs.tar.bz2 $(BOXTYPE)/kernel.bin $(BOXTYPE)/disk.img $(BOXTYPE)/imageversion
+	zip -r $(BASE_DIR)/$(BOXTYPE)_multi_usb_$(shell date '+%d.%m.%Y-%H.%M').zip $(BOXTYPE)/rootfs.tar.bz2 $(BOXTYPE)/kernel.bin $(BOXTYPE)/disk.img $(BOXTYPE)/imageversion
 	# cleanup
 	rm -rf $(HD51_BUILD_TMP)

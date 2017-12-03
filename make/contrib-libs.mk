@@ -809,14 +809,8 @@ $(D)/jpeg: $(D)/bootstrap $(ARCHIVE)/$(JPEG_SOURCE)
 	$(TOUCH)
 
 #
-# libjpeg_turbo
+# libjpg
 #
-LIBJPEG_TURBO_VER = 1.5.2
-LIBJPEG_TURBO_SOURCE = libjpeg-turbo-$(LIBJPEG_TURBO_VER).tar.gz
-
-$(ARCHIVE)/$(JPEG_LIBTURBO_SOURCE):
-	$(WGET) https://sourceforge.net/projects/libjpeg-turbo/files/$(LIBJPEG_TURBO_VER)/$(LIBJPEG_TURBO_SOURCE)
-
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), fortis_hdbox octagon1008 ufs910 ufs922 ipbox55 ipbox99 ipbox9900 cuberevo cuberevo_mini cuberevo_mini2 cuberevo_250hd cuberevo_2000hd cuberevo_3000hd))
 $(D)/libjpeg: $(D)/jpeg
 	@touch $@
@@ -824,6 +818,15 @@ else
 $(D)/libjpeg: $(D)/libjpeg_turbo
 	@touch $@
 endif
+
+#
+# libjpeg_turbo
+#
+LIBJPEG_TURBO_VER = 1.5.2
+LIBJPEG_TURBO_SOURCE = libjpeg-turbo-$(LIBJPEG_TURBO_VER).tar.gz
+
+$(ARCHIVE)/$(LIBJPEG_TURBO_SOURCE):
+	$(WGET) https://sourceforge.net/projects/libjpeg-turbo/files/$(LIBJPEG_TURBO_VER)/$(LIBJPEG_TURBO_SOURCE)
 
 $(D)/libjpeg_turbo: $(D)/bootstrap $(ARCHIVE)/$(LIBJPEG_TURBO_SOURCE)
 	$(START_BUILD)
@@ -962,7 +965,7 @@ $(D)/libconfig: $(D)/bootstrap $(ARCHIVE)/$(LIBCONFIG_SOURCE)
 #
 # libcurl
 #
-LIBCURL_VER = 7.56.1
+LIBCURL_VER = 7.57.0
 LIBCURL_SOURCE = curl-$(LIBCURL_VER).tar.bz2
 LIBCURL_PATCH = libcurl-$(LIBCURL_VER).patch
 
@@ -1453,15 +1456,6 @@ FFMPEG_PATCH += ffmpeg-kodi-$(FFMPEG_VER).patch
 $(ARCHIVE)/$(FFMPEG_SOURCE):
 	$(WGET) http://www.ffmpeg.org/releases/$(FFMPEG_SOURCE)
 
-ifeq ($(IMAGE), enigma2 enigma2-wlandriver)
-FFMPEG_CONF_OPTS  = --enable-librtmp
-LIBRTMPDUMP = $(D)/librtmpdump
-endif
-
-ifeq ($(IMAGE), neutrino neutrino-wlandriver)
-FFMPEG_CONF_OPTS = --disable-iconv
-endif
-
 ifeq ($(BOXARCH), sh4)
 FFMPEG_CONF_OPTS += --disable-armv5te --disable-armv6 --disable-armv6t2
 endif
@@ -1635,6 +1629,7 @@ $(D)/ffmpeg: $(D)/bootstrap $(D)/openssl $(D)/bzip2 $(D)/libass $(D)/libroxml $(
 			--disable-filters \
 			--enable-filter=scale \
 			\
+			--disable-iconv \
 			--disable-xlib \
 			--disable-libxcb \
 			--disable-postproc \
@@ -1844,17 +1839,9 @@ LIBXML2_PATCH = libxml2-$(LIBXML2_VER).patch
 $(ARCHIVE)/$(LIBXML2_SOURCE):
 	$(WGET) ftp://xmlsoft.org/libxml2/$(LIBXML2_SOURCE)
 
-ifeq ($(IMAGE), $(filter $(IMAGE), enigma2 enigma2-wlandriver))
-LIBXML2_CONF_OPTS  = --with-python=$(HOST_DIR)
-LIBXML2_CONF_OPTS += --with-python-install-dir=/$(PYTHON_DIR)/site-packages
-endif
-
-ifeq ($(IMAGE), $(filter $(IMAGE), neutrino neutrino-wlandriver))
-LIBXML2_CONF_OPTS  = --without-python --without-catalog
 ifeq ($(BOXARCH), sh4)
 LIBXML2_CONF_OPTS += --without-iconv
 LIBXML2_CONF_OPTS += --with-minimum
-endif
 endif
 
 $(D)/libxml2: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/$(LIBXML2_SOURCE)
@@ -1869,6 +1856,8 @@ $(D)/libxml2: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/$(LIBXML2_SOURCE)
 			--datarootdir=/.remove \
 			--enable-shared \
 			--disable-static \
+			--without-python \
+			--without-catalog \
 			--without-debug \
 			--without-c14n \
 			--without-legacy \

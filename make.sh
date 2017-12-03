@@ -16,9 +16,8 @@ if [ "$1" == -h ] || [ "$1" == --help ]; then
 	echo "Parameter 1: target system (1-38)"
 	echo "Parameter 2: kernel (1-2) for sh4 cpu"
 	echo "Parameter 3: optimization (1-4)"
-	echo "Parameter 4: Media Framework (1-4)"
-	echo "Parameter 5: Image (Enigma=1/2 Neutrino=3/4 (1-4)"
-	echo "Parameter 6: External LCD support (1-3)"
+	echo "Parameter 4: Image Neutrino (1-2)"
+	echo "Parameter 5: External LCD support (1-3)"
 	exit
 fi
 
@@ -107,7 +106,7 @@ case "$REPLY" in
 	36) BOXARCH="sh4";BOXTYPE="arivalink200";;
 	37) BOXARCH="arm";BOXTYPE="hd51";;
 	38) BOXARCH="arm";BOXTYPE="vusolo4k";;
-	 *) BOXARCH="sh4";BOXTYPE="atevio7500";;
+	 *) BOXARCH="arm";BOXTYPE="hd51";;
 esac
 echo "BOXARCH=$BOXARCH" > config
 echo "BOXTYPE=$BOXTYPE" >> config
@@ -222,49 +221,24 @@ echo "OPTIMIZATIONS=$OPTIMIZATIONS" >> config
 ##############################################
 
 case $4 in
-	[1-4]) REPLY=$4;;
-	*)	echo -e "\nMedia Framework:"
-		echo "   1) eplayer3"
-		echo "   2) gstreamer"
-		echo "   3) use built-in       (required for Neutrino)"
-		echo "   4) gstreamer+eplayer3 (required for OpenPLi)"
-		read -p "Select media framework (1-4)? ";;
-esac
-
-case "$REPLY" in
-	1) MEDIAFW="eplayer3";;
-	2) MEDIAFW="gstreamer";;
-	3) MEDIAFW="buildinplayer";;
-	4) MEDIAFW="gst-eplayer3";;
-	*) MEDIAFW="buildinplayer";;
-esac
-echo "MEDIAFW=$MEDIAFW" >> config
-
-##############################################
-
-case $5 in
-	[1-4]) REPLY=$5;;
+	[1-2]) REPLY=$4;;
 	*)	echo -e "\nWhich Image do you want to build:"
-		echo "   1)  Enigma2"
-		echo "   2)  Enigma2  (includes WLAN drivers)"
-		echo "   3)  Neutrino"
-		echo "   4)  Neutrino (includes WLAN drivers)"
-		read -p "Select Image to build (1-4)? ";;
+		echo "   1)  Neutrino"
+		echo "   2)  Neutrino (includes WLAN drivers sh4)"
+		read -p "Select Image to build (1-2)? ";;
 esac
 
 case "$REPLY" in
-	1) IMAGE="enigma2";;
-	2) IMAGE="enigma2-wlandriver";;
-	3) IMAGE="neutrino";;
-	4) IMAGE="neutrino-wlandriver";;
+	1) IMAGE="neutrino";;
+	2) IMAGE="neutrino-wlandriver";;
 	*) IMAGE="neutrino";;
 esac
 echo "IMAGE=$IMAGE" >> config
 
 ##############################################
 
-case $6 in
-	[1-3]) REPLY=$6;;
+case $5 in
+	[1-3]) REPLY=$5;;
 	*)	echo -e "\nExternal LCD support:"
 		echo "   1)  No external LCD"
 		echo "   2)  graphlcd for external LCD"
@@ -283,23 +257,21 @@ echo "EXTERNAL_LCD=$EXTERNAL_LCD" >> config
 ##############################################
 echo " "
 make printenv
-echo " "
 ##############################################
 echo "Your build environment is ready :-)"
 echo "Your next step could be:"
 case "$IMAGE" in
 		neutrino*)
-		echo "  make yaud-neutrino-mp-tangos"
-		echo "  make yaud-neutrino-mp-tangos-plugins"
+		echo "  make neutrino-mp-tangos"
+		echo "  make neutrino-mp-tangos-plugins"
 		if [ $BOXARCH == 'arm' ]; then
-			echo "  make yaud-neutrino-mp-cst-next-ni"
+			echo "  make neutrino-mp-ni"
+			echo "  make neutrino-mp-ni-plugins"
 		fi
-		echo "  make yaud-neutrino-mp-cst-next"
-		echo "  make yaud-neutrino-mp-cst-next-plugins"
-		echo "  make yaud-neutrino-hd2"
-		echo "  make yaud-neutrino-hd2-plugins";;
-		enigma2*)
-		echo "  make yaud-enigma2";;
+		echo "  make neutrino-mp-ddt"
+		echo "  make neutrino-mp-ddt-plugins"
+		echo "  make neutrino-hd2"
+		echo "  make neutrino-hd2-plugins";;
 		*)
 		echo "  make flashimage"
 		echo "  make ofgimage";;

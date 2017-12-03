@@ -46,7 +46,6 @@ printenv:
 	@echo "TARGET           : $(TARGET)"
 	@echo "BOXTYPE          : $(BOXTYPE)"
 	@echo "KERNEL_VERSION   : $(KERNEL_VER)"
-	@echo "MEDIAFW          : $(MEDIAFW)"
 	@echo "EXTERNAL_LCD     : $(EXTERNAL_LCD)"
 	@echo "PARALLEL_JOBS    : $(PARALLEL_JOBS)"
 ifeq ($(KBUILD_VERBOSE), 1)
@@ -60,10 +59,6 @@ ifeq ($(IMAGE), $(filter $(IMAGE), neutrino neutrino-wlandriver))
 	@echo "LOCAL_NEUTRINO_BUILD_OPTIONS : $(LOCAL_NEUTRINO_BUILD_OPTIONS)"
 	@echo "LOCAL_NEUTRINO_CFLAGS        : $(LOCAL_NEUTRINO_CFLAGS)"
 	@echo "LOCAL_NEUTRINO_DEPS          : $(LOCAL_NEUTRINO_DEPS)"
-else ifeq ($(IMAGE), $(filter $(IMAGE), enigma2 enigma2-wlandriver))
-	@echo "LOCAL_ENIGMA2_BUILD_OPTIONS  : $(LOCAL_ENIGMA2_BUILD_OPTIONS)"
-	@echo "LOCAL_ENIGMA2_CPPFLAGS       : $(LOCAL_ENIGMA2_CPPFLAGS)"
-	@echo "LOCAL_ENIGMA2_DEPS           : $(LOCAL_ENIGMA2_DEPS)"
 endif
 	@echo '================================================================================'
 	@echo ""
@@ -75,7 +70,6 @@ ifeq ($(MAINTAINER),)
 	@echo "##########################################################################"
 	@echo
 endif
-
 	@if ! test -e $(BASE_DIR)/config; then \
 		echo;echo "If you want to create or modify the configuration, run './make.sh'"; \
 		echo; fi
@@ -102,21 +96,15 @@ ifeq ($(BOXARCH), sh4)
 include make/linux-kernel-sh4.mk
 include make/crosstool-sh4.mk
 include make/driver-sh4.mk
-include make/gstreamer-sh4.mk
 else
 include make/linux-kernel-arm.mk
 include make/crosstool-arm.mk
 include make/driver-arm.mk
-include make/gstreamer-arm.mk
 endif
+include make/gstreamer.mk
 include make/root-etc.mk
 include make/python.mk
 include make/tools.mk
-include make/enigma2.mk
-include make/enigma2-tangos.mk
-include make/enigma2-plugins.mk
-include make/enigma2-release.mk
-include make/enigma2-release-small.mk
 include make/neutrino.mk
 include make/neutrino-plugins.mk
 include make/neutrino-release.mk
@@ -193,7 +181,7 @@ everything: $(shell sed -n 's/^\$$.D.\/\(.*\):.*/\1/p' make/*.mk)
 # print all present targets...
 print-targets:
 	@sed -n 's/^\$$.D.\/\(.*\):.*/\1/p; s/^\([a-z].*\):\( \|$$\).*/\1/p;' \
-		`ls -1 make/*.mk|grep -v make/buildenv.mk|grep -v make/neutrino-release.mk|grep -v make/enigma2-release.mk` | \
+		`ls -1 make/*.mk|grep -v make/buildenv.mk|grep -v make/neutrino-release.mk` | \
 		sort -u | fold -s -w 65
 
 # for local extensions, e.g. special plugins or similar...
