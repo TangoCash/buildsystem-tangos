@@ -111,10 +111,6 @@ esac
 echo "BOXARCH=$BOXARCH" > config
 echo "BOXTYPE=$BOXTYPE" >> config
 
-if [ $BOXARCH == 'arm' ]; then
-	echo "KBUILD_VERBOSE=1" >> config
-fi
-
 ##############################################
 
 if [ $BOXTYPE == 'hd51' ]; then

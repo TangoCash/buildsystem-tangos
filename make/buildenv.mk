@@ -129,15 +129,12 @@ MAKEFLAGS            += --no-print-directory
 # To put more focus on warnings, be less verbose as default
 # Use 'make V=1' to see the full commands
 ifeq ("$(origin V)", "command line")
-KBUILD_VERBOSE        = $(V)
-endif
-ifndef KBUILD_VERBOSE
-KBUILD_VERBOSE        = 0
+VERBOSE               = $(V)
 endif
 
-# If KBUILD_VERBOSE equals 0 then the above command will be hidden.
-# If KBUILD_VERBOSE equals 1 then the above command is displayed.
-ifeq ($(KBUILD_VERBOSE),1)
+# If VERBOSE equals 0 then the above command will be hidden.
+# If VERBOSE equals 1 then the above command is displayed.
+ifeq ($(VERBOSE),1)
 SILENT_PATCH          =
 SILENT_OPT            =
 SILENT                =

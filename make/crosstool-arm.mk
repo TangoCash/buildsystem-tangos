@@ -24,7 +24,8 @@ CUSTOM_KERNEL_VER = $(KERNEL_VER)-arm
 
 ifeq ($(wildcard $(CROSS_BASE)/build.log.bz2),)
 CROSSTOOL = crosstool
-crosstool: crosstool-ng
+crosstool:
+	make MAKEFLAGS=--no-print-directory crosstool-ng
 
 $(ARCHIVE)/$(CROSSTOOL_NG_SOURCE):
 	$(SCRIPTS_DIR)/get-git-archive.sh $(CROSSTOOL_NG_URL) $(CROSSTOOL_NG_VER) $(notdir $@) $(ARCHIVE)
