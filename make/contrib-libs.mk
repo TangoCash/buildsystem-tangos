@@ -1640,6 +1640,7 @@ $(D)/ffmpeg: $(D)/bootstrap $(D)/openssl $(D)/bzip2 $(D)/libass $(D)/libroxml $(
 			--enable-zlib \
 			$(FFMPEG_CONF_OPTS) \
 			--disable-static \
+			--enable-libass \
 			--enable-openssl \
 			--enable-network \
 			--enable-shared \
@@ -1649,8 +1650,8 @@ $(D)/ffmpeg: $(D)/bootstrap $(D)/openssl $(D)/bzip2 $(D)/libass $(D)/libroxml $(
 			--disable-runtime-cpudetect \
 			--enable-cross-compile \
 			--cross-prefix=$(TARGET)- \
-			--extra-cflags="-I$(TARGET_DIR)/usr/include -ffunction-sections -fdata-sections" \
-			--extra-ldflags="-L$(TARGET_DIR)/usr/lib -Wl,--gc-sections,-lrt" \
+			--extra-cflags="$(TARGET_CFLAGS)" \
+			--extra-ldflags="$(TARGET_LDFLAGS) -lrt" \
 			--target-os=linux \
 			--arch=$(BOXARCH) \
 			--prefix=/usr \
