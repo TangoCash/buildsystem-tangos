@@ -10,6 +10,9 @@ LINKS_PATCH  = links-$(LINKS_VER).patch
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), spark spark7162))
 LINKS_PATCH += links-$(LINKS_VER)-spark-input.patch
 endif
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51))
+LINKS_PATCH += links-$(LINKS_VER)-hd51-input.patch
+endif
 
 $(ARCHIVE)/links-$(LINKS_VER).tar.bz2:
 	$(WGET) http://links.twibright.com/download/links-$(LINKS_VER).tar.bz2
