@@ -429,7 +429,7 @@ $(D)/libstb-hal-tangos.do_prepare:
 	[ -d "$(ARCHIVE)/libstb-hal-tangos.git" ] && \
 	(cd $(ARCHIVE)/libstb-hal-tangos.git; git pull; cd "$(BUILD_TMP)";); \
 	[ -d "$(ARCHIVE)/libstb-hal-tangos.git" ] || \
-	git clone https://github.com/TangoCash/libstb-hal-cst-next.git $(ARCHIVE)/libstb-hal-tangos.git; \
+	git clone https://github.com/TangoCash/libstb-hal-tangos.git $(ARCHIVE)/libstb-hal-tangos.git; \
 	cp -ra $(ARCHIVE)/libstb-hal-tangos.git $(SOURCE_DIR)/libstb-hal-tangos;\
 	cp -ra $(SOURCE_DIR)/libstb-hal-tangos $(SOURCE_DIR)/libstb-hal-tangos.org
 	set -e; cd $(SOURCE_DIR)/libstb-hal-tangos; \
@@ -487,7 +487,7 @@ $(D)/neutrino-mp-tangos.do_prepare: | $(NEUTRINO_DEPS) $(D)/libstb-hal-tangos
 	[ -d "$(ARCHIVE)/neutrino-mp-tangos.git" ] && \
 	(cd $(ARCHIVE)/neutrino-mp-tangos.git; git pull; cd "$(BUILD_TMP)";); \
 	[ -d "$(ARCHIVE)/neutrino-mp-tangos.git" ] || \
-	git clone https://github.com/TangoCash/neutrino-mp-cst-next.git $(ARCHIVE)/neutrino-mp-tangos.git; \
+	git clone https://github.com/TangoCash/neutrino-mp-tangos.git $(ARCHIVE)/neutrino-mp-tangos.git; \
 	cp -ra $(ARCHIVE)/neutrino-mp-tangos.git $(SOURCE_DIR)/neutrino-mp-tangos; \
 	cp -ra $(SOURCE_DIR)/neutrino-mp-tangos $(SOURCE_DIR)/neutrino-mp-tangos.org
 	set -e; cd $(SOURCE_DIR)/neutrino-mp-tangos; \
