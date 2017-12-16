@@ -1448,10 +1448,10 @@ else
 FFMPEG_VER = 2.8.10
 endif
 FFMPEG_SOURCE = ffmpeg-$(FFMPEG_VER).tar.xz
-FFMPEG_PATCH  = ffmpeg-buffer-size-$(FFMPEG_VER).patch
-FFMPEG_PATCH += ffmpeg-hds-libroxml-$(FFMPEG_VER).patch
-FFMPEG_PATCH += ffmpeg-aac-$(FFMPEG_VER).patch
-FFMPEG_PATCH += ffmpeg-kodi-$(FFMPEG_VER).patch
+FFMPEG_PATCH  = ffmpeg-$(FFMPEG_VER)-buffer-size.patch
+FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-hds-libroxml.patch
+FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-aac.patch
+FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-kodi.patch
 
 $(ARCHIVE)/$(FFMPEG_SOURCE):
 	$(WGET) http://www.ffmpeg.org/releases/$(FFMPEG_SOURCE)
