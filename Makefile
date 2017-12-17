@@ -47,6 +47,7 @@ printenv:
 	@echo "BOXTYPE          : $(BOXTYPE)"
 	@echo "KERNEL_VERSION   : $(KERNEL_VER)"
 	@echo "EXTERNAL_LCD     : $(EXTERNAL_LCD)"
+	@echo "MEDIAFW          : $(MEDIAFW)"
 	@echo "PARALLEL_JOBS    : $(PARALLEL_JOBS)"
 ifeq ($(KBUILD_VERBOSE), 1)
 	@echo "VERBOSE_BUILD    : yes"
