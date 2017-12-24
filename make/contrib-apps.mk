@@ -1105,7 +1105,7 @@ $(D)/smartmontools: $(D)/bootstrap $(ARCHIVE)/$(SMARTMONTOOLS_SOURCE)
 #
 # nfs_utils
 #
-NFS_UTILS_VER = 2.2.1
+NFS_UTILS_VER = 2.3.1
 NFS_UTILS_SOURCE = nfs-utils-$(NFS_UTILS_VER).tar.bz2
 NFS_UTILS_PATCH = nfs-utils-$(NFS_UTILS_VER).patch
 
@@ -1632,12 +1632,13 @@ $(D)/ofgwrite: $(D)/bootstrap
 	$(START_BUILD)
 	$(REMOVE)/ofgwrite
 	set -e; cd $(BUILD_TMP); \
-	git clone git://github.com/oe-alliance/ofgwrite.git ofgwrite; \
+	git clone https://github.com/Duckbox-Developers/ofgwrite-ddt.git ofgwrite; \
 	cd ofgwrite; \
 		$(BUILDENV) \
-		$(MAKE) && \
-	install -m 755 $(BUILD_TMP)/ofgwrite/ofgwrite_bin $(TARGET_DIR)/bin
-	install -m 755 $(BUILD_TMP)/ofgwrite/ofgwrite $(TARGET_DIR)/bin
-	sed -i "s,/usr/bin/,/bin/," $(TARGET_DIR)/bin/ofgwrite
+		$(MAKE); \
+	install -m 755 $(BUILD_TMP)/ofgwrite/ofgwrite_bin $(TARGET_DIR)/usr/bin
+	install -m 755 $(BUILD_TMP)/ofgwrite/ofgwrite_tgz $(TARGET_DIR)/usr/bin
+	install -m 755 $(BUILD_TMP)/ofgwrite/ofgwrite $(TARGET_DIR)/usr/bin
 	$(REMOVE)/ofgwrite
 	$(TOUCH)
+
