@@ -254,7 +254,7 @@ FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-fix-edit-list-parsing.patch
 FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-add-dash-demux.patch
 
 FFMPEG_DEPS = $(D)/libxml2 $(D)/librtmpdump
-FFMPEG_CONF_OPTS  = --enable-librtmp
+FFMPEG_CONF_OPTS  = --enable-librtmp --enable-openssl
 FFMPRG_EXTRA_CFLAGS = -fPIC -mfpu=neon-vfpv4 -mfloat-abi=hard
 
 $(ARCHIVE)/$(FFMPEG_SOURCE):
