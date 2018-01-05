@@ -165,6 +165,34 @@ $(D)/gdb: $(D)/bootstrap $(D)/ncurses $(D)/zlib $(ARCHIVE)/$(GDB_SOURCE)
 	$(TOUCH)
 
 #
+# valgrind
+#
+VALGRIND_VER = 3.13.0
+VALGRIND_SOURCE = valgrind-$(VALGRIND_VER).tar.bz2
+
+$(ARCHIVE)/$(VALGRIND_SOURCE):
+	$(WGET) ftp://sourceware.org/pub/valgrind/$(VALGRIND_SOURCE)
+
+$(D)/valgrind: $(D)/bootstrap $(ARCHIVE)/$(VALGRIND_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/valgrind-$(VALGRIND_VER)
+	$(UNTAR)/$(VALGRIND_SOURCE)
+	set -e; cd $(BUILD_TMP)/valgrind-$(VALGRIND_VER); \
+		sed -i -e "s#armv7#arm#g" configure; \
+		$(CONFIGURE) \
+			--prefix=/usr \
+			--mandir=/.remove \
+			--datadir=/.remove \
+			-enable-only32bit \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	rm -f $(addprefix $(TARGET_DIR)/usr/lib/valgrind/,*.a *.xml)
+	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,cg_* callgrind_* ms_print)
+	$(REMOVE)/valgrind-$(VALGRIND_VER)
+	$(TOUCH)
+
+#
 # host_opkg
 #
 OPKG_VER = 0.3.3
@@ -1579,6 +1607,51 @@ $(D)/dropbear: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/$(DROPBEAR_SOURCE)
 	install -m 755 $(SKEL_ROOT)/etc/init.d/dropbear $(TARGET_DIR)/etc/init.d/
 	install -d -m 0755 $(TARGET_DIR)/etc/dropbear
 	$(REMOVE)/dropbear-$(DROPBEAR_VER)
+	$(TOUCH)
+
+#
+# dropbear multi
+#
+$(D)/dropbearmulti: $(D)/bootstrap
+	$(START_BUILD)
+	$(REMOVE)/dropbearmulti
+	set -e; if [ -d $(ARCHIVE)/dropbearmulti.git ]; \
+		then cd $(ARCHIVE)/dropbearmulti.git; git pull; \
+		else cd $(ARCHIVE); git clone --recursive git://github.com/mkj/dropbear.git $(ARCHIVE)/dropbearmulti.git; \
+		fi
+	cp -ra $(ARCHIVE)/dropbearmulti.git $(BUILD_TMP)/dropbearmulti
+	set -e; cd $(BUILD_TMP)/dropbearmulti; \
+		$(BUILDENV) \
+		autoreconf -fi; \
+		$(CONFIGURE) \
+			--build=$(BUILD) \
+			--host=$(TARGET) \
+			--prefix=/usr \
+			--disable-syslog \
+			--disable-lastlog \
+			--infodir=/.remove \
+			--localedir=/.remove \
+			--mandir=/.remove \
+			--docdir=/.remove \
+			--htmldir=/.remove \
+			--dvidir=/.remove \
+			--pdfdir=/.remove \
+			--psdir=/.remove \
+			--disable-shadow \
+			--disable-zlib \
+			--disable-utmp \
+			--disable-utmpx \
+			--disable-wtmp \
+			--disable-wtmpx \
+			--disable-loginfunc \
+			--disable-pututline \
+			--disable-pututxline \
+		; \
+		$(MAKE) PROGRAMS="dropbear scp" MULTI=1 install DESTDIR=$(TARGET_DIR)
+	cd $(TARGET_DIR)/usr/bin && ln -s /usr/bin/dropbearmulti dropbear
+	install -m 755 $(SKEL_ROOT)/etc/init.d/dropbear $(TARGET_DIR)/etc/init.d/
+	install -d -m 0755 $(TARGET_DIR)/etc/dropbear
+	$(REMOVE)/dropbearmulti
 	$(TOUCH)
 
 #

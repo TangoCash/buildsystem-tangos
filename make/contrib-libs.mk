@@ -1054,34 +1054,6 @@ $(D)/libfribidi: $(D)/bootstrap $(ARCHIVE)/$(LIBFRIBIDI_SOURCE)
 	$(TOUCH)
 
 #
-# libsigc++_e2
-#
-LIBSIGC_E2_VER_MAJOR = 1
-LIBSIGC_E2_VER_MINOR = 2
-LIBSIGC_E2_VER_MICRO = 7
-LIBSIGC_E2_VER = $(LIBSIGC_E2_VER_MAJOR).$(LIBSIGC_E2_VER_MINOR).$(LIBSIGC_E2_VER_MICRO)
-LIBSIGC_E2_SOURCE = libsigc++-$(LIBSIGC_E2_VER).tar.gz
-
-$(ARCHIVE)/$(LIBSIGC_E2_SOURCE):
-	$(WGET) https://ftp.gnome.org/pub/GNOME/sources/libsigc++/$(LIBSIGC_E2_VER_MAJOR).$(LIBSIGC_E2_VER_MINOR)/$(LIBSIGC_E2_SOURCE)
-
-$(D)/libsigc_e2: $(D)/bootstrap $(ARCHIVE)/$(LIBSIGC_E2_SOURCE)
-	$(START_BUILD)
-	$(REMOVE)/libsigc++-$(LIBSIGC_E2_VER)
-	$(UNTAR)/$(LIBSIGC_E2_SOURCE)
-	set -e; cd $(BUILD_TMP)/libsigc++-$(LIBSIGC_E2_VER); \
-		$(CONFIGURE) \
-			--prefix=/usr \
-			--disable-checks \
-		; \
-		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/sigc++-1.2.pc
-	$(REWRITE_LIBTOOL)/libsigc-1.2.la
-	$(REMOVE)/libsigc++-$(LIBSIGC_E2_VER)
-	$(TOUCH)
-
-#
 # libsigc
 #
 LIBSIGC_VER_MAJOR = 2
@@ -1659,7 +1631,7 @@ $(D)/libxml2: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/$(LIBXML2_SOURCE)
 #
 # libxslt
 #
-LIBXSLT_VER = 1.1.28
+LIBXSLT_VER = 1.1.32
 LIBXSLT_SOURCE = libxslt-$(LIBXSLT_VER).tar.gz
 
 $(ARCHIVE)/$(LIBXSLT_SOURCE):
@@ -1673,10 +1645,10 @@ $(D)/libxslt: $(D)/bootstrap $(D)/libxml2 $(ARCHIVE)/$(LIBXSLT_SOURCE)
 		$(CONFIGURE) \
 			CPPFLAGS="$(CPPFLAGS) -I$(TARGET_DIR)/usr/include/libxml2" \
 			--prefix=/usr \
-			--with-libxml-prefix="$(HOST_DIR)" \
-			--with-libxml-include-prefix="$(TARGET_DIR)/usr/include" \
-			--with-libxml-libs-prefix="$(TARGET_DIR)/usr/lib" \
-			--with-python=$(HOST_DIR) \
+			--datarootdir=/.remove \
+			--enable-shared \
+			--disable-static \
+			--without-python \
 			--without-crypto \
 			--without-debug \
 			--without-mem-debug \
@@ -1697,7 +1669,9 @@ $(D)/libxslt: $(D)/bootstrap $(D)/libxml2 $(ARCHIVE)/$(LIBXSLT_SOURCE)
 	$(REWRITE_LIBTOOL)/libexslt.la
 	$(REWRITE_LIBTOOL)/libxslt.la
 	$(REWRITE_LIBTOOLDEP)/libexslt.la
+ifeq ($(BOXARCH), sh4)
 	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,xsltproc xslt-config)
+endif
 	$(REMOVE)/libxslt-$(LIBXSLT_VER)
 	$(TOUCH)
 
