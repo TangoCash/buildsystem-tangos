@@ -86,8 +86,14 @@ $(D)/ffmpeg: $(D)/bootstrap $(D)/openssl $(D)/bzip2 $(D)/freetype $(D)/alsa_lib 
 			--enable-muxer=apng \
 			--enable-muxer=mpegts \
 			\
-			--enable-encoders \
+			--disable-encoders \
+			--enable-encoder=aac \
+			--enable-encoder=h261 \
+			--enable-encoder=h263 \
+			--enable-encoder=h263p \
+			--enable-encoder=mjpeg \
 			--enable-encoder=mpeg1video \
+			--enable-encoder=mpeg2video \
 			--enable-encoder=png \
 			--enable-encoder=ljpeg \
 			--enable-encoder=mpeg4 \
@@ -101,12 +107,15 @@ $(D)/ffmpeg: $(D)/bootstrap $(D)/openssl $(D)/bzip2 $(D)/freetype $(D)/alsa_lib 
 			--enable-decoder=atrac1 \
 			--enable-decoder=atrac3 \
 			--enable-decoder=atrac3p \
+			--enable-decoder=ass \
 			--enable-decoder=cook \
 			--enable-decoder=dca \
 			--enable-decoder=dsd_lsbf \
 			--enable-decoder=dsd_lsbf_planar \
 			--enable-decoder=dsd_msbf \
 			--enable-decoder=dsd_msbf_planar \
+			--enable-decoder=dvbsub \
+			--enable-decoder=dvdsub \
 			--enable-decoder=eac3 \
 			--enable-decoder=evrc \
 			--enable-decoder=h264 \
@@ -157,7 +166,14 @@ $(D)/ffmpeg: $(D)/bootstrap $(D)/openssl $(D)/bzip2 $(D)/freetype $(D)/alsa_lib 
 			--enable-decoder=pcm_u32le \
 			--enable-decoder=pcm_u8 \
 			--enable-decoder=pcm_zork \
+			--enable-decoder=pgssub \
 			--enable-decoder=png \
+			--enable-decoder=srt \
+			--enable-decoder=subrip \
+			--enable-decoder=subviewer \
+			--enable-decoder=subviewer1 \
+			--enable-decoder=ssa \
+			--enable-decoder=text \
 			--enable-decoder=ra_144 \
 			--enable-decoder=ra_288 \
 			--enable-decoder=ralf \
@@ -199,6 +215,7 @@ $(D)/ffmpeg: $(D)/bootstrap $(D)/openssl $(D)/bzip2 $(D)/freetype $(D)/alsa_lib 
 			--enable-decoder=qdm2 \
 			--enable-decoder=vorbis \
 			--enable-decoder=wavpack \
+			--enable-decoder=xsub \
 			\
 			--disable-demuxer=adp \
 			--disable-demuxer=adx \
@@ -276,10 +293,21 @@ $(D)/ffmpeg: $(D)/bootstrap $(D)/openssl $(D)/bzip2 $(D)/freetype $(D)/alsa_lib 
 			--enable-demuxer=h264 \
 			--enable-demuxer=mpegvideo \
 			\
+			--disable-parsers \
+			--enable-parser=aac \
+			--enable-parser=aac_latm \
+			--enable-parser=ac3 \
+			--enable-parser=dca \
+			--enable-parser=dvbsub \
+			--enable-parser=dvdsub \
+			--enable-parser=flac \
 			--enable-parser=h264 \
 			--enable-parser=mjpeg \
 			--enable-parser=mpeg4video \
 			--enable-parser=mpegvideo \
+			--enable-parser=mpegaudio \
+			--enable-parser=vc1 \
+			--enable-parser=vorbis \
 			--enable-parser=png \
 			\
 			--disable-filters \
@@ -289,6 +317,8 @@ $(D)/ffmpeg: $(D)/bootstrap $(D)/openssl $(D)/bzip2 $(D)/freetype $(D)/alsa_lib 
 			--enable-zlib \
 			--enable-bzlib \
 			--enable-openssl \
+			--enable-libass \
+			--enable-bsfs \
 			--disable-xlib \
 			--disable-libxcb \
 			--disable-libxcb-shm \
@@ -299,6 +329,7 @@ $(D)/ffmpeg: $(D)/bootstrap $(D)/openssl $(D)/bzip2 $(D)/freetype $(D)/alsa_lib 
 			\
 			--enable-shared \
 			--enable-network \
+			--enable-nonfree \
 			--enable-small \
 			--enable-stripping \
 			--disable-static \
@@ -315,8 +346,7 @@ $(D)/ffmpeg: $(D)/bootstrap $(D)/openssl $(D)/bzip2 $(D)/freetype $(D)/alsa_lib 
 			--extra-ldflags="$(TARGET_LDFLAGS) -lrt" \
 			--arch=arm \
 			--cpu=cortex-a15 \
-			--target-os="linux" \
-			--prefix=/usr \
+			--target-os=linux \
 			--prefix=/usr \
 			--bindir=/sbin \
 			--mandir=/.remove \
