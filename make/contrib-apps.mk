@@ -1719,3 +1719,27 @@ $(D)/ofgwrite: $(D)/bootstrap
 	install -m 755 $(BUILD_TMP)/ofgwrite/ofgwrite $(TARGET_DIR)/usr/bin
 	$(REMOVE)/ofgwrite
 	$(TOUCH)
+
+#
+# Astra (Advanced Streamer) SlonikMod
+#
+$(D)/astra-sm: $(D)/bootstrap $(D)/openssl
+	$(START_BUILD)
+	$(REMOVE)/astra-sm
+	set -e; if [ -d $(ARCHIVE)/astra-sm.git ]; \
+		then cd $(ARCHIVE)/astra-sm.git; git pull; \
+		else cd $(ARCHIVE); git clone https://gitlab.com/crazycat69/astra-sm.git $(ARCHIVE)/astra-sm.git; \
+		fi
+	cp -ra $(ARCHIVE)/astra-sm.git $(BUILD_TMP)/astra-sm
+	set -e; cd $(BUILD_TMP)/astra-sm; \
+		$(BUILDENV) \
+		autoreconf -fi; \
+		$(CONFIGURE) \
+			--build=$(BUILD) \
+			--host=$(TARGET) \
+			--prefix=/usr \
+		; \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REMOVE)/astra-sm
+	$(TOUCH)
+

@@ -724,6 +724,12 @@ endif
 		cp -aR $(TARGET_DIR)/usr/share/lua $(RELEASE_DIR)/usr/share; \
 	fi
 #
+# astra-sm
+#
+	if [ -d $(TARGET_DIR)/usr/bin/astra ]; then \
+		cp -aR $(TARGET_DIR)/usr/share/astra $(RELEASE_DIR)/usr/share; \
+	fi
+#
 # plugins
 #
 	if [ -d $(TARGET_DIR)/var/tuxbox/plugins ]; then \
