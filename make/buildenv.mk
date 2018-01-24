@@ -187,7 +187,7 @@ TOUCH                 = @touch $@; \
 #
 PATCH                 = patch -p1 $(SILENT_PATCH) -i $(PATCHES)
 APATCH                = patch -p1 $(SILENT_PATCH) -i
-define post_patch
+define apply_patches
     for i in $(1); do \
         if [ -d $$i ]; then \
             for p in $$i/*; do \

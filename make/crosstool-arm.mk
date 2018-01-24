@@ -19,6 +19,9 @@ CROSSTOOL_NG_VER = 1dbb06f2
 CROSSTOOL_NG_SOURCE = crosstool-ng-$(CROSSTOOL_NG_VER).tar.bz2
 CROSSTOOL_NG_URL = https://github.com/crosstool-ng/crosstool-ng.git
 
+$(ARCHIVE)/$(CROSSTOOL_NG_SOURCE):
+	$(SCRIPTS_DIR)/get-git-archive.sh $(CROSSTOOL_NG_URL) $(CROSSTOOL_NG_VER) $(notdir $@) $(ARCHIVE)
+
 CUSTOM_KERNEL = $(ARCHIVE)/$(KERNEL_SRC)
 CUSTOM_KERNEL_VER = $(KERNEL_VER)-arm
 
@@ -26,9 +29,6 @@ ifeq ($(wildcard $(CROSS_BASE)/build.log.bz2),)
 CROSSTOOL = crosstool
 crosstool:
 	make MAKEFLAGS=--no-print-directory crosstool-ng
-
-$(ARCHIVE)/$(CROSSTOOL_NG_SOURCE):
-	$(SCRIPTS_DIR)/get-git-archive.sh $(CROSSTOOL_NG_URL) $(CROSSTOOL_NG_VER) $(notdir $@) $(ARCHIVE)
 
 crosstool-ng: directories $(ARCHIVE)/$(KERNEL_SRC) $(ARCHIVE)/$(CROSSTOOL_NG_SOURCE)
 	make $(BUILD_TMP)
