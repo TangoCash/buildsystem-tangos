@@ -18,7 +18,8 @@ if [ "$1" == -h ] || [ "$1" == --help ]; then
 	echo "Parameter 3: optimization (1-4)"
 	echo "Parameter 4: Media Framework (1-2)"
 	echo "Parameter 5: Image Neutrino (1-2)"
-	echo "Parameter 6: External LCD support (1-3)"
+	echo "Parameter 6: Neutrino variant (1-5)"
+	echo "Parameter 7: External LCD support (1-3)"
 	exit
 fi
 
@@ -63,6 +64,7 @@ case $1 in
 		echo "   36)  Ferguson Ariva @Link 200"
 		echo
 		echo "   37)  Mutant HD51"
+		echo "   38)  VU Solo 4k"
 		echo "   "
 		echo
 		read -p "Select target (1-38)? ";;
@@ -220,7 +222,7 @@ echo "OPTIMIZATIONS=$OPTIMIZATIONS" >> config
 case $4 in
 	[1-2]) REPLY=$4;;
 	*)	echo -e "\nMedia Framework:"
-		echo "   1) build integrated libeplayer3"
+		echo "   1) libeplayer3"
 		echo "   2) gstreamer"
 		read -p "Select media framework (1-2)? ";;
 esac
@@ -252,7 +254,30 @@ echo "IMAGE=$IMAGE" >> config
 ##############################################
 
 case $6 in
-	[1-3]) REPLY=$6;;
+	[1-5]) REPLY=$6;;
+	*)	echo -e "\nWhich Neutrino variant do you want to build?:"
+		echo "   1)  neutrino-mp-ddt    [ arm/sh4 ]"
+		echo "   2)  neutrino-mp-max    [ arm     ]"
+		echo "   3)  neutrino-mp-ni     [ arm     ]"
+		echo "   4)  neutrino-mp-tangos [ arm/sh4 ]"
+		echo "   5)  neutrino-hd2       [ arm/sh4 ]"
+		read -p "Select Image to build (1-5)? ";;
+esac
+
+case "$REPLY" in
+	1) FLAVOUR="neutrino-mp-ddt";;
+	2) FLAVOUR="neutrino-mp-max";;
+	3) FLAVOUR="neutrino-mp-ni";;
+	4) FLAVOUR="neutrino-mp-tangos";;
+	5) FLAVOUR="neutrino-hd2";;
+	*) FLAVOUR="neutrino-mp-ddt";;
+esac
+echo "FLAVOUR=$FLAVOUR" >> config
+
+##############################################
+
+case $7 in
+	[1-3]) REPLY=$7;;
 	*)	echo -e "\nExternal LCD support:"
 		echo "   1)  No external LCD"
 		echo "   2)  graphlcd for external LCD"
@@ -272,21 +297,16 @@ echo "EXTERNAL_LCD=$EXTERNAL_LCD" >> config
 echo " "
 make printenv
 ##############################################
-echo "Your build environment is ready :-)"
+echo "FLAVOUR=$FLAVOUR"
 echo "Your next step could be:"
-case "$IMAGE" in
-		neutrino*)
-		echo "  make neutrino-mp-tangos"
-		echo "  make neutrino-mp-tangos-plugins"
-		if [ $BOXARCH == 'arm' ]; then
-			echo "  make neutrino-mp-ni"
-			echo "  make neutrino-mp-ni-plugins"
-		fi
-		echo "  make neutrino-mp-ddt"
-		echo "  make neutrino-mp-ddt-plugins"
+case "$FLAVOUR" in
+	neutrino-mp*)
+		echo "  make neutrino-mp"
+		echo "  make neutrino-mp-plugins";;
+	neutrino-hd2*)
 		echo "  make neutrino-hd2"
 		echo "  make neutrino-hd2-plugins";;
-		*)
+	*)
 		echo "  make flashimage"
 		echo "  make ofgimage";;
 esac
