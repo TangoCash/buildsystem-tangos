@@ -449,7 +449,7 @@ neutrino-release-hd51:
 	cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/*.ko $(RELEASE_DIR)/lib/modules/
 	cp $(TARGET_DIR)/boot/zImage.dtb $(RELEASE_DIR)/boot/
 	install -m 0644 $(SKEL_ROOT)/release/mdev_hd51.conf $(RELEASE_DIR)/etc/mdev.conf
-	install -m 0644 $(SKEL_ROOT)/release/tangos_hd51.m2v $(RELEASE_DIR)/usr/share/tuxbox/neutrino/icons/bootlogo.m2v
+	install -m 0644 $(SKEL_ROOT)/release/tangos_hd51.m2v $(RELEASE_DIR)/share/tuxbox/neutrino/icons/bootlogo.m2v
 	find $(RELEASE_DIR)/usr/lib/ -name '*.a' -exec rm -f {} \;
 	find $(RELEASE_DIR)/usr/lib/ -name '*.o' -exec rm -f {} \;
 	find $(RELEASE_DIR)/usr/lib/ -name '*.la' -exec rm -f {} \;
