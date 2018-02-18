@@ -87,21 +87,21 @@ N_CONFIG_OPTS += --disable-upnp
 
 N_CONFIG_OPTS += \
 	--with-libdir=/usr/lib \
-	--with-datadir=/share/tuxbox \
-	--with-fontdir=/share/fonts \
+	--with-datadir=/usr/share/tuxbox \
+	--with-fontdir=/usr/share/fonts \
 	--with-configdir=/var/tuxbox/config \
 	--with-gamesdir=/var/tuxbox/games \
-	--with-iconsdir=/share/tuxbox/neutrino/icons \
+	--with-iconsdir=/usr/share/tuxbox/neutrino/icons \
 	--with-iconsdir_var=/var/tuxbox/icons \
-	--with-localedir=/share/tuxbox/neutrino/locale \
+	--with-localedir=/usr/share/tuxbox/neutrino/locale \
 	--with-localedir_var=/var/tuxbox/locale \
 	--with-plugindir=/lib/tuxbox/plugins \
 	--with-plugindir_var=/var/tuxbox/plugins \
 	--with-luaplugindir=/var/tuxbox/plugins \
-	--with-private_httpddir=/share/tuxbox/neutrino/httpd \
-	--with-themesdir=/share/tuxbox/neutrino/themes \
+	--with-private_httpddir=/usr/share/tuxbox/neutrino/httpd \
+	--with-themesdir=/usr/share/tuxbox/neutrino/themes \
 	--with-themesdir_var=/var/tuxbox/themes \
-	--with-webtvdir=/share/tuxbox/neutrino/webtv \
+	--with-webtvdir=/usr/share/tuxbox/neutrino/webtv \
 	--with-webtvdir_var=/var/tuxbox/plugins/webtv
 
 ifeq ($(EXTERNAL_LCD), externallcd)
