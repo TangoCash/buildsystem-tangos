@@ -449,7 +449,7 @@ neutrino-release-hd51:
 	cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/*.ko $(RELEASE_DIR)/lib/modules/
 	cp $(TARGET_DIR)/boot/zImage.dtb $(RELEASE_DIR)/boot/
 	install -m 0644 $(SKEL_ROOT)/release/mdev_hd51.conf $(RELEASE_DIR)/etc/mdev.conf
-	install -m 0644 $(SKEL_ROOT)/release/tangos_hd51.m2v $(RELEASE_DIR)/share/tuxbox/neutrino/icons/bootlogo.m2v
+	install -m 0644 $(SKEL_ROOT)/release/tangos_hd51.m2v $(RELEASE_DIR)/usr/share/tuxbox/neutrino/icons/bootlogo.m2v
 	find $(RELEASE_DIR)/usr/lib/ -name '*.a' -exec rm -f {} \;
 	find $(RELEASE_DIR)/usr/lib/ -name '*.o' -exec rm -f {} \;
 	find $(RELEASE_DIR)/usr/lib/ -name '*.la' -exec rm -f {} \;
@@ -685,6 +685,15 @@ endif
 #
 # neutrino
 #
+	if [ -e $(TARGET_DIR)/usr/bin/install.sh ]; then \
+		ln -s /usr/bin/install.sh $(RELEASE_DIR)/bin/; \
+	fi
+	if [ -e $(TARGET_DIR)/usr/bin/backup.sh ]; then \
+		ln -s /usr/bin/backup.sh $(RELEASE_DIR)/bin/; \
+	fi
+	if [ -e $(TARGET_DIR)/usr/bin/restore.sh ]; then \
+		ln -s /usr/bin/restore.sh $(RELEASE_DIR)/bin/; \
+	fi
 #	ln -sf /usr/share $(RELEASE_DIR)/usr/local/share
 #	cp $(TARGET_DIR)/usr/local/bin/neutrino $(RELEASE_DIR)/usr/local/bin/
 #	cp $(TARGET_DIR)/usr/local/bin/pzapit $(RELEASE_DIR)/usr/local/bin/
