@@ -1,5 +1,6 @@
 apps/
 build_logfile/
+build_source/
 build_tmp/
 /build_source/
 cross/
@@ -10,7 +11,6 @@ own_build/
 Patches/patch-neutrino/
 Patches/oscam.config
 root/boot/*
-source/
 tufsbox/
 .deps/
 config*
