@@ -26,7 +26,7 @@ fi
 ##############################################
 
 case $1 in
-	[1-9] | 1[0-9] | 2[0-9] | 3[0-8]) REPLY=$1;;
+	[1-9] | 1[0-9] | 2[0-9] | 3[0-9] | 4[0-9] | 5[0-9]) REPLY=$1;;
 	*)
 		echo "Target receivers:"
 		echo
@@ -55,19 +55,21 @@ case $1 in
 		echo "   27)  Spark           29)  AM520"
 		echo "   28)  Spark7162       30)  AM530"
 		echo
-		echo "  Various"
+		echo "  Various sh4-based receivers"
 		echo "   31)  Edision Argus VIP1 v1 [ single tuner + 2 CI + 2 USB ]"
 		echo "   32)  SpiderBox HL-101"
 		echo "   33)  B4Team ADB 5800S"
 		echo "   34)  Vitamin HD5000"
 		echo "   35)  SagemCom 88 series"
 		echo "   36)  Ferguson Ariva @Link 200"
+		echo "   37)  Pace HDS-7241 (stm 217 only)"
 		echo
-		echo "   37)  Mutant HD51"
-		echo "   38)  VU Solo 4k"
+		echo "  arm-based receivers"
+		echo "   50)  Vu Solo4K"
+		echo "   51)  Mut@nt HD51"
 		echo "   "
 		echo
-		read -p "Select target (1-38)? ";;
+		read -p "Select target (1-59)? ";;
 esac
 
 case "$REPLY" in
@@ -107,8 +109,9 @@ case "$REPLY" in
 	34) BOXARCH="sh4";BOXTYPE="vitamin_hd5000";;
 	35) BOXARCH="sh4";BOXTYPE="sagemcom88";;
 	36) BOXARCH="sh4";BOXTYPE="arivalink200";;
-	37) BOXARCH="arm";BOXTYPE="hd51";;
-	38) BOXARCH="arm";BOXTYPE="vusolo4k";;
+	37) BOXARCH="sh4";BOXTYPE="pace7241";;
+	50) BOXARCH="arm";BOXTYPE="vusolo4k";;
+	51) BOXARCH="arm";BOXTYPE="hd51";;
 	 *) BOXARCH="arm";BOXTYPE="hd51";;
 esac
 echo "BOXARCH=$BOXARCH" > config
@@ -297,7 +300,6 @@ echo "EXTERNAL_LCD=$EXTERNAL_LCD" >> config
 echo " "
 make printenv
 ##############################################
-echo "FLAVOUR=$FLAVOUR"
 echo "Your next step could be:"
 case "$FLAVOUR" in
 	neutrino-mp*)

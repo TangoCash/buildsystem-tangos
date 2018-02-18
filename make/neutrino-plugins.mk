@@ -56,8 +56,7 @@ NEUTRINO_PLUGINS += $(D)/neutrino-mp-plugin-scripts-lua
 NEUTRINO_PLUGINS += $(D)/neutrino-mp-plugin-mediathek
 NEUTRINO_PLUGINS += $(D)/neutrino-mp-plugin-xupnpd
 
-OBJDIR = $(BUILD_TMP)
-NP_OBJDIR = $(OBJDIR)/neutrino-mp-plugins
+NP_OBJDIR = $(BUILD_TMP)/neutrino-mp-plugins
 
 ifeq ($(BOXARCH), sh4)
 EXTRA_CPPFLAGS_MP_PLUGINS = -DMARTII
@@ -94,8 +93,8 @@ $(D)/neutrino-mp-plugin.config.status: $(D)/bootstrap
 			--with-boxtype=$(BOXTYPE) \
 			--with-plugindir=/var/tuxbox/plugins \
 			--with-libdir=/usr/lib \
-			--with-datadir=/share/tuxbox \
-			--with-fontdir=/share/fonts \
+			--with-datadir=/usr/share/tuxbox \
+			--with-fontdir=/usr/share/fonts \
 			PKG_CONFIG=$(PKG_CONFIG) \
 			PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 			CPPFLAGS="$(N_CPPFLAGS) $(EXTRA_CPPFLAGS_MP_PLUGINS) -DNEW_LIBCURL" \
@@ -103,8 +102,7 @@ $(D)/neutrino-mp-plugin.config.status: $(D)/bootstrap
 	@touch $@
 
 $(D)/neutrino-mp-plugin.do_compile: $(D)/neutrino-mp-plugin.config.status
-	cd $(SOURCE_DIR)/neutrino-mp-plugins; \
-		$(MAKE) -C $(NP_OBJDIR)
+	$(MAKE) -C $(NP_OBJDIR) DESTDIR=$(TARGET_DIR)
 	@touch $@
 
 $(D)/neutrino-mp-plugin: $(D)/neutrino-mp-plugin.do_prepare $(D)/neutrino-mp-plugin.do_compile
@@ -127,6 +125,7 @@ neutrino-mp-plugin-distclean:
 #
 XUPNPD_PATCH = xupnpd.patch
 
+$(D)/xupnpd \
 $(D)/neutrino-mp-plugin-xupnpd: $(D)/bootstrap $(D)/lua $(D)/openssl $(D)/neutrino-mp-plugin-scripts-lua
 	$(START_BUILD)
 	$(REMOVE)/xupnpd
@@ -139,13 +138,15 @@ $(D)/neutrino-mp-plugin-xupnpd: $(D)/bootstrap $(D)/lua $(D)/openssl $(D)/neutri
 		$(call apply_patches,$(XUPNPD_PATCH))
 	set -e; cd $(BUILD_TMP)/xupnpd/src; \
 		$(BUILDENV) \
-		$(MAKE) sh4 TARGET=$(TARGET) PKG_CONFIG=$(PKG_CONFIG); \
+		$(MAKE) embedded TARGET=$(TARGET) PKG_CONFIG=$(PKG_CONFIG) LUAFLAGS="$(TARGET_LDFLAGS) -I$(TARGET_INCLUDE_DIR)"; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	install -m 755 $(SKEL_ROOT)/etc/init.d/xupnpd $(TARGET_DIR)/etc/init.d/
-	install -m 644 $(ARCHIVE)/plugin-scripts-lua.git/xupnpd/xupnpd_18plus.lua ${TARGET_DIR}/share/xupnpd/plugins/
-	install -m 644 $(ARCHIVE)/plugin-scripts-lua.git/xupnpd/xupnpd_cczwei.lua ${TARGET_DIR}/share/xupnpd/plugins/
-	: install -m 644 $(ARCHIVE)/plugin-scripts-lua.git/xupnpd/xupnpd_coolstream.lua ${TARGET_DIR}/share/xupnpd/plugins/
-	install -m 644 $(ARCHIVE)/plugin-scripts-lua.git/xupnpd/xupnpd_youtube.lua ${TARGET_DIR}/share/xupnpd/plugins/
+	mkdir -p $(TARGET_DIR)/usr/share/xupnpd/config
+	rm $(TARGET_DIR)/usr/share/xupnpd/plugins/staff/xupnpd_18plus.lua
+	install -m 644 $(ARCHIVE)/plugin-scripts-lua.git/xupnpd/xupnpd_18plus.lua ${TARGET_DIR}/usr/share/xupnpd/plugins/
+	install -m 644 $(ARCHIVE)/plugin-scripts-lua.git/xupnpd/xupnpd_cczwei.lua ${TARGET_DIR}/usr/share/xupnpd/plugins/
+	: install -m 644 $(ARCHIVE)/plugin-scripts-lua.git/xupnpd/xupnpd_coolstream.lua ${TARGET_DIR}/usr/share/xupnpd/plugins/
+	install -m 644 $(ARCHIVE)/plugin-scripts-lua.git/xupnpd/xupnpd_youtube.lua ${TARGET_DIR}/usr/share/xupnpd/plugins/
 	$(REMOVE)/xupnpd
 	$(TOUCH)
 
@@ -172,6 +173,8 @@ $(D)/neutrino-mp-plugin-scripts-lua: $(D)/bootstrap
 #
 # neutrino-mediathek
 #
+NEUTRINO_MEDIATHEK_PATCH = neutrino-mediathek.patch
+
 $(D)/neutrino-mp-plugin-mediathek:
 	$(START_BUILD)
 	$(REMOVE)/plugins-mediathek
@@ -182,8 +185,10 @@ $(D)/neutrino-mp-plugin-mediathek:
 	cp -ra $(ARCHIVE)/plugins-mediathek.git $(BUILD_TMP)/plugins-mediathek
 	install -d $(TARGET_DIR)/lib/tuxbox/plugins
 	set -e; cd $(BUILD_TMP)/plugins-mediathek; \
+		$(call apply_patches,$(NEUTRINO_MEDIATHEK_PATCH))
+	set -e; cd $(BUILD_TMP)/plugins-mediathek; \
 		cp -a plugins/* $(TARGET_DIR)/lib/tuxbox/plugins/; \
-		cp -a share $(TARGET_DIR)/
+		cp -a share $(TARGET_DIR)/usr/
 	$(REMOVE)/plugins-mediathek
 	$(TOUCH)
 
@@ -211,8 +216,8 @@ $(D)/neutrino-hd2-plugins.config.status: $(D)/bootstrap neutrino-hd2
 			--with-target=cdk \
 			--with-boxtype=$(BOXTYPE) \
 			--with-plugindir=/var/tuxbox/plugins \
-			--with-datadir=/share/tuxbox \
-			--with-fontdir=/share/fonts \
+			--with-datadir=/usr/share/tuxbox \
+			--with-fontdir=/usr/share/fonts \
 			--enable-silent-rules \
 			PKG_CONFIG=$(PKG_CONFIG) \
 			PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \

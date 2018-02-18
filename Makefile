@@ -13,7 +13,6 @@ export TOPDIR LC_ALL LANG
 
 include make/buildenv.mk
 
-
 PARALLEL_JOBS := $(shell echo $$((1 + `getconf _NPROCESSORS_ONLN 2>/dev/null || echo 1`)))
 override MAKE = make $(if $(findstring j,$(filter-out --%,$(MAKEFLAGS))),,-j$(PARALLEL_JOBS)) $(SILENT_OPT)
 
@@ -48,6 +47,7 @@ printenv:
 	@echo "KERNEL_VERSION   : $(KERNEL_VER)"
 	@echo "EXTERNAL_LCD     : $(EXTERNAL_LCD)"
 	@echo "MEDIAFW          : $(MEDIAFW)"
+	@echo -e "FLAVOUR          : $(TERM_YELLOW)$(FLAVOUR)$(TERM_NORMAL)"
 	@echo "PARALLEL_JOBS    : $(PARALLEL_JOBS)"
 ifeq ($(KBUILD_VERBOSE), 1)
 	@echo "VERBOSE_BUILD    : yes"
@@ -57,12 +57,11 @@ endif
 	@echo "IMAGE            : $(IMAGE)"
 	@echo '================================================================================'
 ifeq ($(IMAGE), $(filter $(IMAGE), neutrino neutrino-wlandriver))
-	@echo "LOCAL_NEUTRINO_BUILD_OPTIONS : $(LOCAL_NEUTRINO_BUILD_OPTIONS)"
-	@echo "LOCAL_NEUTRINO_CFLAGS        : $(LOCAL_NEUTRINO_CFLAGS)"
-	@echo "LOCAL_NEUTRINO_DEPS          : $(LOCAL_NEUTRINO_DEPS)"
+	@echo -e "LOCAL_NEUTRINO_BUILD_OPTIONS : $(TERM_GREEN)$(LOCAL_NEUTRINO_BUILD_OPTIONS)$(TERM_NORMAL)"
+	@echo -e "LOCAL_NEUTRINO_CFLAGS        : $(TERM_GREEN)$(LOCAL_NEUTRINO_CFLAGS)$(TERM_NORMAL)"
+	@echo -e "LOCAL_NEUTRINO_DEPS          : $(TERM_GREEN)$(LOCAL_NEUTRINO_DEPS)$(TERM_NORMAL)"
 endif
 	@echo '================================================================================'
-	@echo ""
 	@make --no-print-directory toolcheck
 ifeq ($(MAINTAINER),)
 	@echo "##########################################################################"
@@ -81,7 +80,7 @@ help:
 	@echo "* make bootstrap           - prepares for building"
 	@echo "* make print-targets       - print out all available targets"
 	@echo ""
-	@echo "later, you might find those useful:"
+	@echo "later, you might find these useful:"
 	@echo "* make update-self         - update the build system"
 	@echo "* make update              - update the build system, apps, driver and flash"
 	@echo ""

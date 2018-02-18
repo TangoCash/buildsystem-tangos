@@ -158,9 +158,12 @@ $(D)/gdb: $(D)/bootstrap $(D)/ncurses $(D)/zlib $(ARCHIVE)/$(GDB_SOURCE)
 			--build=$(BUILD) \
 			--target=$(TARGET) \
 			--prefix=/usr \
+			--includedir=$(TARGET_DIR)/usr/include \
 			--mandir=$(TARGET_DIR)/.remove \
 			--infodir=$(TARGET_DIR)/.remove \
-			--nfp --disable-werror \
+			--datarootdir=$(TARGET_DIR)/.remove \
+			--nfp \
+			--disable-werror \
 		; \
 		$(MAKE) all-gdb; \
 		$(MAKE) install-gdb prefix=$(TARGET_DIR)
@@ -192,6 +195,7 @@ $(D)/valgrind: $(D)/bootstrap $(ARCHIVE)/$(VALGRIND_SOURCE)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	rm -f $(addprefix $(TARGET_DIR)/usr/lib/valgrind/,*.a *.xml)
 	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,cg_* callgrind_* ms_print)
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/valgrind.pc
 	$(REMOVE)/valgrind-$(VALGRIND_VER)
 	$(TOUCH)
 
@@ -306,7 +310,7 @@ $(D)/portmap: $(D)/bootstrap $(D)/lsb $(ARCHIVE)/$(PORTMAP_SOURCE) $(ARCHIVE)/po
 #
 # e2fsprogs
 #
-E2FSPROGS_VER = 1.43.7
+E2FSPROGS_VER = 1.43.9
 E2FSPROGS_SOURCE = e2fsprogs-$(E2FSPROGS_VER).tar.gz
 E2FSPROGS_PATCH = e2fsprogs-$(E2FSPROGS_VER).patch
 
@@ -618,7 +622,7 @@ $(D)/nano: $(D)/bootstrap $(ARCHIVE)/$(NANO_SOURCE)
 #
 # rsync
 #
-RSYNC_VER = 3.1.2
+RSYNC_VER = 3.1.3
 RSYNC_SOURCE = rsync-$(RSYNC_VER).tar.gz
 
 $(ARCHIVE)/$(RSYNC_SOURCE):
@@ -666,6 +670,7 @@ $(D)/fuse: $(D)/bootstrap $(ARCHIVE)/$(FUSE_SOURCE)
 		-rmdir $(TARGET_DIR)/etc/udev
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/fuse.pc
 	$(REWRITE_LIBTOOL)/libfuse.la
+	$(REWRITE_LIBTOOL)/libulockmgr.la
 	$(REMOVE)/fuse-$(FUSE_VER)
 	$(TOUCH)
 
@@ -752,7 +757,7 @@ $(D)/hddtemp: $(D)/bootstrap $(ARCHIVE)/$(HDDTEMP_SOURCE)
 #
 # hdparm
 #
-HDPARM_VER = 9.52
+HDPARM_VER = 9.54
 HDPARM_SOURCE = hdparm-$(HDPARM_VER).tar.gz
 
 $(ARCHIVE)/$(HDPARM_SOURCE):
@@ -774,6 +779,7 @@ $(D)/hdparm: $(D)/bootstrap $(ARCHIVE)/$(HDPARM_SOURCE)
 #
 HDIDLE_VER = 1.05
 HDIDLE_SOURCE = hd-idle-$(HDIDLE_VER).tgz
+HDIDLE_PATCH = hd-idle-$(HDIDLE_VER).patch
 
 $(ARCHIVE)/$(HDIDLE_SOURCE):
 	$(WGET) https://sourceforge.net/projects/hd-idle/files/$(HDIDLE_SOURCE)
@@ -783,7 +789,7 @@ $(D)/hdidle: $(D)/bootstrap $(ARCHIVE)/$(HDIDLE_SOURCE)
 	$(REMOVE)/hd-idle
 	$(UNTAR)/$(HDIDLE_SOURCE)
 	set -e; cd $(BUILD_TMP)/hd-idle; \
-		sed -i -e 's/-g root -o root//g' Makefile; \
+		$(call apply_patches,$(HDIDLE_PATCH)); \
 		$(BUILDENV) \
 		$(MAKE) CC=$(TARGET)-gcc; \
 		$(MAKE) install TARGET_DIR=$(TARGET_DIR) install
@@ -1056,7 +1062,7 @@ $(D)/avahi: $(D)/bootstrap $(D)/expat $(D)/libdaemon $(D)/dbus $(ARCHIVE)/$(AVAH
 #
 # wget
 #
-WGET_VER = 1.19.2
+WGET_VER = 1.19.4
 WGET_SOURCE = wget-$(WGET_VER).tar.gz
 
 $(ARCHIVE)/$(WGET_SOURCE):
@@ -1252,11 +1258,11 @@ $(D)/vsftpd: $(D)/bootstrap $(ARCHIVE)/$(VSFTPD_SOURCE)
 #
 # ethtool
 #
-ETHTOOL_VER = 6
-ETHTOOL_SOURCE = ethtool-$(ETHTOOL_VER).tar.gz
+ETHTOOL_VER = 4.15
+ETHTOOL_SOURCE = ethtool-$(ETHTOOL_VER).tar.xz
 
 $(ARCHIVE)/$(ETHTOOL_SOURCE):
-	$(WGET) https://downloads.openwrt.org/sources/$(ETHTOOL_SOURCE)
+	$(WGET) https://www.kernel.org/pub/software/network/ethtool/$(ETHTOOL_SOURCE)
 
 $(D)/ethtool: $(D)/bootstrap $(ARCHIVE)/$(ETHTOOL_SOURCE)
 	$(START_BUILD)
@@ -1659,10 +1665,11 @@ $(D)/dropbearmulti: $(D)/bootstrap
 	$(REMOVE)/dropbearmulti
 	set -e; if [ -d $(ARCHIVE)/dropbearmulti.git ]; \
 		then cd $(ARCHIVE)/dropbearmulti.git; git pull; \
-		else cd $(ARCHIVE); git clone --recursive git://github.com/mkj/dropbear.git $(ARCHIVE)/dropbearmulti.git; \
+		else cd $(ARCHIVE); git clone git://github.com/mkj/dropbear.git $(ARCHIVE)/dropbearmulti.git; \
 		fi
 	cp -ra $(ARCHIVE)/dropbearmulti.git $(BUILD_TMP)/dropbearmulti
 	set -e; cd $(BUILD_TMP)/dropbearmulti; \
+		git checkout -q c8d852caf646d060babd4be9d074caee51c5aead; \
 		$(BUILDENV) \
 		autoreconf -fi; \
 		$(CONFIGURE) \
@@ -1689,8 +1696,9 @@ $(D)/dropbearmulti: $(D)/bootstrap
 			--disable-pututline \
 			--disable-pututxline \
 		; \
+		$(MAKE) PROGRAMS="dropbear scp" MULTI=1; \
 		$(MAKE) PROGRAMS="dropbear scp" MULTI=1 install DESTDIR=$(TARGET_DIR)
-	cd $(TARGET_DIR)/usr/bin && ln -s /usr/bin/dropbearmulti dropbear
+	cd $(TARGET_DIR)/usr/bin && ln -sf /usr/bin/dropbearmulti dropbear
 	install -m 755 $(SKEL_ROOT)/etc/init.d/dropbear $(TARGET_DIR)/etc/init.d/
 	install -d -m 0755 $(TARGET_DIR)/etc/dropbear
 	$(REMOVE)/dropbearmulti

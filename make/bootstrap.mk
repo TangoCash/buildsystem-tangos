@@ -194,7 +194,37 @@ $(D)/host_resize2fs: $(ARCHIVE)/$(HOST_E2FSPROGS_SOURCE)
 	$(TOUCH)
 
 #
+# cortex-strings
 #
+CORTEX_STRINGS_VER = 48fd30c
+CORTEX_STRINGS_SOURCE = cortex-strings-$(CORTEX_STRINGS_VER).tar.bz2
+CORTEX_STRINGS_URL = http://git.linaro.org/git-ro/toolchain/cortex-strings.git
+
+$(ARCHIVE)/cortex-strings-$(CORTEX_STRINGS_VER).tar.bz2:
+	$(SCRIPTS_DIR)/get-git-archive.sh $(CORTEX_STRINGS_URL) $(CORTEX_STRINGS_VER) $(notdir $@) $(ARCHIVE)
+
+$(D)/cortex-strings: $(ARCHIVE)/cortex-strings-$(CORTEX_STRINGS_VER).tar.bz2 directories
+	$(START_BUILD)
+	$(REMOVE)/cortex-strings-$(CORTEX_STRINGS_VER)
+	$(UNTAR)/$(CORTEX_STRINGS_SOURCE)
+	set -e; cd $(BUILD_TMP)/cortex-strings-$(CORTEX_STRINGS_VER); \
+		./autogen.sh; \
+		$(MAKE_OPTS) \
+		./configure \
+			--build=$(BUILD) \
+			--host=$(TARGET) \
+			--prefix=/usr \
+			--disable-shared \
+			--enable-static \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REWRITE_LIBTOOL)/libcortex-strings.la
+	$(REMOVE)/cortex-strings-$(CORTEX_STRINGS_VER)
+	$(TOUCH)
+
+#
+# bootstrap
 #
 BOOTSTRAP  = directories
 BOOTSTRAP += $(D)/ccache
@@ -207,13 +237,14 @@ BOOTSTRAP += $(D)/host_mkcramfs
 BOOTSTRAP += $(D)/host_mksquashfs
 ifeq ($(BOXARCH), arm)
 BOOTSTRAP += $(D)/host_resize2fs
+BOOTSTRAP += $(D)/cortex-strings
 endif
 
 $(D)/bootstrap: $(BOOTSTRAP)
 	@touch $@
 
 #
-#
+# system-tools
 #
 SYSTEM_TOOLS  = $(D)/busybox
 SYSTEM_TOOLS += $(D)/zlib
@@ -241,6 +272,7 @@ $(D)/system-tools: $(SYSTEM_TOOLS) $(TOOLS)
 	@touch $@
 
 #
+# preqs
 #
 #
 $(DRIVER_DIR):
@@ -288,16 +320,15 @@ directories:
 	install -d $(BOOT_DIR)
 	install -d $(HOST_DIR)
 	install -d $(HOST_DIR)/{bin,lib,share}
-	install -d $(TARGET_DIR)/{bin,boot,etc,lib,sbin,share,usr,var}
+	install -d $(TARGET_DIR)/{bin,boot,etc,lib,sbin,usr,var}
 	install -d $(TARGET_DIR)/etc/{init.d,mdev,network,rc.d}
 	install -d $(TARGET_DIR)/etc/rc.d/{rc0.d,rc6.d}
 	ln -sf ../init.d $(TARGET_DIR)/etc/rc.d/init.d
 	install -d $(TARGET_DIR)/lib/{lsb,firmware}
-	install -d $(TARGET_DIR)/usr/{bin,lib,local,sbin,share}
+	install -d $(TARGET_DIR)/usr/{bin,lib,sbin,share}
 	install -d $(TARGET_DIR)/usr/lib/pkgconfig
 	install -d $(TARGET_DIR)/usr/include/linux
 	install -d $(TARGET_DIR)/usr/include/linux/dvb
-	install -d $(TARGET_DIR)/usr/local/{bin,sbin,share}
 	install -d $(TARGET_DIR)/var/{etc,lib,run}
 	install -d $(TARGET_DIR)/var/lib/{misc,nfs}
 	install -d $(TARGET_DIR)/var/bin
