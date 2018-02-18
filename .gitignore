@@ -1,12 +1,14 @@
 apps/
 build_logfile/
 build_tmp/
+/build_source/
 cross/
 custom/*-local*
 driver/
 flash/
 own_build/
 Patches/patch-neutrino/
+Patches/oscam.config
 root/boot/*
 source/
 tufsbox/
@@ -14,4 +16,5 @@ tufsbox/
 config*
 config.local
 Makefile.local
+build-tango.sh
 *~
