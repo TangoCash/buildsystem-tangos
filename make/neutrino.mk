@@ -259,8 +259,6 @@ $(D)/neutrino-mp-plugins.config.status:
 			$(N_CONFIG_OPTS) \
 			\
 			--with-tremor \
-			--with-target=cdk \
-			--with-targetprefix=/usr \
 			--with-stb-hal-includes=$(SOURCE_DIR)/$(LIBSTB_HAL)/include \
 			--with-stb-hal-build=$(LH_OBJDIR) \
 			PKG_CONFIG=$(PKG_CONFIG) \
