@@ -258,13 +258,15 @@ ifneq ($(BOXTYPE), $(filter $(BOXTYPE), ufs922))
 SYSTEM_TOOLS += $(D)/nfs_utils
 endif
 SYSTEM_TOOLS += $(D)/vsftpd
-SYSTEM_TOOLS += $(D)/autofs
+#SYSTEM_TOOLS += $(D)/autofs
 SYSTEM_TOOLS += $(D)/udpxy
 SYSTEM_TOOLS += $(D)/dvbsnoop
 ifeq ($(BOXARCH), sh4)
 SYSTEM_TOOLS += $(D)/fbshot
-else
+endif
+ifeq ($(BOXARCH), arm)
 SYSTEM_TOOLS += $(D)/ofgwrite
+SYSTEM_TOOLS += $(D)/ethtool
 endif
 SYSTEM_TOOLS += $(D)/driver
 
