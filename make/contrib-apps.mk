@@ -1,7 +1,7 @@
 #
 # busybox
 #
-BUSYBOX_VER = 1.28.0
+BUSYBOX_VER = 1.28.1
 BUSYBOX_SOURCE = busybox-$(BUSYBOX_VER).tar.bz2
 BUSYBOX_PATCH  = busybox-$(BUSYBOX_VER)-nandwrite.patch
 BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-unicode.patch
@@ -287,10 +287,10 @@ PORTMAP_PATCH = portmap-$(PORTMAP_VER).patch
 $(ARCHIVE)/$(PORTMAP_SOURCE):
 	$(WGET) https://merges.ubuntu.com/p/portmap/$(PORTMAP_SOURCE)
 
-$(ARCHIVE)/portmap_$(PORTMAP_VER)-2.diff.gz:
-	$(WGET) https://merges.ubuntu.com/p/portmap/portmap_$(PORTMAP_VER)-2.diff.gz
+$(ARCHIVE)/portmap_$(PORTMAP_VER)-3.diff.gz:
+	$(WGET) https://merges.ubuntu.com/p/portmap/portmap_$(PORTMAP_VER)-3.diff.gz
 
-$(D)/portmap: $(D)/bootstrap $(D)/lsb $(ARCHIVE)/$(PORTMAP_SOURCE) $(ARCHIVE)/portmap_$(PORTMAP_VER)-2.diff.gz
+$(D)/portmap: $(D)/bootstrap $(D)/lsb $(ARCHIVE)/$(PORTMAP_SOURCE) $(ARCHIVE)/portmap_$(PORTMAP_VER)-3.diff.gz
 	$(START_BUILD)
 	$(REMOVE)/portmap-$(PORTMAP_VER)
 	$(UNTAR)/$(PORTMAP_SOURCE)
@@ -1506,7 +1506,7 @@ $(D)/wpa_supplicant: $(D)/bootstrap $(D)/openssl $(D)/wireless_tools $(ARCHIVE)/
 # dvbsnoop
 #
 DVBSNOOP_VER = d3f134b
-DVBSNOOP_SOURCE = dvbsnoop-$(DVBSNOOP_VER).tar.bz2
+DVBSNOOP_SOURCE = dvbsnoop-git-$(DVBSNOOP_VER).tar.bz2
 DVBSNOOP_URL = https://github.com/Duckbox-Developers/dvbsnoop.git
 
 $(ARCHIVE)/$(DVBSNOOP_SOURCE):
@@ -1518,9 +1518,9 @@ endif
 
 $(D)/dvbsnoop: $(D)/bootstrap $(D)/kernel $(ARCHIVE)/$(DVBSNOOP_SOURCE)
 	$(START_BUILD)
-	$(REMOVE)/dvbsnoop-$(DVBSNOOP_VER)
+	$(REMOVE)/dvbsnoop-git-$(DVBSNOOP_VER)
 	$(UNTAR)/$(DVBSNOOP_SOURCE)
-	set -e; cd $(BUILD_TMP)/dvbsnoop-$(DVBSNOOP_VER); \
+	set -e; cd $(BUILD_TMP)/dvbsnoop-git-$(DVBSNOOP_VER); \
 		$(CONFIGURE) \
 			--enable-silent-rules \
 			--prefix=/usr \
@@ -1529,14 +1529,14 @@ $(D)/dvbsnoop: $(D)/bootstrap $(D)/kernel $(ARCHIVE)/$(DVBSNOOP_SOURCE)
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/dvbsnoop-$(DVBSNOOP_VER)
+	$(REMOVE)/dvbsnoop-git-$(DVBSNOOP_VER)
 	$(TOUCH)
 
 #
 # udpxy
 #
 UDPXY_VER = 612d227
-UDPXY_SOURCE = udpxy-$(UDPXY_VER).tar.bz2
+UDPXY_SOURCE = udpxy-git-$(UDPXY_VER).tar.bz2
 UDPXY_URL = https://github.com/pcherenkov/udpxy.git
 UDPXY_PATCH = udpxy-$(UDPXY_VER).patch
 
@@ -1545,14 +1545,14 @@ $(ARCHIVE)/$(UDPXY_SOURCE):
 
 $(D)/udpxy: $(D)/bootstrap $(ARCHIVE)/$(UDPXY_SOURCE)
 	$(START_BUILD)
-	$(REMOVE)/udpxy-$(UDPXY_VER)
+	$(REMOVE)/udpxy-git-$(UDPXY_VER)
 	$(UNTAR)/$(UDPXY_SOURCE)
-	set -e; cd $(BUILD_TMP)/udpxy-$(UDPXY_VER)/chipmunk; \
+	set -e; cd $(BUILD_TMP)/udpxy-git-$(UDPXY_VER)/chipmunk; \
 		$(call apply_patches,$(UDPXY_PATCH)); \
 		$(BUILDENV) \
 		$(MAKE) CC=$(TARGET)-gcc CCKIND=gcc; \
 		$(MAKE) install INSTALLROOT=$(TARGET_DIR)/usr MANPAGE_DIR=$(TARGET_DIR)/.remove
-	$(REMOVE)/udpxy-$(UDPXY_VER)
+	$(REMOVE)/udpxy-git-$(UDPXY_VER)
 	$(TOUCH)
 
 #
@@ -1658,18 +1658,20 @@ $(D)/dropbear: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/$(DROPBEAR_SOURCE)
 	$(TOUCH)
 
 #
-# dropbear multi
+# dropbearmulti
 #
-$(D)/dropbearmulti: $(D)/bootstrap
+DROPBEARMULTI_VER = c8d852c
+DROPBEARMULTI_SOURCE = dropbearmulti-git-$(DROPBEARMULTI_VER).tar.bz2
+DROPBEARMULTI_URL = https://github.com/mkj/dropbear.git
+
+$(ARCHIVE)/$(DROPBEARMULTI_SOURCE):
+	$(SCRIPTS_DIR)/get-git-archive.sh $(DROPBEARMULTI_URL) $(DROPBEARMULTI_VER) $(notdir $@) $(ARCHIVE)
+
+$(D)/dropbearmulti: $(D)/bootstrap $(ARCHIVE)/$(DROPBEARMULTI_SOURCE)
 	$(START_BUILD)
-	$(REMOVE)/dropbearmulti
-	set -e; if [ -d $(ARCHIVE)/dropbearmulti.git ]; \
-		then cd $(ARCHIVE)/dropbearmulti.git; git pull; \
-		else cd $(ARCHIVE); git clone git://github.com/mkj/dropbear.git $(ARCHIVE)/dropbearmulti.git; \
-		fi
-	cp -ra $(ARCHIVE)/dropbearmulti.git $(BUILD_TMP)/dropbearmulti
-	set -e; cd $(BUILD_TMP)/dropbearmulti; \
-		git checkout -q c8d852caf646d060babd4be9d074caee51c5aead; \
+	$(REMOVE)/dropbearmulti-git-$(DROPBEARMULTI_VER)
+	$(UNTAR)/$(DROPBEARMULTI_SOURCE)
+	set -e; cd $(BUILD_TMP)/dropbearmulti-git-$(DROPBEARMULTI_VER); \
 		$(BUILDENV) \
 		autoreconf -fi; \
 		$(CONFIGURE) \
@@ -1701,7 +1703,7 @@ $(D)/dropbearmulti: $(D)/bootstrap
 	cd $(TARGET_DIR)/usr/bin && ln -sf /usr/bin/dropbearmulti dropbear
 	install -m 755 $(SKEL_ROOT)/etc/init.d/dropbear $(TARGET_DIR)/etc/init.d/
 	install -d -m 0755 $(TARGET_DIR)/etc/dropbear
-	$(REMOVE)/dropbearmulti
+	$(REMOVE)/dropbearmulti-git-$(DROPBEARMULTI_VER)
 	$(TOUCH)
 
 #
@@ -1751,21 +1753,24 @@ $(D)/usb_modeswitch: $(D)/bootstrap $(D)/libusb $(D)/usb_modeswitch_data $(ARCHI
 #
 # ofgwrite
 #
-$(D)/ofgwrite: $(D)/bootstrap
+OFGWRITE_VER = b7808ce
+OFGWRITE_SOURCE = ofgwrite-git-$(OFGWRITE_VER).tar.bz2
+OFGWRITE_URL = https://github.com/Duckbox-Developers/ofgwrite-ddt.git
+
+$(ARCHIVE)/$(OFGWRITE_SOURCE):
+	$(SCRIPTS_DIR)/get-git-archive.sh $(OFGWRITE_URL) $(OFGWRITE_VER) $(notdir $@) $(ARCHIVE)
+
+$(D)/ofgwrite: $(D)/bootstrap $(ARCHIVE)/$(OFGWRITE_SOURCE)
 	$(START_BUILD)
-	$(REMOVE)/ofgwrite
-	set -e; if [ -d $(ARCHIVE)/ofgwrite-ddt.git ]; \
-		then cd $(ARCHIVE)/ofgwrite-ddt.git; git pull; \
-		else cd $(ARCHIVE); git clone https://github.com/Duckbox-Developers/ofgwrite-ddt.git ofgwrite-ddt.git; \
-		fi
-	cp -ra $(ARCHIVE)/ofgwrite-ddt.git $(BUILD_TMP)/ofgwrite
-	set -e; cd $(BUILD_TMP)/ofgwrite; \
+	$(REMOVE)/ofgwrite-git-$(OFGWRITE_VER)
+	$(UNTAR)/$(OFGWRITE_SOURCE)
+	set -e; cd $(BUILD_TMP)/ofgwrite-git-$(OFGWRITE_VER); \
 		$(BUILDENV) \
 		$(MAKE); \
-	install -m 755 $(BUILD_TMP)/ofgwrite/ofgwrite_bin $(TARGET_DIR)/usr/bin
-	install -m 755 $(BUILD_TMP)/ofgwrite/ofgwrite_tgz $(TARGET_DIR)/usr/bin
-	install -m 755 $(BUILD_TMP)/ofgwrite/ofgwrite $(TARGET_DIR)/usr/bin
-	$(REMOVE)/ofgwrite
+	install -m 755 $(BUILD_TMP)/ofgwrite-git-$(OFGWRITE_VER)/ofgwrite_bin $(TARGET_DIR)/usr/bin
+	install -m 755 $(BUILD_TMP)/ofgwrite-git-$(OFGWRITE_VER)/ofgwrite_tgz $(TARGET_DIR)/usr/bin
+	install -m 755 $(BUILD_TMP)/ofgwrite-git-$(OFGWRITE_VER)/ofgwrite $(TARGET_DIR)/usr/bin
+	$(REMOVE)/ofgwrite-git-$(OFGWRITE_VER)
 	$(TOUCH)
 
 #

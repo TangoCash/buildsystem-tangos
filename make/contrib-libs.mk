@@ -423,7 +423,7 @@ LUA_VER_SHORT = 5.2
 LUA_SOURCE = lua-$(LUA_VER).tar.gz
 
 LUAPOSIX_VER = 31
-LUAPOSIX_SOURCE = luaposix-$(LUAPOSIX_VER).tar.bz2
+LUAPOSIX_SOURCE = luaposix-git-$(LUAPOSIX_VER).tar.bz2
 LUAPOSIX_URL = git://github.com/luaposix/luaposix.git
 LUAPOSIX_PATCH = lua-$(LUA_VER)-luaposix-$(LUAPOSIX_VER).patch
 
@@ -441,8 +441,8 @@ $(D)/lua: $(D)/bootstrap $(D)/ncurses $(ARCHIVE)/$(LUAPOSIX_SOURCE) $(ARCHIVE)/$
 	set -e; cd $(BUILD_TMP)/lua-$(LUA_VER); \
 		$(call apply_patches,$(LUAPOSIX_PATCH)); \
 		tar xf $(ARCHIVE)/$(LUAPOSIX_SOURCE); \
-		cd luaposix-$(LUAPOSIX_VER)/ext; cp posix/posix.c include/lua52compat.h ../../src/; cd ../..; \
-		cd luaposix-$(LUAPOSIX_VER)/lib; cp *.lua $(TARGET_DIR)/usr/share/lua/$(LUA_VER_SHORT); cd ../..; \
+		cd luaposix-git-$(LUAPOSIX_VER)/ext; cp posix/posix.c include/lua52compat.h ../../src/; cd ../..; \
+		cd luaposix-git-$(LUAPOSIX_VER)/lib; cp *.lua $(TARGET_DIR)/usr/share/lua/$(LUA_VER_SHORT); cd ../..; \
 		sed -i 's/<config.h>/"config.h"/' src/posix.c; \
 		sed -i '/^#define/d' src/lua52compat.h; \
 		sed -i 's|man/man1|/.remove|' Makefile; \
@@ -456,7 +456,7 @@ $(D)/lua: $(D)/bootstrap $(D)/ncurses $(ARCHIVE)/$(LUAPOSIX_SOURCE) $(ARCHIVE)/$
 # luacurl
 #
 LUACURL_VER = 9ac72c7
-LUACURL_SOURCE = luacurl-$(LUACURL_VER).tar.bz2
+LUACURL_SOURCE = luacurl-git-$(LUACURL_VER).tar.bz2
 LUACURL_URL = git://github.com/Lua-cURL/Lua-cURLv3.git
 
 $(ARCHIVE)/$(LUACURL_SOURCE):
@@ -464,14 +464,14 @@ $(ARCHIVE)/$(LUACURL_SOURCE):
 
 $(D)/luacurl: $(D)/bootstrap $(D)/libcurl $(D)/lua $(ARCHIVE)/$(LUACURL_SOURCE)
 	$(START_BUILD)
-	$(REMOVE)/luacurl-$(LUACURL_VER)
+	$(REMOVE)/luacurl-git-$(LUACURL_VER)
 	$(UNTAR)/$(LUACURL_SOURCE)
-	set -e; cd $(BUILD_TMP)/luacurl-$(LUACURL_VER); \
+	set -e; cd $(BUILD_TMP)/luacurl-git-$(LUACURL_VER); \
 		$(MAKE) CC=$(TARGET)-gcc LDFLAGS="-L$(TARGET_DIR)/usr/lib" \
 			LIBDIR=$(TARGET_DIR)/usr/lib \
 			LUA_INC=$(TARGET_DIR)/usr/include; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR) LUA_CMOD=/usr/lib/lua/$(LUA_VER_SHORT) LUA_LMOD=/usr/share/lua/$(LUA_VER_SHORT)
-	$(REMOVE)/luacurl-$(LUACURL_VER)
+	$(REMOVE)/luacurl-git-$(LUACURL_VER)
 	$(TOUCH)
 
 #
@@ -499,7 +499,7 @@ $(D)/luaexpat: $(D)/bootstrap $(D)/lua $(D)/expat $(ARCHIVE)/$(LUAEXPAT_SOURCE)
 # luasocket
 #
 LUASOCKET_VER = 5a17f79
-LUASOCKET_SOURCE = luasocket-$(LUASOCKET_VER).tar.bz2
+LUASOCKET_SOURCE = luasocket-git-$(LUASOCKET_VER).tar.bz2
 LUASOCKET_URL = git://github.com/diegonehab/luasocket.git
 
 $(ARCHIVE)/$(LUASOCKET_SOURCE):
@@ -507,20 +507,20 @@ $(ARCHIVE)/$(LUASOCKET_SOURCE):
 
 $(D)/luasocket: $(D)/bootstrap $(D)/lua $(ARCHIVE)/$(LUASOCKET_SOURCE)
 	$(START_BUILD)
-	$(REMOVE)/luasocket-$(LUASOCKET_VER)
+	$(REMOVE)/luasocke-gitt-$(LUASOCKET_VER)
 	$(UNTAR)/$(LUASOCKET_SOURCE)
-	set -e; cd $(BUILD_TMP)/luasocket-$(LUASOCKET_VER); \
+	set -e; cd $(BUILD_TMP)/luasocket-git-$(LUASOCKET_VER); \
 		sed -i -e "s@LD_linux=gcc@LD_LINUX=$(TARGET)-gcc@" -e "s@CC_linux=gcc@CC_LINUX=$(TARGET)-gcc -L$(TARGET_DIR)/usr/lib@" -e "s@DESTDIR?=@DESTDIR?=$(TARGET_DIR)/usr@" src/makefile; \
 		$(MAKE) CC=$(TARGET)-gcc LD=$(TARGET)-gcc LUAV=$(LUA_VER_SHORT) PLAT=linux COMPAT=COMPAT LUAINC_linux=$(TARGET_DIR)/usr/include LUAPREFIX_linux=; \
 		$(MAKE) install LUAPREFIX_linux= LUAV=$(LUA_VER_SHORT)
-	$(REMOVE)/luasocket-$(LUASOCKET_VER)
+	$(REMOVE)/luasocket-git-$(LUASOCKET_VER)
 	$(TOUCH)
 
 #
 # luafeedparser
 #
 LUAFEEDPARSER_VER = 9b284bc
-LUAFEEDPARSER_SOURCE = luafeedparser-$(LUAFEEDPARSER_VER).tar.bz2
+LUAFEEDPARSER_SOURCE = luafeedparser-git-$(LUAFEEDPARSER_VER).tar.bz2
 LUAFEEDPARSER_URL = git://github.com/slact/lua-feedparser.git
 
 $(ARCHIVE)/$(LUAFEEDPARSER_SOURCE):
@@ -528,12 +528,12 @@ $(ARCHIVE)/$(LUAFEEDPARSER_SOURCE):
 
 $(D)/luafeedparser: $(D)/bootstrap $(D)/lua $(D)/luasocket $(D)/luaexpat $(ARCHIVE)/$(LUAFEEDPARSER_SOURCE)
 	$(START_BUILD)
-	$(REMOVE)/luafeedparser-$(LUAFEEDPARSER_VER)
+	$(REMOVE)/luafeedparser-git-$(LUAFEEDPARSER_VER)
 	$(UNTAR)/$(LUAFEEDPARSER_SOURCE)
-	set -e; cd $(BUILD_TMP)/luafeedparser-$(LUAFEEDPARSER_VER); \
+	set -e; cd $(BUILD_TMP)/luafeedparser-git-$(LUAFEEDPARSER_VER); \
 		sed -i -e "s/^PREFIX.*//" -e "s/^LUA_DIR.*//" Makefile ; \
 		$(BUILDENV) $(MAKE) install  LUA_DIR=$(TARGET_DIR)/usr/share/lua/$(LUA_VER_SHORT)
-	$(REMOVE)/luafeedparser-$(LUAFEEDPARSER_VER)
+	$(REMOVE)/luafeedparser-git-$(LUAFEEDPARSER_VER)
 	$(TOUCH)
 
 #
@@ -862,12 +862,13 @@ $(D)/libjpeg_turbo: $(D)/bootstrap $(ARCHIVE)/$(LIBJPEG_TURBO_SOURCE)
 #
 # libpng
 #
-LIBPNG_VER = 1.6.29
+LIBPNG_VER = 1.6.34
 LIBPNG_VER_X = 16
 LIBPNG_SOURCE = libpng-$(LIBPNG_VER).tar.xz
 LIBPNG_PATCH = libpng-$(LIBPNG_VER)-disable-tools.patch
 
 $(ARCHIVE)/$(LIBPNG_SOURCE):
+	$(WGET) https://sourceforge.net/projects/libpng/files/libpng$(LIBPNG_VER_X)/$(LIBPNG_VER)/$(LIBPNG_SOURCE) || \
 	$(WGET) https://sourceforge.net/projects/libpng/files/libpng$(LIBPNG_VER_X)/older-releases/$(LIBPNG_VER)/$(LIBPNG_SOURCE)
 
 $(D)/libpng: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/$(LIBPNG_SOURCE)
@@ -875,7 +876,7 @@ $(D)/libpng: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/$(LIBPNG_SOURCE)
 	$(REMOVE)/libpng-$(LIBPNG_VER)
 	$(UNTAR)/$(LIBPNG_SOURCE)
 	set -e; cd $(BUILD_TMP)/libpng-$(LIBPNG_VER); \
-		$(call apply_patches,$(PNG_PATCH)); \
+		$(call apply_patches,$(LIBPNG_PATCH)); \
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--disable-mips-msa \
@@ -1762,7 +1763,7 @@ $(D)/pugixml: $(D)/bootstrap $(ARCHIVE)/$(PUGIXML_SOURCE)
 # graphlcd
 #
 GRAPHLCD_VER = f5528fe
-GRAPHLCD_SOURCE = graphlcd-$(GRAPHLCD_VER).tar.bz2
+GRAPHLCD_SOURCE = graphlcd-git-$(GRAPHLCD_VER).tar.bz2
 GRAPHLCD_URL = git://projects.vdr-developer.org/graphlcd-base.git
 GRAPHLCD_PATCH = graphlcd-base-touchcol.patch
 
@@ -1771,35 +1772,34 @@ $(ARCHIVE)/$(GRAPHLCD_SOURCE):
 
 $(D)/graphlcd: $(D)/bootstrap $(D)/freetype $(D)/libusb $(ARCHIVE)/$(GRAPHLCD_SOURCE)
 	$(START_BUILD)
-	$(REMOVE)/graphlcd-$(GRAPHLCD_VER)
+	$(REMOVE)/graphlcd-git-$(GRAPHLCD_VER)
 	$(UNTAR)/$(GRAPHLCD_SOURCE)
-	set -e; cd $(BUILD_TMP)/graphlcd-$(GRAPHLCD_VER); \
+	set -e; cd $(BUILD_TMP)/graphlcd-git-$(GRAPHLCD_VER); \
 		$(call apply_patches,$(GRAPHLCD_PATCH)); \
-		export TARGET=$(TARGET)-; \
-		$(BUILDENV) \
-		$(MAKE) DESTDIR=$(TARGET_DIR); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,convpic crtfont genfont showpic showtext lcdtestpattern skintest)
-	$(REMOVE)/graphlcd-$(GRAPHLCD_VER)
+		$(MAKE) -C glcdgraphics all TARGET=$(TARGET)- DESTDIR=$(TARGET_DIR); \
+		$(MAKE) -C glcddrivers all TARGET=$(TARGET)- DESTDIR=$(TARGET_DIR); \
+		$(MAKE) -C glcdgraphics install DESTDIR=$(TARGET_DIR); \
+		$(MAKE) -C glcddrivers install DESTDIR=$(TARGET_DIR); \
+		cp -a graphlcd.conf $(TARGET_DIR)/etc
+	$(REMOVE)/graphlcd-git-$(GRAPHLCD_VER)
 	$(TOUCH)
 
 #
+# libdpf
 #
-#
-DPF-AX_REV = 54
+LIBPDF_VER = 62c8fd0
+LIBPDF_SOURCE = dpf-ax-git-$(LIBPDF_VER).tar.bz2
+LIBPDF_URL = https://github.com/MaxWiesel/dpf-ax.git
 LIBPDF_PATCH = libdpf-crossbuild.patch
 
-$(ARCHIVE)/dpf-ax_svn$(DPF-AX_REV).tar.gz:
-	cd $(BUILD_TMP); \
-		svn co -r$(DPF-AX_REV) https://dpf-ax.svn.sourceforge.net/svnroot/dpf-ax/trunk dpf-ax_svn$(DPF-AX_REV); \
-		tar cvpzf $@ dpf-ax_svn$(DPF-AX_REV)
-	$(REMOVE)/dpf-ax_svn$(DPF-AX_REV)
+$(ARCHIVE)/$(LIBPDF_SOURCE):
+	$(SCRIPTS_DIR)/get-git-archive.sh $(LIBPDF_URL) $(LIBPDF_VER) $(notdir $@) $(ARCHIVE)
 
-$(D)/libdpf: $(D)/bootstrap $(D)/libusb_compat $(ARCHIVE)/dpf-ax_svn$(DPF-AX_REV).tar.gz
+$(D)/libdpf: $(D)/bootstrap $(D)/libusb_compat $(ARCHIVE)/$(LIBPDF_SOURCE)
 	$(START_BUILD)
-	$(REMOVE)/dpf-ax_svn$(DPF-AX_REV)
-	$(UNTAR)/dpf-ax_svn$(DPF-AX_REV).tar.gz
-	cd $(BUILD_TMP)/dpf-ax_svn$(DPF-AX_REV)/dpflib; \
+	$(REMOVE)/dpf-ax-git-$(LIBPDF_VER)
+	$(UNTAR)/$(LIBPDF_SOURCE)
+	set -e; cd $(BUILD_TMP)/dpf-ax-git-$(LIBPDF_VER)/dpflib; \
 		$(call apply_patches,$(LIBPDF_PATCH)); \
 		make libdpf.a CC=$(TARGET)-gcc PREFIX=$(TARGET_DIR)/usr; \
 		mkdir -p $(TARGET_INCLUDE_DIR)/libdpf; \
@@ -1807,21 +1807,24 @@ $(D)/libdpf: $(D)/bootstrap $(D)/libusb_compat $(ARCHIVE)/dpf-ax_svn$(DPF-AX_REV
 		cp ../include/spiflash.h $(TARGET_INCLUDE_DIR)/libdpf/; \
 		cp ../include/usbuser.h $(TARGET_INCLUDE_DIR)/libdpf/; \
 		cp libdpf.a $(TARGET_LIB_DIR)/
-	$(REMOVE)/dpf-ax_svn$(DPF-AX_REV)
+	$(REMOVE)/dpf-ax-git-$(LIBPDF_VER)
 	$(TOUCH)
 
 #
 # lcd4linux
 #
-$(D)/lcd4linux: $(D)/bootstrap $(D)/libusb_compat $(D)/gd $(D)/libusb $(D)/libdpf
+LCD4LINUX_VER = 07ef2dd
+LCD4LINUX_SOURCE = lcd4linux-git-$(LCD4LINUX_VER).tar.bz2
+LCD4LINUX_URL = https://github.com/TangoCash/lcd4linux.git
+
+$(ARCHIVE)/$(LCD4LINUX_SOURCE):
+	$(SCRIPTS_DIR)/get-git-archive.sh $(LCD4LINUX_URL) $(LCD4LINUX_VER) $(notdir $@) $(ARCHIVE)
+
+$(D)/lcd4linux: $(D)/bootstrap $(D)/libusb_compat $(D)/gd $(D)/libusb $(D)/libdpf $(ARCHIVE)/$(LCD4LINUX_SOURCE)
 	$(START_BUILD)
-	$(REMOVE)/lcd4linux
-	set -e; if [ -d $(ARCHIVE)/lcd4linux.git ]; \
-		then cd $(ARCHIVE)/lcd4linux.git; git pull; \
-		else cd $(ARCHIVE); git clone https://github.com/TangoCash/lcd4linux.git lcd4linux.git; \
-		fi
-	cp -ra $(ARCHIVE)/lcd4linux.git $(BUILD_TMP)/lcd4linux
-	set -e; cd $(BUILD_TMP)/lcd4linux; \
+	$(REMOVE)/lcd4linux-git-$(LCD4LINUX_VER)
+	$(UNTAR)/$(LCD4LINUX_SOURCE)
+	set -e; cd $(BUILD_TMP)/lcd4linux-git-$(LCD4LINUX_VER); \
 		$(BUILDENV) ./bootstrap; \
 		$(BUILDENV) ./configure $(SILENT_OPT) $(CONFIGURE_OPTS) \
 			--prefix=/usr \
@@ -1833,7 +1836,7 @@ $(D)/lcd4linux: $(D)/bootstrap $(D)/libusb_compat $(D)/gd $(D)/libusb $(D)/libdp
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	install -m 755 $(SKEL_ROOT)/etc/init.d/lcd4linux $(TARGET_DIR)/etc/init.d/
 	install -D -m 0600 $(SKEL_ROOT)/etc/lcd4linux_ni.conf $(TARGET_DIR)/etc/lcd4linux.conf
-	$(REMOVE)/lcd4linux
+	$(REMOVE)/lcd4linux-git-$(LCD4LINUX_VER)
 	$(TOUCH)
 
 #
@@ -2039,7 +2042,7 @@ $(D)/libopenthreads: $(D)/bootstrap $(ARCHIVE)/$(LIBOPENTHREADS_SOURCE)
 # librtmpdump
 #
 LIBRTMPDUMP_VER = ad70c64
-LIBRTMPDUMP_SOURCE = librtmpdump-$(LIBRTMPDUMP_VER).tar.bz2
+LIBRTMPDUMP_SOURCE = librtmpdump-git-$(LIBRTMPDUMP_VER).tar.bz2
 LIBRTMPDUMP_URL = git://github.com/oe-alliance/rtmpdump.git
 LIBRTMPDUMP_PATCH = rtmpdump-2.4.patch
 
@@ -2048,22 +2051,22 @@ $(ARCHIVE)/$(LIBRTMPDUMP_SOURCE):
 
 $(D)/librtmpdump: $(D)/bootstrap $(D)/zlib $(D)/openssl $(ARCHIVE)/$(LIBRTMPDUMP_SOURCE)
 	$(START_BUILD)
-	$(REMOVE)/librtmpdump-$(LIBRTMPDUMP_VER)
+	$(REMOVE)/librtmpdump-git-$(LIBRTMPDUMP_VER)
 	$(UNTAR)/$(LIBRTMPDUMP_SOURCE)
-	set -e; cd $(BUILD_TMP)/librtmpdump-$(LIBRTMPDUMP_VER); \
+	set -e; cd $(BUILD_TMP)/librtmpdump-git-$(LIBRTMPDUMP_VER); \
 		$(call apply_patches,$(LIBRTMPDUMP_PATCH)); \
 		$(MAKE) CROSS_COMPILE=$(TARGET)- XCFLAGS="-I$(TARGET_INCLUDE_DIR) -L$(TARGET_LIB_DIR)" LDFLAGS="-L$(TARGET_LIB_DIR)"; \
 		$(MAKE) install prefix=/usr DESTDIR=$(TARGET_DIR) MANDIR=$(TARGET_DIR)/.remove
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/librtmp.pc
 	rm -f $(addprefix $(TARGET_DIR)/usr/sbin/,rtmpgw rtmpsrv rtmpsuck)
-	$(REMOVE)/librtmpdump-$(LIBRTMPDUMP_VER)
+	$(REMOVE)/librtmpdump-git-$(LIBRTMPDUMP_VER)
 	$(TOUCH)
 
 #
 # libdvbsi++
 #
 LIBDVBSI_VER = ff57e58
-LIBDVBSI_SOURCE = libdvbsi-$(LIBDVBSI_VER).tar.bz2
+LIBDVBSI_SOURCE = libdvbsi-git-$(LIBDVBSI_VER).tar.bz2
 LIBDVBSI_URL = git://git.opendreambox.org/git/obi/libdvbsi++.git
 LIBDVBSI_PATCH = libdvbsi-git.patch
 
@@ -2072,9 +2075,9 @@ $(ARCHIVE)/$(LIBDVBSI_SOURCE):
 
 $(D)/libdvbsi: $(D)/bootstrap $(ARCHIVE)/$(LIBDVBSI_SOURCE)
 	$(START_BUILD)
-	$(REMOVE)/libdvbsi-$(LIBDVBSI_VER)
+	$(REMOVE)/libdvbsi-git-$(LIBDVBSI_VER)
 	$(UNTAR)/$(LIBDVBSI_SOURCE)
-	set -e; cd $(BUILD_TMP)/libdvbsi-$(LIBDVBSI_VER); \
+	set -e; cd $(BUILD_TMP)/libdvbsi-git-$(LIBDVBSI_VER); \
 		$(call apply_patches,$(LIBDVBSI_PATCH)); \
 		$(CONFIGURE) \
 			--prefix=/usr \
@@ -2083,7 +2086,7 @@ $(D)/libdvbsi: $(D)/bootstrap $(ARCHIVE)/$(LIBDVBSI_SOURCE)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libdvbsi++.pc
 	$(REWRITE_LIBTOOL)/libdvbsi++.la
-	$(REMOVE)/libdvbsi-$(LIBDVBSI_VER)
+	$(REMOVE)/libdvbsi-git-$(LIBDVBSI_VER)
 	$(TOUCH)
 
 #
