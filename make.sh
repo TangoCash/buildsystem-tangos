@@ -69,7 +69,8 @@ case $1 in
 		echo "   51)  Mut@nt HD51"
 		echo "   "
 		echo
-		read -p "Select target (1-59)? ";;
+		read -p "Select target (1-59)? [51]"
+		REPLY="${REPLY:-51}";;
 esac
 
 case "$REPLY" in
@@ -144,7 +145,8 @@ case $2 in
 	*)	echo -e "\nBoxmode:"
 		echo "   1)   1     (default)"
 		echo "   2)  12 PIP (PIP not supported by neutrino yet)"
-		read -p "Select mode (1-2)? ";;
+		read -p "Select mode (1-2)? [1]"
+		REPLY="${REPLY:-1}";;
 esac
 
 case "$REPLY" in
@@ -185,7 +187,8 @@ case $2 in
 	*)	echo -e "\nKernel:"
 		echo "   1)  STM 24 P0209 [2.6.32.46]"
 		echo "   2)  STM 24 P0217 [2.6.32.71]"
-		read -p "Select kernel (1-2)? ";;
+		read -p "Select kernel (1-2)? [2]"
+		REPLY="${REPLY:-2}";;
 esac
 
 case "$REPLY" in
@@ -208,7 +211,8 @@ case $3 in
 		echo "   2)  optimization normal"
 		echo "   3)  Kernel debug"
 		echo "   4)  debug (includes Kernel debug)"
-		read -p "Select optimization (1-4)? ";;
+		read -p "Select optimization (1-4)? [1]"
+		REPLY="${REPLY:-1}";;
 esac
 
 case "$REPLY" in
@@ -227,7 +231,8 @@ case $4 in
 	*)	echo -e "\nMedia Framework:"
 		echo "   1) libeplayer3"
 		echo "   2) gstreamer"
-		read -p "Select media framework (1-2)? ";;
+		read -p "Select media framework (1-2)? [1]"
+		REPLY="${REPLY:-1}";;
 esac
 
 case "$REPLY" in
@@ -244,7 +249,8 @@ case $5 in
 	*)	echo -e "\nWhich Image do you want to build:"
 		echo "   1)  Neutrino"
 		echo "   2)  Neutrino (includes WLAN drivers sh4)"
-		read -p "Select Image to build (1-2)? ";;
+		read -p "Select Image to build (1-2)? [1]"
+		REPLY="${REPLY:-1}";;
 esac
 
 case "$REPLY" in
@@ -264,7 +270,8 @@ case $6 in
 		echo "   3)  neutrino-mp-ni     [ arm     ]"
 		echo "   4)  neutrino-mp-tangos [ arm/sh4 ]"
 		echo "   5)  neutrino-hd2       [ arm/sh4 ]"
-		read -p "Select Image to build (1-5)? ";;
+		read -p "Select Image to build (1-5)? [4]"
+		REPLY="${REPLY:-4}";;
 esac
 
 case "$REPLY" in
@@ -285,7 +292,8 @@ case $7 in
 		echo "   1)  No external LCD"
 		echo "   2)  graphlcd for external LCD"
 		echo "   3)  lcd4linux for external LCD"
-		read -p "Select external LCD support (1-3)? ";;
+		read -p "Select external LCD support (1-3)? [3]"
+		REPLY="${REPLY:-3}";;
 esac
 
 case "$REPLY" in
