@@ -489,6 +489,7 @@ neutrino-release-base:
 	install -d $(RELEASE_DIR)/usr/share/tuxbox/neutrino
 	install -d $(RELEASE_DIR)/usr/share/tuxbox/neutrino/icons/logo
 	install -d $(RELEASE_DIR)/usr/share/lua/5.2
+	ln -sf /usr/share $(RELEASE_DIR)/share
 	ln -sf /usr/share/tuxbox/neutrino/icons/logo $(RELEASE_DIR)/logos
 	install -d $(RELEASE_DIR)/var/{bin,boot,emu,etc,epg,httpd,keys,lib,logos,net,tuxbox,update}
 	install -d $(RELEASE_DIR)/var/lib/{nfs,modules}
