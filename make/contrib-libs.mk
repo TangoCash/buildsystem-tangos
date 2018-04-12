@@ -682,7 +682,7 @@ $(D)/timezone: $(D)/bootstrap find-zic $(ARCHIVE)/$(TZDATA_SOURCE)
 #
 # freetype
 #
-FREETYPE_VER = 2.8.1
+FREETYPE_VER = 2.9
 FREETYPE_SOURCE = freetype-$(FREETYPE_VER).tar.bz2
 FREETYPE_PATCH  = freetype-$(FREETYPE_VER).patch
 
@@ -809,7 +809,7 @@ $(D)/jpeg: $(D)/bootstrap $(ARCHIVE)/$(JPEG_SOURCE)
 #
 # libjpg
 #
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), fortis_hdbox octagon1008 ufs910 ufs922 ipbox55 ipbox99 ipbox9900 cuberevo cuberevo_mini cuberevo_mini2 cuberevo_250hd cuberevo_2000hd cuberevo_3000hd))
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), ufs910 ufs922 ipbox55 ipbox99 ipbox9900 cuberevo_250hd cuberevo_2000hd))
 $(D)/libjpeg: $(D)/jpeg
 	@touch $@
 else
@@ -820,7 +820,7 @@ endif
 #
 # libjpeg_turbo
 #
-LIBJPEG_TURBO_VER = 1.5.2
+LIBJPEG_TURBO_VER = 1.5.3
 LIBJPEG_TURBO_SOURCE = libjpeg-turbo-$(LIBJPEG_TURBO_VER).tar.gz
 
 $(ARCHIVE)/$(LIBJPEG_TURBO_SOURCE):
@@ -966,7 +966,7 @@ $(D)/libconfig: $(D)/bootstrap $(ARCHIVE)/$(LIBCONFIG_SOURCE)
 #
 # libcurl
 #
-LIBCURL_VER = 7.58.0
+LIBCURL_VER = 7.59.0
 LIBCURL_SOURCE = curl-$(LIBCURL_VER).tar.bz2
 LIBCURL_PATCH = libcurl-$(LIBCURL_VER).patch
 
@@ -1150,9 +1150,79 @@ $(D)/libid3tag: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/$(LIBID3TAG_SOURCE)
 	$(TOUCH)
 
 #
+# flac
+#
+FLAC_VER = 1.3.2
+FLAC_SOURCE = flac-$(FLAC_VER).tar.xz
+FLAC_PATCH = flac-$(FLAC_VER).patch
+
+$(ARCHIVE)/$(FLAC_SOURCE):
+	$(WGET) https://ftp.osuosl.org/pub/xiph/releases/flac/$(FLAC_SOURCE)
+
+$(D)/flac: $(D)/bootstrap $(ARCHIVE)/$(FLAC_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/flac-$(FLAC_VER)
+	$(UNTAR)/$(FLAC_SOURCE)
+	set -e; cd $(BUILD_TMP)/flac-$(FLAC_VER); \
+		$(call apply_patches,$(FLAC_PATCH)); \
+		touch NEWS AUTHORS ChangeLog; \
+		autoreconf -fi $(SILENT_OPT); \
+		$(CONFIGURE) \
+			--prefix=/usr \
+			--mandir=/.remove \
+			--datarootdir=/.remove \
+			--disable-cpplibs \
+			--disable-debug \
+			--disable-asm-optimizations \
+			--disable-sse \
+			--disable-altivec \
+			--disable-doxygen-docs \
+			--disable-thorough-tests \
+			--disable-exhaustive-tests \
+			--disable-valgrind-testing \
+			--disable-ogg \
+			--disable-oggtest \
+			--disable-local-xmms-plugin \
+			--disable-xmms-plugin \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR) docdir=/.remove
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/flac.pc
+	$(REWRITE_LIBTOOL)/libFLAC.la
+	$(REMOVE)/flac-$(FLAC_VER)
+	$(TOUCH)
+
+#
+# libogg
+#
+LIBOGG_VER = 1.3.3
+LIBOGG_SOURCE = libogg-$(LIBOGG_VER).tar.gz
+
+$(ARCHIVE)/$(LIBOGG_SOURCE):
+	$(WGET) https://ftp.osuosl.org/pub/xiph/releases/ogg/$(LIBOGG_SOURCE)
+
+$(D)/libogg: $(D)/bootstrap $(ARCHIVE)/$(LIBOGG_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/libogg-$(LIBOGG_VER)
+	$(UNTAR)/$(LIBOGG_SOURCE)
+	set -e; cd $(BUILD_TMP)/libogg-$(LIBOGG_VER); \
+		$(CONFIGURE) \
+			--prefix=/usr \
+			--docdir=/.remove \
+			--enable-shared \
+			--disable-static \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/ogg.pc
+	$(REWRITE_LIBTOOL)/libogg.la
+	$(REMOVE)/libogg-$(LIBOGG_VER)
+	$(TOUCH)
+
+#
 # libvorbis
 #
-LIBVORBIS_VER = 1.3.5
+LIBVORBIS_VER = 1.3.6
 LIBVORBIS_SOURCE = libvorbis-$(LIBVORBIS_VER).tar.xz
 
 $(ARCHIVE)/$(LIBVORBIS_SOURCE):
@@ -1169,6 +1239,7 @@ $(D)/libvorbis: $(D)/bootstrap $(D)/libogg $(ARCHIVE)/$(LIBVORBIS_SOURCE)
 			--mandir=/.remove \
 			--disable-docs \
 			--disable-examples \
+			--disable-oggtest \
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR) docdir=/.remove
@@ -1504,78 +1575,9 @@ $(D)/libsoup: $(D)/bootstrap $(D)/sqlite $(D)/libxml2 $(D)/libglib2 $(ARCHIVE)/$
 	$(TOUCH)
 
 #
-# libogg
-#
-LIBOGG_VER = 1.3.2
-LIBOGG_SOURCE = libogg-$(LIBOGG_VER).tar.gz
-
-$(ARCHIVE)/$(LIBOGG_SOURCE):
-	$(WGET) https://ftp.osuosl.org/pub/xiph/releases/ogg/$(LIBOGG_SOURCE)
-
-$(D)/libogg: $(D)/bootstrap $(ARCHIVE)/$(LIBOGG_SOURCE)
-	$(START_BUILD)
-	$(REMOVE)/libogg-$(LIBOGG_VER)
-	$(UNTAR)/$(LIBOGG_SOURCE)
-	set -e; cd $(BUILD_TMP)/libogg-$(LIBOGG_VER); \
-		$(CONFIGURE) \
-			--prefix=/usr \
-			--docdir=/.remove \
-			--enable-shared \
-			--disable-static \
-		; \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/ogg.pc
-	$(REWRITE_LIBTOOL)/libogg.la
-	$(REMOVE)/libogg-$(LIBOGG_VER)
-	$(TOUCH)
-
-#
-# flac
-#
-FLAC_VER = 1.3.1
-FLAC_SOURCE = flac-$(FLAC_VER).tar.xz
-FLAC_PATCH = flac-$(FLAC_VER).patch
-
-$(ARCHIVE)/$(FLAC_SOURCE):
-	$(WGET) https://ftp.osuosl.org/pub/xiph/releases/flac/$(FLAC_SOURCE)
-
-$(D)/flac: $(D)/bootstrap $(ARCHIVE)/$(FLAC_SOURCE)
-	$(START_BUILD)
-	$(REMOVE)/flac-$(FLAC_VER)
-	$(UNTAR)/$(FLAC_SOURCE)
-	set -e; cd $(BUILD_TMP)/flac-$(FLAC_VER); \
-		$(call apply_patches,$(FLAC_PATCH)); \
-		touch NEWS AUTHORS ChangeLog; \
-		autoreconf -fi $(SILENT_OPT); \
-		$(CONFIGURE) \
-			--prefix=/usr \
-			--mandir=/.remove \
-			--disable-cpplibs \
-			--disable-debug \
-			--disable-asm-optimizations \
-			--disable-sse \
-			--disable-altivec \
-			--disable-doxygen-docs \
-			--disable-thorough-tests \
-			--disable-exhaustive-tests \
-			--disable-valgrind-testing \
-			--disable-ogg \
-			--disable-oggtest \
-			--disable-local-xmms-plugin \
-			--disable-xmms-plugin \
-		; \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR) docdir=/.remove
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/flac.pc
-	$(REWRITE_LIBTOOL)/libFLAC.la
-	$(REMOVE)/flac-$(FLAC_VER)
-	$(TOUCH)
-
-#
 # libxml2
 #
-LIBXML2_VER = 2.9.7
+LIBXML2_VER = 2.9.8
 LIBXML2_SOURCE = libxml2-$(LIBXML2_VER).tar.gz
 LIBXML2_PATCH = libxml2-$(LIBXML2_VER).patch
 
@@ -1613,19 +1615,14 @@ $(D)/libxml2: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/$(LIBXML2_SOURCE)
 		$(MAKE) install DESTDIR=$(TARGET_DIR); \
 		if [ -d $(TARGET_DIR)/usr/include/libxml2/libxml ] ; then \
 			ln -sf ./libxml2/libxml $(TARGET_DIR)/usr/include/libxml; \
-		fi; \
-		mv $(TARGET_DIR)/usr/bin/xml2-config $(HOST_DIR)/bin
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libxml-2.0.pc $(HOST_DIR)/bin/xml2-config
-	sed -i 's/^\(Libs:.*\)/\1 -lz/' $(PKG_CONFIG_PATH)/libxml-2.0.pc
-	if [ -e "$(TARGET_DIR)/$(PYTHON_DIR)/site-packages/libxml2mod.la" ]; then \
-		sed -e "/^dependency_libs/ s,/usr/lib/libxml2.la,$(TARGET_DIR)/usr/lib/libxml2.la,g" -i $(TARGET_DIR)/$(PYTHON_DIR)/site-packages/libxml2mod.la; \
-		sed -e "/^libdir/ s,$(PYTHON_DIR)/site-packages,$(TARGET_DIR)/$(PYTHON_DIR)/site-packages,g" -i $(TARGET_DIR)/$(PYTHON_DIR)/site-packages/libxml2mod.la; \
-	fi; \
-	sed -e "/^XML2_LIBDIR/ s,/usr/lib,$(TARGET_DIR)/usr/lib,g" -i $(TARGET_DIR)/usr/lib/xml2Conf.sh; \
-	sed -e "/^XML2_INCLUDEDIR/ s,/usr/include,$(TARGET_DIR)/usr/include,g" -i $(TARGET_DIR)/usr/lib/xml2Conf.sh; \
-	chmod 755 $(TARGET_DIR)/usr/lib/xml2Conf.sh
+		fi;
+	mv $(TARGET_DIR)/usr/bin/xml2-config $(HOST_DIR)/bin
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libxml-2.0.pc
+	$(REWRITE_PKGCONF) $(HOST_DIR)/bin/xml2-config
 	$(REWRITE_LIBTOOL)/libxml2.la
 	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,xmlcatalog xmllint)
+	rm -rf $(TARGET_LIB_DIR)/xml2Conf.sh
+	rm -rf $(TARGET_LIB_DIR)/cmake
 	$(REMOVE)/libxml2-$(LIBXML2_VER)
 	$(TOUCH)
 
@@ -1655,24 +1652,18 @@ $(D)/libxslt: $(D)/bootstrap $(D)/libxml2 $(ARCHIVE)/$(LIBXSLT_SOURCE)
 			--without-mem-debug \
 		; \
 		$(MAKE) all; \
-		sed -e "s,^prefix=,prefix=$(TARGET_DIR)," < xslt-config > $(HOST_DIR)/bin/xslt-config; \
-		chmod 755 $(HOST_DIR)/bin/xslt-config; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-		if [ -e "$(TARGET_DIR)/$(PYTHON_DIR)/site-packages/libxsltmod.la" ]; then \
-			sed -e "/^dependency_libs/ s,/usr/lib/libexslt.la,$(TARGET_DIR)/usr/lib/libexslt.la,g" -i $(TARGET_DIR)/$(PYTHON_DIR)/site-packages/libxsltmod.la; \
-			sed -e "/^dependency_libs/ s,/usr/lib/libxslt.la,$(TARGET_DIR)/usr/lib/libxslt.la,g" -i $(TARGET_DIR)/$(PYTHON_DIR)/site-packages/libxsltmod.la; \
-			sed -e "/^libdir/ s,$(PYTHON_DIR)/site-packages,$(TARGET_DIR)/$(PYTHON_DIR)/site-packages,g" -i $(TARGET_DIR)/$(PYTHON_DIR)/site-packages/libxsltmod.la; \
-		fi; \
-		sed -e "/^XSLT_LIBDIR/ s,/usr/lib,$(TARGET_DIR)/usr/lib,g" -i $(TARGET_DIR)/usr/lib/xsltConf.sh; \
-		sed -e "/^XSLT_INCLUDEDIR/ s,/usr/include,$(TARGET_DIR)/usr/include,g" -i $(TARGET_DIR)/usr/lib/xsltConf.sh
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libexslt.pc $(HOST_DIR)/bin/xslt-config
+	mv $(TARGETPREFIX)/bin/xslt-config $(HOST_DIR)/bin
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libexslt.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libxslt.pc
+	$(REWRITE_PKGCONF) $(HOST_DIR)/bin/xslt-config
 	$(REWRITE_LIBTOOL)/libexslt.la
 	$(REWRITE_LIBTOOL)/libxslt.la
 	$(REWRITE_LIBTOOLDEP)/libexslt.la
 ifeq ($(BOXARCH), sh4)
 	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,xsltproc xslt-config)
 endif
+	rm -rf $(TARGETLIB)/libxslt-plugins/
 	$(REMOVE)/libxslt-$(LIBXSLT_VER)
 	$(TOUCH)
 
@@ -1787,27 +1778,27 @@ $(D)/graphlcd: $(D)/bootstrap $(D)/freetype $(D)/libusb $(ARCHIVE)/$(GRAPHLCD_SO
 #
 # libdpf
 #
-LIBPDF_VER = 62c8fd0
-LIBPDF_SOURCE = dpf-ax-git-$(LIBPDF_VER).tar.bz2
-LIBPDF_URL = https://github.com/MaxWiesel/dpf-ax.git
-LIBPDF_PATCH = libdpf-crossbuild.patch
+LIBDPF_VER = 62c8fd0
+LIBDPF_SOURCE = dpf-ax-git-$(LIBDPF_VER).tar.bz2
+LIBDPF_URL = https://github.com/MaxWiesel/dpf-ax.git
+LIBDPF_PATCH = libdpf-crossbuild.patch
 
-$(ARCHIVE)/$(LIBPDF_SOURCE):
-	$(SCRIPTS_DIR)/get-git-archive.sh $(LIBPDF_URL) $(LIBPDF_VER) $(notdir $@) $(ARCHIVE)
+$(ARCHIVE)/$(LIBDPF_SOURCE):
+	$(SCRIPTS_DIR)/get-git-archive.sh $(LIBDPF_URL) $(LIBDPF_VER) $(notdir $@) $(ARCHIVE)
 
-$(D)/libdpf: $(D)/bootstrap $(D)/libusb_compat $(ARCHIVE)/$(LIBPDF_SOURCE)
+$(D)/libdpf: $(D)/bootstrap $(D)/libusb_compat $(ARCHIVE)/$(LIBDPF_SOURCE)
 	$(START_BUILD)
-	$(REMOVE)/dpf-ax-git-$(LIBPDF_VER)
-	$(UNTAR)/$(LIBPDF_SOURCE)
-	set -e; cd $(BUILD_TMP)/dpf-ax-git-$(LIBPDF_VER)/dpflib; \
-		$(call apply_patches,$(LIBPDF_PATCH)); \
+	$(REMOVE)/dpf-ax-git-$(LIBDPF_VER)
+	$(UNTAR)/$(LIBDPF_SOURCE)
+	set -e; cd $(BUILD_TMP)/dpf-ax-git-$(LIBDPF_VER)/dpflib; \
+		$(call apply_patches,$(LIBDPF_PATCH)); \
 		make libdpf.a CC=$(TARGET)-gcc PREFIX=$(TARGET_DIR)/usr; \
 		mkdir -p $(TARGET_INCLUDE_DIR)/libdpf; \
 		cp dpf.h $(TARGET_INCLUDE_DIR)/libdpf/libdpf.h; \
 		cp ../include/spiflash.h $(TARGET_INCLUDE_DIR)/libdpf/; \
 		cp ../include/usbuser.h $(TARGET_INCLUDE_DIR)/libdpf/; \
 		cp libdpf.a $(TARGET_LIB_DIR)/
-	$(REMOVE)/dpf-ax-git-$(LIBPDF_VER)
+	$(REMOVE)/dpf-ax-git-$(LIBDPF_VER)
 	$(TOUCH)
 
 #
@@ -1986,7 +1977,7 @@ $(D)/alsa_utils: $(D)/bootstrap $(D)/alsa_lib $(ARCHIVE)/$(ALSA_UTILS_SOURCE)
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--mandir=/.remove \
-			--with-curses=ncursesw \
+			--with-curses=ncurses \
 			--disable-bat \
 			--disable-nls \
 			--disable-alsatest \
@@ -2039,27 +2030,27 @@ $(D)/libopenthreads: $(D)/bootstrap $(ARCHIVE)/$(LIBOPENTHREADS_SOURCE)
 	$(TOUCH)
 
 #
-# librtmpdump
+# librtmp
 #
-LIBRTMPDUMP_VER = ad70c64
-LIBRTMPDUMP_SOURCE = librtmpdump-git-$(LIBRTMPDUMP_VER).tar.bz2
-LIBRTMPDUMP_URL = git://github.com/oe-alliance/rtmpdump.git
-LIBRTMPDUMP_PATCH = rtmpdump-2.4.patch
+LIBRTMP_VER = ad70c64
+LIBRTMP_SOURCE = rtmpdump-git-$(LIBRTMP_VER).tar.bz2
+LIBRTMP_URL = git://github.com/oe-alliance/rtmpdump.git
+LIBRTMP_PATCH = rtmpdump-git-$(LIBRTMP_VER).patch
 
-$(ARCHIVE)/$(LIBRTMPDUMP_SOURCE):
-	$(SCRIPTS_DIR)/get-git-archive.sh $(LIBRTMPDUMP_URL) $(LIBRTMPDUMP_VER) $(notdir $@) $(ARCHIVE)
+$(ARCHIVE)/$(LIBRTMP_SOURCE):
+	$(SCRIPTS_DIR)/get-git-archive.sh $(LIBRTMP_URL) $(LIBRTMP_VER) $(notdir $@) $(ARCHIVE)
 
-$(D)/librtmpdump: $(D)/bootstrap $(D)/zlib $(D)/openssl $(ARCHIVE)/$(LIBRTMPDUMP_SOURCE)
+$(D)/librtmp: $(D)/bootstrap $(D)/zlib $(D)/openssl $(ARCHIVE)/$(LIBRTMP_SOURCE)
 	$(START_BUILD)
-	$(REMOVE)/librtmpdump-git-$(LIBRTMPDUMP_VER)
-	$(UNTAR)/$(LIBRTMPDUMP_SOURCE)
-	set -e; cd $(BUILD_TMP)/librtmpdump-git-$(LIBRTMPDUMP_VER); \
-		$(call apply_patches,$(LIBRTMPDUMP_PATCH)); \
+	$(REMOVE)/rtmpdump-git-$(LIBRTMP_VER)
+	$(UNTAR)/$(LIBRTMP_SOURCE)
+	set -e; cd $(BUILD_TMP)/rtmpdump-git-$(LIBRTMP_VER); \
+		$(call apply_patches,$(LIBRTMP_PATCH)); \
 		$(MAKE) CROSS_COMPILE=$(TARGET)- XCFLAGS="-I$(TARGET_INCLUDE_DIR) -L$(TARGET_LIB_DIR)" LDFLAGS="-L$(TARGET_LIB_DIR)"; \
 		$(MAKE) install prefix=/usr DESTDIR=$(TARGET_DIR) MANDIR=$(TARGET_DIR)/.remove
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/librtmp.pc
 	rm -f $(addprefix $(TARGET_DIR)/usr/sbin/,rtmpgw rtmpsrv rtmpsuck)
-	$(REMOVE)/librtmpdump-git-$(LIBRTMPDUMP_VER)
+	$(REMOVE)/rtmpdump-git-$(LIBRTMP_VER)
 	$(TOUCH)
 
 #
@@ -2068,7 +2059,7 @@ $(D)/librtmpdump: $(D)/bootstrap $(D)/zlib $(D)/openssl $(ARCHIVE)/$(LIBRTMPDUMP
 LIBDVBSI_VER = ff57e58
 LIBDVBSI_SOURCE = libdvbsi-git-$(LIBDVBSI_VER).tar.bz2
 LIBDVBSI_URL = git://git.opendreambox.org/git/obi/libdvbsi++.git
-LIBDVBSI_PATCH = libdvbsi-git.patch
+LIBDVBSI_PATCH = libdvbsi-git-$(LIBDVBSI_VER).patch
 
 $(ARCHIVE)/$(LIBDVBSI_SOURCE):
 	$(SCRIPTS_DIR)/get-git-archive.sh $(LIBDVBSI_URL) $(LIBDVBSI_VER) $(notdir $@) $(ARCHIVE)
