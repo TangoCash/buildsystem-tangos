@@ -210,7 +210,7 @@ $(D)/cortex-strings: $(ARCHIVE)/$(CORTEX_STRINGS_SOURCE) directories
 	set -e; cd $(BUILD_TMP)/cortex-strings-git-$(CORTEX_STRINGS_VER); \
 		./autogen.sh; \
 		$(MAKE_OPTS) \
-		./configure \
+		./configure $(SILENT_OPT)\
 			--build=$(BUILD) \
 			--host=$(TARGET) \
 			--prefix=/usr \
