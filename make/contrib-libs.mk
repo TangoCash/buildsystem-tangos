@@ -1815,8 +1815,8 @@ $(D)/lcd4linux: $(D)/bootstrap $(D)/libusb_compat $(D)/gd $(D)/libusb $(D)/libdp
 	$(REMOVE)/lcd4linux-git-$(LCD4LINUX_VER)
 	$(UNTAR)/$(LCD4LINUX_SOURCE)
 	set -e; cd $(BUILD_TMP)/lcd4linux-git-$(LCD4LINUX_VER); \
-		$(BUILDENV) ./bootstrap; \
-		$(BUILDENV) ./configure $(SILENT_OPT) $(CONFIGURE_OPTS) \
+		$(BUILDENV) ./bootstrap $(SILENT_OPT); \
+		$(BUILDENV) ./configure $(CONFIGURE_OPTS) $(SILENT_OPT)\
 			--prefix=/usr \
 			--with-drivers='DPF,SamsungSPF' \
 			--with-plugins='all,!apm,!asterisk,!dbus,!dvb,!gps,!hddtemp,!huawei,!imon,!isdn,!kvv,!mpd,!mpris_dbus,!mysql,!pop3,!ppp,!python,!qnaplog,!raspi,!sample,!seti,!w1retap,!wireless,!xmms' \
@@ -2200,7 +2200,7 @@ $(D)/djmount: $(D)/bootstrap $(D)/fuse $(ARCHIVE)/$(DJMOUNT_SOURCE)
 	set -e; cd $(BUILD_TMP)/djmount-$(DJMOUNT_VER); \
 		touch libupnp/config.aux/config.rpath; \
 		$(call apply_patches,$(DJMOUNT_PATCH)); \
-		autoreconf -fi; \
+		autoreconf -fi $(SILENT_OPT); \
 		$(CONFIGURE) -C \
 			--prefix=/usr \
 			--disable-debug \

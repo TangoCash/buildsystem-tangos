@@ -208,7 +208,7 @@ $(D)/cortex-strings: $(ARCHIVE)/$(CORTEX_STRINGS_SOURCE) directories
 	$(REMOVE)/cortex-strings-git-$(CORTEX_STRINGS_VER)
 	$(UNTAR)/$(CORTEX_STRINGS_SOURCE)
 	set -e; cd $(BUILD_TMP)/cortex-strings-git-$(CORTEX_STRINGS_VER); \
-		./autogen.sh; \
+		./autogen.sh  $(SILENT_OPT); \
 		$(MAKE_OPTS) \
 		./configure $(SILENT_OPT)\
 			--build=$(BUILD) \
