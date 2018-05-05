@@ -1848,6 +1848,7 @@ $(D)/astra-sm: $(D)/bootstrap $(D)/openssl
 	set -e; cd $(BUILD_TMP)/astra-sm; \
 		$(BUILDENV) \
 		autoreconf -fi $(SILENT_OPT); \
+		sed -i 's:(CFLAGS):(CFLAGS_FOR_BUILD):' tools/Makefile.am; \
 		$(CONFIGURE) \
 			--build=$(BUILD) \
 			--host=$(TARGET) \
