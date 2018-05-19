@@ -30,6 +30,7 @@ endif
 ifeq ($(BOXARCH), arm)
 NEUTRINO_DEPS += $(D)/ntfs_3g
 NEUTRINO_DEPS += $(D)/mc
+NEUTRINO_DEPS += $(D)/samba
 endif
 
 ifeq ($(IMAGE), neutrino-wlandriver)
