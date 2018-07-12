@@ -1,7 +1,7 @@
 #
 # busybox
 #
-BUSYBOX_VER = 1.28.3
+BUSYBOX_VER = 1.29.0
 BUSYBOX_SOURCE = busybox-$(BUSYBOX_VER).tar.bz2
 BUSYBOX_PATCH  = busybox-$(BUSYBOX_VER)-nandwrite.patch
 BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-unicode.patch
@@ -311,7 +311,7 @@ $(D)/portmap: $(D)/bootstrap $(D)/lsb $(ARCHIVE)/$(PORTMAP_SOURCE) $(ARCHIVE)/po
 #
 # e2fsprogs
 #
-E2FSPROGS_VER = 1.44.1
+E2FSPROGS_VER = 1.44.3
 E2FSPROGS_SOURCE = e2fsprogs-$(E2FSPROGS_VER).tar.gz
 E2FSPROGS_PATCH = e2fsprogs-$(E2FSPROGS_VER).patch
 
@@ -325,7 +325,7 @@ $(D)/e2fsprogs: $(D)/bootstrap $(D)/util_linux $(ARCHIVE)/$(E2FSPROGS_SOURCE)
 	set -e; cd $(BUILD_TMP)/e2fsprogs-$(E2FSPROGS_VER); \
 		$(call apply_patches,$(E2FSPROGS_PATCH)); \
 		PATH=$(BUILD_TMP)/e2fsprogs-$(E2FSPROGS_VER):$(PATH) \
-		autoreconf -fi $(SILENT_OPT) && \
+		autoreconf -fi $(SILENT_OPT); \
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--libdir=/usr/lib \
@@ -366,102 +366,6 @@ $(D)/e2fsprogs: $(D)/bootstrap $(D)/util_linux $(ARCHIVE)/$(E2FSPROGS_SOURCE)
 	rm -f $(addprefix $(TARGET_DIR)/usr/sbin/,filefrag e2freefrag mklost+found uuidd e4crypt)
 	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,chattr lsattr uuidgen)
 	$(REMOVE)/e2fsprogs-$(E2FSPROGS_VER)
-	$(TOUCH)
-
-#
-# dosfstools
-#
-DOSFSTOOLS_VER = 4.1
-DOSFSTOOLS_SOURCE = dosfstools-$(DOSFSTOOLS_VER).tar.xz
-
-$(ARCHIVE)/$(DOSFSTOOLS_SOURCE):
-	$(WGET) https://github.com/dosfstools/dosfstools/releases/download/v$(DOSFSTOOLS_VER)/$(DOSFSTOOLS_SOURCE)
-
-DOSFSTOOLS_CFLAGS = $(TARGET_CFLAGS) -D_GNU_SOURCE -fomit-frame-pointer -D_FILE_OFFSET_BITS=64
-
-$(D)/dosfstools: bootstrap $(ARCHIVE)/$(DOSFSTOOLS_SOURCE)
-	$(START_BUILD)
-	$(REMOVE)/dosfstools-$(DOSFSTOOLS_VER)
-	$(UNTAR)/$(DOSFSTOOLS_SOURCE)
-	set -e; cd $(BUILD_TMP)/dosfstools-$(DOSFSTOOLS_VER); \
-		autoreconf -fi $(SILENT_OPT); \
-		$(CONFIGURE) \
-			--prefix= \
-			--mandir=/.remove \
-			--docdir=/.remove \
-			--without-udev \
-			--enable-compat-symlinks \
-			CFLAGS="$(DOSFSTOOLS_CFLAGS)" \
-		; \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/dosfstools-$(DOSFSTOOLS_VER)
-	$(TOUCH)
-
-#
-# jfsutils
-#
-JFSUTILS_VER = 1.1.15
-JFSUTILS_SOURCE = jfsutils-$(JFSUTILS_VER).tar.gz
-JFSUTILS_PATCH = jfsutils-$(JFSUTILS_VER).patch
-
-$(ARCHIVE)/$(JFSUTILS_SOURCE):
-	$(WGET) http://jfs.sourceforge.net/project/pub/$(JFSUTILS_SOURCE)
-
-$(D)/jfsutils: $(D)/bootstrap $(D)/e2fsprogs $(ARCHIVE)/$(JFSUTILS_SOURCE)
-	$(START_BUILD)
-	$(REMOVE)/jfsutils-$(JFSUTILS_VER)
-	$(UNTAR)/$(JFSUTILS_SOURCE)
-	set -e; cd $(BUILD_TMP)/jfsutils-$(JFSUTILS_VER); \
-		$(call apply_patches,$(JFSUTILS_PATCH)); \
-		sed "s@<unistd.h>@&\n#include <sys/types.h>@g" -i fscklog/extract.c; \
-		autoreconf -fi $(SILENT_OPT); \
-		$(CONFIGURE) \
-			--prefix= \
-			--target=$(TARGET) \
-			--mandir=/.remove \
-		; \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	rm -f $(addprefix $(TARGET_DIR)/sbin/,jfs_debugfs jfs_fscklog jfs_logdump)
-	$(REMOVE)/jfsutils-$(JFSUTILS_VER)
-	$(TOUCH)
-
-#
-# ntfs-3g
-#
-NTFS_3G_VER = 2017.3.23
-NTFS_3G_SOURCE = ntfs-3g_ntfsprogs-$(NTFS_3G_VER).tgz
-
-$(ARCHIVE)/$(NTFS_3G_SOURCE):
-	$(WGET) https://tuxera.com/opensource/$(NTFS_3G_SOURCE)
-
-$(D)/ntfs_3g: $(D)/bootstrap $(ARCHIVE)/$(NTFS_3G_SOURCE)
-	$(START_BUILD)
-	$(REMOVE)/ntfs-3g_ntfsprogs-$(NTFS_3G_VER)
-	$(UNTAR)/$(NTFS_3G_SOURCE)
-	set -e; cd $(BUILD_TMP)/ntfs-3g_ntfsprogs-$(NTFS_3G_VER); \
-		CFLAGS="-pipe -Os" \
-		$(CONFIGURE) \
-			--build=$(BUILD) \
-			--host=$(TARGET) \
-			--prefix=/usr \
-			--exec-prefix=/usr \
-			--bindir=/usr/bin \
-			--mandir=/.remove \
-			--docdir=/.remove \
-			--disable-ldconfig \
-			--disable-ntfsprogs \
-			--disable-static \
-			--enable-silent-rules \
-		; \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libntfs-3g.pc
-	$(REWRITE_LIBTOOL)/libntfs-3g.la
-	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,lowntfs-3g ntfs-3g.probe)
-	rm -f $(addprefix $(TARGET_DIR)/sbin/,mount.lowntfs-3g)
-	$(REMOVE)/ntfs-3g_ntfsprogs-$(NTFS_3G_VER)
 	$(TOUCH)
 
 #
@@ -554,6 +458,158 @@ $(D)/util_linux: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/$(UTIL_LINUX_SOURCE)
 		install -D -m 755 sfdisk $(TARGET_DIR)/sbin/sfdisk; \
 		install -D -m 755 mkfs $(TARGET_DIR)/sbin/mkfs
 	$(REMOVE)/util-linux-$(UTIL_LINUX_VER)
+	$(TOUCH)
+
+#
+# gptfdisk
+#
+GPTFDISK_VER = 1.0.3
+GPTFDISK_SOURCE = gptfdisk-$(GPTFDISK_VER).tar.gz
+GPTFDISK_PATCH = gptfdisk-1.0.3.patch
+
+$(ARCHIVE)/$(GPTFDISK_SOURCE):
+	$(WGET) https://sourceforge.net/projects/gptfdisk/files/gptfdisk/$(GPTFDISK_VER)/$(GPTFDISK_SOURCE)
+
+$(D)/gptfdisk: $(D)/bootstrap $(D)/util_linux $(D)/ncurses $(D)/libpopt $(ARCHIVE)/$(GPTFDISK_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/gptfdisk-$(GPTFDISK_VER)
+	$(UNTAR)/$(GPTFDISK_SOURCE)
+	set -e; cd $(BUILD_TMP)/gptfdisk-$(GPTFDISK_VER); \
+		$(call apply_patches,$(GPTFDISK_PATCH)); \
+		$(BUILDENV) \
+		$(MAKE) sgdisk; \
+		install -m755 sgdisk $(TARGET_DIR)/usr/sbin/sgdisk
+	$(REMOVE)/gptfdisk-$(GPTFDISK_VER)
+	$(TOUCH)
+
+#
+# parted
+#
+PARTED_VER = 3.2
+PARTED_SOURCE = parted-$(PARTED_VER).tar.xz
+PARTED_PATCH = parted-$(PARTED_VER)-device-mapper.patch
+
+$(ARCHIVE)/$(PARTED_SOURCE):
+	$(WGET) https://ftp.gnu.org/gnu/parted/$(PARTED_SOURCE)
+
+$(D)/parted: $(D)/bootstrap $(D)/e2fsprogs $(ARCHIVE)/$(PARTED_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/parted-$(PARTED_VER)
+	$(UNTAR)/$(PARTED_SOURCE)
+	set -e; cd $(BUILD_TMP)/parted-$(PARTED_VER); \
+		$(call apply_patches,$(PARTED_PATCH)); \
+		$(CONFIGURE) \
+			--target=$(TARGET) \
+			--prefix=/usr \
+			--mandir=/.remove \
+			--infodir=/.remove \
+			--without-readline \
+			--disable-shared \
+			--disable-dynamic-loading \
+			--disable-debug \
+			--disable-device-mapper \
+			--disable-nls \
+		; \
+		$(MAKE) all; \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libparted.pc
+	$(REWRITE_LIBTOOL)/libparted.la
+	$(REWRITE_LIBTOOL)/libparted-fs-resize.la
+	$(REMOVE)/parted-$(PARTED_VER)
+	$(TOUCH)
+
+#
+# dosfstools
+#
+DOSFSTOOLS_VER = 4.1
+DOSFSTOOLS_SOURCE = dosfstools-$(DOSFSTOOLS_VER).tar.xz
+
+$(ARCHIVE)/$(DOSFSTOOLS_SOURCE):
+	$(WGET) https://github.com/dosfstools/dosfstools/releases/download/v$(DOSFSTOOLS_VER)/$(DOSFSTOOLS_SOURCE)
+
+DOSFSTOOLS_CFLAGS = $(TARGET_CFLAGS) -D_GNU_SOURCE -fomit-frame-pointer -D_FILE_OFFSET_BITS=64
+
+$(D)/dosfstools: bootstrap $(ARCHIVE)/$(DOSFSTOOLS_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/dosfstools-$(DOSFSTOOLS_VER)
+	$(UNTAR)/$(DOSFSTOOLS_SOURCE)
+	set -e; cd $(BUILD_TMP)/dosfstools-$(DOSFSTOOLS_VER); \
+		autoreconf -fi $(SILENT_OPT); \
+		$(CONFIGURE) \
+			--prefix= \
+			--mandir=/.remove \
+			--docdir=/.remove \
+			--without-udev \
+			--enable-compat-symlinks \
+			CFLAGS="$(DOSFSTOOLS_CFLAGS)" \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REMOVE)/dosfstools-$(DOSFSTOOLS_VER)
+	$(TOUCH)
+
+#
+# jfsutils
+#
+JFSUTILS_VER = 1.1.15
+JFSUTILS_SOURCE = jfsutils-$(JFSUTILS_VER).tar.gz
+JFSUTILS_PATCH = jfsutils-$(JFSUTILS_VER).patch
+
+$(ARCHIVE)/$(JFSUTILS_SOURCE):
+	$(WGET) http://jfs.sourceforge.net/project/pub/$(JFSUTILS_SOURCE)
+
+$(D)/jfsutils: $(D)/bootstrap $(D)/e2fsprogs $(ARCHIVE)/$(JFSUTILS_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/jfsutils-$(JFSUTILS_VER)
+	$(UNTAR)/$(JFSUTILS_SOURCE)
+	set -e; cd $(BUILD_TMP)/jfsutils-$(JFSUTILS_VER); \
+		$(call apply_patches,$(JFSUTILS_PATCH)); \
+		sed "s@<unistd.h>@&\n#include <sys/types.h>@g" -i fscklog/extract.c; \
+		autoreconf -fi $(SILENT_OPT); \
+		$(CONFIGURE) \
+			--prefix= \
+			--target=$(TARGET) \
+			--mandir=/.remove \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	rm -f $(addprefix $(TARGET_DIR)/sbin/,jfs_debugfs jfs_fscklog jfs_logdump)
+	$(REMOVE)/jfsutils-$(JFSUTILS_VER)
+	$(TOUCH)
+
+#
+# ntfs-3g
+#
+NTFS_3G_VER = 2017.3.23
+NTFS_3G_SOURCE = ntfs-3g_ntfsprogs-$(NTFS_3G_VER).tgz
+
+$(ARCHIVE)/$(NTFS_3G_SOURCE):
+	$(WGET) https://tuxera.com/opensource/$(NTFS_3G_SOURCE)
+
+$(D)/ntfs_3g: $(D)/bootstrap $(ARCHIVE)/$(NTFS_3G_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/ntfs-3g_ntfsprogs-$(NTFS_3G_VER)
+	$(UNTAR)/$(NTFS_3G_SOURCE)
+	set -e; cd $(BUILD_TMP)/ntfs-3g_ntfsprogs-$(NTFS_3G_VER); \
+		$(CONFIGURE) \
+			--prefix=/usr \
+			--exec-prefix=/usr \
+			--bindir=/usr/bin \
+			--mandir=/.remove \
+			--docdir=/.remove \
+			--disable-ldconfig \
+			--disable-static \
+			--disable-ntfsprogs \
+			--enable-silent-rules \
+			--with-fuse=internal \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libntfs-3g.pc
+	$(REWRITE_LIBTOOL)/libntfs-3g.la
+	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,lowntfs-3g ntfs-3g.probe)
+	rm -f $(addprefix $(TARGET_DIR)/sbin/,mount.lowntfs-3g)
+	$(REMOVE)/ntfs-3g_ntfsprogs-$(NTFS_3G_VER)
 	$(TOUCH)
 
 #
@@ -663,6 +719,9 @@ $(D)/fuse: $(D)/bootstrap $(ARCHIVE)/$(FUSE_SOURCE)
 		$(CONFIGURE) \
 			CFLAGS="$(TARGET_CFLAGS) -I$(KERNEL_DIR)/arch/sh" \
 			--prefix=/usr \
+			--exec-prefix=/usr \
+			--disable-static \
+			--mandir=/.remove \
 		; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -697,6 +756,7 @@ $(D)/curlftpfs: $(D)/bootstrap $(D)/libcurl $(D)/fuse $(D)/libglib2 $(ARCHIVE)/$
 			CFLAGS="$(TARGET_CFLAGS) -I$(KERNEL_DIR)/arch/sh" \
 			--target=$(TARGET) \
 			--prefix=/usr \
+			--mandir=/.remove \
 		; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -807,53 +867,16 @@ FBSHOT_PATCH = fbshot-$(FBSHOT_VER)-$(BOXARCH).patch
 $(ARCHIVE)/$(FBSHOT_SOURCE):
 	$(WGET) http://distro.ibiblio.org/amigolinux/download/Utils/fbshot/$(FBSHOT_SOURCE)
 
-$(D)/fbshot: $(TARGET_DIR)/bin/fbshot
-	$(TOUCH)
-
-$(TARGET_DIR)/bin/fbshot: $(D)/bootstrap $(D)/libpng $(ARCHIVE)/$(FBSHOT_SOURCE)
+$(D)/fbshot: $(D)/bootstrap $(D)/libpng $(ARCHIVE)/$(FBSHOT_SOURCE)
 	$(START_BUILD)
 	$(REMOVE)/fbshot-$(FBSHOT_VER)
 	$(UNTAR)/$(FBSHOT_SOURCE)
 	set -e; cd $(BUILD_TMP)/fbshot-$(FBSHOT_VER); \
 		$(call apply_patches,$(FBSHOT_PATCH)); \
-		$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS) fbshot.c -lpng -lz -o $@
-	$(REMOVE)/fbshot-$(FBSHOT_VER)
-	@touch $@
-
-#
-# parted
-#
-PARTED_VER = 3.2
-PARTED_SOURCE = parted-$(PARTED_VER).tar.xz
-PARTED_PATCH = parted-$(PARTED_VER)-device-mapper.patch
-
-$(ARCHIVE)/$(PARTED_SOURCE):
-	$(WGET) https://ftp.gnu.org/gnu/parted/$(PARTED_SOURCE)
-
-$(D)/parted: $(D)/bootstrap $(D)/e2fsprogs $(ARCHIVE)/$(PARTED_SOURCE)
-	$(START_BUILD)
-	$(REMOVE)/parted-$(PARTED_VER)
-	$(UNTAR)/$(PARTED_SOURCE)
-	set -e; cd $(BUILD_TMP)/parted-$(PARTED_VER); \
-		$(call apply_patches,$(PARTED_PATCH)); \
-		$(CONFIGURE) \
-			--target=$(TARGET) \
-			--prefix=/usr \
-			--mandir=/.remove \
-			--infodir=/.remove \
-			--without-readline \
-			--disable-shared \
-			--disable-dynamic-loading \
-			--disable-debug \
-			--disable-device-mapper \
-			--disable-nls \
-		; \
+		sed -i s~'gcc'~"$(TARGET)-gcc $(TARGET_CFLAGS) $(TARGET_LDFLAGS)"~ Makefile; \
 		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libparted.pc
-	$(REWRITE_LIBTOOL)/libparted.la
-	$(REWRITE_LIBTOOL)/libparted-fs-resize.la
-	$(REMOVE)/parted-$(PARTED_VER)
+		install -D -m 755 fbshot $(TARGET_DIR)/bin/fbshot
+	$(REMOVE)/fbshot-$(FBSHOT_VER)
 	$(TOUCH)
 
 #
@@ -963,7 +986,7 @@ $(D)/shairport-sync: $(D)/bootstrap $(D)/libdaemon $(D)/libpopt $(D)/libconfig $
 #
 # dbus
 #
-DBUS_VER = 1.8.0
+DBUS_VER = 1.12.6
 DBUS_SOURCE = dbus-$(DBUS_VER).tar.gz
 
 $(ARCHIVE)/$(DBUS_SOURCE):
@@ -997,7 +1020,7 @@ $(D)/dbus: $(D)/bootstrap $(D)/expat $(ARCHIVE)/$(DBUS_SOURCE)
 #
 # avahi
 #
-AVAHI_VER = 0.6.32
+AVAHI_VER = 0.7
 AVAHI_SOURCE = avahi-$(AVAHI_VER).tar.gz
 
 $(ARCHIVE)/$(AVAHI_SOURCE):
@@ -1063,7 +1086,7 @@ $(D)/avahi: $(D)/bootstrap $(D)/expat $(D)/libdaemon $(D)/dbus $(ARCHIVE)/$(AVAH
 #
 # wget
 #
-WGET_VER = 1.19.4
+WGET_VER = 1.19.5
 WGET_SOURCE = wget-$(WGET_VER).tar.gz
 
 $(ARCHIVE)/$(WGET_SOURCE):
@@ -1121,7 +1144,7 @@ $(D)/coreutils: $(D)/bootstrap $(D)/openssl $(ARCHIVE)/$(COREUTILS_SOURCE)
 #
 # smartmontools
 #
-SMARTMONTOOLS_VER = 6.4
+SMARTMONTOOLS_VER = 6.6
 SMARTMONTOOLS_SOURCE = smartmontools-$(SMARTMONTOOLS_VER).tar.gz
 
 $(ARCHIVE)/$(SMARTMONTOOLS_SOURCE):
@@ -1143,7 +1166,7 @@ $(D)/smartmontools: $(D)/bootstrap $(ARCHIVE)/$(SMARTMONTOOLS_SOURCE)
 #
 # nfs_utils
 #
-NFS_UTILS_VER = 2.3.1
+NFS_UTILS_VER = 2.3.2
 NFS_UTILS_SOURCE = nfs-utils-$(NFS_UTILS_VER).tar.bz2
 NFS_UTILS_PATCH = nfs-utils-$(NFS_UTILS_VER).patch
 
@@ -1286,7 +1309,7 @@ $(D)/procps_ng: $(D)/bootstrap $(D)/ncurses $(ARCHIVE)/$(PROCPS_NG_SOURCE)
 #
 # htop
 #
-HTOP_VER = 2.1.0
+HTOP_VER = 2.2.0
 HTOP_SOURCE = htop-$(HTOP_VER).tar.gz
 HTOP_PATCH = htop-$(HTOP_VER).patch
 
@@ -1297,8 +1320,9 @@ $(D)/htop: $(D)/bootstrap $(D)/ncurses $(ARCHIVE)/$(HTOP_SOURCE)
 	$(START_BUILD)
 	$(REMOVE)/htop-$(HTOP_VER)
 	$(UNTAR)/$(HTOP_SOURCE)
-	cd $(BUILD_TMP)/htop-$(HTOP_VER); \
+	set -e; cd $(BUILD_TMP)/htop-$(HTOP_VER); \
 		$(call apply_patches,$(HTOP_PATCH)); \
+		autoreconf -fi $(SILENT_OPT); \
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--mandir=/.remove \
@@ -1318,7 +1342,7 @@ $(D)/htop: $(D)/bootstrap $(D)/ncurses $(ARCHIVE)/$(HTOP_SOURCE)
 #
 # ethtool
 #
-ETHTOOL_VER = 4.15
+ETHTOOL_VER = 4.17
 ETHTOOL_SOURCE = ethtool-$(ETHTOOL_VER).tar.xz
 
 $(ARCHIVE)/$(ETHTOOL_SOURCE):
@@ -1332,7 +1356,7 @@ $(D)/ethtool: $(D)/bootstrap $(ARCHIVE)/$(ETHTOOL_SOURCE)
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--mandir=/.remove \
-			--libdir=$(TARGET_DIR)/usr/lib \
+			--disable-pretty-dump \
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -1503,7 +1527,7 @@ $(D)/wireless_tools: $(D)/bootstrap $(ARCHIVE)/$(WIRELESS_TOOLS_SOURCE)
 #
 # libnl
 #
-LIBNL_VER = 2.0
+LIBNL_VER = 3.2.25
 LIBNL_SOURCE = libnl-$(LIBNL_VER).tar.gz
 
 $(ARCHIVE)/$(LIBNL_SOURCE):
@@ -1522,12 +1546,17 @@ $(D)/libnl: $(D)/bootstrap $(D)/openssl $(ARCHIVE)/$(LIBNL_SOURCE)
 			--infodir=/.remove \
 		make $(SILENT_OPT); \
 		make install $(SILENT_OPT) DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libnl-$(LIBNL_VER).pc
-	$(REWRITE_LIBTOOL)/libnl.la
-	$(REWRITE_LIBTOOL)/libnl-cli.la
-	$(REWRITE_LIBTOOL)/libnl-genl.la
-	$(REWRITE_LIBTOOL)/libnl-nf.la
-	$(REWRITE_LIBTOOL)/libnl-route.la
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libnl-3.0.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libnl-cli-3.0.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libnl-genl-3.0.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libnl-nf-3.0.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libnl-route-3.0.pc
+	$(REWRITE_LIBTOOL)/libnl-3.la
+	$(REWRITE_LIBTOOL)/libnl-cli-3.la
+	$(REWRITE_LIBTOOL)/libnl-genl-3.la
+	$(REWRITE_LIBTOOL)/libnl-idiag-3.la
+	$(REWRITE_LIBTOOL)/libnl-nf-3.la
+	$(REWRITE_LIBTOOL)/libnl-route-3.la
 	$(REMOVE)/libnl-$(LIBNL_VER)
 	$(TOUCH)
 
@@ -1657,7 +1686,7 @@ $(D)/openvpn: $(D)/bootstrap $(D)/openssl $(D)/lzo $(ARCHIVE)/$(OPENVPN_SOURCE)
 #
 # openssh
 #
-OPENSSH_VER = 7.5p1
+OPENSSH_VER = 7.7p1
 OPENSSH_SOURCE = openssh-$(OPENSSH_VER).tar.gz
 
 $(ARCHIVE)/$(OPENSSH_SOURCE):
@@ -1709,8 +1738,7 @@ $(D)/dropbear: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/$(DROPBEAR_SOURCE)
 			--disable-loginfunc \
 			--disable-pam \
 		; \
-		sed -i 's:.*\(#define NO_FAST_EXPTMOD\).*:\1:' options.h; \
-		sed -i 's:^#define DROPBEAR_SMALL_CODE::' options.h; \
+		sed -i 's|^\(#define DROPBEAR_SMALL_CODE\).*|\1 0|' default_options.h; \
 		$(MAKE) PROGRAMS="dropbear dbclient dropbearkey scp" SCPPROGRESS=1; \
 		$(MAKE) PROGRAMS="dropbear dbclient dropbearkey scp" install DESTDIR=$(TARGET_DIR)
 	install -m 755 $(SKEL_ROOT)/etc/init.d/dropbear $(TARGET_DIR)/etc/init.d/
@@ -1736,8 +1764,6 @@ $(D)/dropbearmulti: $(D)/bootstrap $(ARCHIVE)/$(DROPBEARMULTI_SOURCE)
 		$(BUILDENV) \
 		autoreconf -fi $(SILENT_OPT); \
 		$(CONFIGURE) \
-			--build=$(BUILD) \
-			--host=$(TARGET) \
 			--prefix=/usr \
 			--disable-syslog \
 			--disable-lastlog \

@@ -79,7 +79,7 @@ $(D)/python: $(D)/bootstrap $(D)/host_python $(D)/ncurses $(D)/zlib $(D)/openssl
 		$(call apply_patches,$(PYTHON_PATCH)); \
 		CONFIG_SITE= \
 		$(BUILDENV) \
-		autoreconf --verbose --install --force Modules/_ctypes/libffi; \
+		autoreconf -fiv Modules/_ctypes/libffi; \
 		autoconf $(SILENT_OPT); \
 		./configure $(SILENT_OPT) \
 			--build=$(BUILD) \
