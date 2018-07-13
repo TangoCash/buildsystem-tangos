@@ -26,12 +26,17 @@ $(D)/links: $(D)/bootstrap $(D)/libpng $(D)/openssl $(ARCHIVE)/links-$(LINKS_VER
 		$(CONFIGURE) \
 			--prefix= \
 			--mandir=/.remove \
-			--without-svgalib \
-			--without-x \
 			--without-libtiff \
+			--without-svgalib \
+			--with-fb \
+			--without-directfb \
+			--without-pmshell \
+			--without-atheos \
 			--enable-graphics \
 			--enable-javascript \
-			--with-ssl; \
+			--with-ssl=$(TARGET_DIR)/usr \
+			--without-x \
+		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	mkdir -p $(TARGET_DIR)/var/tuxbox/plugins $(TARGET_DIR)/var/tuxbox/config/links
@@ -78,7 +83,7 @@ $(D)/neutrino-mp-plugin.config.status: $(D)/bootstrap
 	rm -rf $(NP_OBJDIR); \
 	test -d $(NP_OBJDIR) || mkdir -p $(NP_OBJDIR); \
 	cd $(NP_OBJDIR); \
-		$(SOURCE_DIR)/neutrino-mp-plugins/autogen.sh && automake --add-missing; \
+		$(SOURCE_DIR)/neutrino-mp-plugins/autogen.sh $(SILENT_OPT) && automake --add-missing $(SILENT_OPT); \
 		$(BUILDENV) \
 		$(SOURCE_DIR)/neutrino-mp-plugins/configure $(SILENT_OPT) \
 			--host=$(TARGET) \
