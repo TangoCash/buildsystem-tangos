@@ -5,7 +5,7 @@
 ifeq ($(BOXARCH), arm)
 
 ifeq ($(FFMPEG_EXPERIMENTAL), 1)
-FFMPEG_VER = 3.4.3
+FFMPEG_VER = 3.4.4
 else
 FFMPEG_VER = 3.3
 endif
@@ -364,7 +364,7 @@ endif
 
 ifeq ($(BOXARCH), sh4)
 
-FFMPEG_VER = 2.8.10
+FFMPEG_VER = 2.8.15
 FFMPEG_SOURCE = ffmpeg-$(FFMPEG_VER).tar.xz
 FFMPEG_PATCH  = ffmpeg-$(FFMPEG_VER)-buffer-size.patch
 FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-hds-libroxml.patch
