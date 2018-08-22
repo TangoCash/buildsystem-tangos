@@ -1750,6 +1750,7 @@ $(D)/pugixml: $(D)/bootstrap $(ARCHIVE)/$(PUGIXML_SOURCE)
 			-DCMAKE_CXX_COMPILER=$(TARGET)-g++ \
 			-DCMAKE_C_FLAGS="-pipe -Os" \
 			-DCMAKE_CXX_FLAGS="-pipe -Os" \
+			-DCMAKE_PREFIX_PATH=$(TARGET_DIR)/usr \
 			| tail -n +90 \
 		; \
 		$(MAKE); \
