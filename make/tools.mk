@@ -30,6 +30,9 @@ endif
 	-$(MAKE) -C $(APPS_DIR)/tools/vfdctl distclean
 	-$(MAKE) -C $(APPS_DIR)/tools/wait4button distclean
 endif
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k))
+	-$(MAKE) -C $(APPS_DIR)/tools/initfb distclean
+endif
 ifneq ($(wildcard $(APPS_DIR)/tools/own-tools),)
 	-$(MAKE) -C $(APPS_DIR)/tools/own-tools distclean
 endif
@@ -147,6 +150,19 @@ $(D)/tools-flashtool-pad: $(D)/directories
 $(D)/tools-hotplug: $(D)/bootstrap
 	$(START_BUILD)
 	set -e; cd $(APPS_DIR)/tools/hotplug; \
+		$(CONFIGURE_TOOLS) \
+			--prefix= \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(TOUCH)
+
+#
+# initfb
+#
+$(D)/tools-initfb: $(D)/bootstrap
+	$(START_BUILD)
+	set -e; cd $(APPS_DIR)/tools/initfb; \
 		$(CONFIGURE_TOOLS) \
 			--prefix= \
 		; \
@@ -392,6 +408,9 @@ endif
 TOOLS += $(D)/tools-ustslave
 TOOLS += $(D)/tools-vfdctl
 TOOLS += $(D)/tools-wait4button
+endif
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k))
+TOOLS += $(D)/tools-initfb
 endif
 ifneq ($(wildcard $(APPS_DIR)/tools/own-tools),)
 TOOLS += $(D)/tools-own-tools
