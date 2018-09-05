@@ -737,7 +737,7 @@
  	{ TEXT_(T_SAVE_HTML_OPTIONS), cast_uchar "", TEXT_(T_HK_SAVE_HTML_OPTIONS), MENU_FUNC menu_save_html_options, (void *)0, 0, 0 },
 --- a/rc.c
 +++ b/rc.c
-@@ -0,0 +1,262 @@
+@@ -0,0 +1,265 @@
 +/* rc.c
 + * (c) 2004 CypherLabs International
 + * This file is a part of the Links program, released under GPL.
@@ -947,6 +947,7 @@
 +				kbd_postevent (KBD_BS);
 +				break;
 +			case RC_PAGE_UP:
++			case RC_CHANNELUP:
 +				kbd_postevent (KBD_PAGE_UP);
 +				break;
 +			case RC_HELP:
@@ -962,6 +963,7 @@
 +				kbd_postevent (0x3F); //search prev
 +				break;
 +			case RC_PAGE_DOWN:
++			case RC_CHANNELDOWN:
 +				kbd_postevent (KBD_PAGE_DOWN);
 +				break;
 +			case RC_SETUP:
@@ -974,6 +976,7 @@
 +				kbd_postevent (-264);//move down
 +				break;
 +			case RC_FAVORITES:
++			case RC_VIDEO:
 +				kbd_postevent(0x53);//bookmarks manager
 +				break;
 +			case RC_EPG:
@@ -1200,7 +1203,7 @@
 +}
 --- a/rcinput.h
 +++ b/rcinput.h
-@@ -0,0 +1,47 @@
+@@ -0,0 +1,50 @@
 +#ifndef RC_INPUT_H
 +#define RC_INPUT_H
 +
@@ -1242,6 +1245,9 @@
 +#define RC_TEXT	KEY_TEXT
 +#define RC_GAMES	KEY_GAMES
 +#define RC_INFO	KEY_INFO
++#define RC_CHANNELUP	KEY_CHANNELUP
++#define RC_CHANNELDOWN	KEY_CHANNELDOWN
++#define RC_VIDEO	KEY_VIDEO
 +
 +void			RcGetActCode(void);
 +int			RcInitialize(int extfd);
