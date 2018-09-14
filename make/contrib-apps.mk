@@ -1,7 +1,7 @@
 #
 # busybox
 #
-BUSYBOX_VER = 1.29.2
+BUSYBOX_VER = 1.29.3
 BUSYBOX_SOURCE = busybox-$(BUSYBOX_VER).tar.bz2
 BUSYBOX_PATCH  = busybox-$(BUSYBOX_VER)-nandwrite.patch
 BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-unicode.patch
@@ -1037,7 +1037,6 @@ $(D)/dbus: $(D)/bootstrap $(D)/expat $(ARCHIVE)/$(DBUS_SOURCE)
 			--localstatedir=/var \
 			--with-console-auth-dir=/run/console/ \
 			--without-systemdsystemunitdir \
-			--enable-abstract-sockets \
 			--disable-systemd \
 			--disable-static \
 		; \
@@ -1198,7 +1197,7 @@ $(D)/smartmontools: $(D)/bootstrap $(ARCHIVE)/$(SMARTMONTOOLS_SOURCE)
 #
 # nfs_utils
 #
-NFS_UTILS_VER = 2.3.2
+NFS_UTILS_VER = 2.3.3
 NFS_UTILS_SOURCE = nfs-utils-$(NFS_UTILS_VER).tar.bz2
 NFS_UTILS_PATCH = nfs-utils-$(NFS_UTILS_VER).patch
 

@@ -506,7 +506,7 @@ $(ARCHIVE)/$(LUASOCKET_SOURCE):
 
 $(D)/luasocket: $(D)/bootstrap $(D)/lua $(ARCHIVE)/$(LUASOCKET_SOURCE)
 	$(START_BUILD)
-	$(REMOVE)/luasocke-gitt-$(LUASOCKET_VER)
+	$(REMOVE)/luasocket-git-$(LUASOCKET_VER)
 	$(UNTAR)/$(LUASOCKET_SOURCE)
 	set -e; cd $(BUILD_TMP)/luasocket-git-$(LUASOCKET_VER); \
 		sed -i -e "s@LD_linux=gcc@LD_LINUX=$(TARGET)-gcc@" -e "s@CC_linux=gcc@CC_LINUX=$(TARGET)-gcc -L$(TARGET_DIR)/usr/lib@" -e "s@DESTDIR?=@DESTDIR?=$(TARGET_DIR)/usr@" src/makefile; \
@@ -683,7 +683,7 @@ $(D)/timezone: $(D)/bootstrap find-zic $(ARCHIVE)/$(TZDATA_SOURCE)
 #
 FREETYPE_VER = 2.9.1
 FREETYPE_SOURCE = freetype-$(FREETYPE_VER).tar.bz2
-FREETYPE_PATCH  = freetype-$(FREETYPE_VER).patch
+FREETYPE_PATCH = freetype-$(FREETYPE_VER).patch
 
 $(ARCHIVE)/$(FREETYPE_SOURCE):
 	$(WGET) https://sourceforge.net/projects/freetype/files/freetype2/$(FREETYPE_VER)/$(FREETYPE_SOURCE)
@@ -813,9 +813,42 @@ ifeq ($(BOXTYPE), $(filter $(BOXTYPE), ufs910 ufs922 ipbox55 ipbox99 ipbox9900 c
 $(D)/libjpeg: $(D)/jpeg
 	@touch $@
 else
-$(D)/libjpeg: $(D)/libjpeg_turbo
+$(D)/libjpeg: $(D)/libjpeg_turbo2
 	@touch $@
 endif
+
+#
+# libjpeg_turbo2
+#
+LIBJPEG_TURBO2_VER = 2.0.0
+LIBJPEG_TURBO2_SOURCE = libjpeg-turbo-$(LIBJPEG_TURBO2_VER).tar.gz
+LIBJPEG_TURBO2_PATCH = libjpeg-turbo-tiff-ojpeg.patch
+
+$(ARCHIVE)/$(LIBJPEG_TURBO2_SOURCE):
+	$(WGET) https://sourceforge.net/projects/libjpeg-turbo/files/$(LIBJPEG_TURBO2_VER)/$(LIBJPEG_TURBO2_SOURCE)
+
+$(D)/libjpeg_turbo2: $(D)/bootstrap $(ARCHIVE)/$(LIBJPEG_TURBO2_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/libjpeg-turbo-$(LIBJPEG_TURBO2_VER)
+	$(UNTAR)/$(LIBJPEG_TURBO2_SOURCE)
+	set -e; cd $(BUILD_TMP)/libjpeg-turbo-$(LIBJPEG_TURBO2_VER); \
+		$(call apply_patches,$(LIBJPEG_TURBO2_PATCH)); \
+		cmake   -DCMAKE_INSTALL_PREFIX=/usr \
+			-DCMAKE_C_COMPILER=$(TARGET)-gcc \
+			-DCMAKE_CXX_COMPILER=$(TARGET)-g++ \
+			-DCMAKE_C_FLAGS="-pipe -Os" \
+			-DCMAKE_CXX_FLAGS="-pipe -Os" \
+			-DWITH_SIMD=False \
+			-DCMAKE_INSTALL_DOCDIR=/.remove \
+			-DCMAKE_INSTALL_MANDIR=/.remove \
+			-DCMAKE_INSTALL_DEFAULT_LIBDIR=lib \
+			-DENABLE_STATIC=OFF \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,cjpeg djpeg jpegtran rdjpgcom wrjpgcom tjbench)
+	$(REMOVE)/libjpeg-turbo-$(LIBJPEG_TURBO2_VER)
+	$(TOUCH)
 
 #
 # libjpeg_turbo
@@ -928,6 +961,7 @@ $(D)/giflib: $(D)/bootstrap $(ARCHIVE)/$(GIFLIB_SOURCE)
 		export ac_cv_prog_have_xmlto=no; \
 		$(CONFIGURE) \
 			--prefix=/usr \
+			--bindir=/.remove \
 		; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -966,7 +1000,7 @@ $(D)/libconfig: $(D)/bootstrap $(ARCHIVE)/$(LIBCONFIG_SOURCE)
 #
 # libcurl
 #
-LIBCURL_VER = 7.61.0
+LIBCURL_VER = 7.61.1
 LIBCURL_SOURCE = curl-$(LIBCURL_VER).tar.bz2
 LIBCURL_PATCH = libcurl-$(LIBCURL_VER).patch
 
@@ -1001,8 +1035,12 @@ $(D)/libcurl: $(D)/bootstrap $(D)/zlib $(D)/openssl $(D)/ca-bundle $(ARCHIVE)/$(
 			--disable-pop3 \
 			--disable-smtp \
 			--enable-shared \
+			--enable-optimize \
+			--disable-verbose \
 			--disable-ldap \
 			--without-libidn \
+			--without-libidn2 \
+			--without-winidn \
 			--without-libpsl \
 			--with-ca-bundle=$(CA_BUNDLE_DIR)/$(CA_BUNDLE) \
 			--with-random=/dev/urandom \
@@ -1015,9 +1053,9 @@ $(D)/libcurl: $(D)/bootstrap $(D)/zlib $(D)/openssl $(D)/ca-bundle $(ARCHIVE)/$(
 		rm -f $(TARGET_DIR)/usr/bin/curl-config
 	$(REWRITE_LIBTOOL)/libcurl.la
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libcurl.pc
-ifeq ($(BOXARCH), sh4)
-	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,curl)
-endif
+#ifeq ($(BOXTYPE), $(filter $(BOXTYPE), ufs910 ufs922))
+#	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,curl)
+#endif
 	$(REMOVE)/curl-$(LIBCURL_VER)
 	$(TOUCH)
 
@@ -1259,11 +1297,9 @@ $(D)/libvorbis: $(D)/bootstrap $(D)/libogg $(ARCHIVE)/$(LIBVORBIS_SOURCE)
 #
 # libvorbisidec
 #
-LIBVORBISIDEC_SVN = 18153
-LIBVORBISIDEC_VER = 1.0.2+svn$(LIBVORBISIDEC_SVN)
+LIBVORBISIDEC_VER = 1.2.1+git20180316
 LIBVORBISIDEC_VER_APPEND = .orig
 LIBVORBISIDEC_SOURCE = libvorbisidec_$(LIBVORBISIDEC_VER)$(LIBVORBISIDEC_VER_APPEND).tar.gz
-LIBVORBISIDEC_PATCH = libvorbisidec-$(LIBVORBISIDEC_VER).patch
 
 $(ARCHIVE)/$(LIBVORBISIDEC_SOURCE):
 	$(WGET) https://ftp.de.debian.org/debian/pool/main/libv/libvorbisidec/$(LIBVORBISIDEC_SOURCE)
@@ -1322,7 +1358,7 @@ $(D)/libiconv: $(D)/bootstrap $(ARCHIVE)/$(LIBICONV_SOURCE)
 #
 # expat
 #
-EXPAT_VER = 2.2.0
+EXPAT_VER = 2.2.6
 EXPAT_SOURCE = expat-$(EXPAT_VER).tar.bz2
 
 $(ARCHIVE)/$(EXPAT_SOURCE):
@@ -1337,6 +1373,7 @@ $(D)/expat: $(D)/bootstrap $(ARCHIVE)/$(EXPAT_SOURCE)
 			--prefix=/usr \
 			--mandir=/.remove \
 			--bindir=/.remove \
+			--without-xmlwf \
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -1660,7 +1697,7 @@ $(D)/libxslt: $(D)/bootstrap $(D)/libxml2 $(ARCHIVE)/$(LIBXSLT_SOURCE)
 		; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	mv $(TARGET_DIR)/bin/xslt-config $(HOST_DIR)/bin
+	mv $(TARGET_DIR)/usr/bin/xslt-config $(HOST_DIR)/bin
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libexslt.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libxslt.pc
 	$(REWRITE_PKGCONF) $(HOST_DIR)/bin/xslt-config
@@ -1670,6 +1707,7 @@ $(D)/libxslt: $(D)/bootstrap $(D)/libxml2 $(ARCHIVE)/$(LIBXSLT_SOURCE)
 ifeq ($(BOXARCH), sh4)
 	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,xsltproc xslt-config)
 endif
+	rm -rf $(TARGETLIB)/xsltConf.sh
 	rm -rf $(TARGETLIB)/libxslt-plugins/
 	$(REMOVE)/libxslt-$(LIBXSLT_VER)
 	$(TOUCH)
@@ -1766,7 +1804,9 @@ GRAPHLCD_VER = 55d4bd8
 GRAPHLCD_SOURCE = graphlcd-git-$(GRAPHLCD_VER).tar.bz2
 GRAPHLCD_URL = git://projects.vdr-developer.org/graphlcd-base.git
 GRAPHLCD_PATCH = graphlcd-git-$(GRAPHLCD_VER).patch
+ifeq ($(BOXTYPE), vusolo4k)
 GRAPHLCD_PATCH += graphlcd-vusolo4k.patch
+endif
 
 $(ARCHIVE)/$(GRAPHLCD_SOURCE):
 	$(SCRIPTS_DIR)/get-git-archive.sh $(GRAPHLCD_URL) $(GRAPHLCD_VER) $(notdir $@) $(ARCHIVE)
@@ -1817,6 +1857,11 @@ $(D)/libdpf: $(D)/bootstrap $(D)/libusb_compat $(ARCHIVE)/$(LIBDPF_SOURCE)
 LCD4LINUX_VER = 07ef2dd
 LCD4LINUX_SOURCE = lcd4linux-git-$(LCD4LINUX_VER).tar.bz2
 LCD4LINUX_URL = https://github.com/TangoCash/lcd4linux.git
+LCD4LINUX_PATCH = lcd4linux-widget.patch
+ifeq ($(BOXTYPE), vusolo4k)
+LCD4LINUX_PATCH += lcd4linux-vusolo4k.patch
+LCD4LINUX_DRV = ,VUSOLO4K
+endif
 
 $(ARCHIVE)/$(LCD4LINUX_SOURCE):
 	$(SCRIPTS_DIR)/get-git-archive.sh $(LCD4LINUX_URL) $(LCD4LINUX_VER) $(notdir $@) $(ARCHIVE)
@@ -1826,10 +1871,11 @@ $(D)/lcd4linux: $(D)/bootstrap $(D)/libusb_compat $(D)/gd $(D)/libusb $(D)/libdp
 	$(REMOVE)/lcd4linux-git-$(LCD4LINUX_VER)
 	$(UNTAR)/$(LCD4LINUX_SOURCE)
 	set -e; cd $(BUILD_TMP)/lcd4linux-git-$(LCD4LINUX_VER); \
+		$(call apply_patches,$(LCD4LINUX_PATCH)); \
 		$(BUILDENV) ./bootstrap $(SILENT_OPT); \
 		$(BUILDENV) ./configure $(CONFIGURE_OPTS) $(SILENT_OPT) \
 			--prefix=/usr \
-			--with-drivers='DPF,SamsungSPF' \
+			--with-drivers='DPF,SamsungSPF$(LCD4LINUX_DRV)' \
 			--with-plugins='all,!apm,!asterisk,!dbus,!dvb,!gps,!hddtemp,!huawei,!imon,!isdn,!kvv,!mpd,!mpris_dbus,!mysql,!pop3,!ppp,!python,!qnaplog,!raspi,!sample,!seti,!w1retap,!wireless,!xmms' \
 			--without-ncurses \
 		; \
@@ -1871,10 +1917,13 @@ $(D)/gd: $(D)/bootstrap $(D)/libpng $(D)/libjpeg $(D)/freetype $(ARCHIVE)/$(GD_S
 #
 # libusb
 #
-LIBUSB_VER = 1.0.21
+LIBUSB_VER = 1.0.22
 LIBUSB_VER_MAJOR = 1.0
 LIBUSB_SOURCE = libusb-$(LIBUSB_VER).tar.bz2
 LIBUSB_PATCH = libusb-$(LIBUSB_VER).patch
+ifeq ($(BOXARCH), sh4)
+LIBUSB_PATCH += libusb-1.0.22-sh4-clock_gettime.patch
+endif
 
 $(ARCHIVE)/$(LIBUSB_SOURCE):
 	$(WGET) https://sourceforge.net/projects/libusb/files/libusb-$(LIBUSB_VER_MAJOR)/libusb-$(LIBUSB_VER)/$(LIBUSB_SOURCE)
@@ -2341,6 +2390,7 @@ $(D)/libdaemon: $(D)/bootstrap $(ARCHIVE)/$(LIBDAEMON_SOURCE)
 			ac_cv_func_setpgrp_void=yes \
 			--prefix=/usr \
 			--disable-static \
+			--disable-lynx \
 		; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -2441,7 +2491,7 @@ $(D)/nettle: $(D)/bootstrap $(D)/gmp $(ARCHIVE)/$(NETTLE_SOURCE)
 # gnutls
 #
 GNUTLS_VER_MAJOR = 3.6
-GNUTLS_VER_MINOR = 0
+GNUTLS_VER_MINOR = 1
 GNUTLS_VER = $(GNUTLS_VER_MAJOR).$(GNUTLS_VER_MINOR)
 GNUTLS_SOURCE = gnutls-$(GNUTLS_VER).tar.xz
 
@@ -2466,6 +2516,9 @@ $(D)/gnutls: $(D)/bootstrap $(D)/nettle $(ARCHIVE)/$(GNUTLS_SOURCE)
 			--with-default-trust-store-dir=$(CA_BUNDLE_DIR)/ \
 			--disable-guile \
 			--without-p11-kit \
+			--without-idn \
+			--disable-libdane \
+			--without-tpm \
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)

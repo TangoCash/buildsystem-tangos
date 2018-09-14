@@ -1,6 +1,6 @@
 --- a/libusb/io.c
 +++ b/libusb/io.c
-@@ -34,6 +34,7 @@
+@@ -31,6 +31,7 @@
  #include <sys/time.h>
  #endif
  #ifdef USBI_TIMERFD_AVAILABLE
@@ -8,11 +8,11 @@
  #include <sys/timerfd.h>
  #endif
  
-@@ -1148,7 +1149,7 @@
+@@ -1145,7 +1146,7 @@
  
  #ifdef USBI_TIMERFD_AVAILABLE
- 	ctx->timerfd = timerfd_create(usbi_backend->get_timerfd_clockid(),
--		TFD_NONBLOCK);
+ 	ctx->timerfd = timerfd_create(usbi_backend.get_timerfd_clockid(),
+-		TFD_NONBLOCK | TFD_CLOEXEC);
 +		O_NONBLOCK);
  	if (ctx->timerfd >= 0) {
  		usbi_dbg("using timerfd for timeouts");
