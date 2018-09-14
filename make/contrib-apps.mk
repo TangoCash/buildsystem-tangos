@@ -983,6 +983,39 @@ $(D)/shairport-sync: $(D)/bootstrap $(D)/libdaemon $(D)/libpopt $(D)/libconfig $
 	$(TOUCH)
 
 #
+# shairplay
+#
+SHAIRPLAY_VER = 193138f39adc47108e4091753ea6db8d15ae289a
+SHAIRPLAY_SOURCE = shairplay-git-$(SHAIRPLAY_VER).tar.bz2
+SHAIRPLAY_URL = https://github.com/juhovh/shairplay.git
+SHAIRPLAY_PATCH = shairplay-howl.diff
+
+$(ARCHIVE)/$(SHAIRPLAY_SOURCE):
+	$(SCRIPTS_DIR)/get-git-archive.sh $(SHAIRPLAY_URL) $(SHAIRPLAY_VER) $(notdir $@) $(ARCHIVE)
+
+$(D)/shairplay: libao $(D)/howl $(ARCHIVE)/$(SHAIRPLAY_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/shairplay-$(SHAIRPLAY_VER)
+	$(UNTAR)/$(SHAIRPLAY_SOURCE)
+	set -e; cd $(BUILD_TMP)/shairplay-git-$(SHAIRPLAY_VER); \
+		$(call apply_patches,$(SHAIRPLAY_PATCH)); \
+		for A in src/test/example.c src/test/main.c src/shairplay.c ; do sed -i "s#airport.key#/usr/share/shairplay/airport.key#" $$A ; done && \
+		autoreconf -fi $(SILENT_OPT); \
+		PKG_CONFIG=$(PKG_CONFIG) \
+		$(BUILDENV) \
+		$(CONFIGURE) \
+			--enable-shared \
+			--disable-static \
+			--prefix=/usr \
+		; \
+		$(MAKE) install DESTDIR=$(TARGET_DIR); \
+		install -d $(TARGET_DIR)/usr/share/shairplay ; \
+		install -m 644 airport.key $(TARGET_DIR)/usr/share/shairplay && \
+	$(REWRITE_LIBTOOL)/libshairplay.la
+	$(REMOVE)/shairplay-git-$(SHAIRPLAY_VER)
+	$(TOUCH)
+
+#
 # dbus
 #
 DBUS_VER = 1.12.6

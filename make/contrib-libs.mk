@@ -2301,6 +2301,7 @@ $(D)/sshfs: $(D)/bootstrap $(D)/libglib2 $(D)/fuse $(ARCHIVE)/$(SSHFS_SOURCE)
 #
 HOWL_VER = 1.0.0
 HOWL_SOURCE = howl-$(HOWL_VER).tar.gz
+HOWL_PATCH = howl-ipv4-mapped-ipv6.diff
 
 $(ARCHIVE)/$(HOWL_SOURCE):
 	$(WGET) https://sourceforge.net/projects/howl/files/howl/$(HOWL_VER)/$(HOWL_SOURCE)
@@ -2310,6 +2311,7 @@ $(D)/howl: $(D)/bootstrap $(ARCHIVE)/$(HOWL_SOURCE)
 	$(REMOVE)/howl-$(HOWL_VER)
 	$(UNTAR)/$(HOWL_SOURCE)
 	set -e; cd $(BUILD_TMP)/howl-$(HOWL_VER); \
+		$(call apply_patches,$(HOWL_PATCH)); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix=/usr \

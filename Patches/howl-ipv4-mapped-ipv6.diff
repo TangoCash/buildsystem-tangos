@@ -1,0 +1,50 @@
+diff -ur a/src/lib/mDNSResponder/mDNS.c b/src/lib/mDNSResponder/mDNS.c
+--- a/src/lib/mDNSResponder/mDNS.c	2005-05-19 08:13:01.000000000 +0200
++++ b/src/lib/mDNSResponder/mDNS.c	2013-10-03 18:53:26.770771618 +0200
+@@ -6323,6 +6323,7 @@
+ 	if (!primary) primary = set; // If no existing advertised interface, this new NetworkInterfaceInfo becomes our new primary
+ 	
+ 	mDNS_SetupResourceRecord(&set->RR_A,     mDNSNULL, set->InterfaceID, kDNSType_A,     kDefaultTTLforUnique, kDNSRecordTypeUnique,      HostNameCallback, set);
++	mDNS_SetupResourceRecord(&set->RR_AAAA,  mDNSNULL, set->InterfaceID, kDNSType_AAAA,  kDefaultTTLforUnique, kDNSRecordTypeUnique,      HostNameCallback, set);
+ 	mDNS_SetupResourceRecord(&set->RR_PTR,   mDNSNULL, set->InterfaceID, kDNSType_PTR,   kDefaultTTLforUnique, kDNSRecordTypeKnownUnique, mDNSNULL, mDNSNULL);
+ 	mDNS_SetupResourceRecord(&set->RR_HINFO, mDNSNULL, set->InterfaceID, kDNSType_HINFO, kDefaultTTLforUnique, kDNSRecordTypeUnique,      mDNSNULL, mDNSNULL);
+ 
+@@ -6360,6 +6361,19 @@
+ 
+ 	mDNS_Register_internal(m, &set->RR_A);
+ 	mDNS_Register_internal(m, &set->RR_PTR);
++	if (set->ip.type == mDNSAddrType_IPv4) {
++		// create a IPv4-mapped IPv6 address
++		AssignDomainName(set->RR_AAAA.resrec.name, m->hostname);
++		set->RR_AAAA.resrec.rrtype = kDNSType_AAAA;
++		memset(&set->RR_AAAA.resrec.rdata->u.ipv6.b, 0, 10);
++		set->RR_AAAA.resrec.rdata->u.ipv6.b[10] = 0xff;
++		set->RR_AAAA.resrec.rdata->u.ipv6.b[11] = 0xff;
++		set->RR_AAAA.resrec.rdata->u.ipv6.b[12] = set->ip.ip.v4.b[0];
++		set->RR_AAAA.resrec.rdata->u.ipv6.b[13] = set->ip.ip.v4.b[1];
++		set->RR_AAAA.resrec.rdata->u.ipv6.b[14] = set->ip.ip.v4.b[2];
++		set->RR_AAAA.resrec.rdata->u.ipv6.b[15] = set->ip.ip.v4.b[3];
++		mDNS_Register_internal(m, &set->RR_AAAA);
++	}
+ 
+ 	if (m->HIHardware.c[0] > 0 && m->HISoftware.c[0] > 0 && m->HIHardware.c[0] + m->HISoftware.c[0] <= 254)
+ 		{
+@@ -6394,6 +6408,7 @@
+ 	// Also, in the event of a name conflict, one or more of our records will have been forcibly deregistered.
+ 	// To avoid unnecessary and misleading warning messages, we check the RecordType before calling mDNS_Deregister_internal().
+ 	if (set->RR_A.    resrec.RecordType) mDNS_Deregister_internal(m, &set->RR_A,     mDNS_Dereg_normal);
++	if (set->RR_AAAA. resrec.RecordType) mDNS_Deregister_internal(m, &set->RR_AAAA,  mDNS_Dereg_normal);
+ 	if (set->RR_PTR.  resrec.RecordType) mDNS_Deregister_internal(m, &set->RR_PTR,   mDNS_Dereg_normal);
+ 	if (set->RR_HINFO.resrec.RecordType) mDNS_Deregister_internal(m, &set->RR_HINFO, mDNS_Dereg_normal);
+ 	}
+diff -ur a/src/lib/mDNSResponder/mDNSClientAPI.h b/src/lib/mDNSResponder/mDNSClientAPI.h
+--- a/src/lib/mDNSResponder/mDNSClientAPI.h	2005-05-19 04:06:39.000000000 +0200
++++ b/src/lib/mDNSResponder/mDNSClientAPI.h	2013-10-03 18:48:11.204619273 +0200
+@@ -885,6 +885,7 @@
+ 
+ 	// Standard AuthRecords that every Responder host should have (one per active IP address)
+ 	AuthRecord RR_A;					// 'A' or 'AAAA' (address) record for our ".local" name
++	AuthRecord RR_AAAA;					// 'AAAA' (address) record for IPv4-mapped IPv6 addresses
+ 	AuthRecord RR_PTR;					// PTR (reverse lookup) record
+ 	AuthRecord RR_HINFO;
+ 

@@ -1,0 +1,336 @@
+diff --git a/src/lib/dnssd.c b/src/lib/dnssd.c
+index 8137962..547e5d2 100644
+--- a/src/lib/dnssd.c
++++ b/src/lib/dnssd.c
+@@ -16,6 +16,7 @@
+ #include <string.h>
+ #include <stdio.h>
+ #include <assert.h>
++#include <signal.h>
+ 
+ #ifdef HAVE_CONFIG_H
+ #include "config.h"
+@@ -100,8 +101,14 @@ typedef DNSServiceErrorType (DNSSD_STDCALL *TXTRecordSetValue_t)
+ typedef uint16_t (DNSSD_STDCALL *TXTRecordGetLength_t)(const TXTRecordRef *txtRecord);
+ typedef const void * (DNSSD_STDCALL *TXTRecordGetBytesPtr_t)(const TXTRecordRef *txtRecord);
+ 
++#define USE_HOWL 1 // ... by martii
+ 
+ struct dnssd_s {
++#if USE_HOWL
++	const char *mDNSPublish;
++	pid_t mDNSPublishPID_airplay;
++	pid_t mDNSPublishPID_raop;
++#else
+ #ifdef WIN32
+ 	HMODULE module;
+ #elif USE_LIBDL
+@@ -118,6 +125,7 @@ struct dnssd_s {
+ 
+ 	DNSServiceRef raopService;
+ 	DNSServiceRef airplayService;
++#endif
+ };
+ 
+ 
+@@ -158,6 +166,22 @@ dnssd_init(int *error)
+ 		free(dnssd);
+ 		return NULL;
+ 	}
++#elif USE_HOWL
++	dnssd->mDNSPublishPID_airplay = -1;
++	dnssd->mDNSPublishPID_raop = -1;
++	dnssd->mDNSPublish = NULL;
++	char *bin[] = { "/bin/mDNSPublish", "/sbin/mDNSPublish", "/usr/bin/mDNSPublish", "/usr/sbin/mDNSPublish", "/usr/local/bin/mDNSPublish", "/usr/local/sbin/mDNSPublish", NULL };
++	char **b = bin;
++	while (*b) {
++		if (!access(*bin, X_OK)) {
++			dnssd->mDNSPublish = *b;
++			return dnssd;
++		}
++		b++;
++	}
++	free(dnssd);
++	if (error) *error = DNSSD_ERROR_LIBNOTFOUND;
++	return NULL;
+ #elif USE_LIBDL
+ 	dnssd->module = dlopen("libdns_sd.so", RTLD_LAZY);
+ 	if (!dnssd->module) {
+@@ -191,18 +215,33 @@ dnssd_init(int *error)
+ 	dnssd->TXTRecordDeallocate = &TXTRecordDeallocate;
+ #endif
+ 
++#if !USE_HOWL
+ 	return dnssd;
++#endif
+ }
+ 
+ void
+ dnssd_destroy(dnssd_t *dnssd)
+ {
+ 	if (dnssd) {
++#if USE_HOWL
++		if (dnssd->mDNSPublishPID_raop > -1) {
++			kill(dnssd->mDNSPublishPID_raop, SIGTERM);
++			waitpid(dnssd->mDNSPublishPID_raop, NULL, 0);
++			dnssd->mDNSPublishPID_raop = -1;
++		}
++		if (dnssd->mDNSPublishPID_airplay > -1) {
++			kill(dnssd->mDNSPublishPID_airplay, SIGTERM);
++			waitpid(dnssd->mDNSPublishPID_airplay, NULL, 0);
++			dnssd->mDNSPublishPID_airplay = -1;
++		}
++#else
+ #ifdef WIN32
+ 		FreeLibrary(dnssd->module);
+ #elif USE_LIBDL
+ 		dlclose(dnssd->module);
+ #endif
++#endif
+ 		free(dnssd);
+ 	}
+ }
+@@ -210,6 +249,67 @@ dnssd_destroy(dnssd_t *dnssd)
+ int
+ dnssd_register_raop(dnssd_t *dnssd, const char *name, unsigned short port, const char *hwaddr, int hwaddrlen, int password)
+ {
++#if USE_HOWL
++	dnssd->mDNSPublishPID_raop = fork();
++
++	switch(dnssd->mDNSPublishPID_raop) {
++		case 0:
++			break;
++		case -1:
++			/* FIXME: handle better */
++			return -1;
++		default:
++			return;
++	}
++
++	char servname[MAX_SERVNAME];
++	int ret;
++	/* Convert hardware address to string */
++	ret = utils_hwaddr_raop(servname, sizeof(servname), hwaddr, hwaddrlen);
++	if (ret < 0) {
++		/* FIXME: handle better */
++		return -1;
++	}
++
++	/* Convert hardware address to string */
++	ret = utils_hwaddr_raop(servname, sizeof(servname), hwaddr, hwaddrlen);
++	if (ret < 0) {
++		/* FIXME: handle better */
++		return -1;
++	}
++
++	/* Check that we have bytes for 'hw@name' format */
++	if (sizeof(servname) < strlen(servname)+1+strlen(name)+1) {
++		/* FIXME: handle better */
++		return -2;
++	}
++
++	strncat(servname, "@", sizeof(servname)-strlen(servname)-1);
++	strncat(servname, name, sizeof(servname)-strlen(servname)-1);
++	char _port[10];
++	snprintf(_port, sizeof(_port), "%d", port);
++
++	char *argv[] = { "mDNSPublish", servname, "_raop._tcp", _port,
++		"txtvers=" RAOP_TXTVERS,
++		"ch=" RAOP_CH,
++		"cn=" RAOP_CN,
++		"et=" RAOP_ET,
++		"sv=" RAOP_SV,
++		"da=" RAOP_DA,
++		"sr=" RAOP_SR,
++		"ss=" RAOP_SS,
++		password ? "pw=true" : "pw=false",
++		"vn=" RAOP_VN,
++		"tp=" RAOP_TP,
++		"md=" RAOP_MD,
++		"vs=" GLOBAL_VERSION,
++		"sm=" RAOP_SM,
++		"ek=" RAOP_EK,
++		NULL
++	};
++
++	execvp(dnssd->mDNSPublish, argv);
++#else
+ 	TXTRecordRef txtRecord;
+ 	char servname[MAX_SERVNAME];
+ 	int ret;
+@@ -267,6 +367,7 @@ dnssd_register_raop(dnssd_t *dnssd, const char *name, unsigned short port, const
+ 	/* Deallocate TXT record */
+ 	dnssd->TXTRecordDeallocate(&txtRecord);
+ 	return 1;
++#endif
+ }
+ 
+ int
+@@ -291,6 +392,62 @@ dnssd_register_airplay(dnssd_t *dnssd, const char *name, unsigned short port, co
+ 	features[sizeof(features)-1] = '\0';
+ 	snprintf(features, sizeof(features)-1, "0x%x", GLOBAL_FEATURES);
+ 
++#if USE_HOWL
++	dnssd->mDNSPublishPID_airplay = fork();
++
++	switch(dnssd->mDNSPublishPID_airplay) {
++		case 0:
++			break;
++		case -1:
++			/* FIXME: handle better */
++			return -1;
++		default:
++			return 0;
++	}
++
++	char servname[MAX_SERVNAME];
++	/* Convert hardware address to string */
++	ret = utils_hwaddr_raop(servname, sizeof(servname), hwaddr, hwaddrlen);
++	if (ret < 0) {
++		/* FIXME: handle better */
++		return -1;
++	}
++
++	/* Convert hardware address to string */
++	ret = utils_hwaddr_raop(servname, sizeof(servname), hwaddr, hwaddrlen);
++	if (ret < 0) {
++		/* FIXME: handle better */
++		return -1;
++	}
++
++	/* Check that we have bytes for 'hw@name' format */
++	if (sizeof(servname) < strlen(servname)+1+strlen(name)+1) {
++		/* FIXME: handle better */
++		return -2;
++	}
++
++	strncat(servname, "@", sizeof(servname)-strlen(servname)-1);
++	strncat(servname, name, sizeof(servname)-strlen(servname)-1);
++
++	char _deviceid[sizeof(deviceid) + 20];
++	char _features[sizeof(features) + 20];
++	strcpy(_deviceid, "deviceid=");
++	strcat(_deviceid, deviceid);
++	strcpy(_features, "features=");
++	strcat(_features, features);
++
++	char _port[10];
++	snprintf(_port, sizeof(_port), "%d", port);
++
++	const char *argv[] = { "mDNSPublish", name, "_airplay._tcp", _port,
++		_deviceid,
++		_features,
++		"model=" GLOBAL_MODEL,
++		NULL
++	};
++
++	execvp(dnssd->mDNSPublish, argv);
++#else
+ 	dnssd->TXTRecordCreate(&txtRecord, 0, NULL);
+ 	dnssd->TXTRecordSetValue(&txtRecord, "deviceid", strlen(deviceid), deviceid);
+ 	dnssd->TXTRecordSetValue(&txtRecord, "features", strlen(features), features);
+@@ -307,6 +464,7 @@ dnssd_register_airplay(dnssd_t *dnssd, const char *name, unsigned short port, co
+ 
+ 	/* Deallocate TXT record */
+ 	dnssd->TXTRecordDeallocate(&txtRecord);
++#endif
+ 	return 0;
+ }
+ 
+@@ -315,12 +473,19 @@ dnssd_unregister_raop(dnssd_t *dnssd)
+ {
+ 	assert(dnssd);
+ 
++#if USE_HOWL
++	if (dnssd->mDNSPublishPID_raop > -1) {
++		kill(dnssd->mDNSPublishPID_raop, SIGTERM);
++		waitpid(dnssd->mDNSPublishPID_raop, NULL, 0);
++		dnssd->mDNSPublishPID_raop = -1;
++	}
++#else
+ 	if (!dnssd->raopService) {
+ 		return;
+ 	}
+-
+ 	dnssd->DNSServiceRefDeallocate(dnssd->raopService);
+ 	dnssd->raopService = NULL;
++#endif
+ }
+ 
+ void
+@@ -328,10 +493,17 @@ dnssd_unregister_airplay(dnssd_t *dnssd)
+ {
+ 	assert(dnssd);
+ 
++#if USE_HOWL
++	if (dnssd->mDNSPublishPID_airplay > -1) {
++		kill(dnssd->mDNSPublishPID_airplay, SIGTERM);
++		waitpid(dnssd->mDNSPublishPID_airplay, NULL, 0);
++		dnssd->mDNSPublishPID_airplay = -1;
++	}
++#else
+ 	if (!dnssd->airplayService) {
+ 		return;
+ 	}
+-
+ 	dnssd->DNSServiceRefDeallocate(dnssd->airplayService);
+ 	dnssd->airplayService = NULL;
++#endif
+ }
+diff --git a/src/lib/netutils.c b/src/lib/netutils.c
+index 180d32e..27c2b47 100644
+--- a/src/lib/netutils.c
++++ b/src/lib/netutils.c
+@@ -67,6 +67,8 @@ netutils_init_socket(unsigned short *port, int use_ipv6, int use_udp)
+ 	if (server_fd == -1) {
+ 		goto cleanup;
+ 	}
++	int one = 1;
++	setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, (char*) &one, sizeof(one));
+ 
+ 	memset(&saddr, 0, sizeof(saddr));
+ 	if (use_ipv6) {
+diff --git a/src/shairplay.c b/src/shairplay.c
+index 424c28f..b112ace 100644
+--- a/src/shairplay.c
++++ b/src/shairplay.c
+@@ -247,6 +247,30 @@ audio_set_volume(void *cls, void *opaque, float volume)
+ 	session->volume = pow(10.0, 0.05*volume);
+ }
+ 
++static void
++audio_set_metadata(void *cls, void *session, const void *buffer, int buflen)
++{
++	int orig = buflen;
++	FILE *file = fopen("/tmp/metadata.bin", "wb");
++	while (buflen > 0) {
++		buflen -= fwrite(buffer+orig-buflen, 1, buflen, file);
++	}
++	fclose(file);
++	printf("Metadata of length %d saved as metadata.bin\n", orig);
++}
++
++static void
++audio_set_coverart(void *cls, void *session, const void *buffer, int buflen)
++{
++	int orig = buflen;
++	FILE *file = fopen("/tmp/coverart.jpg", "wb");
++	while (buflen > 0) {
++		buflen -= fwrite(buffer+orig-buflen, 1, buflen, file);
++	}
++	fclose(file);
++	printf("Coverart of length %d saved as coverart.jpg\n", orig);
++}
++
+ static int
+ parse_options(shairplay_options_t *opt, int argc, char *argv[])
+ {
+@@ -345,6 +369,8 @@ main(int argc, char *argv[])
+ 	raop_cbs.audio_process = audio_process;
+ 	raop_cbs.audio_destroy = audio_destroy;
+ 	raop_cbs.audio_set_volume = audio_set_volume;
++	raop_cbs.audio_set_metadata = audio_set_metadata;
++	raop_cbs.audio_set_coverart = audio_set_coverart;
+ 
+ 	raop = raop_init_from_keyfile(10, &raop_cbs, "airport.key", NULL);
+ 	if (raop == NULL) {
