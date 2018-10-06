@@ -105,6 +105,7 @@ endif
 include make/gstreamer.mk
 include make/root-etc.mk
 include make/python.mk
+include make/python-small.mk
 include make/tools.mk
 include make/neutrino.mk
 include make/neutrino-plugins.mk
