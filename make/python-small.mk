@@ -63,7 +63,7 @@ $(D)/python-small: $(D)/bootstrap $(D)/host_python $(D)/ncurses $(D)/zlib $(D)/o
 	$(REMOVE)/Python-$(PYTHON_VER)
 	$(TOUCH)
 
-$(D)/python_twisted-small: $(D)/bootstrap $(D)/python-small $(D)/python_setuptools-small $(D)/python_zope_interface-small $(D)/python_pyopenssl-small $(D)/python_service_identity-small $(ARCHIVE)/$(PYTHON_TWISTED_SOURCE)
+$(D)/python_twisted-small: $(D)/bootstrap $(D)/python-small $(D)/python_setuptools-small $(D)/python_zope_interface-small $(ARCHIVE)/$(PYTHON_TWISTED_SOURCE)
 	$(START_BUILD)
 	$(REMOVE)/Twisted-$(PYTHON_TWISTED_VER)
 	$(UNTAR)/$(PYTHON_TWISTED_SOURCE)
@@ -93,68 +93,6 @@ $(D)/python_zope_interface-small: $(D)/bootstrap $(D)/python-small $(D)/python_s
 	$(REMOVE)/zope.interface-$(PYTHON_ZOPE_INTERFACE_VER)
 	$(TOUCH)
 
-$(D)/python_pyopenssl-small: $(D)/bootstrap $(D)/python-small $(D)/python_setuptools-small $(ARCHIVE)/$(PYTHON_PYOPENSSL_SOURCE)
-	$(START_BUILD)
-	$(REMOVE)/pyOpenSSL-$(PYTHON_PYOPENSSL_VER)
-	$(UNTAR)/$(PYTHON_PYOPENSSL_SOURCE)
-	set -e; cd $(BUILD_TMP)/pyOpenSSL-$(PYTHON_PYOPENSSL_VER); \
-		$(call apply_patches,$(PYTHON_PYOPENSSL_PATCH)); \
-		$(PYTHON_BUILD); \
-		$(PYTHON_INSTALL)
-	$(REMOVE)/pyOpenSSL-$(PYTHON_PYOPENSSL_VER)
-	$(TOUCH)
-
-$(D)/python_service_identity-small: $(D)/bootstrap $(D)/python-small $(D)/python_setuptools-small $(D)/python_attr-small $(D)/python_attrs-small $(D)/python_pyasn1-small $(ARCHIVE)/$(PYTHON_SERVICE_IDENTITY_SOURCE)
-	$(START_BUILD)
-	$(REMOVE)/service_identity-$(PYTHON_SERVICE_IDENTITY_VER)
-	$(UNTAR)/$(PYTHON_SERVICE_IDENTITY_SOURCE)
-	set -e; cd $(BUILD_TMP)/service_identity-$(PYTHON_SERVICE_IDENTITY_VER); \
-		$(call apply_patches,$(PYTHON_SERVICE_IDENTITY_PATCH)); \
-		$(PYTHON_BUILD); \
-		$(PYTHON_INSTALL)
-	$(REMOVE)/service_identity-$(PYTHON_SERVICE_IDENTITY_VER)
-	$(TOUCH)
-
-$(D)/python_attr-small: $(D)/bootstrap $(D)/python-small $(D)/python_setuptools-small $(ARCHIVE)/$(PYTHON_ATTR_SOURCE)
-	$(START_BUILD)
-	$(REMOVE)/attr-$(PYTHON_ATTR_VER)
-	$(UNTAR)/$(PYTHON_ATTR_SOURCE)
-	set -e; cd $(BUILD_TMP)/attr-$(PYTHON_ATTR_VER); \
-		$(PYTHON_BUILD); \
-		$(PYTHON_INSTALL)
-	$(REMOVE)/attr-$(PYTHON_ATTR_VER)
-	$(TOUCH)
-
-$(D)/python_attrs-small: $(D)/bootstrap $(D)/python-small $(D)/python_setuptools-small $(ARCHIVE)/$(PYTHON_ATTRS_SOURCE)
-	$(START_BUILD)
-	$(REMOVE)/attrs-$(PYTHON_ATTRS_VER)
-	$(UNTAR)/$(PYTHON_ATTRS_SOURCE)
-	set -e; cd $(BUILD_TMP)/attrs-$(PYTHON_ATTRS_VER); \
-		$(PYTHON_BUILD); \
-		$(PYTHON_INSTALL)
-	$(REMOVE)/attrs-$(PYTHON_ATTRS_VER)
-	$(TOUCH)
-
-$(D)/python_pyasn1-small: $(D)/bootstrap $(D)/python-small $(D)/python_setuptools-small $(D)/python_pyasn1_modules-small $(ARCHIVE)/$(PYTHON_PYASN1_SOURCE)
-	$(START_BUILD)
-	$(REMOVE)/pyasn1-$(PYTHON_PYASN1_VER)
-	$(UNTAR)/$(PYTHON_PYASN1_SOURCE)
-	set -e; cd $(BUILD_TMP)/pyasn1-$(PYTHON_PYASN1_VER); \
-		$(PYTHON_BUILD); \
-		$(PYTHON_INSTALL)
-	$(REMOVE)/pyasn1-$(PYTHON_PYASN1_VER)
-	$(TOUCH)
-
-$(D)/python_pyasn1_modules-small: $(D)/bootstrap $(D)/python-small $(D)/python_setuptools-small $(ARCHIVE)/$(PYTHON_PYASN1_MODULES_SOURCE)
-	$(START_BUILD)
-	$(REMOVE)/pyasn1-modules-$(PYTHON_PYASN1_MODULES_VER)
-	$(UNTAR)/$(PYTHON_PYASN1_MODULES_SOURCE)
-	set -e; cd $(BUILD_TMP)/pyasn1-modules-$(PYTHON_PYASN1_MODULES_VER); \
-		$(PYTHON_BUILD); \
-		$(PYTHON_INSTALL)
-	$(REMOVE)/pyasn1-modules-$(PYTHON_PYASN1_MODULES_VER)
-	$(TOUCH)
-
 python-iptv: $(PYTHON_IPTV_DEPS)
 
 python-iptv-install:
@@ -176,12 +114,9 @@ python-iptv-install:
 	cp -a $(TARGET_DIR)/$(PYTHON_DIR)/* $(RELEASE_DIR)/$(PYTHON_DIR)/
 	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/{bsddb,compiler,curses,distutils,lib-old,lib-tk,plat-linux3,test}
 	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/ctypes/test
-	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/email/test
 	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/json/tests
-	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/lib2to3/tests
-	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/sqlite3/test
-	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/unittest/test
-	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/twisted/{test,conch,mail,names,news,words,flow,lore,pair,runner}
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/twisted/{test,conch,mail,names,news,words,flow,lore,pair,runner,_threads,application,cred,enterprise,persisted,plugins,positioning,scripts,spread,tap,trial,web}
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/twisted/logger/test
 	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/Cheetah/Tests
 	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/livestreamer_cli
 	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/lxml
@@ -209,6 +144,17 @@ python-iptv-install:
 	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/twisted/web/test
 	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/twisted/words/test
 	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/*-py$(PYTHON_VER_MAJOR).egg-info
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/email
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/ensurepip
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/hotshot
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/idlelib
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/lib2to3
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/multiprocessing
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/plat-linux2
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/pydoc_data
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/sqlite3
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/unittest
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/wsgiref
 #
 # Do not remove pyo files, remove pyc instead
 #
