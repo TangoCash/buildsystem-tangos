@@ -167,3 +167,39 @@ endif
 	find $(RELEASE_DIR)/$(PYTHON_DIR)/ -name '*.pyx' -exec rm -f {} \;
 	find $(RELEASE_DIR)/$(PYTHON_DIR)/ -name '*.o' -exec rm -f {} \;
 	find $(RELEASE_DIR)/$(PYTHON_DIR)/ -name '*.la' -exec rm -f {} \;
+
+$(D)/iptvplayer: $(D)/librtmp
+	$(START_BUILD)
+	$(MAKE) python-iptv
+	$(MAKE) python-iptv-install
+	$(REMOVE)/iptvplayer
+	set -e; if [ -d $(ARCHIVE)/iptvplayer.git ]; \
+		then cd $(ARCHIVE)/iptvplayer.git; git pull; \
+		else cd $(ARCHIVE); git clone https://github.com/TangoCash/crossplatform_iptvplayer.git iptvplayer.git; \
+		fi
+	cp -ra $(ARCHIVE)/iptvplayer.git $(BUILD_TMP)/iptvplayer
+	install -d $(TARGET_DIR)/usr/share/E2emulator
+	cp -R $(BUILD_TMP)/iptvplayer/E2emulator/* $(TARGET_DIR)/usr/share/E2emulator/
+	install -d $(TARGET_DIR)/usr/share/E2emulator/Plugins/Extensions/IPTVPlayer
+	cp -R $(BUILD_TMP)/iptvplayer/IPTVplayer/* $(TARGET_DIR)/usr/share/E2emulator//Plugins/Extensions/IPTVPlayer/
+	cp -R $(BUILD_TMP)/iptvplayer/IPTVdaemon/* $(TARGET_DIR)/usr/share/E2emulator//Plugins/Extensions/IPTVPlayer/
+	chmod 755 $(TARGET_DIR)/usr/share/E2emulator/Plugins/Extensions/IPTVPlayer/cmdlineIPTV.*
+	chmod 755 $(TARGET_DIR)/usr/share/E2emulator/Plugins/Extensions/IPTVPlayer/IPTVdaemon.*
+	PYTHONPATH=$(TARGET_DIR)/$(PYTHON_DIR)  \
+	$(HOST_DIR)/bin/python$(PYTHON_VER_MAJOR) -Wi -t -O $(TARGET_DIR)/$(PYTHON_DIR)/compileall.py \
+	-d /usr/share/E2emulator -f -x badsyntax $(TARGET_DIR)/usr/share/E2emulator
+	find $(TARGET_DIR)/usr/share/E2emulator/ -name '*.pyc' -exec rm -f {} \;
+ifeq ($(OPTIMIZATIONS), size)
+	find $(TARGET_DIR)/usr/share/E2emulator/ -name '*.py' -exec rm -f {} \;
+endif
+	find $(TARGET_DIR)/usr/share/E2emulator/ -name '*.a' -exec rm -f {} \;
+	find $(TARGET_DIR)/usr/share/E2emulator/ -name '*.c' -exec rm -f {} \;
+	find $(TARGET_DIR)/usr/share/E2emulator/ -name '*.pyx' -exec rm -f {} \;
+	find $(TARGET_DIR)/usr/share/E2emulator/ -name '*.o' -exec rm -f {} \;
+	find $(TARGET_DIR)/usr/share/E2emulator/ -name '*.la' -exec rm -f {} \;
+	install -d $(RELEASE_DIR)/usr/share/E2emulator
+	cp -R $(TARGET_DIR)/usr/share/E2emulator/* $(RELEASE_DIR)/usr/share/E2emulator/
+	cp -R $(BUILD_TMP)/iptvplayer/addon4neutrino/neutrinoIPTV/* $(RELEASE_DIR)/lib/tuxbox/plugins/
+	ln -sf /usr/share/E2emulator/Plugins/Extensions/IPTVPlayer/cmdlineIPTV.sh $(RELEASE_DIR)/usr/bin/cmdlineIPTV
+	$(REMOVE)/iptvplayer
+	$(TOUCH)
