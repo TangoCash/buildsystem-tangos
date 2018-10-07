@@ -100,7 +100,9 @@ python-iptv-install:
 # python2.7
 #
 	if [ $(PYTHON_VER_MAJOR) == 2.7 ]; then \
+		install -d $(RELEASE_DIR)/usr/bin; \
 		install -d $(RELEASE_DIR)/usr/include; \
+		install -d $(RELEASE_DIR)/usr/lib; \
 		install -d $(RELEASE_DIR)/$(PYTHON_INCLUDE_DIR); \
 		cp $(TARGET_DIR)/$(PYTHON_INCLUDE_DIR)/pyconfig.h $(RELEASE_DIR)/$(PYTHON_INCLUDE_DIR); \
 		cp -P $(TARGET_DIR)/usr/lib/libpython* $(RELEASE_DIR)/usr/lib; \
@@ -171,7 +173,6 @@ endif
 $(D)/iptvplayer: $(D)/librtmp
 	$(START_BUILD)
 	$(MAKE) python-iptv
-	$(MAKE) python-iptv-install
 	$(REMOVE)/iptvplayer
 	set -e; if [ -d $(ARCHIVE)/iptvplayer.git ]; \
 		then cd $(ARCHIVE)/iptvplayer.git; git pull; \
@@ -197,9 +198,7 @@ endif
 	find $(TARGET_DIR)/usr/share/E2emulator/ -name '*.pyx' -exec rm -f {} \;
 	find $(TARGET_DIR)/usr/share/E2emulator/ -name '*.o' -exec rm -f {} \;
 	find $(TARGET_DIR)/usr/share/E2emulator/ -name '*.la' -exec rm -f {} \;
-	install -d $(RELEASE_DIR)/usr/share/E2emulator
-	cp -R $(TARGET_DIR)/usr/share/E2emulator/* $(RELEASE_DIR)/usr/share/E2emulator/
-	cp -R $(BUILD_TMP)/iptvplayer/addon4neutrino/neutrinoIPTV/* $(RELEASE_DIR)/lib/tuxbox/plugins/
-	ln -sf /usr/share/E2emulator/Plugins/Extensions/IPTVPlayer/cmdlineIPTV.sh $(RELEASE_DIR)/usr/bin/cmdlineIPTV
+	install -d $(TARGET_DIR)/lib/tuxbox/plugins
+	cp -R $(BUILD_TMP)/iptvplayer/addon4neutrino/neutrinoIPTV/* $(TARGET_DIR)/lib/tuxbox/plugins/
 	$(REMOVE)/iptvplayer
 	$(TOUCH)

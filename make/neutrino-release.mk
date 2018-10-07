@@ -809,6 +809,11 @@ endif
 		cp -rf $(TARGET_DIR)/usr/share/tuxbox/sokoban $(RELEASE_DIR)/var/tuxbox/plugins; \
 		ln -s /var/tuxbox/plugins/sokoban $(RELEASE_DIR)/usr/share/tuxbox/sokoban; \
 	fi
+	if [ -d $(TARGET_DIR)/usr/share/E2emulator ]; then \
+		cp -af $(TARGET_DIR)/usr/share/E2emulator $(RELEASE_DIR)/usr/share/; \
+		ln -sf /usr/share/E2emulator/Plugins/Extensions/IPTVPlayer/cmdlineIPTV.sh $(RELEASE_DIR)/usr/bin/cmdlineIPTV; \
+		$(MAKE) python-iptv-install; \
+	fi
 #
 # shairport
 #
