@@ -313,7 +313,7 @@ neutrino-mp: $(D)/neutrino-mp.do_prepare $(D)/neutrino-mp.config.status $(D)/neu
 	$(MAKE) -C $(N_OBJDIR) install DESTDIR=$(TARGET_DIR)
 	make $(TARGET_DIR)/.version
 	touch $(D)/$(notdir $@)
-	make neutrino-release
+	make neutrino-mp-release
 	$(TUXBOX_CUSTOMIZE)
 
 mp-clean \
@@ -336,7 +336,7 @@ neutrino-mp-plugins: $(D)/neutrino-mp-plugins.do_prepare $(D)/neutrino-mp-plugin
 	make $(TARGET_DIR)/.version
 	make $(NEUTRINO_PLUGINS)
 	touch $(D)/$(notdir $@)
-	make neutrino-release
+	make neutrino-mp-release
 	$(TUXBOX_CUSTOMIZE)
 
 mpp-clean \
@@ -415,7 +415,7 @@ neutrino-hd2: $(D)/neutrino-hd2.do_prepare $(D)/neutrino-hd2.do_compile
 	$(MAKE) -C $(SOURCE_DIR)/neutrino-hd2 install DESTDIR=$(TARGET_DIR)
 	make $(TARGET_DIR)/.version
 	touch $(D)/$(notdir $@)
-	make neutrino-release
+	make neutrino-mp-release
 	$(TUXBOX_CUSTOMIZE)
 
 nhd2 \
@@ -424,7 +424,7 @@ neutrino-hd2-plugins: $(D)/neutrino-hd2.do_prepare $(D)/neutrino-hd2.do_compile
 	make $(TARGET_DIR)/.version
 	touch $(D)/$(notdir $@)
 	make neutrino-hd2-plugins.build
-	make neutrino-release
+	make neutrino-mp-release
 	$(TUXBOX_CUSTOMIZE)
 
 nhd2-clean \
