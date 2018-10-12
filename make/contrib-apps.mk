@@ -1915,3 +1915,27 @@ $(D)/astra-sm: $(D)/bootstrap $(D)/openssl
 	$(REMOVE)/astra-sm
 	$(TOUCH)
 
+#
+# 
+#
+IOZONE_VER = 482
+IOZONE_SOURCE = iozone3_$(IOZONE_VER).tar
+IOZONE_PATCH =
+
+$(ARCHIVE)/$(IOZONE_SOURCE):
+	$(WGET) http://www.iozone.org/src/current/$(IOZONE_SOURCE)
+
+$(D)/iozone3: $(D)/bootstrap $(ARCHIVE)/$(IOZONE_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/iozone3_$(IOZONE_VER)
+	$(UNTAR)/$(IOZONE_SOURCE)
+	set -e; cd $(BUILD_TMP)/iozone3_$(IOZONE_VER); \
+		$(call apply_patches,$(IOZONE_PATCH)); \
+		sed -i -e "s/= gcc/= $(TARGET)-gcc/" src/current/makefile; \
+		sed -i -e "s/= cc/= $(TARGET)-cc/" src/current/makefile; \
+		cd src/current; \
+		$(BUILDENV); \
+		$(MAKE) linux-arm
+		install -m 755 $(BUILD_TMP)/iozone3_$(IOZONE_VER)/src/current/iozone $(TARGET_DIR)/usr/bin
+	$(REMOVE)/iozone3_$(IOZONE_VER)
+	$(TOUCH)
