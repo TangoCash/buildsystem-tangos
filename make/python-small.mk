@@ -170,6 +170,11 @@ endif
 	find $(RELEASE_DIR)/$(PYTHON_DIR)/ -name '*.o' -exec rm -f {} \;
 	find $(RELEASE_DIR)/$(PYTHON_DIR)/ -name '*.la' -exec rm -f {} \;
 
+iptvplayer-install:
+	cp -af $(TARGET_DIR)/usr/share/E2emulator $(RELEASE_DIR)/usr/share/; \
+	ln -sf /usr/share/E2emulator/Plugins/Extensions/IPTVPlayer/cmdlineIPTV.sh $(RELEASE_DIR)/usr/bin/cmdlineIPTV;
+
+$(D)/iptvplayer-nightly \
 $(D)/iptvplayer: $(D)/librtmp
 	$(START_BUILD)
 	$(MAKE) python-iptv
@@ -179,6 +184,9 @@ $(D)/iptvplayer: $(D)/librtmp
 		else cd $(ARCHIVE); git clone https://github.com/TangoCash/crossplatform_iptvplayer.git iptvplayer.git; \
 		fi
 	cp -ra $(ARCHIVE)/iptvplayer.git $(BUILD_TMP)/iptvplayer
+	@if [ "$@" = "$(D)/iptvplayer-nightly" ]; then \
+		$(BUILD_TMP)/iptvplayer/SyncWithGitLab.sh $(BUILD_TMP)/iptvplayer; \
+	fi
 	install -d $(TARGET_DIR)/usr/share/E2emulator
 	cp -R $(BUILD_TMP)/iptvplayer/E2emulator/* $(TARGET_DIR)/usr/share/E2emulator/
 	install -d $(TARGET_DIR)/usr/share/E2emulator/Plugins/Extensions/IPTVPlayer
