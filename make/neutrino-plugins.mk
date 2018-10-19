@@ -5,8 +5,9 @@
 #
 # links
 #
-LINKS_VER = 2.7
+LINKS_VER = 2.17
 LINKS_PATCH  = links-$(LINKS_VER).patch
+LINKS_PATCH += links-$(LINKS_VER)-ac-prog-cxx.patch
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), spark spark7162))
 LINKS_PATCH += links-$(LINKS_VER)-spark-input.patch
 endif
@@ -26,14 +27,15 @@ $(D)/links: $(D)/bootstrap $(D)/libpng $(D)/openssl $(ARCHIVE)/links-$(LINKS_VER
 		$(CONFIGURE) \
 			--prefix= \
 			--mandir=/.remove \
+			--with-libjpeg \
 			--without-libtiff \
 			--without-svgalib \
+			--without-lzma \
 			--with-fb \
 			--without-directfb \
 			--without-pmshell \
 			--without-atheos \
 			--enable-graphics \
-			--enable-javascript \
 			--with-ssl=$(TARGET_DIR)/usr \
 			--without-x \
 		; \
