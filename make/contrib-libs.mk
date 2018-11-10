@@ -1448,7 +1448,7 @@ $(D)/pixman: $(ARCHIVE)/$(PIXMAN_SOURCE) $(D)/bootstrap $(D)/zlib $(D)/libpng
 #
 CAIRO_VER = 1.16.0
 CAIRO_SOURCE = cairo-$(CAIRO_VER).tar.xz
-CAIRO_PATCH  = cairo-get_bitmap_surface-bsc1036789-CVE-2017-7475.diff
+CAIRO_PATCH  = cairo-$(CAIRO_VER)-get_bitmap_surface.diff
 
 $(ARCHIVE)/$(CAIRO_SOURCE):
 	$(WGET) https://www.cairographics.org/releases/$(CAIRO_SOURCE)
