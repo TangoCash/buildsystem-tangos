@@ -1411,7 +1411,7 @@ $(D)/samba: $(D)/bootstrap $(ARCHIVE)/$(SAMBA_SOURCE)
 	set -e; cd $(BUILD_TMP)/samba-$(SAMBA_VER); \
 		$(call apply_patches,$(SAMBA_PATCH)); \
 		cd source3; \
-		./autogen.sh; \
+		./autogen.sh $(SILENT_OPT); \
 		$(BUILDENV) \
 		ac_cv_lib_attr_getxattr=no \
 		ac_cv_search_getxattr=no \
