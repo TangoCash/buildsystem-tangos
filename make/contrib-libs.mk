@@ -1414,14 +1414,14 @@ $(D)/fontconfig: $(D)/bootstrap $(D)/freetype $(D)/expat $(ARCHIVE)/$(FONTCONFIG
 #
 # Pixman: Pixel Manipulation library
 #
-PIXMAN_VER = 0.33.6
-PIXMAN_SOURCE = pixman-$(PIXMAN_VER).tar.bz2
+PIXMAN_VER = 0.34.0
+PIXMAN_SOURCE = pixman-$(PIXMAN_VER).tar.gz
 PIXMAN_PATCH  = pixman-$(PIXMAN_VER)-0001-ARM-qemu-related-workarounds-in-cpu-features-detecti.patch
 PIXMAN_PATCH += pixman-$(PIXMAN_VER)-asm_include.patch
 PIXMAN_PATCH += pixman-$(PIXMAN_VER)-0001-test-utils-Check-for-FE_INVALID-definition-before-us.patch
 
 $(ARCHIVE)/$(PIXMAN_SOURCE):
-	$(WGET) https://www.x.org/releases/individual/lib/$(PIXMAN_SOURCE)
+	$(WGET) https://www.cairographics.org/releases/$(PIXMAN_SOURCE)
 
 $(D)/pixman: $(ARCHIVE)/$(PIXMAN_SOURCE) $(D)/bootstrap $(D)/zlib $(D)/libpng
 	$(START_BUILD)
