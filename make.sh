@@ -313,8 +313,7 @@ make printenv
 echo "Your next step could be:"
 case "$FLAVOUR" in
 	neutrino-mp*)
-		echo "  make neutrino-mp"
-		echo "  make neutrino-mp-plugins";;
+		echo "  make neutrino-mp";;
 	neutrino-hd2*)
 		echo "  make neutrino-hd2"
 		echo "  make neutrino-hd2-plugins";;

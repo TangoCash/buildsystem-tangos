@@ -1,25 +1,56 @@
-#
-# Makefile to build NEUTRINO
-#
-$(TARGET_DIR)/.version:
-	echo "imagename=Neutrino MP" > $@
-	echo "homepage=https://github.com/Duckbox-Developers" >> $@
-	echo "creator=$(MAINTAINER)" >> $@
-	echo "docs=https://github.com/Duckbox-Developers" >> $@
-	echo "forum=https://github.com/Duckbox-Developers/neutrino-mp-ddt" >> $@
-	echo "version=0200`date +%Y%m%d%H%M`" >> $@
-	echo "git=`git log | grep "^commit" | wc -l`" >> $@
+# makefile to build NEUTRINO
 
-AUDIODEC = ffmpeg
+# -----------------------------------------------------------------------------
 
-NEUTRINO_DEPS  = $(D)/bootstrap $(KERNEL) $(D)/system-tools
-NEUTRINO_DEPS += $(D)/ncurses $(LIRC) $(D)/libcurl
-NEUTRINO_DEPS += $(D)/libpng $(D)/libjpeg $(D)/giflib $(D)/freetype
-NEUTRINO_DEPS += $(D)/alsa_utils $(D)/ffmpeg
-NEUTRINO_DEPS += $(D)/libfribidi $(D)/libsigc $(D)/libdvbsi $(D)/libusb
-NEUTRINO_DEPS += $(D)/zlib $(D)/pugixml $(D)/libopenthreads
-NEUTRINO_DEPS += $(D)/lua $(D)/luaexpat $(D)/luacurl $(D)/luasocket $(D)/luafeedparser $(D)/luasoap $(D)/luajson
+NEUTRINO_DEPS  = $(D)/bootstrap
+NEUTRINO_DEPS += $(KERNEL)
+NEUTRINO_DEPS += $(D)/system-tools
+NEUTRINO_DEPS += $(D)/ncurses
+NEUTRINO_DEPS += $(LIRC)
+NEUTRINO_DEPS += $(D)/libcurl
+NEUTRINO_DEPS += $(D)/libpng
+NEUTRINO_DEPS += $(D)/libjpeg
+NEUTRINO_DEPS += $(D)/giflib
+NEUTRINO_DEPS += $(D)/freetype
+NEUTRINO_DEPS += $(D)/alsa_utils
+NEUTRINO_DEPS += $(D)/ffmpeg
+NEUTRINO_DEPS += $(D)/libsigc
+NEUTRINO_DEPS += $(D)/libdvbsi
+NEUTRINO_DEPS += $(D)/libusb
+NEUTRINO_DEPS += $(D)/zlib
+NEUTRINO_DEPS += $(D)/pugixml
+NEUTRINO_DEPS += $(D)/libopenthreads
+NEUTRINO_DEPS += $(D)/lua
+NEUTRINO_DEPS += $(D)/luaexpat
+NEUTRINO_DEPS += $(D)/luacurl
+NEUTRINO_DEPS += $(D)/luasocket
+NEUTRINO_DEPS += $(D)/luafeedparser
+NEUTRINO_DEPS += $(D)/luasoap
+NEUTRINO_DEPS += $(D)/luajson
+NEUTRINO_DEPS += $(D)/neutrino-mp-plugins
+NEUTRINO_DEPS += $(D)/neutrino-mp-plugin-scripts-lua
+NEUTRINO_DEPS += $(D)/neutrino-mp-plugin-mediathek
+NEUTRINO_DEPS += $(D)/neutrino-mp-plugin-xupnpd
 NEUTRINO_DEPS += $(LOCAL_NEUTRINO_DEPS)
+NEUTRINO_DEPS += $(LOCAL_NEUTRINO_PLUGINS)
+
+N_CONFIG_OPTS  = $(LOCAL_NEUTRINO_BUILD_OPTIONS)
+
+# enable ffmpeg audio decoder in neutrino
+AUDIODEC = ffmpeg
+ifeq ($(AUDIODEC), ffmpeg)
+# enable ffmpeg audio decoder in neutrino
+N_CONFIG_OPTS += --enable-ffmpegdec
+else
+NEUTRINO_DEPS += $(D)/libid3tag
+NEUTRINO_DEPS += $(D)/libmad
+
+N_CONFIG_OPTS += --with-tremor
+NEUTRINO_DEPS += $(D)/libvorbisidec
+
+N_CONFIG_OPTS += --enable-flac
+NEUTRINO_DEPS += $(D)/flac
+endif
 
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), atevio7500 spark spark7162 ufs912 ufs913 ufs910))
 NEUTRINO_DEPS += $(D)/ntfs_3g
@@ -54,16 +85,20 @@ NEUTRINO_DEPS += $(D)/install-$(BOXTYPE)-extra-libs
 endif
 
 ifeq ($(IMAGE), neutrino-wlandriver)
-NEUTRINO_DEPS += $(D)/wpa_supplicant $(D)/wireless_tools
+NEUTRINO_DEPS += $(D)/wpa_supplicant
+NEUTRINO_DEPS += $(D)/wireless_tools
 endif
 
-NEUTRINO_DEPS2 = $(D)/libid3tag $(D)/libmad $(D)/flac
 
 N_CFLAGS       = -Wall -W -Wshadow -pipe -Os
 N_CFLAGS      += -D__KERNEL_STRICT_NAMES
 N_CFLAGS      += -D__STDC_FORMAT_MACROS
 N_CFLAGS      += -D__STDC_CONSTANT_MACROS
-N_CFLAGS      += -fno-strict-aliasing -funsigned-char -ffunction-sections -fdata-sections
+N_CFLAGS      += -fno-strict-aliasing
+N_CFLAGS      += -funsigned-char
+N_CFLAGS      += -ffunction-sections
+N_CFLAGS      += -fdata-sections
+#N_CFLAGS      += -Wno-deprecated-declarations
 #N_CFLAGS      += -DCPU_FREQ
 N_CFLAGS      += $(LOCAL_NEUTRINO_CFLAGS)
 
@@ -84,16 +119,9 @@ N_CPPFLAGS += -I$(DRIVER_DIR)/frontcontroller/aotom_spark
 endif
 
 LH_CONFIG_OPTS =
-ifeq ($(MEDIAFW), gstreamer)
-NEUTRINO_DEPS  += $(D)/gst_plugins_dvbmediasink
-N_CPPFLAGS     += $(shell $(PKG_CONFIG) --cflags --libs gstreamer-1.0)
-N_CPPFLAGS     += $(shell $(PKG_CONFIG) --cflags --libs gstreamer-audio-1.0)
-N_CPPFLAGS     += $(shell $(PKG_CONFIG) --cflags --libs gstreamer-video-1.0)
-N_CPPFLAGS     += $(shell $(PKG_CONFIG) --cflags --libs glib-2.0)
-LH_CONFIG_OPTS += --enable-gstreamer_10=yes
-endif
+#LH_CONFIG_OPTS += --enable-flv2mpeg4
 
-N_CONFIG_OPTS  = $(LOCAL_NEUTRINO_BUILD_OPTIONS)
+
 ifeq ($(FLAVOUR), neutrino-mp-ni)
 N_CONFIG_OPTS += --with-boxtype=armbox
 N_CONFIG_OPTS += --with-boxmodel=$(BOXTYPE)
@@ -105,6 +133,10 @@ N_CONFIG_OPTS += --enable-freesatepg
 #N_CONFIG_OPTS += --disable-webif
 N_CONFIG_OPTS += --disable-upnp
 #N_CONFIG_OPTS += --disable-tangos
+#N_CONFIG_OPTS += --enable-reschange
+
+N_CONFIG_OPTS += --enable-fribidi
+NEUTRINO_DEPS += $(D)/libfribidi
 
 N_CONFIG_OPTS += \
 	--with-libdir=/usr/lib \
@@ -133,20 +165,21 @@ endif
 ifeq ($(EXTERNAL_LCD), lcd4linux)
 NEUTRINO_DEPS += $(D)/lcd4linux
 endif
+# -----------------------------------------------------------------------------
 
-ifeq ($(AUDIODEC), ffmpeg)
-# enable ffmpeg audio decoder in neutrino
-N_CONFIG_OPTS += --enable-ffmpegdec
-else
-NEUTRINO_DEPS += $(D)/libid3tag
-NEUTRINO_DEPS += $(D)/libmad
-
-N_CONFIG_OPTS += --with-tremor
-NEUTRINO_DEPS += $(D)/libvorbisidec
-
-N_CONFIG_OPTS += --enable-flac
-NEUTRINO_DEPS += $(D)/flac
+ifeq ($(MEDIAFW), gstreamer)
+NEUTRINO_DEPS  += $(D)/gst_plugins_dvbmediasink
+N_CPPFLAGS     += $(shell $(PKG_CONFIG) --cflags --libs gstreamer-1.0)
+N_CPPFLAGS     += $(shell $(PKG_CONFIG) --cflags --libs gstreamer-audio-1.0)
+N_CPPFLAGS     += $(shell $(PKG_CONFIG) --cflags --libs gstreamer-video-1.0)
+N_CPPFLAGS     += $(shell $(PKG_CONFIG) --cflags --libs glib-2.0)
+LH_CONFIG_OPTS += --enable-gstreamer_10=yes
 endif
+
+# -----------------------------------------------------------------------------
+
+N_OBJDIR = $(BUILD_TMP)/$(NEUTRINO_MP)
+LH_OBJDIR = $(BUILD_TMP)/$(LIBSTB_HAL)
 
 ifeq ($(FLAVOUR), neutrino-mp-max)
 GIT_URL     ?= https://bitbucket.org/max_10
@@ -182,13 +215,36 @@ NMP_PATCHES  = $(NEUTRINO_MP_DDT_PATCHES)
 HAL_PATCHES  = $(NEUTRINO_MP_LIBSTB_DDT_PATCHES)
 endif
 
-N_OBJDIR = $(BUILD_TMP)/$(NEUTRINO_MP)
-LH_OBJDIR = $(BUILD_TMP)/$(LIBSTB_HAL)
+# -----------------------------------------------------------------------------
 
-################################################################################
-#
-# libstb-hal
-#
+$(TARGET_DIR)/.version:
+	echo "imagename=Neutrino MP" > $@
+	echo "homepage=https://github.com/Duckbox-Developers" >> $@
+	echo "creator=$(MAINTAINER)" >> $@
+	echo "docs=https://github.com/Duckbox-Developers" >> $@
+	echo "forum=https://github.com/Duckbox-Developers/neutrino-mp-ddt" >> $@
+	echo "version=0200`date +%Y%m%d%H%M`" >> $@
+	echo "git=`git log | grep "^commit" | wc -l`" >> $@
+
+# -----------------------------------------------------------------------------
+
+$(SOURCE_DIR)/$(NEUTRINO_MP)/src/gui/version.h:
+	@rm -f $@
+	echo '#define BUILT_DATE "'`date`'"' > $@
+	@if test -d $(SOURCE_DIR)/$(LIBSTB_HAL); then \
+		pushd $(SOURCE_DIR)/$(LIBSTB_HAL); \
+		HAL_REV=$$(git log | grep "^commit" | wc -l); \
+		popd; \
+		pushd $(SOURCE_DIR)/$(NEUTRINO_MP); \
+		NMP_REV=$$(git log | grep "^commit" | wc -l); \
+		popd; \
+		pushd $(BASE_DIR); \
+		BS_REV=$$(git log | grep "^commit" | wc -l); \
+		popd; \
+		echo '#define VCS "BS-rev'$$BS_REV'_HAL-rev'$$HAL_REV'_NMP-rev'$$NMP_REV'"' >> $@; \
+	fi
+
+# -----------------------------------------------------------------------------
 
 $(D)/libstb-hal.do_prepare:
 	$(START_BUILD)
@@ -228,7 +284,7 @@ $(D)/libstb-hal.config.status: | $(NEUTRINO_DEPS)
 			PKG_CONFIG=$(PKG_CONFIG) \
 			PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 			CFLAGS="$(N_CFLAGS)" CXXFLAGS="$(N_CFLAGS)" CPPFLAGS="$(N_CPPFLAGS)"
-	@touch $@
+#	@touch $@
 
 $(D)/libstb-hal.do_compile: $(D)/libstb-hal.config.status
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
@@ -251,11 +307,8 @@ libstb-hal-distclean:
 	rm -rf $(LH_OBJDIR)
 	rm -f $(D)/libstb-hal*
 
-################################################################################
-#
-# neutrino-mp
-#
-$(D)/neutrino-mp-plugins.do_prepare \
+# -----------------------------------------------------------------------------
+
 $(D)/neutrino-mp.do_prepare: | $(NEUTRINO_DEPS) $(D)/libstb-hal
 	$(START_BUILD)
 	rm -rf $(SOURCE_DIR)/$(NEUTRINO_MP)
@@ -272,8 +325,7 @@ $(D)/neutrino-mp.do_prepare: | $(NEUTRINO_DEPS) $(D)/libstb-hal
 		$(call apply_patches,$(NMP_PATCHES))
 	@touch $@
 
-$(D)/neutrino-mp.config.status \
-$(D)/neutrino-mp-plugins.config.status:
+$(D)/neutrino-mp.config.status:
 	rm -rf $(N_OBJDIR)
 	test -d $(N_OBJDIR) || mkdir -p $(N_OBJDIR)
 	cd $(N_OBJDIR); \
@@ -286,7 +338,6 @@ $(D)/neutrino-mp-plugins.config.status:
 			--enable-maintainer-mode \
 			--enable-silent-rules \
 			\
-			--enable-fribidi \
 			--enable-giflib \
 			--enable-lua \
 			--enable-pugixml \
@@ -299,25 +350,8 @@ $(D)/neutrino-mp-plugins.config.status:
 			PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 			CFLAGS="$(N_CFLAGS)" CXXFLAGS="$(N_CFLAGS)" CPPFLAGS="$(N_CPPFLAGS)"
 		+make $(SOURCE_DIR)/$(NEUTRINO_MP)/src/gui/version.h
-	@touch $@
+#	@touch $@
 
-$(SOURCE_DIR)/$(NEUTRINO_MP)/src/gui/version.h:
-	@rm -f $@
-	echo '#define BUILT_DATE "'`date`'"' > $@
-	@if test -d $(SOURCE_DIR)/$(LIBSTB_HAL); then \
-		pushd $(SOURCE_DIR)/$(LIBSTB_HAL); \
-		HAL_REV=$$(git log | grep "^commit" | wc -l); \
-		popd; \
-		pushd $(SOURCE_DIR)/$(NEUTRINO_MP); \
-		NMP_REV=$$(git log | grep "^commit" | wc -l); \
-		popd; \
-		pushd $(BASE_DIR); \
-		BS_REV=$$(git log | grep "^commit" | wc -l); \
-		popd; \
-		echo '#define VCS "BS-rev'$$BS_REV'_HAL-rev'$$HAL_REV'_NMP-rev'$$NMP_REV'"' >> $@; \
-	fi
-
-$(D)/neutrino-mp-plugins.do_compile \
 $(D)/neutrino-mp.do_compile:
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 	$(MAKE) -C $(N_OBJDIR) all DESTDIR=$(TARGET_DIR)
@@ -327,13 +361,13 @@ mp \
 neutrino-mp: $(D)/neutrino-mp.do_prepare $(D)/neutrino-mp.config.status $(D)/neutrino-mp.do_compile
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 	$(MAKE) -C $(N_OBJDIR) install DESTDIR=$(TARGET_DIR)
+	$(TOUCH)
 	make $(TARGET_DIR)/.version
-	touch $(D)/$(notdir $@)
 	make neutrino-mp-release
 	$(TUXBOX_CUSTOMIZE)
 
 mp-clean \
-neutrino-mp-clean: neutrino-cdkroot-clean
+neutrino-mp-clean:
 	rm -f $(D)/neutrino-mp
 	rm -f $(D)/neutrino-mp.config.status
 	rm -f $(SOURCE_DIR)/$(NEUTRINO_MP)/src/gui/version.h
@@ -341,36 +375,11 @@ neutrino-mp-clean: neutrino-cdkroot-clean
 		$(MAKE) -C $(N_OBJDIR) distclean
 
 mp-distclean \
-neutrino-mp-distclean: neutrino-cdkroot-clean
+neutrino-mp-distclean:
 	rm -rf $(N_OBJDIR)
 	rm -f $(D)/neutrino-mp*
 
-mpp \
-neutrino-mp-plugins: $(D)/neutrino-mp-plugins.do_prepare $(D)/neutrino-mp-plugins.config.status $(D)/neutrino-mp-plugins.do_compile
-	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
-	$(MAKE) -C $(N_OBJDIR) install DESTDIR=$(TARGET_DIR)
-	make $(TARGET_DIR)/.version
-	make $(NEUTRINO_PLUGINS)
-	touch $(D)/$(notdir $@)
-	make neutrino-mp-release
-	$(TUXBOX_CUSTOMIZE)
-
-mpp-clean \
-neutrino-mp-plugins-clean: neutrino-cdkroot-clean
-	rm -f $(D)/neutrino-mp-plugins
-	rm -f $(D)/neutrino-mp-plugins.config.status
-	rm -f $(SOURCE_DIR)/$(NEUTRINO_MP)/src/gui/version.h
-	make neutrino-mp-plugin-clean
-	cd $(N_OBJDIR); \
-		$(MAKE) -C $(N_OBJDIR) distclean
-
-mpp-distclean \
-neutrino-mp-plugins-distclean: neutrino-cdkroot-clean
-	rm -rf $(N_OBJDIR)
-	rm -f $(D)/neutrino-mp-plugins*
-	make neutrino-mp-plugin-distclean
-
-################################################################################
+# -----------------------------------------------------------------------------
 #
 # neutrino-hd2
 #
@@ -384,7 +393,7 @@ endif
 
 NEUTRINO_HD2_PATCHES =
 
-$(D)/neutrino-hd2.do_prepare: | $(NEUTRINO_DEPS) $(NEUTRINO_DEPS2)
+$(D)/neutrino-hd2.do_prepare: | $(NEUTRINO_DEPS) $(D)/libid3tag $(D)/libmad $(D)/flac
 	$(START_BUILD)
 	rm -rf $(SOURCE_DIR)/neutrino-hd2
 	rm -rf $(SOURCE_DIR)/neutrino-hd2.org
@@ -455,7 +464,7 @@ neutrino-hd2-distclean: neutrino-cdkroot-clean
 	rm -f $(D)/neutrino-hd2*
 	rm -f $(D)/neutrino-hd2-plugins*
 
-################################################################################
+# -----------------------------------------------------------------------------
 neutrino-cdkroot-clean:
 	[ -e $(TARGET_DIR)/usr/local/bin ] && cd $(TARGET_DIR)/usr/local/bin && find -name '*' -delete || true
 	[ -e $(TARGET_DIR)/usr/local/share/iso-codes ] && cd $(TARGET_DIR)/usr/local/share/iso-codes && find -name '*' -delete || true
@@ -475,6 +484,8 @@ dual-clean:
 dual-distclean:
 	make nhd2-distclean
 	make mp-distclean
+
+# -----------------------------------------------------------------------------
 
 PHONY += $(TARGET_DIR)/.version
 PHONY += $(SOURCE_DIR)/$(NEUTRINO_MP)/src/gui/version.h
