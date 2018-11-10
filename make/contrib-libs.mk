@@ -1444,6 +1444,58 @@ $(D)/pixman: $(ARCHIVE)/$(PIXMAN_SOURCE) $(D)/bootstrap $(D)/zlib $(D)/libpng
 	$(TOUCH)
 
 #
+# The Cairo library GObject wrapper library
+#
+CAIRO_VER = 1.16.0
+CAIRO_SOURCE = cairo-$(CAIRO_VER).tar.xz
+CAIRO_PATCH  = cairo-get_bitmap_surface-bsc1036789-CVE-2017-7475.diff
+
+$(ARCHIVE)/$(CAIRO_SOURCE):
+	$(WGET) https://www.cairographics.org/releases/$(CAIRO_SOURCE)
+
+$(D)/cairo: $(ARCHIVE)/$(CAIRO_SOURCE) $(D)/bootstrap $(D)/fontconfig $(D)/libglib2 $(D)/libpng $(D)/pixman $(D)/zlib
+	$(START_BUILD)
+	$(REMOVE)/cairo-$(CAIRO_VER)
+	$(UNTAR)/$(CAIRO_SOURCE)
+	set -e; cd $(BUILD_TMP)/cairo-$(CAIRO_VER); \
+		$(call apply_patches,$(CAIRO_PATCH)); \
+		$(BUILDENV) \
+		ax_cv_c_float_words_bigendian="no" \
+		./configure $(SILENT_OPT) $(CONFIGURE_OPTS) \
+			--prefix=/usr \
+			--with-x=no \
+			--disable-xlib \
+			--disable-xcb \
+			--disable-egl \
+			--disable-glesv2 \
+			--disable-gl \
+			--enable-tee \
+		; \
+		$(MAKE) all; \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	rm -rf $(TARGET_DIR)/usr/bin/cairo-sphinx
+	rm -rf $(TARGET_LIB_DIR)/cairo/cairo-fdr*
+	rm -rf $(TARGET_LIB_DIR)/cairo/cairo-sphinx*
+	rm -rf $(TARGET_LIB_DIR)/cairo/.debug/cairo-fdr*
+	rm -rf $(TARGET_LIB_DIR)/cairo/.debug/cairo-sphinx*
+	$(REWRITE_LIBTOOL)/libcairo.la
+	$(REWRITE_LIBTOOL)/libcairo-script-interpreter.la
+	$(REWRITE_LIBTOOL)/libcairo-gobject.la
+	$(REWRITE_LIBTOOL)/cairo/libcairo-trace.la
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/cairo.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/cairo-fc.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/cairo-ft.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/cairo-gobject.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/cairo-pdf.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/cairo-png.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/cairo-ps.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/cairo-script.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/cairo-svg.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/cairo-tee.pc
+	$(REMOVE)/cairo-$(CAIRO_VER)
+	$(TOUCH)
+
+#
 # libdvdcss
 #
 LIBDVDCSS_VER = 1.2.13
