@@ -1412,6 +1412,38 @@ $(D)/fontconfig: $(D)/bootstrap $(D)/freetype $(D)/expat $(ARCHIVE)/$(FONTCONFIG
 	$(TOUCH)
 
 #
+# Pixman: Pixel Manipulation library
+#
+PIXMAN_VER = 0.33.6
+PIXMAN_SOURCE = pixman-$(PIXMAN_VER).tar.bz2
+PIXMAN_PATCH  = pixman-$(PIXMAN_VER)-0001-ARM-qemu-related-workarounds-in-cpu-features-detecti.patch
+PIXMAN_PATCH += pixman-$(PIXMAN_VER)-asm_include.patch
+PIXMAN_PATCH += pixman-$(PIXMAN_VER)-0001-test-utils-Check-for-FE_INVALID-definition-before-us.patch
+
+$(ARCHIVE)/$(PIXMAN_SOURCE):
+	$(WGET) https://www.x.org/releases/individual/lib/$(PIXMAN_SOURCE)
+
+$(D)/pixman: $(ARCHIVE)/$(PIXMAN_SOURCE) $(D)/bootstrap $(D)/zlib $(D)/libpng
+	$(START_BUILD)
+	$(REMOVE)/pixman-$(PIXMAN_VER)
+	$(UNTAR)/$(PIXMAN_SOURCE)
+	set -e; cd $(BUILD_TMP)/pixman-$(PIXMAN_VER); \
+		$(call apply_patches,$(PIXMAN_PATCH)); \
+		$(CONFIGURE) \
+			--prefix=/usr \
+			--disable-gtk \
+			--disable-arm-simd \
+			--disable-loongson-mmi \
+			--disable-docs \
+		; \
+		$(MAKE) all; \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REWRITE_LIBTOOL)/libpixman-1.la
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/pixman-1.pc
+	$(REMOVE)/pixman-$(PIXMAN_VER)
+	$(TOUCH)
+
+#
 # libdvdcss
 #
 LIBDVDCSS_VER = 1.2.13
