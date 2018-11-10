@@ -1496,6 +1496,40 @@ $(D)/cairo: $(ARCHIVE)/$(CAIRO_SOURCE) $(D)/bootstrap $(D)/fontconfig $(D)/libgl
 	$(TOUCH)
 
 #
+# HarfBuzz is an OpenType text shaping engine
+#
+HARFBUZZ_VER = 1.8.8
+HARFBUZZ_SOURCE = harfbuzz-$(HARFBUZZ_VER).tar.bz2
+HARFBUZZ_PATCH  = harfbuzz-$(HARFBUZZ_VER)-disable-docs.patch
+
+$(ARCHIVE)/$(HARFBUZZ_SOURCE):
+	$(WGET) https://www.freedesktop.org/software/harfbuzz/release/$(HARFBUZZ_SOURCE)
+
+$(D)/harfbuzz: $(ARCHIVE)/$(HARFBUZZ_SOURCE) $(D)/bootstrap $(D)/fontconfig $(D)/libglib2 $(D)/cairo $(D)/freetype
+	$(START_BUILD)
+	$(REMOVE)/harfbuzz-$(HARFBUZZ_VER)
+	$(UNTAR)/$(HARFBUZZ_SOURCE)
+	set -e; cd $(BUILD_TMP)/harfbuzz-$(HARFBUZZ_VER); \
+		$(call apply_patches,$(HARFBUZZ_PATCH)); \
+		$(CONFIGURE) \
+			--prefix=/usr \
+			--with-cairo \
+			--with-fontconfig \
+			--with-freetype \
+			--with-glib \
+			--without-graphite2 \
+			--without-icu \
+		; \
+		$(MAKE) all; \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REWRITE_LIBTOOL)/libharfbuzz.la
+	$(REWRITE_LIBTOOL)/libharfbuzz-subset.la
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/harfbuzz.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/harfbuzz-subset.pc
+	$(REMOVE)/harfbuzz-$(HARFBUZZ_VER)
+	$(TOUCH)
+
+#
 # libdvdcss
 #
 LIBDVDCSS_VER = 1.2.13
