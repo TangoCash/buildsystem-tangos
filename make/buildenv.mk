@@ -318,7 +318,7 @@ CMAKE_OPTS := \
 
 CMAKE := \
 	rm -f CMakeCache.txt; \
-	cmake --no-warn-unused-cli $(CMAKE_OPTS)
+	cmake $(SILENT_OPT) --no-warn-unused-cli $(CMAKE_OPTS)
 #
 # image
 #
