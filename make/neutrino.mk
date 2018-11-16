@@ -201,6 +201,7 @@ endif
 
 # -----------------------------------------------------------------------------
 
+.version: $(TARGET_DIR)/.version
 $(TARGET_DIR)/.version:
 	echo "imagename=Neutrino MP" > $@
 	echo "homepage=https://github.com/Duckbox-Developers" >> $@
@@ -208,24 +209,17 @@ $(TARGET_DIR)/.version:
 	echo "docs=https://github.com/Duckbox-Developers" >> $@
 	echo "forum=https://github.com/Duckbox-Developers/neutrino-mp-ddt" >> $@
 	echo "version=0200`date +%Y%m%d%H%M`" >> $@
-	echo "git=`git log | grep "^commit" | wc -l`" >> $@
+	echo "builddate="`date` >> $@
+	echo "git=BS-rev$(BS_REV)_HAL-rev$(HAL_REV)_NMP-rev$(NMP_REV)" >> $@
 
 # -----------------------------------------------------------------------------
 
+version.h: $(SOURCE_DIR)/$(NEUTRINO_MP)/src/gui/version.h
 $(SOURCE_DIR)/$(NEUTRINO_MP)/src/gui/version.h:
 	@rm -f $@
 	echo '#define BUILT_DATE "'`date`'"' > $@
 	@if test -d $(SOURCE_DIR)/$(LIBSTB_HAL); then \
-		pushd $(SOURCE_DIR)/$(LIBSTB_HAL); \
-		HAL_REV=$$(git log | grep "^commit" | wc -l); \
-		popd; \
-		pushd $(SOURCE_DIR)/$(NEUTRINO_MP); \
-		NMP_REV=$$(git log | grep "^commit" | wc -l); \
-		popd; \
-		pushd $(BASE_DIR); \
-		BS_REV=$$(git log | grep "^commit" | wc -l); \
-		popd; \
-		echo '#define VCS "BS-rev'$$BS_REV'_HAL-rev'$$HAL_REV'_NMP-rev'$$NMP_REV'"' >> $@; \
+		echo '#define VCS "BS-rev$(BS_REV)_HAL-rev$(HAL_REV)_NMP-rev$(NMP_REV)"' >> $@; \
 	fi
 
 # -----------------------------------------------------------------------------
@@ -342,11 +336,12 @@ $(D)/neutrino-mp.do_compile:
 	@touch $@
 
 mp \
-neutrino-mp: $(D)/neutrino-mp.do_prepare $(D)/neutrino-mp.config.status $(D)/neutrino-mp.do_compile
+neutrino-mp: $(D)/neutrino-mp
+$(D)/neutrino-mp: $(D)/neutrino-mp.do_prepare $(D)/neutrino-mp.config.status $(D)/neutrino-mp.do_compile
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 	$(MAKE) -C $(N_OBJDIR) install DESTDIR=$(TARGET_DIR)
+	make .version
 	$(TOUCH)
-	make $(TARGET_DIR)/.version
 	make neutrino-mp-release
 	$(TUXBOX_CUSTOMIZE)
 
