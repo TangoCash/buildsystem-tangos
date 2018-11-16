@@ -278,25 +278,25 @@ $(D)/system-tools: $(SYSTEM_TOOLS) $(TOOLS)
 #
 #
 $(DRIVER_DIR):
-	@echo '===================================================================='
+	make line
 	@echo '      Cloning $(GIT_NAME_DRIVER)-driver git repository'
-	@echo '===================================================================='
+	make line
 	if [ ! -e $(DRIVER_DIR)/.git ]; then \
 		git clone $(GITHUB)/$(GIT_NAME_DRIVER)/driver.git driver; \
 	fi
 
 $(APPS_DIR):
-	@echo '===================================================================='
+	make line
 	@echo '      Cloning $(GIT_NAME_APPS)-apps git repository'
-	@echo '===================================================================='
+	make line
 	if [ ! -e $(APPS_DIR)/.git ]; then \
 		git clone $(GITHUB)/$(GIT_NAME_APPS)/apps.git apps; \
 	fi
 
 $(FLASH_DIR):
-	@echo '===================================================================='
+	make line
 	@echo '      Cloning $(GIT_NAME_FLASH)-flash git repository'
-	@echo '===================================================================='
+	make line
 	if [ ! -e $(FLASH_DIR)/.git ]; then \
 		git clone $(GITHUB)/$(GIT_NAME_FLASH)/flash.git flash; \
 	fi

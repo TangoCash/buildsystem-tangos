@@ -182,7 +182,7 @@ PKG_NAME_HELPER       = $(shell echo $(PKG_NAME) | sed 's/.*/\U&/')
 PKG_VER_HELPER        = A$($(PKG_NAME_HELPER)_VER)A
 PKG_VER               = $($(PKG_NAME_HELPER)_VER)
 
-START_BUILD           = @echo "=============================================================="; \
+START_BUILD           = make line; \
                         echo; \
                         if [ $(PKG_VER_HELPER) == "AA" ]; then \
                             echo -e "Start build of $(TERM_GREEN_BOLD)$(PKG_NAME)$(TERM_NORMAL)"; \

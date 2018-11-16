@@ -190,6 +190,10 @@ print-targets:
 # put them into $(BASE_DIR)/local since that is ignored in .gitignore
 -include ./Makefile.local
 
+line:
+	@for i in $$(seq 1 1 $$(tput cols)); do printf -; done
+	@echo
+
 # debug target, if you need that, you know it. If you don't know if you need
 # that, you don't need it.
 .print-phony:
