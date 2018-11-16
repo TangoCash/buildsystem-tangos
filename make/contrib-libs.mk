@@ -833,21 +833,12 @@ $(D)/libjpeg_turbo2: $(D)/bootstrap $(ARCHIVE)/$(LIBJPEG_TURBO2_SOURCE)
 	$(UNTAR)/$(LIBJPEG_TURBO2_SOURCE)
 	set -e; cd $(BUILD_TMP)/libjpeg-turbo-$(LIBJPEG_TURBO2_VER); \
 		$(call apply_patches,$(LIBJPEG_TURBO2_PATCH)); \
-		cmake   -DCMAKE_INSTALL_PREFIX=/usr \
-			-DCMAKE_C_COMPILER=$(TARGET)-gcc \
-			-DCMAKE_CXX_COMPILER=$(TARGET)-g++ \
-			-DCMAKE_C_FLAGS="-pipe -Os" \
-			-DCMAKE_CXX_FLAGS="-pipe -Os" \
-			-DWITH_SIMD=False \
-			-DCMAKE_INSTALL_DOCDIR=/.remove \
-			-DCMAKE_INSTALL_MANDIR=/.remove \
-			-DCMAKE_INSTALL_DEFAULT_LIBDIR=lib \
-			-DENABLE_STATIC=OFF \
-		; \
+		$(CMAKE) -DWITH_SIMD=False ; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,cjpeg djpeg jpegtran rdjpgcom wrjpgcom tjbench)
 	$(REMOVE)/libjpeg-turbo-$(LIBJPEG_TURBO2_VER)
+	rm -rf $(TARGET_LIB_DIR)/cmake
 	$(TOUCH)
 
 #
@@ -1898,21 +1889,11 @@ $(D)/pugixml: $(D)/bootstrap $(ARCHIVE)/$(PUGIXML_SOURCE)
 	$(UNTAR)/$(PUGIXML_SOURCE)
 	set -e; cd $(BUILD_TMP)/pugixml-$(PUGIXML_VER); \
 		$(call apply_patches,$(PUGIXML_PATCH)); \
-		cmake  --no-warn-unused-cli \
-			-DCMAKE_INSTALL_PREFIX=/usr \
-			-DBUILD_SHARED_LIBS=ON \
-			-DCMAKE_BUILD_TYPE=Linux \
-			-DCMAKE_C_COMPILER=$(TARGET)-gcc \
-			-DCMAKE_CXX_COMPILER=$(TARGET)-g++ \
-			-DCMAKE_C_FLAGS="-pipe -Os" \
-			-DCMAKE_CXX_FLAGS="-pipe -Os" \
-			-DCMAKE_PREFIX_PATH=$(TARGET_DIR)/usr \
-			| tail -n +90 \
-		; \
+		$(CMAKE) ; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REMOVE)/pugixml-$(PUGIXML_VER)
-	cd $(TARGET_DIR) && rm -rf usr/lib/cmake
+	rm -rf $(TARGET_LIB_DIR)/cmake
 	$(TOUCH)
 
 #
@@ -2190,20 +2171,12 @@ $(D)/libopenthreads: $(D)/bootstrap $(ARCHIVE)/$(LIBOPENTHREADS_SOURCE)
 	$(UNTAR)/$(LIBOPENTHREADS_SOURCE)
 	set -e; cd $(BUILD_TMP)/OpenThreads-$(LIBOPENTHREADS_VER); \
 		$(call apply_patches,$(LIBOPENTHREADS_PATCH)); \
-		echo "# dummy file to prevent warning message" > examples/CMakeLists.txt; \
-		cmake . -DCMAKE_BUILD_TYPE=Release \
-			-DCMAKE_SYSTEM_NAME="Linux" \
-			-DCMAKE_INSTALL_PREFIX=/usr \
-			-DCMAKE_C_COMPILER="$(TARGET)-gcc" \
-			-DCMAKE_CXX_COMPILER="$(TARGET)-g++" \
-			-D_OPENTHREADS_ATOMIC_USE_GCC_BUILTINS_EXITCODE=1 \
-		; \
-		find . -name cmake_install.cmake -print0 | xargs -0 \
-		sed -i 's@SET(CMAKE_INSTALL_PREFIX "/usr/local")@SET(CMAKE_INSTALL_PREFIX "")@'; \
+		$(CMAKE) -D_OPENTHREADS_ATOMIC_USE_GCC_BUILTINS_EXITCODE=1; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/openthreads.pc
 	$(REMOVE)/OpenThreads-$(LIBOPENTHREADS_VER)
+	rm -rf $(TARGET_LIB_DIR)/cmake
 	$(TOUCH)
 
 #
@@ -2532,21 +2505,13 @@ $(D)/libplist: $(D)/bootstrap $(D)/libxml2 $(ARCHIVE)/$(LIBPLIST_SOURCE)
 	$(UNTAR)/$(LIBPLIST_SOURCE)
 	export PKG_CONFIG_PATH=$(PKG_CONFIG_PATH); \
 	set -e; cd $(BUILD_TMP)/libplist-$(LIBPLIST_VER); \
-		rm CMakeFiles/* -rf CMakeCache.txt cmake_install.cmake; \
-		cmake . -DCMAKE_BUILD_TYPE=Release \
-			-DCMAKE_SYSTEM_NAME="Linux" \
-			-DCMAKE_INSTALL_PREFIX="/usr" \
-			-DCMAKE_C_COMPILER="$(TARGET)-gcc" \
-			-DCMAKE_CXX_COMPILER="$(TARGET)-g++" \
-			-DCMAKE_INCLUDE_PATH="$(TARGET_DIR)/usr/include" \
-		; \
-		find . -name cmake_install.cmake -print0 | xargs -0 \
-		sed -i 's@SET(CMAKE_INSTALL_PREFIX "/usr/local")@SET(CMAKE_INSTALL_PREFIX "")@'; \
+		$(CMAKE) ; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libplist.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libplist++.pc
 	$(REMOVE)/libplist-$(LIBPLIST_VER)
+	rm -rf $(TARGET_LIB_DIR)/cmake
 	$(TOUCH)
 
 #
