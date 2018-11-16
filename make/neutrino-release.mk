@@ -496,9 +496,9 @@ python-iptv-install:
 	ln -sf /usr/share/E2emulator/Plugins/Extensions/IPTVPlayer/cmdlineIPTV.sh $(RELEASE_DIR)/usr/bin/cmdlineIPTV; \
 	rm -f $(RELEASE_DIR)/usr/bin/{cftp,ckeygen,easy_install*,mailmail,pyhtmlizer,tkconch,trial,twist,twistd}
 	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/{bsddb,compiler,curses,distutils,email,ensurepip,hotshot,idlelib,lib2to3}
-	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/lib-dynload/*-py$(PYTHON_VER_MAJOR).egg-info
 	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/{lib-old,lib-tk,multiprocessing,plat-linux2,pydoc_data,sqlite3,unittest,wsgiref}
-	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/*-py$(PYTHON_VER_MAJOR).egg-info
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/lib-dynload/{_codecs_*.so,_curses*.so,_csv.so,_multi*.so}
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/lib-dynload/{audioop.so,cmath.so,future_builtins.so,mmap.so,strop.so}
 	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/setuptools
 	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/twisted/{application,conch,cred,enterprise,flow,lore,mail,names,news,pair,persisted}
 	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/twisted/{plugins,positioning,runner,scripts,spread,tap,_threads,trial,web,words}
@@ -507,10 +507,12 @@ python-iptv-install:
 		\( -name '*.a' \
 		-o -name '*.c' \
 		-o -name '*.doc' \
+		-o -name '*.egg-info' \
 		-o -name '*.la' \
 		-o -name '*.o' \
 		-o -name '*.pyc' \
 		-o -name '*.pyx' \
+		-o -name '*.txt' \
 		-o -name 'test' \
 		-o -name 'tests' \) \
 		-print0 | xargs --no-run-if-empty -0 rm -rf
@@ -972,6 +974,10 @@ $(D)/neutrino-mp-release: neutrino-mp-release-base neutrino-mp-release-$(BOXTYPE
 #
 # linux-strip all
 #
+	find $(RELEASE_DIR)/lib $(RELEASE_DIR)/usr/lib/ \
+		\( -name '*.a' \
+		-o -name '*.la' \) \
+		-print0 | xargs --no-run-if-empty -0 rm -f
 ifneq ($(OPTIMIZATIONS), $(filter $(OPTIMIZATIONS), kerneldebug debug normal))
 	find $(RELEASE_DIR)/ -name '*' -exec $(TARGET)-strip --strip-unneeded {} &>/dev/null \;
 endif
