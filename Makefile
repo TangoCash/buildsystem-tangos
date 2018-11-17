@@ -24,7 +24,7 @@ override MAKE = make $(if $(findstring j,$(filter-out --%,$(MAKEFLAGS))),,-j$(PA
 #
 printenv:
 	@echo
-	@echo '================================================================================'
+	$(call draw_line,);
 	@echo "Build Environment Variables:"
 	@echo "PATH             : `type -p fmt>/dev/null&&echo $(PATH)|sed 's/:/ /g' |fmt -65|sed 's/ /:/g; 2,$$s/^/                 : /;'||echo $(PATH)`"
 	@echo "ARCHIVE_DIR      : $(ARCHIVE)"
@@ -55,20 +55,22 @@ else
 	@echo "VERBOSE_BUILD    : no"
 endif
 	@echo "IMAGE            : $(IMAGE)"
-	@echo '================================================================================'
+	$(call draw_line,);
 ifeq ($(IMAGE), $(filter $(IMAGE), neutrino neutrino-wlandriver))
 	@echo -e "LOCAL_NEUTRINO_BUILD_OPTIONS : $(TERM_GREEN)$(LOCAL_NEUTRINO_BUILD_OPTIONS)$(TERM_NORMAL)"
 	@echo -e "LOCAL_NEUTRINO_CFLAGS        : $(TERM_GREEN)$(LOCAL_NEUTRINO_CFLAGS)$(TERM_NORMAL)"
 	@echo -e "LOCAL_NEUTRINO_PLUGINS       : $(TERM_GREEN)$(LOCAL_NEUTRINO_PLUGINS)$(TERM_NORMAL)"
 	@echo -e "LOCAL_NEUTRINO_DEPS          : $(TERM_GREEN)$(LOCAL_NEUTRINO_DEPS)$(TERM_NORMAL)"
 endif
-	@echo '================================================================================'
+	$(call draw_line,);
 	@make --no-print-directory toolcheck
 ifeq ($(MAINTAINER),)
-	@echo "##########################################################################"
-	@echo "# The MAINTAINER variable is not set. It defaults to your name from the  #"
-	@echo "# passwd entry, but this seems to have failed. Please set it in 'config'.#"
-	@echo "##########################################################################"
+	printf $$(tput setaf 0)$$(tput setab 3)
+	$(call draw_line,);
+	@echo "| The MAINTAINER variable is not set. It defaults to your name from the  |"
+	@echo "| passwd entry, but this seems to have failed. Please set it in 'config'.|"
+	$(call draw_line,);
+	printf $$(tput sgr0)
 	@echo
 endif
 	@if ! test -e $(BASE_DIR)/config; then \
@@ -123,9 +125,9 @@ update:
 	$(MAKE) distclean
 	@if test -d $(BASE_DIR); then \
 		cd $(BASE_DIR)/; \
-		echo '===================================================================='; \
+		$(call draw_line,); \
 		echo '      updating $(GIT_NAME)-buildsystem git repository'; \
-		echo '===================================================================='; \
+		$(call draw_line,); \
 		echo; \
 		if [ "$(GIT_STASH_PULL)" = "stashpull" ]; then \
 			git stash && git stash show -p > ./pull-stash-cdk.patch || true && git pull && git stash pop || true; \
@@ -136,9 +138,9 @@ update:
 	@echo;
 	@if test -d $(DRIVER_DIR); then \
 		cd $(DRIVER_DIR)/; \
-		echo '==================================================================='; \
+		$(call draw_line,); \
 		echo '      updating $(GIT_NAME_DRIVER)-driver git repository'; \
-		echo '==================================================================='; \
+		$(call draw_line,); \
 		echo; \
 		if [ "$(GIT_STASH_PULL)" = "stashpull" ]; then \
 			git stash && git stash show -p > ./pull-stash-driver.patch || true && git pull && git stash pop || true; \
@@ -149,9 +151,9 @@ update:
 	@echo;
 	@if test -d $(APPS_DIR); then \
 		cd $(APPS_DIR)/; \
-		echo '==================================================================='; \
+		$(call draw_line,); \
 		echo '      updating $(GIT_NAME_APPS)-apps git repository'; \
-		echo '==================================================================='; \
+		$(call draw_line,); \
 		echo; \
 		if [ "$(GIT_STASH_PULL)" = "stashpull" ]; then \
 			git stash && git stash show -p > ./pull-stash-apps.patch || true && git pull && git stash pop || true; \
@@ -162,9 +164,9 @@ update:
 	@echo;
 	@if test -d $(FLASH_DIR); then \
 		cd $(FLASH_DIR)/; \
-		echo '==================================================================='; \
+		$(call draw_line,); \
 		echo '      updating $(GIT_NAME_FLASH)-flash git repository'; \
-		echo '==================================================================='; \
+		$(call draw_line,); \
 		echo; \
 		if [ "$(GIT_STASH_PULL)" = "stashpull" ]; then \
 			git stash && git stash show -p > ./pull-stash-flash.patch || true && git pull && git stash pop || true; \
@@ -189,10 +191,6 @@ print-targets:
 # for local extensions, e.g. special plugins or similar...
 # put them into $(BASE_DIR)/local since that is ignored in .gitignore
 -include ./Makefile.local
-
-line:
-	@for i in $$(seq 1 1 $$(tput cols)); do printf -; done
-	@echo
 
 # debug target, if you need that, you know it. If you don't know if you need
 # that, you don't need it.

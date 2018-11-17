@@ -278,25 +278,25 @@ $(D)/system-tools: $(SYSTEM_TOOLS) $(TOOLS)
 #
 #
 $(DRIVER_DIR):
-	make line
+	$(call draw_line,)
 	@echo '      Cloning $(GIT_NAME_DRIVER)-driver git repository'
-	make line
+	$(call draw_line,)
 	if [ ! -e $(DRIVER_DIR)/.git ]; then \
 		git clone $(GITHUB)/$(GIT_NAME_DRIVER)/driver.git driver; \
 	fi
 
 $(APPS_DIR):
-	make line
+	$(call draw_line,)
 	@echo '      Cloning $(GIT_NAME_APPS)-apps git repository'
-	make line
+	$(call draw_line,)
 	if [ ! -e $(APPS_DIR)/.git ]; then \
 		git clone $(GITHUB)/$(GIT_NAME_APPS)/apps.git apps; \
 	fi
 
 $(FLASH_DIR):
-	make line
+	$(call draw_line,)
 	@echo '      Cloning $(GIT_NAME_FLASH)-flash git repository'
-	make line
+	$(call draw_line,)
 	if [ ! -e $(FLASH_DIR)/.git ]; then \
 		git clone $(GITHUB)/$(GIT_NAME_FLASH)/flash.git flash; \
 	fi

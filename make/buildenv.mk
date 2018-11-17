@@ -161,6 +161,26 @@ NMP_REV=$(shell cd $(SOURCE_DIR)/$(NEUTRINO_MP); git log | grep "^commit" | wc -
 # libstb-hal Revision
 HAL_REV=$(shell cd $(SOURCE_DIR)/$(LIBSTB_HAL); git log | grep "^commit" | wc -l)
 
+define draw_line
+	if [ "$(1)" == "" ]; then \
+		printf '%.0s~' {1..$(shell tput cols)}; \
+	else \
+		headline1=$(shell tput cols); \
+		headline2=$(shell echo $(1) | awk '{print length}'); \
+		let headline3="headline1 - (headline1 - headline2) / 2"; \
+		printf '%.0s~' {1..$(shell tput cols)}; \
+		tput cub $$headline3; \
+		if [ "$(2)" == "" ]; then \
+			printf '$(1)'; \
+		else \
+			printf $$(tput setaf $(2)); \
+			printf '$(1)'; \
+			printf $$(tput sgr0); \
+		fi; \
+	fi; \
+	echo
+endef
+
 # certificates
 CA_BUNDLE             = ca-certificates.crt
 CA_BUNDLE_DIR         = /etc/ssl/certs
@@ -182,7 +202,7 @@ PKG_NAME_HELPER       = $(shell echo $(PKG_NAME) | sed 's/.*/\U&/')
 PKG_VER_HELPER        = A$($(PKG_NAME_HELPER)_VER)A
 PKG_VER               = $($(PKG_NAME_HELPER)_VER)
 
-START_BUILD           = make line; \
+START_BUILD           = $(call draw_line,$(PKG_NAME),6); \
                         echo; \
                         if [ $(PKG_VER_HELPER) == "AA" ]; then \
                             echo -e "Start build of $(TERM_GREEN_BOLD)$(PKG_NAME)$(TERM_NORMAL)"; \
@@ -196,6 +216,8 @@ TOUCH                 = @touch $@; \
                         else \
                             echo -e "Build of $(TERM_GREEN_BOLD)$(PKG_NAME) $(PKG_VER)$(TERM_NORMAL) completed"; \
                         fi; \
+                        echo ; \
+                        $(call draw_line,$(PKG_NAME),2); \
                         echo
 
 #

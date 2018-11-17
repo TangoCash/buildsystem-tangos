@@ -981,11 +981,9 @@ $(D)/neutrino-mp-release: neutrino-mp-release-base neutrino-mp-release-$(BOXTYPE
 ifneq ($(OPTIMIZATIONS), $(filter $(OPTIMIZATIONS), kerneldebug debug normal))
 	find $(RELEASE_DIR)/ -name '*' -exec $(TARGET)-strip --strip-unneeded {} &>/dev/null \;
 endif
-	@echo "***************************************************************"
-	@echo -e "\033[01;32m"
-	@echo " Build of Neutrino for $(BOXTYPE) successfully completed."
-	@echo -e "\033[00m"
-	@echo "***************************************************************"
+	$(call draw_line,);
+	$(call draw_line,Build of Neutrino for $(BOXTYPE) successfully completed.,2);
+	$(call draw_line,);
 #
 # neutrino-mp-release-clean
 #
