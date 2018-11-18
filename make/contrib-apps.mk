@@ -1939,3 +1939,61 @@ $(D)/iozone3: $(D)/bootstrap $(ARCHIVE)/$(IOZONE_SOURCE)
 		install -m 755 $(BUILD_TMP)/iozone3_$(IOZONE_VER)/src/current/iozone $(TARGET_DIR)/usr/bin
 	$(REMOVE)/iozone3_$(IOZONE_VER)
 	$(TOUCH)
+
+#
+# Mupen64Plus
+#
+MUPEN64CORE_VER = ef15526
+MUPEN64CORE_SOURCE = mupen64core-git-$(MUPEN64CORE_VER).tar.bz2
+MUPEN64CORE_URL = https://github.com/mupen64plus/mupen64plus-core.git
+
+$(ARCHIVE)/$(MUPEN64CORE_SOURCE):
+	$(SCRIPTS_DIR)/get-git-archive.sh $(MUPEN64CORE_URL) $(MUPEN64CORE_VER) $(notdir $@) $(ARCHIVE)
+
+$(D)/mupen64core: $(D)/bootstrap $(ARCHIVE)/$(MUPEN64CORE_SOURCE) $(D)/libsdl2 $(D)/libpng $(D)/freetype $(D)/zlib
+	$(START_BUILD)
+	$(REMOVE)/mupen64core-git-$(MUPEN64CORE_VER)
+	$(UNTAR)/$(MUPEN64CORE_SOURCE)
+	set -e; cd $(BUILD_TMP)/mupen64core-git-$(MUPEN64CORE_VER); \
+		$(BUILDENV) \
+		cd projects/unix/ && $(MAKE) \
+			CROSS_COMPILE=$(TARGET)- \
+			PKG_CONFIG=$(PKG_CONFIG) \
+			NO_ASM=1 \
+			SDL_CONFIG=$(TARGET_DIR)/usr/bin/sdl2-config \
+			USE_GLES=1 \
+			PREFIX=/usr \
+			DESTDIR=$(TARGET_DIR) \
+			all install; \
+	$(REMOVE)/mupen64core-git-$(MUPEN64CORE_VER)
+	$(TOUCH)
+
+MUPEN64CMD_VER = 5926250
+MUPEN64CMD_SOURCE = mupen64cmd-git-$(MUPEN64CMD_VER).tar.bz2
+MUPEN64CMD_URL = https://github.com/mupen64plus/mupen64plus-ui-console.git
+
+$(ARCHIVE)/$(MUPEN64CMD_SOURCE):
+	$(SCRIPTS_DIR)/get-git-archive.sh $(MUPEN64CMD_URL) $(MUPEN64CMD_VER) $(notdir $@) $(ARCHIVE)
+
+$(D)/mupen64cmd: $(D)/bootstrap $(ARCHIVE)/$(MUPEN64CMD_SOURCE) $(D)/mupen64core
+	$(START_BUILD)
+	$(REMOVE)/mupen64cmd-git-$(MUPEN64CMD_VER)
+	$(UNTAR)/$(MUPEN64CMD_SOURCE)
+	set -e; cd $(BUILD_TMP)/mupen64cmd-git-$(MUPEN64CMD_VER); \
+		$(BUILDENV) \
+		cd projects/unix/ && $(MAKE) \
+			CROSS_COMPILE=$(TARGET)- \
+			PKG_CONFIG=$(PKG_CONFIG) \
+			NO_ASM=1 \
+			SDL_CONFIG="$(PKG_CONFIG) sdl2" \
+			USE_GLES=1 \
+			PREFIX=/usr \
+			DESTDIR=$(TARGET_DIR) \
+			APIDIR=$(TARGET_DIR)/usr/include/mupen64plus \
+			MANDIR=/.remove \
+			APPSDIR=/.remove \
+			ICONSDIR=/.remove \
+			all install; \
+	$(REMOVE)/mupen64cmd-git-$(MUPEN64CMD_VER)
+	$(TOUCH)
+
