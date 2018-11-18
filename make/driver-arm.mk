@@ -6,8 +6,19 @@ DRIVER_VER = 4.10.12
 DRIVER_DATE = 20180424
 DRIVER_SRC = $(KERNEL_TYPE)-drivers-$(DRIVER_VER)-$(DRIVER_DATE).zip
 
+EXTRA_LIBGLES_DATE = 20170322
+EXTRA_LIBGLES_SRC = $(KERNEL_TYPE)-v3ddriver-$(EXTRA_LIBGLES_DATE).zip
+
+EXTRA_LIBGLES_HEADERS = hd-v3ddriver-headers.tar.gz
+
 $(ARCHIVE)/$(DRIVER_SRC):
 	$(WGET) http://source.mynonpublic.com/gfutures/$(DRIVER_SRC)
+
+$(ARCHIVE)/$(EXTRA_LIBGLES_SRC):
+	$(WGET) http://downloads.mutant-digital.net/v3ddriver/$(EXTRA_LIBGLES_SRC)
+
+$(ARCHIVE)/$(EXTRA_LIBGLES_HEADERS):
+	$(WGET) http://downloads.mutant-digital.net/v3ddriver/$(EXTRA_LIBGLES_HEADERS)
 endif
 
 ifeq ($(BOXTYPE), hd60)
@@ -18,8 +29,10 @@ DRIVER_SRC = $(KERNEL_TYPE)-drivers-$(DRIVER_VER)-$(DRIVER_DATE).zip
 EXTRA_PLAYERLIB_DATE = 20180912
 EXTRA_PLAYERLIB_SRC = $(KERNEL_TYPE)-libs-$(EXTRA_PLAYERLIB_DATE).zip
 
-EXTRA_MALILIB_DATE = 20180912
-EXTRA_MALILIB_SRC = $(KERNEL_TYPE)-mali-$(EXTRA_MALILIB_DATE).zip
+EXTRA_LIBGLES_DATE = 20180912
+EXTRA_LIBGLES_SRC = $(KERNEL_TYPE)-mali-$(EXTRA_LIBGLES_DATE).zip
+
+EXTRA_LIBGLES_HEADERS = libgles-mali-utgard-headers.zip
 
 EXTRA_MALI_MODULE_VER = DX910-SW-99002-r7p0-00rel0
 EXTRA_MALI_MODULE_SRC = $(EXTRA_MALI_MODULE_VER).tgz
@@ -31,8 +44,8 @@ $(ARCHIVE)/$(DRIVER_SRC):
 $(ARCHIVE)/$(EXTRA_PLAYERLIB_SRC):
 	$(WGET) http://downloads.mutant-digital.net/$(KERNEL_TYPE)/$(EXTRA_PLAYERLIB_SRC)
 
-$(ARCHIVE)/$(EXTRA_MALILIB_SRC):
-	$(WGET) http://downloads.mutant-digital.net/$(KERNEL_TYPE)/$(EXTRA_MALILIB_SRC)
+$(ARCHIVE)/$(EXTRA_LIBGLES_SRC):
+	$(WGET) http://downloads.mutant-digital.net/$(KERNEL_TYPE)/$(EXTRA_LIBGLES_SRC)
 
 $(ARCHIVE)/$(EXTRA_MALI_MODULE_SRC):
 	$(WGET) https://developer.arm.com/-/media/Files/downloads/mali-drivers/kernel/mali-utgard-gpu/$(EXTRA_MALI_MODULE_SRC);name=driver
@@ -58,7 +71,15 @@ ifeq ($(BOXTYPE), hd51)
 	$(START_BUILD)
 	install -d $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra
 	unzip -o $(ARCHIVE)/$(DRIVER_SRC) -d $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra
+	$(MAKE) install-extra-libs
 	$(TOUCH)
+
+$(D)/install-extra-libs: $(ARCHIVE)/$(EXTRA_LIBGLES_HEADERS) $(ARCHIVE)/$(EXTRA_LIBGLES_SRC)
+	install -d $(TARGET_DIR)/usr/lib
+	unzip -o $(ARCHIVE)/$(EXTRA_LIBGLES_HEADERS) -d $(TARGET_DIR)/usr/include
+	unzip -o $(ARCHIVE)/$(EXTRA_LIBGLES_SRC) -d $(TARGET_DIR)/usr/lib
+	ln -sf libv3ddriver.so $(TARGET_DIR)/usr/lib/libEGL.so
+	ln -sf libv3ddriver.so $(TARGET_DIR)/usr/lib/libGLESv2.so
 endif
 ifeq ($(BOXTYPE), hd60)
 	$(START_BUILD)
@@ -70,11 +91,11 @@ ifeq ($(BOXTYPE), hd60)
 	$(MAKE) mali-gpu-modul
 	$(TOUCH)
 
-$(D)/install-extra-libs: $(ARCHIVE)/$(EXTRA_PLAYERLIB_SRC) $(ARCHIVE)/$(EXTRA_MALILIB_SRC) $(D)/zlib $(D)/libpng $(D)/freetype $(D)/libcurl $(D)/libxml2 $(D)/libjpeg_turbo2 $(D)/harfbuzz
+$(D)/install-extra-libs: $(ARCHIVE)/$(EXTRA_PLAYERLIB_SRC) $(ARCHIVE)/$(EXTRA_LIBGLES_SRC) $(D)/zlib $(D)/libpng $(D)/freetype $(D)/libcurl $(D)/libxml2 $(D)/libjpeg_turbo2 $(D)/harfbuzz
 	install -d $(TARGET_DIR)/usr/lib
-	unzip -o $(PATCHES)/libgles-mali-utgard-headers.zip -d $(TARGET_DIR)/usr/include
 	unzip -o $(ARCHIVE)/$(EXTRA_PLAYERLIB_SRC) -d $(TARGET_DIR)/usr/lib
-	unzip -o $(ARCHIVE)/$(EXTRA_MALILIB_SRC) -d $(TARGET_DIR)/usr/lib
+	unzip -o $(PATCHES)/$(EXTRA_LIBGLES_HEADERS) -d $(TARGET_DIR)/usr/include
+	unzip -o $(ARCHIVE)/$(EXTRA_LIBGLES_SRC) -d $(TARGET_DIR)/usr/lib
 	ln -sf libMali.so $(TARGET_DIR)/usr/lib/libmali.so
 	ln -sf libMali.so $(TARGET_DIR)/usr/lib/libEGL.so
 	ln -sf libMali.so $(TARGET_DIR)/usr/lib/libGLESv1_CM.so
