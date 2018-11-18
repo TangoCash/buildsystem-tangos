@@ -1,4 +1,46 @@
 #
+# Simple DirectMedia Layer 2.0
+#
+LIBSDL2_VER = 2.0.9
+LIBSDL2_SOURCE = SDL2-$(LIBSDL2_VER).tar.gz
+LIBSDL2_PATCH  = SDL2-$(LIBSDL2_VER)-more-gen-depends.patch
+
+$(ARCHIVE)/$(LIBSDL2_SOURCE):
+	$(WGET) https://www.libsdl.org/release/$(LIBSDL2_SOURCE)
+
+$(D)/libsdl2: $(D)/bootstrap $(ARCHIVE)/$(LIBSDL2_SOURCE) $(KERNEL)
+	$(START_BUILD)
+	$(REMOVE)/SDL2-$(LIBSDL2_VER)
+	$(UNTAR)/$(LIBSDL2_SOURCE)
+	set -e; cd $(BUILD_TMP)/SDL2-$(LIBSDL2_VER); \
+		$(call apply_patches,$(LIBSDL2_PATCH)); \
+		$(CONFIGURE) \
+			--target=$(TARGET) \
+			--prefix=/usr \
+			--disable-oss \
+			--disable-esd \
+			--disable-arts \
+			--disable-diskaudio \
+			--disable-nas \
+			--disable-esd-shared \
+			--disable-esdtest \
+			--disable-video-dummy \
+			--enable-pthreads \
+			--enable-sdl-dlopen \
+			--disable-rpath \
+			--disable-sndio \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR) ; \
+	$(REWRITE_LIBTOOL)/libSDL2.la
+	$(REWRITE_LIBTOOL)/libSDL2main.la
+	$(REWRITE_LIBTOOL)/libSDL2_test.la
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/sdl2.pc
+	sed -i "s,prefix=/usr,prefix=$(TARGET_DIR)/usr," $(TARGET_DIR)/usr/bin/sdl2-config
+	$(REMOVE)/SDL2-$(LIBSDL2_VER)
+	$(TOUCH)
+
+#
 # ncurses
 #
 NCURSES_VER = 6.0
