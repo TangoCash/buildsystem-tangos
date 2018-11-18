@@ -1441,6 +1441,16 @@ CAIRO_VER = 1.16.0
 CAIRO_SOURCE = cairo-$(CAIRO_VER).tar.xz
 CAIRO_PATCH  = cairo-$(CAIRO_VER)-get_bitmap_surface.diff
 
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51 hd60))
+CAIRO_OPTS = \
+		--enable-egl \
+		--enable-glesv2
+else
+CAIRO_OPTS = \
+		--disable-egl \
+		--disable-glesv2
+endif
+
 $(ARCHIVE)/$(CAIRO_SOURCE):
 	$(WGET) https://www.cairographics.org/releases/$(CAIRO_SOURCE)
 
@@ -1457,8 +1467,7 @@ $(D)/cairo: $(ARCHIVE)/$(CAIRO_SOURCE) $(D)/bootstrap $(D)/fontconfig $(D)/libgl
 			--with-x=no \
 			--disable-xlib \
 			--disable-xcb \
-			--disable-egl \
-			--disable-glesv2 \
+			$(CAIRO_OPTS) \
 			--disable-gl \
 			--enable-tee \
 		; \
