@@ -161,22 +161,22 @@ NMP_REV=$(shell cd $(SOURCE_DIR)/$(NEUTRINO_MP); git log | grep "^commit" | wc -
 # libstb-hal Revision
 HAL_REV=$(shell cd $(SOURCE_DIR)/$(LIBSTB_HAL); git log | grep "^commit" | wc -l)
 
+# $(1) = title; $(2) = color; $(3) = left, center, right
 define draw_line
-	if [ "$(1)" == "" ]; then \
-		printf '%.0s~' {1..$(shell tput cols)}; \
-	else \
-		headline1=$(shell tput cols); \
-		headline2=$(shell echo $(1) | awk '{print length}'); \
-		let headline3="headline1 - (headline1 - headline2) / 2"; \
-		printf '%.0s~' {1..$(shell tput cols)}; \
-		tput cub $$headline3; \
-		if [ "$(2)" == "" ]; then \
-			printf '$(1)'; \
-		else \
-			printf $$(tput setaf $(2)); \
-			printf '$(1)'; \
-			printf $$(tput sgr0); \
-		fi; \
+	@ \
+	printf '%.0s~' {1..$(shell tput cols)}; \
+	if test "$(1)"; then \
+		cols=$(shell tput cols); \
+		length=$(shell echo $(1) | awk '{print length}'); \
+		case "$(3)" in \
+			*right)  let indent="length + 1" ;; \
+			*center) let indent="cols - (cols - length) / 2" ;; \
+			*left|*) let indent="cols" ;; \
+		esac; \
+		tput cub $$indent; \
+		test "$(2)" && printf $$(tput setaf $(2)); \
+		printf '$(1)'; \
+		test "$(2)" && printf $$(tput sgr0); \
 	fi; \
 	echo
 endef
