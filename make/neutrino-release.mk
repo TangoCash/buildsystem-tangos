@@ -878,6 +878,15 @@ endif
 		cp -f $(TARGET_DIR)/usr/lib/libmDNSResponder.so* $(RELEASE_DIR)/usr/lib; \
 	fi
 #
+# mupen64
+#
+	if [ -e $(TARGET_DIR)/usr/bin/mupen64plus ]; then \
+		cp -f $(TARGET_DIR)/usr/bin/mupen64plus $(RELEASE_DIR)/usr/bin; \
+		cp -rf $(TARGET_DIR)/usr/share/mupen64plus $(RELEASE_DIR)/usr/share; \
+		cp -f $(TARGET_DIR)/usr/lib/libmupen64plus.so* $(RELEASE_DIR)/usr/lib; \
+		cp -f $(TARGET_DIR)/usr/lib/libSDL2* $(RELEASE_DIR)/usr/lib; \
+	fi
+#
 # Neutrino HD2 Workaround Build in Player
 #
 	if [ -e $(TARGET_DIR)/usr/local/bin/eplayer3 ]; then \
