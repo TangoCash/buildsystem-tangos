@@ -163,15 +163,14 @@ HAL_REV=$(shell cd $(SOURCE_DIR)/$(LIBSTB_HAL); git log | grep "^commit" | wc -l
 
 # $(1) = title; $(2) = color; $(3) = left, center, right
 define draw_line
-	@ \
 	printf '%.0s~' {1..$(shell tput cols)}; \
 	if test "$(1)"; then \
 		cols=$(shell tput cols); \
 		length=$(shell echo $(1) | awk '{print length}'); \
 		case "$(3)" in \
 			*right)  let indent="length + 1" ;; \
-			*center) let indent="cols - (cols - length) / 2" ;; \
-			*left|*) let indent="cols" ;; \
+			*left) let indent="cols" ;; \
+			*center|*) let indent="cols - (cols - length) / 2" ;; \
 		esac; \
 		tput cub $$indent; \
 		test "$(2)" && printf $$(tput setaf $(2)); \
