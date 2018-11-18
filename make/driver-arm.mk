@@ -76,7 +76,7 @@ ifeq ($(BOXTYPE), hd51)
 
 $(D)/install-extra-libs: $(ARCHIVE)/$(EXTRA_LIBGLES_HEADERS) $(ARCHIVE)/$(EXTRA_LIBGLES_SRC)
 	install -d $(TARGET_DIR)/usr/lib
-	unzip -o $(ARCHIVE)/$(EXTRA_LIBGLES_HEADERS) -d $(TARGET_DIR)/usr/include
+	tar -xf $(ARCHIVE)/$(EXTRA_LIBGLES_HEADERS) -C $(TARGET_DIR)/usr/include
 	unzip -o $(ARCHIVE)/$(EXTRA_LIBGLES_SRC) -d $(TARGET_DIR)/usr/lib
 	ln -sf libv3ddriver.so $(TARGET_DIR)/usr/lib/libEGL.so
 	ln -sf libv3ddriver.so $(TARGET_DIR)/usr/lib/libGLESv2.so
