@@ -1,4 +1,62 @@
 #
+# DirectFB
+#
+DIRECTFB_VER = 1.7.7
+DIRECTFB_SOURCE = DirectFB-$(DIRECTFB_VER).tar.gz
+DIRECTFB_PATCH  = DirectFB-$(DIRECTFB_VER)-configurefix.patch
+DIRECTFB_PATCH += DirectFB-$(DIRECTFB_VER)-fusion.patch
+DIRECTFB_PATCH += DirectFB-$(DIRECTFB_VER)-bashism.patch
+DIRECTFB_PATCH += DirectFB-$(DIRECTFB_VER)-gfx-direct-Aboid-usng-VLAs-and-printf-formats.patch
+DIRECTFB_PATCH += DirectFB-$(DIRECTFB_VER)-compar_fn_t.patch
+DIRECTFB_PATCH += DirectFB-$(DIRECTFB_VER)-union-sigval.patch
+DIRECTFB_PATCH += DirectFB-$(DIRECTFB_VER)-use-PTHREAD_MUTEX_RECURSIVE.patch
+DIRECTFB_PATCH += DirectFB-$(DIRECTFB_VER)-fix-client-gfx_state-initialisation.patch
+
+$(ARCHIVE)/$(DIRECTFB_SOURCE):
+	$(WGET) http://sources.buildroot.net/$(DIRECTFB_SOURCE)
+
+$(D)/directfb: $(D)/bootstrap $(ARCHIVE)/$(DIRECTFB_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/DirectFB-$(DIRECTFB_VER)
+	$(UNTAR)/$(DIRECTFB_SOURCE)
+	set -e; cd $(BUILD_TMP)/DirectFB-$(DIRECTFB_VER); \
+		$(call apply_patches,$(DIRECTFB_PATCH)); \
+		$(BUILDENV) \
+		autoreconf -fi $(SILENT_OPT); \
+		EGL_CFLAGS=-I$(TARGET_DIR)/usr/include/EGL -I$(TARGET_DIR)/usr/include/GLES2 \
+		EGL_LIBS=-lEGL -lGLESv2 -L$(TARGET_DIR)/usr/lib \
+		$(CONFIGURE) \
+			--prefix=/usr \
+			--sysconfdir=/etc \
+			--enable-egl=yes \
+			--with-gfxdrivers=gles2 \
+			--enable-freetype=yes \
+			--enable-zlib \
+			--disable-imlib2 \
+			--disable-mesa \
+			--disable-sdl \
+			--disable-vnc \
+			--disable-x11 \
+			--without-tools \
+			--with-inputdrivers=linuxinput \
+			--enable-fusion \
+		; \
+		$(MAKE) ; \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+		$(REWRITE_LIBTOOL)/libdirect.la
+		$(REWRITE_LIBTOOL)/libdirectfb.la
+		$(REWRITE_LIBTOOL)/libfusion.la
+		$(REWRITE_LIBTOOL)/lib++dfb.la
+		$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/direct.pc
+		$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/fusion.pc
+		$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/++dfb.pc
+		$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/directfb.pc
+		$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/directfb-internal.pc
+		sed -i "s,prefix=/usr,prefix=$(TARGET_DIR)/usr," $(TARGET_DIR)/usr/bin/directfb-config
+	$(REMOVE)/DirectFB-$(DIRECTFB_VER)
+	$(TOUCH)
+
+#
 # Simple DirectMedia Layer 2.0
 #
 LIBSDL2_VER = 2.0.9
@@ -38,6 +96,49 @@ $(D)/libsdl2: $(D)/bootstrap $(ARCHIVE)/$(LIBSDL2_SOURCE) $(KERNEL)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/sdl2.pc
 	sed -i "s,prefix=/usr,prefix=$(TARGET_DIR)/usr," $(TARGET_DIR)/usr/bin/sdl2-config
 	$(REMOVE)/SDL2-$(LIBSDL2_VER)
+	$(TOUCH)
+
+#
+# Simple DirectMedia Layer 1.2
+#
+LIBSDL_VER = 1.2.15
+LIBSDL_SOURCE = SDL-$(LIBSDL_VER).tar.gz
+#LIBSDL_PATCH  = SDL-$(LIBSDL_VER)-more-gen-depends.patch
+
+$(ARCHIVE)/$(LIBSDL_SOURCE):
+	$(WGET) https://www.libsdl.org/release/$(LIBSDL_SOURCE)
+
+$(D)/libsdl: $(D)/bootstrap $(ARCHIVE)/$(LIBSDL_SOURCE) $(KERNEL)
+	$(START_BUILD)
+	$(REMOVE)/SDL-$(LIBSDL_VER)
+	$(UNTAR)/$(LIBSDL_SOURCE)
+	set -e; cd $(BUILD_TMP)/SDL-$(LIBSDL_VER); \
+		$(call apply_patches,$(LIBSDL_PATCH)); \
+		$(CONFIGURE) \
+			--target=$(TARGET) \
+			--prefix=/usr \
+			--disable-static --enable-cdrom --enable-threads --enable-timers \
+			--enable-file --disable-oss --disable-esd --disable-arts \
+			--disable-diskaudio --disable-nas --disable-esd-shared --disable-esdtest \
+			--disable-mintaudio --disable-nasm --disable-video-dga \
+			--enable-video-fbcon \
+			--disable-video-ps2gs --disable-video-ps3 \
+			--disable-xbios --disable-gem --disable-video-dummy \
+			--enable-input-events --enable-input-tslib --enable-pthreads \
+			--enable-video-opengl \
+			--disable-video-x11 \
+			--disable-video-svga \
+			--disable-video-picogui --disable-video-qtopia --enable-sdl-dlopen \
+			--disable-rpath \
+			--disable-pulseaudio \
+		; \
+		$(MAKE) ; \
+		$(MAKE) install DESTDIR=$(TARGET_DIR) ; \
+	$(REWRITE_LIBTOOL)/libSDL.la
+	$(REWRITE_LIBTOOL)/libSDLmain.la
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/sdl.pc
+	sed -i "s,prefix=/usr,prefix=$(TARGET_DIR)/usr," $(TARGET_DIR)/usr/bin/sdl-config
+	$(REMOVE)/SDL-$(LIBSDL_VER)
 	$(TOUCH)
 
 #
