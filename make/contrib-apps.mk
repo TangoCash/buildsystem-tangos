@@ -1957,6 +1957,7 @@ $(D)/mupen64core: $(D)/bootstrap $(ARCHIVE)/$(MUPEN64CORE_SOURCE) $(D)/libsdl2 $
 	set -e; cd $(BUILD_TMP)/mupen64core-git-$(MUPEN64CORE_VER); \
 		$(BUILDENV) \
 		cd projects/unix/ && $(MAKE) \
+			CPU=ARM \
 			CROSS_COMPILE=$(TARGET)- \
 			PKG_CONFIG=$(PKG_CONFIG) \
 			NO_ASM=1 \
@@ -1982,10 +1983,11 @@ $(D)/mupen64cmd: $(D)/bootstrap $(ARCHIVE)/$(MUPEN64CMD_SOURCE) $(D)/mupen64core
 	set -e; cd $(BUILD_TMP)/mupen64cmd-git-$(MUPEN64CMD_VER); \
 		$(BUILDENV) \
 		cd projects/unix/ && $(MAKE) \
+			CPU=ARM \
 			CROSS_COMPILE=$(TARGET)- \
 			PKG_CONFIG=$(PKG_CONFIG) \
 			NO_ASM=1 \
-			SDL_CONFIG="$(PKG_CONFIG) sdl2" \
+			SDL_CONFIG=$(TARGET_DIR)/usr/bin/sdl2-config \
 			USE_GLES=1 \
 			PREFIX=/usr \
 			DESTDIR=$(TARGET_DIR) \
@@ -1997,3 +1999,96 @@ $(D)/mupen64cmd: $(D)/bootstrap $(ARCHIVE)/$(MUPEN64CMD_SOURCE) $(D)/mupen64core
 	$(REMOVE)/mupen64cmd-git-$(MUPEN64CMD_VER)
 	$(TOUCH)
 
+MUPEN64VID_VER = 7f10448
+MUPEN64VID_SOURCE = mupen64vid-git-$(MUPEN64VID_VER).tar.bz2
+MUPEN64VID_URL = https://github.com/mupen64plus/mupen64plus-video-rice.git
+
+$(ARCHIVE)/$(MUPEN64VID_SOURCE):
+	$(SCRIPTS_DIR)/get-git-archive.sh $(MUPEN64VID_URL) $(MUPEN64VID_VER) $(notdir $@) $(ARCHIVE)
+
+$(D)/mupen64vid: $(D)/bootstrap $(ARCHIVE)/$(MUPEN64VID_SOURCE) $(D)/mupen64core
+	$(START_BUILD)
+	$(REMOVE)/mupen64vid-git-$(MUPEN64VID_VER)
+	$(UNTAR)/$(MUPEN64VID_SOURCE)
+	set -e; cd $(BUILD_TMP)/mupen64vid-git-$(MUPEN64VID_VER); \
+		$(BUILDENV) \
+		cd projects/unix/ && $(MAKE) \
+			CPU=ARM \
+			CROSS_COMPILE=$(TARGET)- \
+			PKG_CONFIG=$(PKG_CONFIG) \
+			NO_ASM=1 \
+			SDL_CONFIG=$(TARGET_DIR)/usr/bin/sdl2-config \
+			USE_GLES=1 \
+			PREFIX=/usr \
+			DESTDIR=$(TARGET_DIR) \
+			APIDIR=$(TARGET_DIR)/usr/include/mupen64plus \
+			MANDIR=/.remove \
+			APPSDIR=/.remove \
+			ICONSDIR=/.remove \
+			all install; \
+	$(REMOVE)/mupen64vid-git-$(MUPEN64VID_VER)
+	$(TOUCH)
+
+MUPEN64AUD_VER = 732722c
+MUPEN64AUD_SOURCE = mupen64aud-git-$(MUPEN64AUD_VER).tar.bz2
+MUPEN64AUD_URL = https://github.com/mupen64plus/mupen64plus-audio-sdl.git
+
+$(ARCHIVE)/$(MUPEN64AUD_SOURCE):
+	$(SCRIPTS_DIR)/get-git-archive.sh $(MUPEN64AUD_URL) $(MUPEN64AUD_VER) $(notdir $@) $(ARCHIVE)
+
+$(D)/mupen64aud: $(D)/bootstrap $(ARCHIVE)/$(MUPEN64AUD_SOURCE) $(D)/mupen64core
+	$(START_BUILD)
+	$(REMOVE)/mupen64aud-git-$(MUPEN64AUD_VER)
+	$(UNTAR)/$(MUPEN64AUD_SOURCE)
+	set -e; cd $(BUILD_TMP)/mupen64aud-git-$(MUPEN64AUD_VER); \
+		$(BUILDENV) \
+		cd projects/unix/ && $(MAKE) \
+			CPU=ARM \
+			CROSS_COMPILE=$(TARGET)- \
+			PKG_CONFIG=$(PKG_CONFIG) \
+			SDL_CONFIG=$(TARGET_DIR)/usr/bin/sdl2-config \
+			NO_SPEEX=1 \
+			NO_OSS=1 \
+			NO_SRC=1 \
+			PREFIX=/usr \
+			DESTDIR=$(TARGET_DIR) \
+			APIDIR=$(TARGET_DIR)/usr/include/mupen64plus \
+			MANDIR=/.remove \
+			APPSDIR=/.remove \
+			ICONSDIR=/.remove \
+			all install; \
+	$(REMOVE)/mupen64aud-git-$(MUPEN64AUD_VER)
+	$(TOUCH)
+
+MUPEN64INP_VER = f5c3995
+MUPEN64INP_SOURCE = mupen64inp-git-$(MUPEN64INP_VER).tar.bz2
+MUPEN64INP_URL = https://github.com/mupen64plus/mupen64plus-input-sdl.git
+
+$(ARCHIVE)/$(MUPEN64INP_SOURCE):
+	$(SCRIPTS_DIR)/get-git-archive.sh $(MUPEN64INP_URL) $(MUPEN64INP_VER) $(notdir $@) $(ARCHIVE)
+
+$(D)/mupen64inp: $(D)/bootstrap $(ARCHIVE)/$(MUPEN64INP_SOURCE) $(D)/mupen64core
+	$(START_BUILD)
+	$(REMOVE)/mupen64inp-git-$(MUPEN64INP_VER)
+	$(UNTAR)/$(MUPEN64INP_SOURCE)
+	set -e; cd $(BUILD_TMP)/mupen64inp-git-$(MUPEN64INP_VER); \
+		$(BUILDENV) \
+		cd projects/unix/ && $(MAKE) \
+			CPU=ARM \
+			CROSS_COMPILE=$(TARGET)- \
+			PKG_CONFIG=$(PKG_CONFIG) \
+			NO_ASM=1 \
+			SDL_CONFIG=$(TARGET_DIR)/usr/bin/sdl2-config \
+			USE_GLES=1 \
+			PREFIX=/usr \
+			DESTDIR=$(TARGET_DIR) \
+			APIDIR=$(TARGET_DIR)/usr/include/mupen64plus \
+			MANDIR=/.remove \
+			APPSDIR=/.remove \
+			ICONSDIR=/.remove \
+			all install; \
+	$(REMOVE)/mupen64inp-git-$(MUPEN64INP_VER)
+	$(TOUCH)
+
+$(D)/mupen64: $(D)/mupen64core $(D)/mupen64vid $(D)/mupen64aud $(D)/mupen64inp $(D)/mupen64cmd
+	$(TOUCH)
