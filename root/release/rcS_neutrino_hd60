@@ -32,6 +32,8 @@ insmod /lib/modules/hd60_4.ko
 
 insmod /lib/modules/hi_play.ko
 
+[ -f /lib/modules/mali.ko ] && insmod /lib/modules/mali.ko
+
 # load moduls from modules.extra ( kerneloptions )
 [ -f /var/etc/modules.extra ] && eval `awk '{ if ($1) print "insmod /lib/modules/" $1 ".ko " $2,$3,$4,$5,$6,$7,$8,$9 "; "}' < /var/etc/modules.extra`
 
