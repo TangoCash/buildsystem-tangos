@@ -1,0 +1,101 @@
+#!/bin/sh
+swapfound=0
+
+#Mounts all LABELED partitions in appropriate folders
+devices=$(blkid -w /dev/null -c /dev/null /dev/sd* | cut -d ':' -f1 | cut -d '/' -f3)
+for device in $devices; do
+   BLKID=$(blkid -w /dev/null -c /dev/null /dev/$device)
+   eval ${BLKID#*:}
+   # speedup usb device
+   if [ `cat /sys/block/${device:0:3}/removable` == "1" ]; then
+     echo "512" > /sys/block/${device:0:3}/device/max_sectors
+   fi
+
+   case $LABEL in
+      SWAP|Swap|swap)
+         if [ `awk '{print $2}' /proc/mounts | grep -c /swap` -eq 0 ]; then
+           case $TYPE in
+              vfat) mount -t $TYPE -o defaults,noatime,nodiratime,rw /dev/$device /swap;;
+              *) mount -t auto -o defaults,noatime,nodiratime,rw /dev/$device /swap
+              ;;
+           esac
+         else
+           MDEV=$device /etc/mdev/mdev-mount.sh
+         fi
+      ;;
+      hdd|HDD|MEDIA|record|RECORD|VIDEO_DISC)
+         if [ `awk '{print $2}' /proc/mounts | grep -c /hdd` -eq 0 ]; then
+           case $TYPE in
+              vfat) mount -t $TYPE -o defaults,noatime,nodiratime,rw /dev/$device /media/hdd;;
+              *) mount -t auto -o defaults,noatime,nodiratime,rw /dev/$device /media/hdd
+              ;;
+           esac
+         else
+           MDEV=$device /etc/mdev/mdev-mount.sh
+         fi
+      ;;
+      movie|MOVIE)
+         case $TYPE in
+            vfat) mount -t $TYPE -o defaults,noatime,nodiratime,rw /dev/$device /media/hdd/movie;;
+            *) mount -t auto -o defaults,noatime,nodiratime,rw /dev/$device /media/hdd/movie
+            ;;
+         esac
+      ;;
+      picture|PICTURE)
+         case $TYPE in
+            vfat) mount -t $TYPE -o defaults,noatime,nodiratime,rw /dev/$device /media/hdd/picture;;
+            *) mount -t auto -o defaults,noatime,nodiratime,rw /dev/$device /media/hdd/picture
+            ;;
+         esac
+      ;;
+      music|MUSIC)
+         case $TYPE in
+            vfat) mount -t $TYPE -o defaults,noatime,nodiratime,rw /dev/$device /media/hdd/music;;
+            *) mount -t auto -o defaults,noatime,nodiratime,rw /dev/$device /media/hdd/music
+            ;;
+         esac
+      ;;
+      *) # mount all other unknown partitions
+         case $TYPE in
+            swap|SWAP) #this is a real linux SWAP partition
+               swapon /dev/$device
+               sleep 1
+               for deviceok in `awk '{print $1}' /proc/swaps | grep "/dev/$device"`; do
+                  if [ "$deviceok" == "/dev/$device" ]; then
+                     echo "real linux swap partition mounted"
+                     swapfound=1
+                  fi
+               done
+            ;;
+            *)
+               MDEV=$device /etc/mdev/mdev-mount.sh
+            ;;
+         esac
+      ;;
+   esac
+done
+if [ swapfound == "0" ]; then
+   if [ -e /swap/swapfile ]; then
+      swapon /swap/swapfile
+      if [ "`awk '{print $1}' /proc/swaps | grep "/swap/swapfile"`" == "/swap/swapfile" ]; then
+         echo "linux swap file mounted"
+      fi
+   else
+#      insmod /lib/modules/lzo1x_compress.ko
+#      insmod /lib/modules/lzo1x_decompress.ko
+#      insmod /lib/modules/ramzswap.ko disksize_kb=20480
+#      swapon /dev/ramzswap0
+#      if [ "`awk '{print $1}' /proc/swaps | grep "/dev/ramzswap0"`" == "/dev/ramzswap0" ]; then
+#         echo "warning - ramswap used"
+#         echo "warning - ramswap used" > /tmp/infobar.txt
+#      fi
+       echo "warning - no swap used"
+   fi
+fi
+
+if [ -d /media/hdd/swapped ]; then
+  if [ `awk '{print $2}' /proc/mounts | grep -c /swap` -eq 0 ]; then
+    echo "using hdd for storage-swap"
+    mount --bind /media/hdd/swapped /swap
+  fi
+fi

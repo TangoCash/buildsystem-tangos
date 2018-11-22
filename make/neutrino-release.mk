@@ -587,6 +587,8 @@ neutrino-mp-release-base:
 	cp $(SKEL_ROOT)/bin/autologin $(RELEASE_DIR)/bin/
 	cp $(SKEL_ROOT)/bin/vdstandby $(RELEASE_DIR)/bin/
 	cp $(SKEL_ROOT)/usr/sbin/fw_printenv $(RELEASE_DIR)/usr/sbin/
+	cp $(SKEL_ROOT)/etc/init.d/mount_everything $(TARGET_DIR)/etc/init.d/
+	cp $(SKEL_ROOT)/etc/init.d/mount_before $(TARGET_DIR)/etc/init.d/
 	cp -aR $(TARGET_DIR)/etc/init.d/* $(RELEASE_DIR)/etc/init.d/
 	cp -aR $(TARGET_DIR)/etc/* $(RELEASE_DIR)/etc/
 	echo "$(BOXTYPE)" > $(RELEASE_DIR)/etc/hostname
