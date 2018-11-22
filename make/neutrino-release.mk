@@ -456,6 +456,14 @@ neutrino-mp-release-pace7241:
 	cp -dp $(SKEL_ROOT)/release/lircd_pace7241.conf $(RELEASE_DIR)/etc/lircd.conf
 
 #
+# Bre2ze 4k
+#
+neutrino-mp-release-bre2ze4k:
+	install -m 0755 $(SKEL_ROOT)/release/halt_bre2ze4k $(RELEASE_DIR)/etc/init.d/halt
+	cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/*.ko $(RELEASE_DIR)/lib/modules/
+	cp $(TARGET_DIR)/boot/zImage.dtb $(RELEASE_DIR)/boot/
+
+#
 # Mutant HD51
 #
 neutrino-mp-release-hd51:

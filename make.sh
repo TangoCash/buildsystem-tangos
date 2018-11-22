@@ -67,10 +67,11 @@ case $1 in
 		echo "  arm-based receivers"
 		echo "   50)  Vu Solo4K"
 		echo "   51)  Mut@nt HD51"
+		echo "   52)  BRE2ZE 4K"
 		echo "   60)  Mut@nt HD60"
 		echo "   "
 		echo
-		read -p "Select target (1-59)? [51]"
+		read -p "Select target (1-60)? [51]"
 		REPLY="${REPLY:-51}";;
 esac
 
@@ -114,6 +115,7 @@ case "$REPLY" in
 	37) BOXARCH="sh4";BOXTYPE="pace7241";;
 	50) BOXARCH="arm";BOXTYPE="vusolo4k";;
 	51) BOXARCH="arm";BOXTYPE="hd51";;
+	52) BOXARCH="arm";BOXTYPE="bre2ze4k";;
 	60) BOXARCH="arm";BOXTYPE="hd60";;
 	 *) BOXARCH="arm";BOXTYPE="hd51";;
 esac
@@ -157,6 +159,44 @@ case "$REPLY" in
 	*)  HD51_BOXMODE="1";;
 esac
 echo "HD51_BOXMODE=$HD51_BOXMODE" >> config
+fi
+
+##############################################
+
+if [ $BOXTYPE == 'bre2ze4k' ]; then
+
+		echo -e "\n*** boxmode=1 (Standard) ***"
+		echo -e "+++ Features +++"
+		echo -e "3840x2160p60 10-bit HEVC, 3840x2160p60 8-bit VP9, 1920x1080p60 8-bit AVC,\nMAIN only (no PIP), Limited display usages, UHD only (no SD),\nNo multi-PIP, No transcoding"
+		echo -e "--- Restrictions ---"
+		echo -e "Decoder 0: 3840x2160p60 10-bit HEVC, 3840x2160p60 8-bit VP9, 1920x1080p60 8-bit AVC"
+		echo -e "OSD Grafic 0: 1080p60 32 bit ARGB"
+		echo -e "Display 0 Encode Restrictions: 3840x2160p60 12-bit 4:2:0 (HDMI),\n3840x2160p60 12-bit 4:2:2 (HDMI), 3840x2160p60 8-bit 4:4:4 (HDMI),\n1920x1080p60 (component), Only one display format at a time"
+		echo -e "\n*** boxmode=12 (Experimental) ***"
+		echo -e "+++ Features +++"
+		echo -e "3840x2160p50 10-bit decode for MAIN, 1080p25/50i PIP support,\n UHD display only, No SD display, No transcoding"
+		echo -e "--- Restrictions ---"
+		echo -e "Decoder 0: 3840x2160p50 10-bit HEVC, 3840x2160p50 8-bit VP9,\n1920x1080p50 8-bit AVC/MPEG"
+		echo -e "Decoder 1: 1920x1080p25/50i 10-bit HEVC, 1920x1080p25/50i 8-bit VP9/AVC/MPEG2, 3840x2160p50"
+		echo -e "OSD Graphic 0 (UHD): 1080p50 32-bit ARGB"
+		echo -e "Window 0 (MAIN/UHD): Limited display capabilities, 1080i50 10-bit de-interlacing"
+		echo -e "Window 1 (PIP/UHD): Up to 1/2 x 1/2 screen display, 576i50 de-interlacing"
+		echo -e "Display 0 (UHD) Encode Restrictions: 3840x2160p50"
+
+case $2 in
+	[1-2]) REPLY=$2;;
+	*)	echo -e "\nBoxmode:"
+		echo "   1)   1     (default)"
+		echo "   2)  12 PIP (PIP not supported by neutrino yet)"
+		read -p "Select mode (1-2)? ";;
+esac
+
+case "$REPLY" in
+	1)  BRE2ZE4K_BOXMODE="1";;
+	2)  BRE2ZE4K_BOXMODE="12";;
+	*)  BRE2ZE4K_BOXMODE="1";;
+esac
+echo "BRE2ZE4K_BOXMODE=$BRE2ZE4K_BOXMODE" >> config
 fi
 
 ##############################################

@@ -21,6 +21,15 @@ $(ARCHIVE)/$(EXTRA_LIBGLES_HEADERS):
 	$(WGET) http://downloads.mutant-digital.net/v3ddriver/$(EXTRA_LIBGLES_HEADERS)
 endif
 
+ifeq ($(BOXTYPE), bre2ze4k)
+DRIVER_VER = 4.10.12
+DRIVER_DATE = 20180424
+DRIVER_SRC = $(KERNEL_TYPE)-drivers-$(DRIVER_VER)-$(DRIVER_DATE).zip
+
+$(ARCHIVE)/$(DRIVER_SRC):
+	$(WGET) http://source.mynonpublic.com/gfutures/$(DRIVER_SRC)
+endif
+
 ifeq ($(BOXTYPE), hd60)
 DRIVER_VER = 4.4.35
 DRIVER_DATE = 20180918
@@ -80,6 +89,12 @@ $(D)/install-extra-libs: $(ARCHIVE)/$(EXTRA_LIBGLES_HEADERS) $(ARCHIVE)/$(EXTRA_
 	unzip -o $(ARCHIVE)/$(EXTRA_LIBGLES_SRC) -d $(TARGET_DIR)/usr/lib
 	ln -sf libv3ddriver.so $(TARGET_DIR)/usr/lib/libEGL.so
 	ln -sf libv3ddriver.so $(TARGET_DIR)/usr/lib/libGLESv2.so
+endif
+ifeq ($(BOXTYPE), bre2ze4k)
+	$(START_BUILD)
+	install -d $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra
+	unzip -o $(ARCHIVE)/$(DRIVER_SRC) -d $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra
+	$(TOUCH)
 endif
 ifeq ($(BOXTYPE), hd60)
 	$(START_BUILD)

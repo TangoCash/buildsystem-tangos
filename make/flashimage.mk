@@ -27,6 +27,9 @@ endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51))
 	$(MAKE) flash-image-hd51-multi-disk flash-image-hd51-multi-rootfs
 endif
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), bre2ze4k))
+	$(MAKE) flash-image-bre2ze4k-multi-disk flash-image-bre2ze4k-multi-rootfs
+endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd60))
 	$(MAKE) flash-image-hd60-multi-disk
 endif
@@ -39,6 +42,9 @@ ofgimage:
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51))
 	$(MAKE) flash-image-hd51-multi-rootfs
 endif
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), bre2ze4k))
+	$(MAKE) flash-image-bre2ze4k-multi-rootfs
+endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k))
 	$(MAKE) flash-image-vusolo4k-multi-rootfs
 endif
@@ -48,6 +54,9 @@ oi \
 online-image:
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51))
 	$(MAKE) flash-image-hd51-online
+endif
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), bre2ze4k))
+	$(MAKE) flash-image-bre2ze4k-online
 endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k))
 	$(MAKE) flash-image-vusolo4k-online
@@ -79,9 +88,30 @@ else
 HD51_BOXMODE_MEM = brcm_cma=520M@248M brcm_cma=200M@768M
 endif
 
+### armbox bre2ze4k
+
+# general
+BRE2ZE4K_IMAGE_NAME = disk
+BRE2ZE4K_BOOT_IMAGE = boot.img
+BRE2ZE4K_IMAGE_LINK = $(BRE2ZE4K_IMAGE_NAME).ext4
+BRE2ZE4K_IMAGE_ROOTFS_SIZE = 294912
+BRE2ZE4K_BUILD_TMP = $(BUILD_TMP)/image-build
+BRE2ZE4K_BOXMODE ?= 1
+ifeq ($(BRE2ZE4K_BOXMODE), $(filter $(BRE2ZE4K_BOXMODE), 1))
+BRE2ZE4K_BOXMODE_MEM = brcm_cma=440M@328M brcm_cma=192M@768M
+else
+BRE2ZE4K_BOXMODE_MEM = brcm_cma=520M@248M brcm_cma=200M@768M
+endif
+
 # emmc image
 EMMC_IMAGE_SIZE = 3817472
+EMMC_IMAGE ?= $(BUILD_TMP)/image-build/disk.img
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51))
 EMMC_IMAGE = $(HD51_BUILD_TMP)/$(HD51_IMAGE_NAME).img
+endif
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), bre2ze4k))
+EMMC_IMAGE = $(BRE2ZE4K_BUILD_TMP)/$(BRE2ZE4K_IMAGE_NAME).img
+endif
 
 # partition sizes
 BLOCK_SIZE = 512
@@ -176,6 +206,72 @@ flash-image-hd51-online:
 	tar -cvzf $(BASE_DIR)/$(BOXTYPE)_multi_usb_$(shell date '+%d.%m.%Y-%H.%M').tgz rootfs.tar.bz2 kernel.bin imageversion
 	# cleanup
 	rm -rf $(HD51_BUILD_TMP)
+
+flash-image-bre2ze4k-multi-disk: $(D)/host_resize2fs
+	rm -rf $(BRE2ZE4K_BUILD_TMP)
+	mkdir -p $(BRE2ZE4K_BUILD_TMP)/$(BOXTYPE)
+	# Create a sparse image block
+	dd if=/dev/zero of=$(BRE2ZE4K_BUILD_TMP)/$(BRE2ZE4K_IMAGE_LINK) seek=$(shell expr $(BRE2ZE4K_IMAGE_ROOTFS_SIZE) \* $(BLOCK_SECTOR)) count=0 bs=$(BLOCK_SIZE)
+	$(HOST_DIR)/bin/mkfs.ext4 -F $(BRE2ZE4K_BUILD_TMP)/$(BRE2ZE4K_IMAGE_LINK) -d $(RELEASE_DIR)
+	# Error codes 0-3 indicate successfull operation of fsck (no errors or errors corrected)
+	$(HOST_DIR)/bin/fsck.ext4 -pvfD $(BRE2ZE4K_BUILD_TMP)/$(BRE2ZE4K_IMAGE_LINK) || [ $? -le 3 ]
+	dd if=/dev/zero of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) count=0 seek=$(shell expr $(EMMC_IMAGE_SIZE) \* $(BLOCK_SECTOR))
+	parted -s $(EMMC_IMAGE) mklabel gpt
+	parted -s $(EMMC_IMAGE) unit KiB mkpart boot fat16 $(IMAGE_ROOTFS_ALIGNMENT) $(shell expr $(IMAGE_ROOTFS_ALIGNMENT) \+ $(BOOT_PARTITION_SIZE))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart kernel1 $(KERNEL_PARTITION_OFFSET) $(shell expr $(KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart rootfs1 ext4 $(ROOTFS_PARTITION_OFFSET) $(shell expr $(ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart kernel2 $(SECOND_KERNEL_PARTITION_OFFSET) $(shell expr $(SECOND_KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart rootfs2 ext4 $(SECOND_ROOTFS_PARTITION_OFFSET) $(shell expr $(SECOND_ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart kernel3 $(THIRD_KERNEL_PARTITION_OFFSET) $(shell expr $(THIRD_KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart rootfs3 ext4 $(THIRD_ROOTFS_PARTITION_OFFSET) $(shell expr $(THIRD_ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart kernel4 $(FOURTH_KERNEL_PARTITION_OFFSET) $(shell expr $(FOURTH_KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart rootfs4 ext4 $(FOURTH_ROOTFS_PARTITION_OFFSET) $(shell expr $(FOURTH_ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart swapdata ext4 $(SWAP_DATA_PARTITION_OFFSET) $(shell expr $(SWAP_DATA_PARTITION_OFFSET) \+ $(SWAP_DATA_PARTITION_SIZE))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart swap linux-swap $(SWAP_PARTITION_OFFSET) $(shell expr $(EMMC_IMAGE_SIZE) \- 1024)
+	dd if=/dev/zero of=$(BRE2ZE4K_BUILD_TMP)/$(BRE2ZE4K_BOOT_IMAGE) bs=$(BLOCK_SIZE) count=$(shell expr $(BOOT_PARTITION_SIZE) \* $(BLOCK_SECTOR))
+	mkfs.msdos -S 512 $(BRE2ZE4K_BUILD_TMP)/$(BRE2ZE4K_BOOT_IMAGE)
+	echo "boot emmcflash0.kernel1 '$(BRE2ZE4K_BOXMODE_MEM) root=/dev/mmcblk0p3 rw rootwait $(BOXTYPE)_4.boxmode=$(BRE2ZE4K_BOXMODE)'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP
+	echo "boot emmcflash0.kernel1 '$(BRE2ZE4K_BOXMODE_MEM) root=/dev/mmcblk0p3 rw rootwait $(BOXTYPE)_4.boxmode=$(BRE2ZE4K_BOXMODE)'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_1
+	echo "boot emmcflash0.kernel2 '$(BRE2ZE4K_BOXMODE_MEM) root=/dev/mmcblk0p5 rw rootwait $(BOXTYPE)_4.boxmode=$(BRE2ZE4K_BOXMODE)'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_2
+	echo "boot emmcflash0.kernel3 '$(BRE2ZE4K_BOXMODE_MEM) root=/dev/mmcblk0p7 rw rootwait $(BOXTYPE)_4.boxmode=$(BRE2ZE4K_BOXMODE)'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_3
+	echo "boot emmcflash0.kernel4 '$(BRE2ZE4K_BOXMODE_MEM) root=/dev/mmcblk0p9 rw rootwait $(BOXTYPE)_4.boxmode=$(BRE2ZE4K_BOXMODE)'" > $(HBRE2ZE4K_BUILD_TMP)/STARTUP_4
+	mcopy -i $(BRE2ZE4K_BUILD_TMP)/$(BRE2ZE4K_BOOT_IMAGE) -v $(BRE2ZE4K_BUILD_TMP)/STARTUP ::
+	mcopy -i $(BRE2ZE4K_BUILD_TMP)/$(BRE2ZE4K_BOOT_IMAGE) -v $(BRE2ZE4K_BUILD_TMP)/STARTUP_1 ::
+	mcopy -i $(BRE2ZE4K_BUILD_TMP)/$(BRE2ZE4K_BOOT_IMAGE) -v $(BRE2ZE4K_BUILD_TMP)/STARTUP_2 ::
+	mcopy -i $(BRE2ZE4K_BUILD_TMP)/$(BRE2ZE4K_BOOT_IMAGE) -v $(BRE2ZE4K_BUILD_TMP)/STARTUP_3 ::
+	mcopy -i $(BRE2ZE4K_BUILD_TMP)/$(BRE2ZE4K_BOOT_IMAGE) -v $(BRE2ZE4K_BUILD_TMP)/STARTUP_4 ::
+	dd conv=notrunc if=$(BRE2ZE4K_BUILD_TMP)/$(BRE2ZE4K_BOOT_IMAGE) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(IMAGE_ROOTFS_ALIGNMENT) \* $(BLOCK_SECTOR))
+	dd conv=notrunc if=$(RELEASE_DIR)/boot/zImage.dtb of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(KERNEL_PARTITION_OFFSET) \* $(BLOCK_SECTOR))
+	$(HOST_DIR)/bin/resize2fs $(BRE2ZE4K_BUILD_TMP)/$(BRE2ZE4K_IMAGE_LINK) $(ROOTFS_PARTITION_SIZE_MULTI)k
+	# Truncate on purpose
+	dd if=$(BRE2ZE4K_BUILD_TMP)/$(BRE2ZE4K_IMAGE_LINK) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(ROOTFS_PARTITION_OFFSET) \* $(BLOCK_SECTOR)) count=$(shell expr $(BRE2ZE4K_IMAGE_ROOTFS_SIZE) \* $(BLOCK_SECTOR))
+	mv $(BRE2ZE4K_BUILD_TMP)/disk.img $(BRE2ZE4K_BUILD_TMP)/$(BOXTYPE)/
+
+flash-image-bre2ze4k-multi-rootfs:
+	# Create final USB-image
+	mkdir -p $(BRE2ZE4K_BUILD_TMP)/$(BOXTYPE)
+	cp $(RELEASE_DIR)/boot/zImage.dtb $(BRE2ZE4K_BUILD_TMP)/$(BOXTYPE)/kernel.bin
+	cd $(RELEASE_DIR); \
+	tar -cvf $(BRE2ZE4K_BUILD_TMP)/$(BOXTYPE)/rootfs.tar --exclude=zImage* . > /dev/null 2>&1; \
+	bzip2 $(BRE2ZE4K_BUILD_TMP)/$(BOXTYPE)/rootfs.tar
+	echo $(BOXTYPE)_DDT_usb_$(shell date '+%d%m%Y-%H%M%S') > $(BRE2ZE4K_BUILD_TMP)/$(BOXTYPE)/imageversion
+	cd $(BRE2ZE4K_BUILD_TMP) && \
+	zip -r $(BASE_DIR)/$(BOXTYPE)_multi_usb_$(shell date '+%d.%m.%Y-%H.%M').zip $(BOXTYPE)/rootfs.tar.bz2 $(BOXTYPE)/kernel.bin $(BOXTYPE)/disk.img $(BOXTYPE)/imageversion
+	# cleanup
+	rm -rf $(BRE2ZE4K_BUILD_TMP)
+
+flash-image-bre2ze4k-online:
+	# Create final USB-image
+	mkdir -p $(BRE2ZE4K_BUILD_TMP)/$(BOXTYPE)
+	cp $(RELEASE_DIR)/boot/zImage.dtb $(BRE2ZE4K_BUILD_TMP)/$(BOXTYPE)/kernel.bin
+	cd $(RELEASE_DIR); \
+	tar -cvf $(BRE2ZE4K_BUILD_TMP)/$(BOXTYPE)/rootfs.tar --exclude=zImage* . > /dev/null 2>&1; \
+	bzip2 $(BRE2ZE4K_BUILD_TMP)/$(BOXTYPE)/rootfs.tar
+	echo $(BOXTYPE)_DDT_usb_$(shell date '+%d%m%Y-%H%M%S') > $(BRE2ZE4K_BUILD_TMP)/$(BOXTYPE)/imageversion
+	cd $(BRE2ZE4K_BUILD_TMP)/$(BOXTYPE) && \
+	tar -cvzf $(BASE_DIR)/$(BOXTYPE)_multi_usb_$(shell date '+%d.%m.%Y-%H.%M').tgz rootfs.tar.bz2 kernel.bin imageversion
+	# cleanup
+	rm -rf $(BRE2ZE4K_BUILD_TMP)
 
 ### armbox hd60
 HD60_BUILD_TMP = $(BUILD_TMP)/image-build

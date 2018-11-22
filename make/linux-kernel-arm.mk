@@ -13,6 +13,18 @@ KERNEL_PATCHES_ARM     = $(HD51_PATCHES)
 KERNEL_DTB_VER         = bcm7445-bcm97445svmb.dtb
 endif
 
+ifeq ($(BOXTYPE), bre2ze4k)
+KERNEL_VER             = 4.10.12
+KERNEL_DATE            = 20180424
+KERNEL_TYPE            = bre2ze4k
+KERNEL_SRC             = linux-$(KERNEL_VER)-arm.tar.gz
+KERNEL_URL             = http://source.mynonpublic.com/gfutures
+KERNEL_CONFIG          = bre2ze4k_defconfig
+KERNEL_DIR             = $(BUILD_TMP)/linux-$(KERNEL_VER)
+KERNEL_PATCHES_ARM     = $(BRE2ZE4K_PATCHES)
+KERNEL_DTB_VER         = bcm7445-bcm97445svmb.dtb
+endif
+
 ifeq ($(BOXTYPE), hd60)
 KERNEL_VER             = 4.4.35
 KERNEL_DATE            = 20180301
@@ -56,6 +68,18 @@ HD51_PATCHES = \
 		armbox/hd51_reserve_dvb_adapter_0.patch \
 		armbox/hd51_blacklist_mmc0.patch \
 		armbox/hd51_export_pmpoweroffprepare.patch
+
+BRE2ZE4K_PATCHES = \
+		armbox/bre2ze4k_TBS-fixes-for-4.10-kernel.patch \
+		armbox/bre2ze4k_0001-Support-TBS-USB-drivers-for-4.6-kernel.patch \
+		armbox/bre2ze4k_0001-TBS-fixes-for-4.6-kernel.patch \
+		armbox/bre2ze4k_0001-STV-Add-PLS-support.patch \
+		armbox/bre2ze4k_0001-STV-Add-SNR-Signal-report-parameters.patch \
+		armbox/bre2ze4k_blindscan2.patch \
+		armbox/bre2ze4k_0001-stv090x-optimized-TS-sync-control.patch \
+		armbox/bre2ze4k_reserve_dvb_adapter_0.patch \
+		armbox/bre2ze4k_blacklist_mmc0.patch \
+		armbox/bre2ze4k_export_pmpoweroffprepare.patch
 
 HD60_PATCHES = \
 
@@ -115,6 +139,13 @@ ifeq ($(BOXTYPE), hd51)
 		$(MAKE) -C $(KERNEL_DIR) ARCH=arm CROSS_COMPILE=$(TARGET)- DEPMOD=$(DEPMOD) INSTALL_MOD_PATH=$(TARGET_DIR) modules_install
 	@touch $@
 endif
+ifeq ($(BOXTYPE), bre2ze4k)
+	set -e; cd $(KERNEL_DIR); \
+		$(MAKE) -C $(KERNEL_DIR) ARCH=arm oldconfig
+		$(MAKE) -C $(KERNEL_DIR) ARCH=arm CROSS_COMPILE=$(TARGET)- $(KERNEL_DTB_VER) zImage modules
+		$(MAKE) -C $(KERNEL_DIR) ARCH=arm CROSS_COMPILE=$(TARGET)- DEPMOD=$(DEPMOD) INSTALL_MOD_PATH=$(TARGET_DIR) modules_install
+	@touch $@
+endif
 ifeq ($(BOXTYPE), hd60)
 	set -e; cd $(KERNEL_DIR); \
 		$(MAKE) -C $(KERNEL_DIR) ARCH=arm oldconfig
@@ -133,6 +164,16 @@ endif
 KERNEL = $(D)/kernel
 $(D)/kernel: $(D)/bootstrap $(D)/kernel.do_compile
 ifeq ($(BOXTYPE), hd51)
+	install -m 644 $(KERNEL_DIR)/arch/arm/boot/zImage $(BOOT_DIR)/vmlinux.ub
+	install -m 644 $(KERNEL_DIR)/vmlinux $(TARGET_DIR)/boot/vmlinux-arm-$(KERNEL_VER)
+	install -m 644 $(KERNEL_DIR)/System.map $(TARGET_DIR)/boot/System.map-arm-$(KERNEL_VER)
+	cp $(KERNEL_DIR)/arch/arm/boot/zImage $(TARGET_DIR)/boot/
+	cat $(KERNEL_DIR)/arch/arm/boot/zImage $(KERNEL_DIR)/arch/arm/boot/dts/$(KERNEL_DTB_VER) > $(TARGET_DIR)/boot/zImage.dtb
+	rm $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/build || true
+	rm $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/source || true
+	$(TOUCH)
+endif
+ifeq ($(BOXTYPE), bre2ze4k)
 	install -m 644 $(KERNEL_DIR)/arch/arm/boot/zImage $(BOOT_DIR)/vmlinux.ub
 	install -m 644 $(KERNEL_DIR)/vmlinux $(TARGET_DIR)/boot/vmlinux-arm-$(KERNEL_VER)
 	install -m 644 $(KERNEL_DIR)/System.map $(TARGET_DIR)/boot/System.map-arm-$(KERNEL_VER)
