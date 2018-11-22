@@ -20,25 +20,28 @@ create_symlinks() {
 	read MODEL < /sys/block/$DEVBASE/device/model
 	MODEL=${MODEL// /_} # replace ' ' with '_'
 	OLDPWD=$PWD
+	if [ `cat /sys/block/$DEVBASE/removable` == "1" ]; then
+		echo "512" > /sys/block/$DEVBASE/device/max_sectors
+	fi
 	cd $MOUNTBASE
 	# this is a hack and will break with kernel updates, but so might DEVPATH :-(
 	# and DEVPATH is not available at runtime, only at hotplug
 	DEV_P=$(readlink /sys/block/$DEVBASE) # ../devices/...
 	DEV_P=${DEV_P:2} # strip off '..'
 	if which blkid > /dev/null; then
-		BLKID=$(blkid /dev/$MDEV)
+		BLKID=$(blkid -w /dev/null -c /dev/null /dev/$MDEV)
 		eval ${BLKID#*:}
 	fi
 	if [ -n "$LABEL" ]; then
 		rm -f "$LABEL"
 		ln -s $MDEV "$LABEL"
-	fi
-	if [ -n "$UUID" ]; then
-		LINK="${TYPE}${TYPE:+-}${UUID}"
-		rm -f "${LINK}"
-		ln -s $MDEV "${LINK}"
-	fi
-	if [ -n "$MODEL" ]; then
+	#fi
+	#if [ -n "$UUID" ]; then
+	#	LINK="${TYPE}${TYPE:+-}${UUID}"
+	#	rm -f "${LINK}"
+	#	ln -s $MDEV "${LINK}"
+	#fi
+	elif [ -n "$MODEL" ]; then
 		LINK="${MODEL}${PARTNUM:+-}${PARTNUM}"
 		rm -f "${LINK}"
 		ln -s $MDEV "${LINK}"
@@ -60,11 +63,11 @@ create_symlinks() {
 		# BUS="unknown" # ignored for now
 		;;
 	esac
-	if [ -n "$BUS" ]; then
-		LINK="${BUS}${PARTNUM:+-}${PARTNUM}"
-		rm -f "${LINK}"
-		ln -s $MDEV "${LINK}"
-	fi
+	#if [ -n "$BUS" ]; then
+	#	LINK="${BUS}${PARTNUM:+-}${PARTNUM}"
+	#	rm -f "${LINK}"
+	#	ln -s $MDEV "${LINK}"
+	#fi
 
 	cd $OLDPWD
 }
