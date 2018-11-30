@@ -581,6 +581,8 @@ neutrino-mp-release-base:
 	ln -sf ../sbin/MAKEDEV $(RELEASE_DIR)/dev/MAKEDEV
 	ln -sf ../../sbin/MAKEDEV $(RELEASE_DIR)/lib/udev/MAKEDEV
 	cp -aR $(SKEL_ROOT)/etc/mdev/* $(RELEASE_DIR)/etc/mdev/
+	cp -aR $(SKEL_ROOT)/etc/{inetd.conf,irexec.keys} $(RELEASE_DIR)/etc/
+	cp -aR $(SKEL_ROOT)/etc/network/* $(RELEASE_DIR)/etc/network/
 	cp -aR $(SKEL_ROOT)/etc/mdev_$(BOXARCH).conf $(RELEASE_DIR)/etc/mdev.conf
 	cp -aR $(SKEL_ROOT)/usr/share/udhcpc/* $(RELEASE_DIR)/usr/share/udhcpc/
 	cp -aR $(SKEL_ROOT)/usr/share/zoneinfo/* $(RELEASE_DIR)/usr/share/zoneinfo/
@@ -777,33 +779,14 @@ endif
 	if [ -e $(TARGET_DIR)/usr/bin/restore.sh ]; then \
 		ln -s /usr/bin/restore.sh $(RELEASE_DIR)/bin/; \
 	fi
-#	ln -sf /usr/share $(RELEASE_DIR)/usr/local/share
-#	cp $(TARGET_DIR)/usr/local/bin/neutrino $(RELEASE_DIR)/usr/local/bin/
-#	cp $(TARGET_DIR)/usr/local/bin/pzapit $(RELEASE_DIR)/usr/local/bin/
-#	cp $(TARGET_DIR)/usr/local/bin/sectionsdcontrol $(RELEASE_DIR)/usr/local/bin/
-#	if [ -e $(TARGET_DIR)/usr/local/bin/install.sh ]; then \
-#		cp -aR $(TARGET_DIR)/usr/local/bin/install.sh $(RELEASE_DIR)/bin/; \
-#	fi
-#	if [ -e $(TARGET_DIR)/usr/local/bin/luaclient ]; then \
-#		cp $(TARGET_DIR)/usr/local/bin/luaclient $(RELEASE_DIR)/bin/; \
-#	fi
-#	if [ -e $(TARGET_DIR)/usr/local/bin/rcsim ]; then \
-#		cp $(TARGET_DIR)/usr/local/bin/rcsim $(RELEASE_DIR)/bin/; \
-#	fi
-#	if [ -e $(TARGET_DIR)/usr/local/sbin/udpstreampes ]; then \
-#		cp $(TARGET_DIR)/usr/local/sbin/udpstreampes $(RELEASE_DIR)/usr/local/sbin/; \
-#	fi
-#	if [ -e $(TARGET_DIR)/usr/local/bin/udpstreampes ]; then \
-#		cp $(TARGET_DIR)/usr/local/bin/udpstreampes $(RELEASE_DIR)/usr/local/bin/; \
-#	fi
+
 #
 # channellist / tuxtxt
 #
 	cp -aR $(TARGET_DIR)/var/tuxbox/config/* $(RELEASE_DIR)/var/tuxbox/config
 #
-# copy root_neutrino
+# remove unneeded
 #
-	cp -aR $(SKEL_ROOT)/root_neutrino/* $(RELEASE_DIR)/
 ifneq ($(BOXTYPE), $(filter $(BOXTYPE), atevio7500 spark7162 cuberevo_mini2 cuberevo_3000hd hd51 vusolo4k))
 	rm -f $(RELEASE_DIR)/var/tuxbox/config/cables.xml
 	rm -f $(RELEASE_DIR)/var/tuxbox/config/terrestrial.xml
