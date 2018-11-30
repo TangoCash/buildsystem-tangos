@@ -311,8 +311,9 @@ case $6 in
 		echo "   2)  neutrino-mp-max    [ arm     ]"
 		echo "   3)  neutrino-mp-ni     [ arm     ]"
 		echo "   4)  neutrino-mp-tangos [ arm/sh4 ]"
-		echo "   5)  neutrino-hd2       [ arm/sh4 ]"
-		read -p "Select Image to build (1-5)? [4]"
+		echo "   5)  neutrino-tuxbox    [ arm/sh4 ]"
+		echo "   6)  neutrino-hd2       [ arm/sh4 ]"
+		read -p "Select Image to build (1-6)? [4]"
 		REPLY="${REPLY:-4}";;
 esac
 
@@ -321,7 +322,8 @@ case "$REPLY" in
 	2) FLAVOUR="neutrino-mp-max";;
 	3) FLAVOUR="neutrino-mp-ni";;
 	4) FLAVOUR="neutrino-mp-tangos";;
-	5) FLAVOUR="neutrino-hd2";;
+	5) FLAVOUR="neutrino-tuxbox";;
+	6) FLAVOUR="neutrino-hd2";;
 	*) FLAVOUR="neutrino-mp-ddt";;
 esac
 echo "FLAVOUR=$FLAVOUR" >> config

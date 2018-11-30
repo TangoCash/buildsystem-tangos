@@ -106,7 +106,7 @@ LH_CONFIG_OPTS =
 #LH_CONFIG_OPTS += --enable-flv2mpeg4
 
 
-ifeq ($(FLAVOUR), neutrino-mp-ni)
+ifeq ($(FLAVOUR), $(filter $(FLAVOUR), neutrino-mp-ni neutrino-tuxbox))
 N_CONFIG_OPTS += --with-boxtype=armbox
 N_CONFIG_OPTS += --with-boxmodel=$(BOXTYPE)
 else
@@ -198,6 +198,14 @@ NMP_BRANCH  ?= master
 HAL_BRANCH  ?= master
 NMP_PATCHES  = $(NEUTRINO_MP_DDT_PATCHES)
 HAL_PATCHES  = $(NEUTRINO_MP_LIBSTB_DDT_PATCHES)
+else ifeq  ($(FLAVOUR), neutrino-tuxbox)
+GIT_URL     ?= https://github.com/tuxbox-neutrino
+NEUTRINO_MP  = gui-neutrino
+LIBSTB_HAL   = library-stb-hal
+NMP_BRANCH  ?= master
+HAL_BRANCH  ?= mpx
+NMP_PATCHES  = $(NEUTRINO_MP_TUX_PATCHES)
+HAL_PATCHES  = $(NEUTRINO_MP_LIBSTB_TUX_PATCHES)
 endif
 
 # -----------------------------------------------------------------------------
