@@ -86,7 +86,7 @@ $(D)/neutrino-mp-plugins.config.status:
 		$(SOURCE_DIR)/neutrino-mp-plugins/configure $(SILENT_OPT) \
 			--host=$(TARGET) \
 			--build=$(BUILD) \
-			--prefix=/usr \
+			--prefix= \
 			--enable-maintainer-mode \
 			--enable-silent-rules \
 			\
