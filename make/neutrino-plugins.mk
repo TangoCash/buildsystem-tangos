@@ -92,7 +92,6 @@ $(D)/neutrino-mp-plugins.config.status:
 			\
 			--with-target=cdk \
 			--include=/usr/include \
-			--with-targetprefix=/usr \
 			--with-boxtype=$(BOXTYPE) \
 			--with-plugindir=/var/tuxbox/plugins \
 			--with-libdir=/usr/lib \
