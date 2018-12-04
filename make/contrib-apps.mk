@@ -35,6 +35,34 @@ $(D)/busybox: $(D)/bootstrap $(ARCHIVE)/$(BUSYBOX_SOURCE) $(PATCHES)/$(BUSYBOX_C
 	$(TOUCH)
 
 #
+# bash
+#
+BASH_VER = 4.4
+BASH_SOURCE = bash-$(BASH_VER).tar.gz
+
+$(ARCHIVE)/$(BASH_SOURCE):
+	$(WGET) http://ftp.gnu.org/gnu/bash/$(BASH_SOURCE)
+
+$(D)/bash: $(D)/bootstrap $(ARCHIVE)/$(BASH_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/bash-$(BASH_VER)
+	$(UNTAR)/$(BASH_SOURCE)
+	set -e; cd $(BUILD_TMP)/bash-$(BASH_VER); \
+		$(CONFIGURE) \
+			--libdir=$(TARGET_DIR)/usr/lib \
+			--includedir=$(TARGET_DIR)/usr/include \
+			--docdir=$(TARGET_DIR)/.remove \
+			--infodir=$(TARGET_DIR)/.remove \
+			--mandir=$(TARGET_DIR)/.remove \
+			--localedir=$(TARGET_DIR)/.remove/locale \
+		; \
+		$(MAKE); \
+		$(MAKE) install prefix=$(TARGET_DIR)
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/bash.pc
+	$(REMOVE)/bash-$(BASH_VER)
+	$(TOUCH)
+
+#
 # mtd_utils
 #
 MTD_UTILS_VER = 1.5.2
