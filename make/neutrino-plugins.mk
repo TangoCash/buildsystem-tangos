@@ -22,7 +22,7 @@ $(D)/links: $(D)/bootstrap $(D)/libpng $(D)/libjpeg $(D)/openssl $(ARCHIVE)/link
 	$(START_BUILD)
 	$(REMOVE)/links-$(LINKS_VER)
 	$(UNTAR)/links-$(LINKS_VER).tar.bz2
-	set -e; cd $(BUILD_TMP)/links-$(LINKS_VER); \
+	$(CHDIR)/links-$(LINKS_VER); \
 		$(call apply_patches, $(LINKS_PATCH)); \
 		$(CONFIGURE) \
 			--prefix= \
@@ -137,9 +137,9 @@ $(D)/neutrino-mp-plugin-xupnpd: $(D)/bootstrap $(D)/lua $(D)/openssl $(D)/neutri
 		else cd $(ARCHIVE); git clone git://github.com/clark15b/xupnpd.git xupnpd.git; \
 		fi
 	cp -ra $(ARCHIVE)/xupnpd.git $(BUILD_TMP)/xupnpd
-	set -e; cd $(BUILD_TMP)/xupnpd; \
+	$(CHDIR)/xupnpd; \
 		$(call apply_patches, $(XUPNPD_PATCH))
-	set -e; cd $(BUILD_TMP)/xupnpd/src; \
+	$(CHDIR)/xupnpd/src; \
 		$(BUILDENV) \
 		$(MAKE) embedded TARGET=$(TARGET) PKG_CONFIG=$(PKG_CONFIG) LUAFLAGS="$(TARGET_LDFLAGS) -I$(TARGET_INCLUDE_DIR)"; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -164,7 +164,7 @@ $(D)/neutrino-mp-plugin-scripts-lua: $(D)/bootstrap
 		else cd $(ARCHIVE); git clone https://github.com/tuxbox-neutrino/plugin-scripts-lua.git plugin-scripts-lua.git; \
 		fi
 	cp -ra $(ARCHIVE)/plugin-scripts-lua.git/plugins $(BUILD_TMP)/neutrino-mp-plugin-scripts-lua
-	set -e; cd $(BUILD_TMP)/neutrino-mp-plugin-scripts-lua; \
+	$(CHDIR)/neutrino-mp-plugin-scripts-lua; \
 		install -d $(TARGET_DIR)/lib/tuxbox/plugins
 		cp -R $(BUILD_TMP)/neutrino-mp-plugin-scripts-lua/ard_mediathek/* $(TARGET_DIR)/lib/tuxbox/plugins/
 		cp -R $(BUILD_TMP)/neutrino-mp-plugin-scripts-lua/favorites2bin/* $(TARGET_DIR)/lib/tuxbox/plugins/
@@ -187,9 +187,9 @@ $(D)/neutrino-mp-plugin-mediathek:
 		fi
 	cp -ra $(ARCHIVE)/plugins-mediathek.git $(BUILD_TMP)/plugins-mediathek
 	install -d $(TARGET_DIR)/lib/tuxbox/plugins
-	set -e; cd $(BUILD_TMP)/plugins-mediathek; \
+	$(CHDIR)/plugins-mediathek; \
 		$(call apply_patches, $(NEUTRINO_MEDIATHEK_PATCH))
-	set -e; cd $(BUILD_TMP)/plugins-mediathek; \
+	$(CHDIR)/plugins-mediathek; \
 		cp -a plugins/* $(TARGET_DIR)/lib/tuxbox/plugins/; \
 		cp -a share $(TARGET_DIR)/usr/
 	$(REMOVE)/plugins-mediathek
