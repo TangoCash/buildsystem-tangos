@@ -19,7 +19,7 @@ $(D)/directfb: $(D)/bootstrap $(ARCHIVE)/$(DIRECTFB_SOURCE)
 	$(START_BUILD)
 	$(REMOVE)/DirectFB-$(DIRECTFB_VER)
 	$(UNTAR)/$(DIRECTFB_SOURCE)
-	set -e; cd $(BUILD_TMP)/DirectFB-$(DIRECTFB_VER); \
+	$(CHDIR)/DirectFB-$(DIRECTFB_VER); \
 		$(call apply_patches,$(DIRECTFB_PATCH)); \
 		$(BUILDENV) \
 		autoreconf -fi $(SILENT_OPT); \
@@ -70,7 +70,7 @@ $(D)/libsdl2: $(D)/bootstrap $(ARCHIVE)/$(LIBSDL2_SOURCE) $(KERNEL)
 	$(START_BUILD)
 	$(REMOVE)/SDL2-$(LIBSDL2_VER)
 	$(UNTAR)/$(LIBSDL2_SOURCE)
-	set -e; cd $(BUILD_TMP)/SDL2-$(LIBSDL2_VER); \
+	$(CHDIR)/SDL2-$(LIBSDL2_VER); \
 		$(call apply_patches,$(LIBSDL2_PATCH)); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
@@ -112,7 +112,7 @@ $(D)/libsdl: $(D)/bootstrap $(ARCHIVE)/$(LIBSDL_SOURCE) $(KERNEL)
 	$(START_BUILD)
 	$(REMOVE)/SDL-$(LIBSDL_VER)
 	$(UNTAR)/$(LIBSDL_SOURCE)
-	set -e; cd $(BUILD_TMP)/SDL-$(LIBSDL_VER); \
+	$(CHDIR)/SDL-$(LIBSDL_VER); \
 		$(call apply_patches,$(LIBSDL_PATCH)); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
@@ -1558,7 +1558,7 @@ $(D)/pixman: $(ARCHIVE)/$(PIXMAN_SOURCE) $(D)/bootstrap $(D)/zlib $(D)/libpng
 	$(START_BUILD)
 	$(REMOVE)/pixman-$(PIXMAN_VER)
 	$(UNTAR)/$(PIXMAN_SOURCE)
-	set -e; cd $(BUILD_TMP)/pixman-$(PIXMAN_VER); \
+	$(CHDIR)/pixman-$(PIXMAN_VER); \
 		$(call apply_patches,$(PIXMAN_PATCH)); \
 		$(CONFIGURE) \
 			--prefix=/usr \
@@ -1598,7 +1598,7 @@ $(D)/cairo: $(ARCHIVE)/$(CAIRO_SOURCE) $(D)/bootstrap $(D)/fontconfig $(D)/libgl
 	$(START_BUILD)
 	$(REMOVE)/cairo-$(CAIRO_VER)
 	$(UNTAR)/$(CAIRO_SOURCE)
-	set -e; cd $(BUILD_TMP)/cairo-$(CAIRO_VER); \
+	$(CHDIR)/cairo-$(CAIRO_VER); \
 		$(call apply_patches,$(CAIRO_PATCH)); \
 		$(BUILDENV) \
 		ax_cv_c_float_words_bigendian="no" \
@@ -1649,7 +1649,7 @@ $(D)/harfbuzz: $(ARCHIVE)/$(HARFBUZZ_SOURCE) $(D)/bootstrap $(D)/fontconfig $(D)
 	$(START_BUILD)
 	$(REMOVE)/harfbuzz-$(HARFBUZZ_VER)
 	$(UNTAR)/$(HARFBUZZ_SOURCE)
-	set -e; cd $(BUILD_TMP)/harfbuzz-$(HARFBUZZ_VER); \
+	$(CHDIR)/harfbuzz-$(HARFBUZZ_VER); \
 		$(call apply_patches,$(HARFBUZZ_PATCH)); \
 		$(CONFIGURE) \
 			--prefix=/usr \

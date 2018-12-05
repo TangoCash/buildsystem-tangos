@@ -47,7 +47,7 @@ $(D)/bash: $(D)/bootstrap $(ARCHIVE)/$(BASH_SOURCE)
 	$(START_BUILD)
 	$(REMOVE)/bash-$(BASH_VER)
 	$(UNTAR)/$(BASH_SOURCE)
-	set -e; cd $(BUILD_TMP)/bash-$(BASH_VER); \
+	$(CHDIR)/bash-$(BASH_VER); \
 		$(CONFIGURE) \
 			--libdir=$(TARGET_DIR)/usr/lib \
 			--includedir=$(TARGET_DIR)/usr/include \
@@ -1025,7 +1025,7 @@ $(D)/shairplay: libao $(D)/howl $(ARCHIVE)/$(SHAIRPLAY_SOURCE)
 	$(START_BUILD)
 	$(REMOVE)/shairplay-$(SHAIRPLAY_VER)
 	$(UNTAR)/$(SHAIRPLAY_SOURCE)
-	set -e; cd $(BUILD_TMP)/shairplay-git-$(SHAIRPLAY_VER); \
+	$(CHDIR)/shairplay-git-$(SHAIRPLAY_VER); \
 		$(call apply_patches,$(SHAIRPLAY_PATCH)); \
 		for A in src/test/example.c src/test/main.c src/shairplay.c ; do sed -i "s#airport.key#/usr/share/shairplay/airport.key#" $$A ; done && \
 		autoreconf -fi $(SILENT_OPT); \
@@ -1930,7 +1930,7 @@ $(D)/astra-sm: $(D)/bootstrap $(D)/openssl
 		else cd $(ARCHIVE); git clone https://gitlab.com/crazycat69/astra-sm.git $(ARCHIVE)/astra-sm.git; \
 		fi
 	cp -ra $(ARCHIVE)/astra-sm.git $(BUILD_TMP)/astra-sm
-	set -e; cd $(BUILD_TMP)/astra-sm; \
+	$(CHDIR)/astra-sm; \
 		$(BUILDENV) \
 		autoreconf -fi $(SILENT_OPT); \
 		sed -i 's:(CFLAGS):(CFLAGS_FOR_BUILD):' tools/Makefile.am; \
@@ -1957,7 +1957,7 @@ $(D)/iozone3: $(D)/bootstrap $(ARCHIVE)/$(IOZONE_SOURCE)
 	$(START_BUILD)
 	$(REMOVE)/iozone3_$(IOZONE_VER)
 	$(UNTAR)/$(IOZONE_SOURCE)
-	set -e; cd $(BUILD_TMP)/iozone3_$(IOZONE_VER); \
+	$(CHDIR)/iozone3_$(IOZONE_VER); \
 		$(call apply_patches,$(IOZONE_PATCH)); \
 		sed -i -e "s/= gcc/= $(TARGET)-gcc/" src/current/makefile; \
 		sed -i -e "s/= cc/= $(TARGET)-cc/" src/current/makefile; \
@@ -1982,7 +1982,7 @@ $(D)/mupen64core: $(D)/bootstrap $(ARCHIVE)/$(MUPEN64CORE_SOURCE) $(D)/libsdl2 $
 	$(START_BUILD)
 	$(REMOVE)/mupen64core-git-$(MUPEN64CORE_VER)
 	$(UNTAR)/$(MUPEN64CORE_SOURCE)
-	set -e; cd $(BUILD_TMP)/mupen64core-git-$(MUPEN64CORE_VER); \
+	$(CHDIR)/mupen64core-git-$(MUPEN64CORE_VER); \
 		$(BUILDENV) \
 		cd projects/unix/ && $(MAKE) \
 			CPU=ARM \
@@ -2008,7 +2008,7 @@ $(D)/mupen64cmd: $(D)/bootstrap $(ARCHIVE)/$(MUPEN64CMD_SOURCE) $(D)/mupen64core
 	$(START_BUILD)
 	$(REMOVE)/mupen64cmd-git-$(MUPEN64CMD_VER)
 	$(UNTAR)/$(MUPEN64CMD_SOURCE)
-	set -e; cd $(BUILD_TMP)/mupen64cmd-git-$(MUPEN64CMD_VER); \
+	$(CHDIR)/mupen64cmd-git-$(MUPEN64CMD_VER); \
 		$(BUILDENV) \
 		cd projects/unix/ && $(MAKE) \
 			CPU=ARM \
@@ -2038,7 +2038,7 @@ $(D)/mupen64vid: $(D)/bootstrap $(ARCHIVE)/$(MUPEN64VID_SOURCE) $(D)/mupen64core
 	$(START_BUILD)
 	$(REMOVE)/mupen64vid-git-$(MUPEN64VID_VER)
 	$(UNTAR)/$(MUPEN64VID_SOURCE)
-	set -e; cd $(BUILD_TMP)/mupen64vid-git-$(MUPEN64VID_VER); \
+	$(CHDIR)/mupen64vid-git-$(MUPEN64VID_VER); \
 		$(BUILDENV) \
 		cd projects/unix/ && $(MAKE) \
 			CPU=ARM \
@@ -2068,7 +2068,7 @@ $(D)/mupen64aud: $(D)/bootstrap $(ARCHIVE)/$(MUPEN64AUD_SOURCE) $(D)/mupen64core
 	$(START_BUILD)
 	$(REMOVE)/mupen64aud-git-$(MUPEN64AUD_VER)
 	$(UNTAR)/$(MUPEN64AUD_SOURCE)
-	set -e; cd $(BUILD_TMP)/mupen64aud-git-$(MUPEN64AUD_VER); \
+	$(CHDIR)/mupen64aud-git-$(MUPEN64AUD_VER); \
 		$(BUILDENV) \
 		cd projects/unix/ && $(MAKE) \
 			CPU=ARM \
@@ -2099,7 +2099,7 @@ $(D)/mupen64inp: $(D)/bootstrap $(ARCHIVE)/$(MUPEN64INP_SOURCE) $(D)/mupen64core
 	$(START_BUILD)
 	$(REMOVE)/mupen64inp-git-$(MUPEN64INP_VER)
 	$(UNTAR)/$(MUPEN64INP_SOURCE)
-	set -e; cd $(BUILD_TMP)/mupen64inp-git-$(MUPEN64INP_VER); \
+	$(CHDIR)/mupen64inp-git-$(MUPEN64INP_VER); \
 		$(BUILDENV) \
 		cd projects/unix/ && $(MAKE) \
 			CPU=ARM \
