@@ -20,7 +20,7 @@ $(D)/directfb: $(D)/bootstrap $(ARCHIVE)/$(DIRECTFB_SOURCE)
 	$(REMOVE)/DirectFB-$(DIRECTFB_VER)
 	$(UNTAR)/$(DIRECTFB_SOURCE)
 	$(CHDIR)/DirectFB-$(DIRECTFB_VER); \
-		$(call apply_patches,$(DIRECTFB_PATCH)); \
+		$(call apply_patches, $(DIRECTFB_PATCH)); \
 		$(BUILDENV) \
 		autoreconf -fi $(SILENT_OPT); \
 		EGL_CFLAGS=-I$(TARGET_DIR)/usr/include/EGL -I$(TARGET_DIR)/usr/include/GLES2 \
@@ -71,7 +71,7 @@ $(D)/libsdl2: $(D)/bootstrap $(ARCHIVE)/$(LIBSDL2_SOURCE) $(KERNEL)
 	$(REMOVE)/SDL2-$(LIBSDL2_VER)
 	$(UNTAR)/$(LIBSDL2_SOURCE)
 	$(CHDIR)/SDL2-$(LIBSDL2_VER); \
-		$(call apply_patches,$(LIBSDL2_PATCH)); \
+		$(call apply_patches, $(LIBSDL2_PATCH)); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix=/usr \
@@ -113,7 +113,7 @@ $(D)/libsdl: $(D)/bootstrap $(ARCHIVE)/$(LIBSDL_SOURCE) $(KERNEL)
 	$(REMOVE)/SDL-$(LIBSDL_VER)
 	$(UNTAR)/$(LIBSDL_SOURCE)
 	$(CHDIR)/SDL-$(LIBSDL_VER); \
-		$(call apply_patches,$(LIBSDL_PATCH)); \
+		$(call apply_patches, $(LIBSDL_PATCH)); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix=/usr \
@@ -1559,7 +1559,7 @@ $(D)/pixman: $(ARCHIVE)/$(PIXMAN_SOURCE) $(D)/bootstrap $(D)/zlib $(D)/libpng
 	$(REMOVE)/pixman-$(PIXMAN_VER)
 	$(UNTAR)/$(PIXMAN_SOURCE)
 	$(CHDIR)/pixman-$(PIXMAN_VER); \
-		$(call apply_patches,$(PIXMAN_PATCH)); \
+		$(call apply_patches, $(PIXMAN_PATCH)); \
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--disable-gtk \
@@ -1599,7 +1599,7 @@ $(D)/cairo: $(ARCHIVE)/$(CAIRO_SOURCE) $(D)/bootstrap $(D)/fontconfig $(D)/libgl
 	$(REMOVE)/cairo-$(CAIRO_VER)
 	$(UNTAR)/$(CAIRO_SOURCE)
 	$(CHDIR)/cairo-$(CAIRO_VER); \
-		$(call apply_patches,$(CAIRO_PATCH)); \
+		$(call apply_patches, $(CAIRO_PATCH)); \
 		$(BUILDENV) \
 		ax_cv_c_float_words_bigendian="no" \
 		./configure $(SILENT_OPT) $(CONFIGURE_OPTS) \
@@ -1650,7 +1650,7 @@ $(D)/harfbuzz: $(ARCHIVE)/$(HARFBUZZ_SOURCE) $(D)/bootstrap $(D)/fontconfig $(D)
 	$(REMOVE)/harfbuzz-$(HARFBUZZ_VER)
 	$(UNTAR)/$(HARFBUZZ_SOURCE)
 	$(CHDIR)/harfbuzz-$(HARFBUZZ_VER); \
-		$(call apply_patches,$(HARFBUZZ_PATCH)); \
+		$(call apply_patches, $(HARFBUZZ_PATCH)); \
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--with-cairo \

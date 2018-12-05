@@ -1026,7 +1026,7 @@ $(D)/shairplay: libao $(D)/howl $(ARCHIVE)/$(SHAIRPLAY_SOURCE)
 	$(REMOVE)/shairplay-$(SHAIRPLAY_VER)
 	$(UNTAR)/$(SHAIRPLAY_SOURCE)
 	$(CHDIR)/shairplay-git-$(SHAIRPLAY_VER); \
-		$(call apply_patches,$(SHAIRPLAY_PATCH)); \
+		$(call apply_patches, $(SHAIRPLAY_PATCH)); \
 		for A in src/test/example.c src/test/main.c src/shairplay.c ; do sed -i "s#airport.key#/usr/share/shairplay/airport.key#" $$A ; done && \
 		autoreconf -fi $(SILENT_OPT); \
 		PKG_CONFIG=$(PKG_CONFIG) \
@@ -1958,7 +1958,7 @@ $(D)/iozone3: $(D)/bootstrap $(ARCHIVE)/$(IOZONE_SOURCE)
 	$(REMOVE)/iozone3_$(IOZONE_VER)
 	$(UNTAR)/$(IOZONE_SOURCE)
 	$(CHDIR)/iozone3_$(IOZONE_VER); \
-		$(call apply_patches,$(IOZONE_PATCH)); \
+		$(call apply_patches, $(IOZONE_PATCH)); \
 		sed -i -e "s/= gcc/= $(TARGET)-gcc/" src/current/makefile; \
 		sed -i -e "s/= cc/= $(TARGET)-cc/" src/current/makefile; \
 		cd src/current; \

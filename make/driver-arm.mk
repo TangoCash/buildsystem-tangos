@@ -121,7 +121,7 @@ $(D)/mali-gpu-modul: $(ARCHIVE)/$(EXTRA_MALI_MODULE_SRC) $(D)/bootstrap $(D)/ker
 	$(REMOVE)/$(EXTRA_MALI_MODULE_VER)
 	$(UNTAR)/$(EXTRA_MALI_MODULE_SRC)
 	$(CHDIR)/$(EXTRA_MALI_MODULE_VER); \
-		$(call apply_patches,$(EXTRA_MALI_MODULE_PATCH)); \
+		$(call apply_patches, $(EXTRA_MALI_MODULE_PATCH)); \
 		$(MAKE) -C $(KERNEL_DIR) ARCH=arm CROSS_COMPILE=$(TARGET)- \
 		M=$(BUILD_TMP)/$(EXTRA_MALI_MODULE_VER)/driver/src/devicedrv/mali \
 		EXTRA_CFLAGS="-DCONFIG_MALI_SHARED_INTERRUPTS=y \

@@ -66,7 +66,7 @@ $(D)/host_module_init_tools: $(D)/directories $(ARCHIVE)/$(HOST_MODULE_INIT_TOOL
 	$(REMOVE)/module-init-tools-$(HOST_MODULE_INIT_TOOLS_VER)
 	$(UNTAR)/$(HOST_MODULE_INIT_TOOLS_SOURCE)
 	$(CHDIR)/module-init-tools-$(HOST_MODULE_INIT_TOOLS_VER); \
-		$(call apply_patches,$(HOST_MODULE_INIT_TOOLS_PATCH)); \
+		$(call apply_patches, $(HOST_MODULE_INIT_TOOLS_PATCH)); \
 		autoreconf -fi $(SILENT_OPT); \
 		./configure $(SILENT_OPT) \
 			--prefix=$(HOST_DIR) \
@@ -89,7 +89,7 @@ $(D)/host_mtd_utils: $(D)/directories $(ARCHIVE)/$(HOST_MTD_UTILS_SOURCE)
 	$(REMOVE)/mtd-utils-$(HOST_MTD_UTILS_VER)
 	$(UNTAR)/$(HOST_MTD_UTILS_SOURCE)
 	$(CHDIR)/mtd-utils-$(HOST_MTD_UTILS_VER); \
-		$(call apply_patches,$(HOST_MTD_UTILS_PATCH)); \
+		$(call apply_patches, $(HOST_MTD_UTILS_PATCH)); \
 		$(MAKE) `pwd`/mkfs.jffs2 `pwd`/sumtool BUILDDIR=`pwd` WITHOUT_XATTR=1 DESTDIR=$(HOST_DIR); \
 		$(MAKE) install DESTDIR=$(HOST_DIR)/bin
 	$(REMOVE)/mtd-utils-$(HOST_MTD_UTILS_VER)
