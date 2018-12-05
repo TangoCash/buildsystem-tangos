@@ -156,7 +156,7 @@ $(D)/ncurses: $(D)/bootstrap $(ARCHIVE)/$(NCURSES_SOURCE)
 	$(REMOVE)/ncurses-$(NCURSES_VER)
 	$(UNTAR)/$(NCURSES_SOURCE)
 	set -e; cd $(BUILD_TMP)/ncurses-$(NCURSES_VER); \
-		$(call apply_patches,$(NCURSES_PATCH)); \
+		$(call apply_patches, $(NCURSES_PATCH)); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix=/usr \
@@ -249,7 +249,7 @@ $(D)/libffi: $(D)/bootstrap $(ARCHIVE)/$(LIBFFI_SOURCE)
 	$(REMOVE)/libffi-$(LIBFFI_VER)
 	$(UNTAR)/$(LIBFFI_SOURCE)
 	set -e; cd $(BUILD_TMP)/libffi-$(LIBFFI_VER); \
-		$(call apply_patches,$(LIBFFI_PATCH)); \
+		$(call apply_patches, $(LIBFFI_PATCH)); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix=/usr \
@@ -314,7 +314,7 @@ $(D)/libglib2: $(D)/bootstrap $(D)/host_libglib2_genmarshal $(D)/zlib $(D)/libff
 		echo "ac_cv_func_posix_getgrgid_r=yes" >> config.cache; \
 		echo "glib_cv_stack_grows=no" >> config.cache; \
 		echo "glib_cv_uscore=no" >> config.cache; \
-		$(call apply_patches,$(LIBGLIB2_PATCH)); \
+		$(call apply_patches, $(LIBGLIB2_PATCH)); \
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--enable-static \
@@ -374,7 +374,7 @@ $(D)/libpcre: $(D)/bootstrap $(ARCHIVE)/$(LIBPCRE_SOURCE)
 		; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-		mv $(TARGET_DIR)/usr/bin/pcre-config $(HOST_DIR)/bin/pcre-config
+	mv $(TARGET_DIR)/usr/bin/pcre-config $(HOST_DIR)/bin/pcre-config
 	$(REWRITE_PKGCONF) $(HOST_DIR)/bin/pcre-config
 	$(REWRITE_LIBTOOL)/libpcre.la
 	$(REWRITE_LIBTOOL)/libpcrecpp.la
@@ -496,7 +496,7 @@ $(D)/openssl: $(D)/bootstrap $(ARCHIVE)/$(OPENSSL_SOURCE)
 	$(REMOVE)/openssl-$(OPENSSL_VER)
 	$(UNTAR)/$(OPENSSL_SOURCE)
 	set -e; cd $(BUILD_TMP)/openssl-$(OPENSSL_VER); \
-		$(call apply_patches,$(OPENSSL_PATCH)); \
+		$(call apply_patches, $(OPENSSL_PATCH)); \
 		$(BUILDENV) \
 		./Configure $(SILENT_OPT) \
 			-DL_ENDIAN \
@@ -535,7 +535,7 @@ $(D)/libbluray: $(D)/bootstrap $(ARCHIVE)/$(LIBBLURAY_SOURCE)
 	$(REMOVE)/libbluray-$(LIBBLURAY_VER)
 	$(UNTAR)/$(LIBBLURAY_SOURCE)
 	set -e; cd $(BUILD_TMP)/libbluray-$(LIBBLURAY_VER); \
-		$(call apply_patches,$(LIBBLURAY_PATCH)); \
+		$(call apply_patches, $(LIBBLURAY_PATCH)); \
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--enable-shared \
@@ -581,7 +581,7 @@ $(D)/lua: $(D)/bootstrap $(D)/ncurses $(ARCHIVE)/$(LUAPOSIX_SOURCE) $(ARCHIVE)/$
 	mkdir -p $(TARGET_DIR)/usr/share/lua/$(LUA_VER_SHORT)
 	$(UNTAR)/$(LUA_SOURCE)
 	set -e; cd $(BUILD_TMP)/lua-$(LUA_VER); \
-		$(call apply_patches,$(LUAPOSIX_PATCH)); \
+		$(call apply_patches, $(LUAPOSIX_PATCH)); \
 		tar xf $(ARCHIVE)/$(LUAPOSIX_SOURCE); \
 		cd luaposix-git-$(LUAPOSIX_VER)/ext; cp posix/posix.c include/lua52compat.h ../../src/; cd ../..; \
 		cd luaposix-git-$(LUAPOSIX_VER)/lib; cp *.lua $(TARGET_DIR)/usr/share/lua/$(LUA_VER_SHORT); cd ../..; \
@@ -631,7 +631,7 @@ $(D)/luaexpat: $(D)/bootstrap $(D)/lua $(D)/expat $(ARCHIVE)/$(LUAEXPAT_SOURCE)
 	$(REMOVE)/luaexpat-$(LUAEXPAT_VER)
 	$(UNTAR)/$(LUAEXPAT_SOURCE)
 	set -e; cd $(BUILD_TMP)/luaexpat-$(LUAEXPAT_VER); \
-		$(call apply_patches,$(LUAEXPAT_PATCH)); \
+		$(call apply_patches, $(LUAEXPAT_PATCH)); \
 		$(MAKE) CC=$(TARGET)-gcc LDFLAGS="-L$(TARGET_DIR)/usr/lib" PREFIX=$(TARGET_DIR)/usr; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)/usr
 	$(REMOVE)/luaexpat-$(LUAEXPAT_VER)
@@ -693,7 +693,7 @@ $(D)/luasoap: $(D)/bootstrap $(D)/lua $(D)/luasocket $(D)/luaexpat $(ARCHIVE)/$(
 	$(REMOVE)/luasoap-$(LUASOAP_VER)
 	$(UNTAR)/$(LUASOAP_SOURCE)
 	set -e; cd $(BUILD_TMP)/luasoap-$(LUASOAP_VER); \
-		$(call apply_patches,$(LUASOAP_PATCH)); \
+		$(call apply_patches, $(LUASOAP_PATCH)); \
 		$(MAKE) install LUA_DIR=$(TARGET_DIR)/usr/share/lua/$(LUA_VER_SHORT)
 	$(REMOVE)/luasoap-$(LUASOAP_VER)
 	$(TOUCH)
@@ -728,7 +728,7 @@ $(D)/boost: $(D)/bootstrap $(ARCHIVE)/$(BOOST_SOURCE)
 	$(REMOVE)/boost_$(BOOST_VER)
 	$(UNTAR)/$(BOOST_SOURCE)
 	set -e; cd $(BUILD_TMP)/boost_$(BOOST_VER); \
-		$(call apply_patches,$(BOOST_PATCH)); \
+		$(call apply_patches, $(BOOST_PATCH)); \
 		rm -rf $(TARGET_DIR)/usr/include/boost; \
 		mv $(BUILD_TMP)/boost_$(BOOST_VER)/boost $(TARGET_DIR)/usr/include/boost
 	$(REMOVE)/boost_$(BOOST_VER)
@@ -749,7 +749,7 @@ $(D)/zlib: $(D)/bootstrap $(ARCHIVE)/$(ZLIB_SOURCE)
 	$(REMOVE)/zlib-$(ZLIB_VER)
 	$(UNTAR)/$(ZLIB_SOURCE)
 	set -e; cd $(BUILD_TMP)/zlib-$(ZLIB_VER); \
-		$(call apply_patches,$(ZLIB_Patch)); \
+		$(call apply_patches, $(ZLIB_Patch)); \
 		CC=$(TARGET)-gcc mandir=$(TARGET_DIR)/.remove CFLAGS="$(TARGET_CFLAGS)" \
 		./configure $(SILENT_OPT) \
 			--prefix=/usr \
@@ -778,7 +778,7 @@ $(D)/bzip2: $(D)/bootstrap $(ARCHIVE)/$(BZIP2_SOURCE)
 	$(REMOVE)/bzip2-$(BZIP2_VER)
 	$(UNTAR)/$(BZIP2_SOURCE)
 	set -e; cd $(BUILD_TMP)/bzip2-$(BZIP2_VER); \
-		$(call apply_patches,$(BZIP2_Patch)); \
+		$(call apply_patches, $(BZIP2_Patch)); \
 		mv Makefile-libbz2_so Makefile; \
 		$(MAKE) all CC=$(TARGET)-gcc AR=$(TARGET)-ar RANLIB=$(TARGET)-ranlib; \
 		$(MAKE) install PREFIX=$(TARGET_DIR)/usr
@@ -836,7 +836,7 @@ $(D)/freetype: $(D)/bootstrap $(D)/zlib $(D)/libpng $(ARCHIVE)/$(FREETYPE_SOURCE
 	$(REMOVE)/freetype-$(FREETYPE_VER)
 	$(UNTAR)/$(FREETYPE_SOURCE)
 	set -e; cd $(BUILD_TMP)/freetype-$(FREETYPE_VER); \
-		$(call apply_patches,$(FREETYPE_PATCH)); \
+		$(call apply_patches, $(FREETYPE_PATCH)); \
 		sed -r "s:.*(#.*SUBPIXEL_(RENDERING|HINTING  2)) .*:\1:g" \
 			-i include/freetype/config/ftoption.h; \
 		sed -i '/^FONT_MODULES += \(type1\|cid\|pfr\|type42\|pcf\|bdf\|winfonts\|cff\)/d' modules.cfg; \
@@ -895,7 +895,7 @@ $(D)/lirc: $(D)/bootstrap $(ARCHIVE)/$(LIRC_SOURCE)
 	$(REMOVE)/lirc-$(LIRC_VER)
 	$(UNTAR)/$(LIRC_SOURCE)
 	set -e; cd $(BUILD_TMP)/lirc-$(LIRC_VER); \
-		$(call apply_patches,$(LIRC_PATCH)); \
+		$(call apply_patches, $(LIRC_PATCH)); \
 		$(CONFIGURE) \
 		ac_cv_path_LIBUSB_CONFIG= \
 		CFLAGS="$(TARGET_CFLAGS) $(LIRC_OPTS)" \
@@ -937,7 +937,7 @@ $(D)/jpeg: $(D)/bootstrap $(ARCHIVE)/$(JPEG_SOURCE)
 	$(REMOVE)/jpeg-$(JPEG_VER)
 	$(UNTAR)/$(JPEG_SOURCE)
 	set -e; cd $(BUILD_TMP)/jpeg-$(JPEG_VER); \
-		$(call apply_patches,$(JPEG_PATCH)); \
+		$(call apply_patches, $(JPEG_PATCH)); \
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--mandir=/.remove \
@@ -975,7 +975,7 @@ $(D)/libjpeg_turbo2: $(D)/bootstrap $(ARCHIVE)/$(LIBJPEG_TURBO2_SOURCE)
 	$(REMOVE)/libjpeg-turbo-$(LIBJPEG_TURBO2_VER)
 	$(UNTAR)/$(LIBJPEG_TURBO2_SOURCE)
 	set -e; cd $(BUILD_TMP)/libjpeg-turbo-$(LIBJPEG_TURBO2_VER); \
-		$(call apply_patches,$(LIBJPEG_TURBO2_PATCH)); \
+		$(call apply_patches, $(LIBJPEG_TURBO2_PATCH)); \
 		$(CMAKE) -DWITH_SIMD=False ; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -1043,7 +1043,7 @@ $(D)/libpng: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/$(LIBPNG_SOURCE)
 	$(REMOVE)/libpng-$(LIBPNG_VER)
 	$(UNTAR)/$(LIBPNG_SOURCE)
 	set -e; cd $(BUILD_TMP)/libpng-$(LIBPNG_VER); \
-		$(call apply_patches,$(LIBPNG_PATCH)); \
+		$(call apply_patches, $(LIBPNG_PATCH)); \
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--disable-mips-msa \
@@ -1154,7 +1154,7 @@ $(D)/libcurl: $(D)/bootstrap $(D)/zlib $(D)/openssl $(D)/ca-bundle $(ARCHIVE)/$(
 	$(REMOVE)/curl-$(LIBCURL_VER)
 	$(UNTAR)/$(LIBCURL_SOURCE)
 	set -e; cd $(BUILD_TMP)/curl-$(LIBCURL_VER); \
-		$(call apply_patches,$(LIBCURL_PATCH)); \
+		$(call apply_patches, $(LIBCURL_PATCH)); \
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--mandir=/.remove \
@@ -1205,7 +1205,7 @@ $(D)/libfribidi: $(D)/bootstrap $(ARCHIVE)/$(LIBFRIBIDI_SOURCE)
 	$(REMOVE)/fribidi-$(LIBFRIBIDI_VER)
 	$(UNTAR)/$(LIBFRIBIDI_SOURCE)
 	set -e; cd $(BUILD_TMP)/fribidi-$(LIBFRIBIDI_VER); \
-		$(call apply_patches,$(LIBFRIBIDI_PATCH)); \
+		$(call apply_patches, $(LIBFRIBIDI_PATCH)); \
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--mandir=/.remove \
@@ -1273,7 +1273,7 @@ $(D)/libmad: $(D)/bootstrap $(ARCHIVE)/$(LIBMAD_SOURCE)
 	$(REMOVE)/libmad-$(LIBMAD_VER)
 	$(UNTAR)/$(LIBMAD_SOURCE)
 	set -e; cd $(BUILD_TMP)/libmad-$(LIBMAD_VER); \
-		$(call apply_patches,$(LIBMAD_PATCH)); \
+		$(call apply_patches, $(LIBMAD_PATCH)); \
 		touch NEWS AUTHORS ChangeLog; \
 		autoreconf -fi $(SILENT_OPT); \
 		$(CONFIGURE) \
@@ -1305,7 +1305,7 @@ $(D)/libid3tag: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/$(LIBID3TAG_SOURCE)
 	$(REMOVE)/libid3tag-$(LIBID3TAG_VER)
 	$(UNTAR)/$(LIBID3TAG_SOURCE)
 	set -e; cd $(BUILD_TMP)/libid3tag-$(LIBID3TAG_VER); \
-		$(call apply_patches,$(LIBID3TAG_PATCH)); \
+		$(call apply_patches, $(LIBID3TAG_PATCH)); \
 		touch NEWS AUTHORS ChangeLog; \
 		autoreconf -fi $(SILENT_OPT); \
 		$(CONFIGURE) \
@@ -1334,7 +1334,7 @@ $(D)/flac: $(D)/bootstrap $(ARCHIVE)/$(FLAC_SOURCE)
 	$(REMOVE)/flac-$(FLAC_VER)
 	$(UNTAR)/$(FLAC_SOURCE)
 	set -e; cd $(BUILD_TMP)/flac-$(FLAC_VER); \
-		$(call apply_patches,$(FLAC_PATCH)); \
+		$(call apply_patches, $(FLAC_PATCH)); \
 		touch NEWS AUTHORS ChangeLog; \
 		autoreconf -fi $(SILENT_OPT); \
 		$(CONFIGURE) \
@@ -1440,7 +1440,7 @@ $(D)/libvorbisidec: $(D)/bootstrap $(D)/libogg $(ARCHIVE)/$(LIBVORBISIDEC_SOURCE
 	$(REMOVE)/libvorbisidec-$(LIBVORBISIDEC_VER)
 	$(UNTAR)/$(LIBVORBISIDEC_SOURCE)
 	set -e; cd $(BUILD_TMP)/libvorbisidec-$(LIBVORBISIDEC_VER); \
-		$(call apply_patches,$(LIBVORBISIDEC_PATCH)); \
+		$(call apply_patches, $(LIBVORBISIDEC_PATCH)); \
 		ACLOCAL_FLAGS="-I . -I $(TARGET_DIR)/usr/share/aclocal" \
 		$(BUILDENV) \
 		./autogen.sh $(SILENT_OPT) \
@@ -1709,7 +1709,7 @@ $(D)/libdvdnav: $(D)/bootstrap $(D)/libdvdread $(ARCHIVE)/$(LIBDVDNAV_SOURCE)
 	$(REMOVE)/libdvdnav-$(LIBDVDNAV_VER)
 	$(UNTAR)/$(LIBDVDNAV_SOURCE)
 	set -e; cd $(BUILD_TMP)/libdvdnav-$(LIBDVDNAV_VER); \
-		$(call apply_patches,$(LIBDVDNAV_PATCH)); \
+		$(call apply_patches, $(LIBDVDNAV_PATCH)); \
 		$(BUILDENV) \
 		libtoolize --copy --force --quiet --ltdl; \
 		./autogen.sh \
@@ -1743,7 +1743,7 @@ $(D)/libdvdread: $(D)/bootstrap $(ARCHIVE)/$(LIBDVDREAD_SOURCE)
 	$(REMOVE)/libdvdread-$(LIBDVDREAD_VER)
 	$(UNTAR)/$(LIBDVDREAD_SOURCE)
 	set -e; cd $(BUILD_TMP)/libdvdread-$(LIBDVDREAD_VER); \
-		$(call apply_patches,$(LIBDVDREAD_PATCH)); \
+		$(call apply_patches, $(LIBDVDREAD_PATCH)); \
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--enable-static \
@@ -1770,7 +1770,7 @@ $(D)/libdreamdvd: $(D)/bootstrap $(D)/libdvdnav
 		fi
 	cp -ra $(ARCHIVE)/libdreamdvd.git $(BUILD_TMP)/libdreamdvd
 	set -e; cd $(BUILD_TMP)/libdreamdvd; \
-		$(call apply_patches,$(LIBDREAMDVD_PATCH)); \
+		$(call apply_patches, $(LIBDREAMDVD_PATCH)); \
 		$(BUILDENV) \
 		libtoolize --copy --ltdl --force --quiet; \
 		autoreconf --verbose --force --install; \
@@ -1801,7 +1801,7 @@ $(D)/libass: $(D)/bootstrap $(D)/freetype $(D)/libfribidi $(ARCHIVE)/$(LIBASS_SO
 	$(REMOVE)/libass-$(LIBASS_VER)
 	$(UNTAR)/$(LIBASS_SOURCE)
 	set -e; cd $(BUILD_TMP)/libass-$(LIBASS_VER); \
-		$(call apply_patches,$(LIBASS_PATCH)); \
+		$(call apply_patches, $(LIBASS_PATCH)); \
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--disable-static \
@@ -1895,7 +1895,7 @@ $(D)/libxml2: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/$(LIBXML2_SOURCE)
 	$(REMOVE)/libxml2-$(LIBXML2_VER).tar.gz
 	$(UNTAR)/$(LIBXML2_SOURCE)
 	set -e; cd $(BUILD_TMP)/libxml2-$(LIBXML2_VER); \
-		$(call apply_patches,$(LIBXML2_PATCH)); \
+		$(call apply_patches, $(LIBXML2_PATCH)); \
 		autoreconf -fi $(SILENT_OPT); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
@@ -2037,7 +2037,7 @@ $(D)/pugixml: $(D)/bootstrap $(ARCHIVE)/$(PUGIXML_SOURCE)
 	$(REMOVE)/pugixml-$(PUGIXML_VER)
 	$(UNTAR)/$(PUGIXML_SOURCE)
 	set -e; cd $(BUILD_TMP)/pugixml-$(PUGIXML_VER); \
-		$(call apply_patches,$(PUGIXML_PATCH)); \
+		$(call apply_patches, $(PUGIXML_PATCH)); \
 		$(CMAKE) ; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -2064,7 +2064,7 @@ $(D)/graphlcd: $(D)/bootstrap $(D)/freetype $(D)/libusb $(ARCHIVE)/$(GRAPHLCD_SO
 	$(REMOVE)/graphlcd-git-$(GRAPHLCD_VER)
 	$(UNTAR)/$(GRAPHLCD_SOURCE)
 	set -e; cd $(BUILD_TMP)/graphlcd-git-$(GRAPHLCD_VER); \
-		$(call apply_patches,$(GRAPHLCD_PATCH)); \
+		$(call apply_patches, $(GRAPHLCD_PATCH)); \
 		$(MAKE) -C glcdgraphics all TARGET=$(TARGET)- DESTDIR=$(TARGET_DIR); \
 		$(MAKE) -C glcddrivers all TARGET=$(TARGET)- DESTDIR=$(TARGET_DIR); \
 		$(MAKE) -C glcdgraphics install DESTDIR=$(TARGET_DIR); \
@@ -2089,7 +2089,7 @@ $(D)/libdpf: $(D)/bootstrap $(D)/libusb_compat $(ARCHIVE)/$(LIBDPF_SOURCE)
 	$(REMOVE)/dpf-ax-git-$(LIBDPF_VER)
 	$(UNTAR)/$(LIBDPF_SOURCE)
 	set -e; cd $(BUILD_TMP)/dpf-ax-git-$(LIBDPF_VER)/dpflib; \
-		$(call apply_patches,$(LIBDPF_PATCH)); \
+		$(call apply_patches, $(LIBDPF_PATCH)); \
 		make libdpf.a CC=$(TARGET)-gcc PREFIX=$(TARGET_DIR)/usr; \
 		mkdir -p $(TARGET_INCLUDE_DIR)/libdpf; \
 		cp dpf.h $(TARGET_INCLUDE_DIR)/libdpf/libdpf.h; \
@@ -2119,7 +2119,7 @@ $(D)/lcd4linux: $(D)/bootstrap $(D)/libusb_compat $(D)/gd $(D)/libusb $(D)/libdp
 	$(REMOVE)/lcd4linux-git-$(LCD4LINUX_VER)
 	$(UNTAR)/$(LCD4LINUX_SOURCE)
 	set -e; cd $(BUILD_TMP)/lcd4linux-git-$(LCD4LINUX_VER); \
-		$(call apply_patches,$(LCD4LINUX_PATCH)); \
+		$(call apply_patches, $(LCD4LINUX_PATCH)); \
 		$(BUILDENV) ./bootstrap $(SILENT_OPT); \
 		$(BUILDENV) ./configure $(CONFIGURE_OPTS) $(SILENT_OPT) \
 			--prefix=/usr \
@@ -2181,7 +2181,7 @@ $(D)/libusb: $(D)/bootstrap $(ARCHIVE)/$(LIBUSB_SOURCE)
 	$(REMOVE)/libusb-$(LIBUSB_VER)
 	$(UNTAR)/$(LIBUSB_SOURCE)
 	set -e; cd $(BUILD_TMP)/libusb-$(LIBUSB_VER); \
-		$(call apply_patches,$(LIBUSB_PATCH)); \
+		$(call apply_patches, $(LIBUSB_PATCH)); \
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--enable-static \
@@ -2241,7 +2241,7 @@ $(D)/alsa_lib: $(D)/bootstrap $(ARCHIVE)/$(ALSA_LIB_SOURCE)
 	$(REMOVE)/alsa-lib-$(ALSA_LIB_VER)
 	$(UNTAR)/$(ALSA_LIB_SOURCE)
 	set -e; cd $(BUILD_TMP)/alsa-lib-$(ALSA_LIB_VER); \
-		$(call apply_patches,$(ALSA_LIB_PATCH)); \
+		$(call apply_patches, $(ALSA_LIB_PATCH)); \
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--with-alsa-devdir=/dev/snd/ \
@@ -2319,7 +2319,7 @@ $(D)/libopenthreads: $(D)/bootstrap $(ARCHIVE)/$(LIBOPENTHREADS_SOURCE)
 	$(REMOVE)/OpenThreads-$(LIBOPENTHREADS_VER)
 	$(UNTAR)/$(LIBOPENTHREADS_SOURCE)
 	set -e; cd $(BUILD_TMP)/OpenThreads-$(LIBOPENTHREADS_VER); \
-		$(call apply_patches,$(LIBOPENTHREADS_PATCH)); \
+		$(call apply_patches, $(LIBOPENTHREADS_PATCH)); \
 		$(CMAKE) -D_OPENTHREADS_ATOMIC_USE_GCC_BUILTINS_EXITCODE=1; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -2344,7 +2344,7 @@ $(D)/librtmp: $(D)/bootstrap $(D)/zlib $(D)/openssl $(ARCHIVE)/$(LIBRTMP_SOURCE)
 	$(REMOVE)/rtmpdump-git-$(LIBRTMP_VER)
 	$(UNTAR)/$(LIBRTMP_SOURCE)
 	set -e; cd $(BUILD_TMP)/rtmpdump-git-$(LIBRTMP_VER); \
-		$(call apply_patches,$(LIBRTMP_PATCH)); \
+		$(call apply_patches, $(LIBRTMP_PATCH)); \
 		$(MAKE) CROSS_COMPILE=$(TARGET)- XCFLAGS="-I$(TARGET_INCLUDE_DIR) -L$(TARGET_LIB_DIR)" LDFLAGS="-L$(TARGET_LIB_DIR)"; \
 		$(MAKE) install prefix=/usr DESTDIR=$(TARGET_DIR) MANDIR=$(TARGET_DIR)/.remove
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/librtmp.pc
@@ -2368,7 +2368,7 @@ $(D)/libdvbsi: $(D)/bootstrap $(ARCHIVE)/$(LIBDVBSI_SOURCE)
 	$(REMOVE)/libdvbsi-git-$(LIBDVBSI_VER)
 	$(UNTAR)/$(LIBDVBSI_SOURCE)
 	set -e; cd $(BUILD_TMP)/libdvbsi-git-$(LIBDVBSI_VER); \
-		$(call apply_patches,$(LIBDVBSI_PATCH)); \
+		$(call apply_patches, $(LIBDVBSI_PATCH)); \
 		$(CONFIGURE) \
 			--prefix=/usr \
 		; \
@@ -2443,7 +2443,7 @@ $(D)/minidlna: $(D)/bootstrap $(D)/zlib $(D)/sqlite $(D)/libexif $(D)/libjpeg $(
 	$(REMOVE)/minidlna-$(MINIDLNA_VER)
 	$(UNTAR)/$(MINIDLNA_SOURCE)
 	set -e; cd $(BUILD_TMP)/minidlna-$(MINIDLNA_VER); \
-		$(call apply_patches,$(MINIDLNA_PATCH)); \
+		$(call apply_patches, $(MINIDLNA_PATCH)); \
 		autoreconf -fi $(SILENT_OPT); \
 		$(CONFIGURE) \
 			--prefix=/usr \
@@ -2499,7 +2499,7 @@ $(D)/djmount: $(D)/bootstrap $(D)/fuse $(ARCHIVE)/$(DJMOUNT_SOURCE)
 	$(UNTAR)/$(DJMOUNT_SOURCE)
 	set -e; cd $(BUILD_TMP)/djmount-$(DJMOUNT_VER); \
 		touch libupnp/config.aux/config.rpath; \
-		$(call apply_patches,$(DJMOUNT_PATCH)); \
+		$(call apply_patches, $(DJMOUNT_PATCH)); \
 		autoreconf -fi $(SILENT_OPT); \
 		$(CONFIGURE) -C \
 			--prefix=/usr \
@@ -2706,7 +2706,7 @@ $(D)/nettle: $(D)/bootstrap $(D)/gmp $(ARCHIVE)/$(NETTLE_SOURCE)
 	$(REMOVE)/nettle-$(NETTLE_VER)
 	$(UNTAR)/$(NETTLE_SOURCE)
 	set -e; cd $(BUILD_TMP)/nettle-$(NETTLE_VER); \
-		$(call apply_patches,$(NETTLE_PATCH)); \
+		$(call apply_patches, $(NETTLE_PATCH)); \
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--disable-documentation \
