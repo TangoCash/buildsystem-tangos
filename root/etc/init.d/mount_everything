@@ -24,7 +24,7 @@ for device in $devices; do
          fi
       ;;
       hdd|HDD|MEDIA|record|RECORD|VIDEO_DISC)
-         if [ `awk '{print $2}' /proc/mounts | grep -c /hdd` -eq 0 ]; then
+         if [ `awk '{print $2}' /proc/mounts | grep -c /media/hdd` -eq 0 ]; then
            case $TYPE in
               vfat) mount -t $TYPE -o defaults,noatime,nodiratime,rw /dev/$device /media/hdd;;
               *) mount -t auto -o defaults,noatime,nodiratime,rw /dev/$device /media/hdd

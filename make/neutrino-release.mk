@@ -536,22 +536,25 @@ endif
 neutrino-mp-release-base:
 	rm -rf $(RELEASE_DIR) || true
 	install -d $(RELEASE_DIR)
-	install -d $(RELEASE_DIR)/{autofs,bin,boot,dev,dev.static,etc,hdd,lib,media,mnt,proc,ram,root,sbin,swap,sys,tmp,usr,var}
+	install -d $(RELEASE_DIR)/{autofs,bin,boot,dev,dev.static,etc,lib,media,proc,ram,root,sbin,swap,sys,tmp,usr,var}
 	install -d $(RELEASE_DIR)/etc/{init.d,network,mdev,ssl}
 	install -d $(RELEASE_DIR)/etc/network/if-{post-{up,down},pre-{up,down},up,down}.d
 	install -d $(RELEASE_DIR)/lib/{modules,udev,firmware,tuxbox}
 	install -d $(RELEASE_DIR)/lib/tuxbox/plugins
-	install -d $(RELEASE_DIR)/media/{dvd,nfs,usb,sda1,sdb1}
-	ln -sf /hdd $(RELEASE_DIR)/media/hdd
-	install -d $(RELEASE_DIR)/mnt/{hdd,nfs,usb}
-	install -d $(RELEASE_DIR)/mnt/mnt{0..7}
+	install -d $(RELEASE_DIR)/media/{hdd,nfs,usb,mnt}
+	install -d $(RELEASE_DIR)/media/mnt/{hdd,nfs,usb}
+	install -d $(RELEASE_DIR)/media/mnt/mnt{0..7}
+	ln -sf /media/hdd $(RELEASE_DIR)/hdd
+	ln -sf /media/mnt $(RELEASE_DIR)/mnt
 	install -d $(RELEASE_DIR)/usr/{bin,lib,sbin,share}
 	install -d $(RELEASE_DIR)/usr/lib/tuxbox/{luaplugins,plugins}
 	install -d $(RELEASE_DIR)/usr/share/{fonts,tuxbox,udhcpc,zoneinfo,lua}
 	install -d $(RELEASE_DIR)/usr/share/tuxbox/neutrino
 	install -d $(RELEASE_DIR)/usr/share/tuxbox/neutrino/icons/logo
+	install -d $(RELEASE_DIR)/usr/share/tuxbox/neutrino/icons/logo/events
 	install -d $(RELEASE_DIR)/usr/share/lua/5.2
-	install -d $(RELEASE_DIR)/var/{bin,boot,emu,etc,epg,httpd,keys,lib,logos,net,tuxbox,update}
+	install -d $(RELEASE_DIR)/var/{bin,boot,emu,etc,epg,httpd,keys,lib,net,tuxbox,update}
+	ln -sf /tmp $(RELEASE_DIR)/var/mnt
 	install -d $(RELEASE_DIR)/var/lib/{nfs,modules}
 	install -d $(RELEASE_DIR)/var/net/epg
 	install -d $(RELEASE_DIR)/var/tuxbox/{config,fonts,locale,plugins,themes}
@@ -566,6 +569,7 @@ neutrino-mp-release-base:
 	ln -s ../init.d/umountfs $(RELEASE_DIR)/etc/rc.d/rc6.d/S40umountfs
 	ln -s ../init.d/reboot $(RELEASE_DIR)/etc/rc.d/rc6.d/S90reboot
 	ln -sf /usr/share/tuxbox/neutrino/icons/logo $(RELEASE_DIR)/logos
+	ln -sf /usr/share/tuxbox/neutrino/icons/logo $(RELEASE_DIR)/var/logos
 	ln -sf /usr/share/tuxbox/neutrino/icons/logo $(RELEASE_DIR)/var/httpd/logos
 	ln -sf /usr/share $(RELEASE_DIR)/share
 	touch $(RELEASE_DIR)/var/etc/.firstboot
@@ -586,12 +590,12 @@ neutrino-mp-release-base:
 	cp -aR $(SKEL_ROOT)/etc/mdev_$(BOXARCH).conf $(RELEASE_DIR)/etc/mdev.conf
 	cp -aR $(SKEL_ROOT)/usr/share/udhcpc/* $(RELEASE_DIR)/usr/share/udhcpc/
 	cp -aR $(SKEL_ROOT)/usr/share/zoneinfo/* $(RELEASE_DIR)/usr/share/zoneinfo/
-	cp $(SKEL_ROOT)/bin/autologin $(RELEASE_DIR)/bin/
-	cp $(SKEL_ROOT)/bin/vdstandby $(RELEASE_DIR)/bin/
-	cp $(SKEL_ROOT)/usr/sbin/fw_printenv $(RELEASE_DIR)/usr/sbin/
-	cp $(SKEL_ROOT)/etc/init.d/mount_everything $(TARGET_DIR)/etc/init.d/
-	cp $(SKEL_ROOT)/etc/init.d/mount_before $(TARGET_DIR)/etc/init.d/
-	cp -aR $(TARGET_DIR)/etc/init.d/* $(RELEASE_DIR)/etc/init.d/
+	install -m 0755 $(SKEL_ROOT)/bin/autologin $(RELEASE_DIR)/bin/
+	install -m 0755 $(SKEL_ROOT)/bin/vdstandby $(RELEASE_DIR)/bin/
+	install -m 0755 $(SKEL_ROOT)/usr/sbin/fw_printenv $(RELEASE_DIR)/usr/sbin/
+	install -m 0755 $(SKEL_ROOT)/etc/init.d/mount_everything $(TARGET_DIR)/etc/init.d/
+	install -m 0755 $(SKEL_ROOT)/etc/init.d/mount_before $(TARGET_DIR)/etc/init.d/
+	install -m 0755 $(TARGET_DIR)/etc/init.d/* $(RELEASE_DIR)/etc/init.d/
 	cp -aR $(TARGET_DIR)/etc/* $(RELEASE_DIR)/etc/
 	echo "$(BOXTYPE)" > $(RELEASE_DIR)/etc/hostname
 	ln -sf ../../bin/busybox $(RELEASE_DIR)/usr/bin/ether-wake
