@@ -226,6 +226,29 @@ $(D)/neutrino-mp-plugin-iptvplayer: $(D)/librtmp $(D)/python_twisted_small
 	$(TOUCH)
 
 #
+# fred_feuerstein's channellogos
+#
+$(D)/neutrino-mp-plugin-channellogos:
+	$(START_BUILD)
+	$(REMOVE)/channellogos
+	set -e; if [ -d $(ARCHIVE)/channellogos.git ]; \
+		then cd $(ARCHIVE)/channellogos.git; git pull; \
+		else cd $(ARCHIVE); git clone https://bitbucket.org/neutrino-images/ni-logo-stuff.git channellogos.git; \
+		fi
+	cp -ra $(ARCHIVE)/channellogos.git $(BUILD_TMP)/channellogos
+	rm -rf $(TARGET_DIR)/usr/share/tuxbox/neutrino/icons/logo
+	install -d $(TARGET_DIR)/usr/share/tuxbox/neutrino/icons/logo
+	install -m 0644 $(BUILD_TMP)/channellogos/logos/* $(TARGET_DIR)/usr/share/tuxbox/neutrino/icons/logo
+	install -d $(TARGET_DIR)/usr/share/tuxbox/neutrino/icons/logo/events
+	install -m 0644 $(BUILD_TMP)/channellogos/logos-events/* $(TARGET_DIR)/usr/share/tuxbox/neutrino/icons/logo/events
+	cd $(BUILD_TMP)/channellogos/logo-links && \
+		./logo-linker.sh logo-links.db $(TARGET_DIR)/usr/share/tuxbox/neutrino/icons/logo
+	install -d $(TARGET_DIR)/lib/tuxbox/plugins
+	cp -a $(BUILD_TMP)/channellogos/logo-addon/* $(TARGET_DIR)/lib/tuxbox/plugins/
+	$(REMOVE)/channellogos
+	$(TOUCH)
+
+#
 # neutrino-hd2 plugins
 #
 NEUTRINO_HD2_PLUGINS_PATCHES =
