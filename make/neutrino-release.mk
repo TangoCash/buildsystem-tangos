@@ -804,6 +804,9 @@ endif
 # httpd/icons/locale/themes
 #
 	cp -aR $(TARGET_DIR)/usr/share/tuxbox/neutrino/* $(RELEASE_DIR)/usr/share/tuxbox/neutrino
+ifeq ($(EXTERNAL_LCD), lcd4linux)
+	cp -aR $(TARGET_DIR)/usr/share/lcd $(RELEASE_DIR)/usr/share
+endif
 #
 # alsa
 #

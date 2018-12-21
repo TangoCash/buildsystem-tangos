@@ -249,6 +249,23 @@ $(D)/neutrino-mp-plugin-channellogos:
 	$(TOUCH)
 
 #
+# annie's lcd4linux skins
+#
+$(D)/neutrino-mp-plugin-l4l-skins:
+	$(START_BUILD)
+	$(REMOVE)/l4l-skins
+	set -e; if [ -d $(ARCHIVE)/l4l-skins.git ]; \
+		then cd $(ARCHIVE)/l4l-skins.git; git pull; \
+		else cd $(ARCHIVE); git clone https://github.com/horsti58/SamsungLCD4Linux.git l4l-skins.git; \
+		fi
+	cp -ra $(ARCHIVE)/l4l-skins.git $(BUILD_TMP)/l4l-skins
+	install -m 0600 $(BUILD_TMP)/l4l-skins/etc/lcd4linux.conf $(TARGET_DIR)/etc
+	install -d $(TARGET_DIR)/usr/share/lcd/icons
+	cp -aR $(BUILD_TMP)/l4l-skins/share/* $(TARGET_DIR)/usr/share
+	$(REMOVE)/l4l-skins
+	$(TOUCH)
+
+#
 # neutrino-hd2 plugins
 #
 NEUTRINO_HD2_PLUGINS_PATCHES =
