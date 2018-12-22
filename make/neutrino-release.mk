@@ -536,15 +536,13 @@ endif
 neutrino-mp-release-base:
 	rm -rf $(RELEASE_DIR) || true
 	install -d $(RELEASE_DIR)
-	install -d $(RELEASE_DIR)/{autofs,bin,boot,dev,dev.static,etc,lib,media,proc,ram,root,sbin,swap,sys,tmp,usr,var}
+	install -d $(RELEASE_DIR)/{autofs,bin,boot,dev,dev.static,etc,lib,media,mnt,proc,ram,root,sbin,swap,sys,tmp,usr,var}
 	install -d $(RELEASE_DIR)/etc/{init.d,network,mdev,ssl}
 	install -d $(RELEASE_DIR)/etc/network/if-{post-{up,down},pre-{up,down},up,down}.d
 	install -d $(RELEASE_DIR)/lib/{modules,udev,firmware,tuxbox}
 	install -d $(RELEASE_DIR)/lib/tuxbox/plugins
 	install -d $(RELEASE_DIR)/media/{hdd,nfs,usb,mnt}
 	ln -sf /media/hdd $(RELEASE_DIR)/hdd
-	install -d $(RELEASE_DIR)/mnt/{hdd,nfs,usb}
-	install -d $(RELEASE_DIR)/mnt/mnt{0..7}
 	install -d $(RELEASE_DIR)/usr/{bin,lib,sbin,share}
 	install -d $(RELEASE_DIR)/usr/lib/tuxbox/{luaplugins,plugins}
 	install -d $(RELEASE_DIR)/usr/share/{fonts,tuxbox,udhcpc,zoneinfo,lua}
