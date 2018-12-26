@@ -259,9 +259,11 @@ $(D)/neutrino-mp-plugin-l4l-skins:
 		else cd $(ARCHIVE); git clone https://github.com/horsti58/SamsungLCD4Linux.git l4l-skins.git; \
 		fi
 	cp -ra $(ARCHIVE)/l4l-skins.git $(BUILD_TMP)/l4l-skins
-	install -m 0600 $(BUILD_TMP)/l4l-skins/Tango/etc/lcd4linux.conf $(TARGET_DIR)/etc
+	install -m 0600 $(BUILD_TMP)/l4l-skins/tango/etc/lcd4linux.conf $(TARGET_DIR)/etc
 	install -d $(TARGET_DIR)/usr/share/lcd/icons
-	cp -aR $(BUILD_TMP)/l4l-skins/Tango/share/* $(TARGET_DIR)/usr/share
+	cp -aR $(BUILD_TMP)/l4l-skins/tango/share/* $(TARGET_DIR)/usr/share
+	install -d $(TARGET_DIR)/var/lcd
+	cp -aR $(BUILD_TMP)/l4l-skins/tango/var/lcd/* $(TARGET_DIR)/var/lcd
 	$(REMOVE)/l4l-skins
 	$(TOUCH)
 
