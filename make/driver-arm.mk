@@ -32,10 +32,10 @@ endif
 
 ifeq ($(BOXTYPE), hd60)
 DRIVER_VER = 4.4.35
-DRIVER_DATE = 20180918
+DRIVER_DATE = 20181228
 DRIVER_SRC = $(KERNEL_TYPE)-drivers-$(DRIVER_VER)-$(DRIVER_DATE).zip
 
-EXTRA_PLAYERLIB_DATE = 20180912
+EXTRA_PLAYERLIB_DATE = 20181201
 EXTRA_PLAYERLIB_SRC = $(KERNEL_TYPE)-libs-$(EXTRA_PLAYERLIB_DATE).zip
 
 EXTRA_LIBGLES_DATE = 20180912
@@ -80,6 +80,7 @@ ifeq ($(BOXTYPE), hd51)
 	$(START_BUILD)
 	install -d $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra
 	unzip -o $(ARCHIVE)/$(DRIVER_SRC) -d $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra
+	ls $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra | sed s/.ko//g > $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/modules.default
 	$(MAKE) install-extra-libs
 	$(TOUCH)
 
@@ -94,6 +95,7 @@ ifeq ($(BOXTYPE), bre2ze4k)
 	$(START_BUILD)
 	install -d $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra
 	unzip -o $(ARCHIVE)/$(DRIVER_SRC) -d $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra
+	ls $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra | sed s/.ko//g > $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/modules.default
 	$(TOUCH)
 endif
 ifeq ($(BOXTYPE), hd60)
@@ -102,6 +104,7 @@ ifeq ($(BOXTYPE), hd60)
 	unzip -o $(ARCHIVE)/$(DRIVER_SRC) -d $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra
 	install -d $(TARGET_DIR)/bin
 	mv $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/turnoff_power $(TARGET_DIR)/bin
+	ls $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra | sed s/.ko//g > $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/modules.default
 	$(MAKE) install-extra-libs
 	$(MAKE) mali-gpu-modul
 	$(TOUCH)
@@ -147,6 +150,7 @@ $(D)/mali-gpu-modul: $(ARCHIVE)/$(EXTRA_MALI_MODULE_SRC) $(D)/bootstrap $(D)/ker
 		CONFIG_MALI_DVFS=y \
 		CONFIG_GPU_AVS_ENABLE=y \
 		DEPMOD=$(DEPMOD) INSTALL_MOD_PATH=$(TARGET_DIR) modules_install
+	ls $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra | sed s/.ko//g > $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/modules.default
 	$(REMOVE)/$(EXTRA_MALI_MODULE_VER)
 	$(TOUCH)
 endif

@@ -19,6 +19,9 @@ mdev -s
 echo "starting interface"
 /etc/init.d/mountall start
 
+echo "mounting everything"
+/etc/init.d/mount_everything
+
 insmod /lib/modules/hd51_1.ko
 insmod /lib/modules/hd51_2.ko
 insmod /lib/modules/hd51_3.ko
@@ -36,7 +39,7 @@ if [ -e /share/tuxbox/neutrino/icons/bootlogo.m2v ]; then
   showiframe /share/tuxbox/neutrino/icons/bootlogo.m2v
 fi
 
-echo "Booting... DDT" > /dev/dbox/oled0
+echo "Booting...TC-NMP" > /dev/dbox/oled0
 
 echo "setup network"
 /etc/init.d/hostname start

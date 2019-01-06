@@ -27,7 +27,7 @@ endif
 
 ifeq ($(BOXTYPE), hd60)
 KERNEL_VER             = 4.4.35
-KERNEL_DATE            = 20180301
+KERNEL_DATE            = 20181228
 KERNEL_TYPE            = hd60
 KERNEL_SRC             = linux-$(KERNEL_VER)-$(KERNEL_DATE)-arm.tar.gz
 KERNEL_URL             = http://downloads.mutant-digital.net
@@ -82,6 +82,7 @@ BRE2ZE4K_PATCHES = \
 		armbox/bre2ze4k_export_pmpoweroffprepare.patch
 
 HD60_PATCHES = \
+		armbox/hd60_ieee80211-increase-scan-result-expire-time.patch
 
 VUSOLO4K_PATCHES = \
 		armbox/vusolo4k_bcm_genet_disable_warn.patch \

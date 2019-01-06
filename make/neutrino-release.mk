@@ -739,9 +739,12 @@ ifeq ($(IMAGE), neutrino-wlandriver)
 	cp -aR $(SKEL_ROOT)/firmware/*.bin $(RELEASE_DIR)/lib/firmware/
 endif
 #
-# modules.available
+# modules.available // modules.default
 #
 	cp -aR $(SKEL_ROOT)/release/modules.available_$(BOXARCH) $(RELEASE_DIR)/etc/modules.available
+	if [ -e $(TARGET_DIR)/etc/modules.default ]; then \
+		cp -aR $(TARGET_DIR)/etc/modules.default $(RELEASE_DIR)/etc/modules.default; \
+	fi;
 #
 # lib usr/lib
 #
