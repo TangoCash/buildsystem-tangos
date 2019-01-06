@@ -764,6 +764,7 @@ endif
 	else \
 		if [ -e $(TARGET_DIR)/usr/share/fonts/neutrino.ttf ]; then \
 			cp -aR $(TARGET_DIR)/usr/share/fonts/neutrino.ttf $(RELEASE_DIR)/usr/share/fonts; \
+			ln -s /usr/share/fonts/neutrino.ttf $(RELEASE_DIR)/usr/share/fonts/pakenham.ttf; \
 		fi; \
 		if [ -e $(TARGET_DIR)/usr/share/fonts/micron.ttf ]; then \
 			cp -aR $(TARGET_DIR)/usr/share/fonts/micron.ttf $(RELEASE_DIR)/usr/share/fonts; \
