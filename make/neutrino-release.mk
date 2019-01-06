@@ -742,8 +742,8 @@ endif
 # modules.available // modules.default
 #
 	cp -aR $(SKEL_ROOT)/release/modules.available_$(BOXARCH) $(RELEASE_DIR)/etc/modules.available
-	if [ -e $(TARGET_DIR)/etc/modules.default ]; then \
-		cp -aR $(TARGET_DIR)/etc/modules.default $(RELEASE_DIR)/etc/modules.default; \
+	if [ -e $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/modules.default ]; then \
+		cp -aR $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/modules.default $(RELEASE_DIR)/etc/modules.default; \
 	fi;
 #
 # lib usr/lib
