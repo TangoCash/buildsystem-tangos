@@ -26,7 +26,7 @@ fi
 ##############################################
 
 case $1 in
-	[1-9] | 1[0-9] | 2[0-9] | 3[0-9] | 4[0-9] | 5[0-9]) REPLY=$1;;
+	[1-9] | 1[0-9] | 2[0-9] | 3[0-9] | 4[0-9] | 5[0-9] | 6[0-9]) REPLY=$1;;
 	*)
 		echo "Target receivers:"
 		echo
@@ -66,12 +66,13 @@ case $1 in
 		echo
 		echo "  arm-based receivers"
 		echo "   50)  Vu Solo4K"
-		echo "   51)  Mut@nt HD51"
+		echo "   51)  AX/Mut@nt HD51"
 		echo "   52)  BRE2ZE 4K"
-		echo "   60)  Mut@nt HD60"
+		echo "   60)  AX/Mut@nt HD60"
+		echo "   61)  AX/Mut@nt HD61"
 		echo "   "
 		echo
-		read -p "Select target (1-60)? [51]"
+		read -p "Select target (1-61)? [51]"
 		REPLY="${REPLY:-51}";;
 esac
 
@@ -117,6 +118,7 @@ case "$REPLY" in
 	51) BOXARCH="arm";BOXTYPE="hd51";;
 	52) BOXARCH="arm";BOXTYPE="bre2ze4k";;
 	60) BOXARCH="arm";BOXTYPE="hd60";;
+	61) BOXARCH="arm";BOXTYPE="hd61";;
 	 *) BOXARCH="arm";BOXTYPE="hd51";;
 esac
 echo "BOXARCH=$BOXARCH" > config
@@ -353,14 +355,7 @@ echo " "
 make printenv
 ##############################################
 echo "Your next step could be:"
-case "$FLAVOUR" in
-	neutrino-mp*)
-		echo "  make neutrino-mp";;
-	neutrino-hd2*)
-		echo "  make neutrino-hd2"
-		echo "  make neutrino-hd2-plugins";;
-	*)
-		echo "  make flashimage"
-		echo "  make ofgimage";;
-esac
+echo "  make neutrino-mp";;
+echo "  make flashimage"
+echo "  make ofgimage";;
 echo " "
