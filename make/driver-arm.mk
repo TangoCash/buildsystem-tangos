@@ -112,13 +112,26 @@ ifeq ($(BOXTYPE), hd60)
 
 $(D)/install-extra-libs: $(ARCHIVE)/$(EXTRA_PLAYERLIB_SRC) $(ARCHIVE)/$(EXTRA_LIBGLES_SRC)
 	install -d $(TARGET_DIR)/usr/lib
-	unzip -o $(ARCHIVE)/$(EXTRA_PLAYERLIB_SRC) -d $(TARGET_DIR)/usr/lib
+	install -d $(BUILD_TMP)/hiplay
+	unzip -o $(ARCHIVE)/$(EXTRA_PLAYERLIB_SRC) -d $(BUILD_TMP)/hiplay
+	install -d $(TARGET_DIR)/usr/lib/hisilicon
+	install -m 0755 $(BUILD_TMP)/hiplay/hisilicon/* $(TARGET_DIR)/usr/lib/hisilicon
+	install -m 0755 $(BUILD_TMP)/hiplay/ffmpeg/* $(TARGET_DIR)/usr/lib/hisilicon
+	install -m 0755 $(BUILD_TMP)/hiplay/glibc/* $(TARGET_DIR)/usr/lib/hisilicon
+	$(REMOVE)/hiplay
 	unzip -o $(PATCHES)/$(EXTRA_LIBGLES_HEADERS) -d $(TARGET_DIR)/usr/include
 	unzip -o $(ARCHIVE)/$(EXTRA_LIBGLES_SRC) -d $(TARGET_DIR)/usr/lib
 	ln -sf libMali.so $(TARGET_DIR)/usr/lib/libmali.so
-	ln -sf libMali.so $(TARGET_DIR)/usr/lib/libEGL.so
-	ln -sf libMali.so $(TARGET_DIR)/usr/lib/libGLESv1_CM.so
-	ln -sf libMali.so $(TARGET_DIR)/usr/lib/libGLESv2.so
+	ln -sf libMali.so $(TARGET_DIR)/usr/lib/libEGL.so.1.4
+	ln -sf libEGL.so.1.4 $(TARGET_DIR)/usr/lib/libEGL.so.1
+	ln -sf libEGL.so.1 $(TARGET_DIR)/usr/lib/libEGL.so
+	ln -sf libMali.so $(TARGET_DIR)/usr/lib/libGLESv1_CM.so.1.1
+	ln -sf libGLESv1_CM.so.1.1 $(TARGET_DIR)/usr/lib/libGLESv1_CM.so.1
+	ln -sf libGLESv1_CM.so.1 $(TARGET_DIR)/usr/lib/libGLESv1_CM.so
+	ln -sf libMali.so $(TARGET_DIR)/usr/lib/libGLESv2.so.2.0
+	ln -sf libGLESv2.so.2.0 $(TARGET_DIR)/usr/lib/libGLESv2.so.2
+	ln -sf libGLESv2.so.2 $(TARGET_DIR)/usr/lib/libGLESv2.so
+	ln -sf libMali.so $(TARGET_DIR)/usr/lib/libgbm.so
 	install -d $(TARGET_DIR)/usr/lib/pkgconfig
 	cp $(PATCHES)/glesv2.pc $(TARGET_DIR)/usr/lib/pkgconfig
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/glesv2.pc
