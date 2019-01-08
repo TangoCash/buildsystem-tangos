@@ -106,10 +106,11 @@ ifeq ($(BOXTYPE), hd60)
 	mv $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/turnoff_power $(TARGET_DIR)/bin
 	ls $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra | sed s/.ko//g > $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/modules.default
 	$(MAKE) install-extra-libs
+	$(MAKE) install-extra-preq
 	$(MAKE) mali-gpu-modul
 	$(TOUCH)
 
-$(D)/install-extra-libs: $(ARCHIVE)/$(EXTRA_PLAYERLIB_SRC) $(ARCHIVE)/$(EXTRA_LIBGLES_SRC) $(D)/zlib $(D)/libpng $(D)/freetype $(D)/libcurl $(D)/libxml2 $(D)/libjpeg_turbo2 $(D)/harfbuzz
+$(D)/install-extra-libs: $(ARCHIVE)/$(EXTRA_PLAYERLIB_SRC) $(ARCHIVE)/$(EXTRA_LIBGLES_SRC)
 	install -d $(TARGET_DIR)/usr/lib
 	unzip -o $(ARCHIVE)/$(EXTRA_PLAYERLIB_SRC) -d $(TARGET_DIR)/usr/lib
 	unzip -o $(PATCHES)/$(EXTRA_LIBGLES_HEADERS) -d $(TARGET_DIR)/usr/include
@@ -118,6 +119,11 @@ $(D)/install-extra-libs: $(ARCHIVE)/$(EXTRA_PLAYERLIB_SRC) $(ARCHIVE)/$(EXTRA_LI
 	ln -sf libMali.so $(TARGET_DIR)/usr/lib/libEGL.so
 	ln -sf libMali.so $(TARGET_DIR)/usr/lib/libGLESv1_CM.so
 	ln -sf libMali.so $(TARGET_DIR)/usr/lib/libGLESv2.so
+	install -d $(TARGET_DIR)/usr/lib/pkgconfig
+	cp $(PATCHES)/glesv2.pc $(TARGET_DIR)/usr/lib/pkgconfig
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/glesv2.pc
+
+$(D)/install-extra-preq: $(D)/zlib $(D)/libpng $(D)/freetype $(D)/libcurl $(D)/libxml2 $(D)/libjpeg_turbo2 $(D)/harfbuzz
 
 $(D)/mali-gpu-modul: $(ARCHIVE)/$(EXTRA_MALI_MODULE_SRC) $(D)/bootstrap $(D)/kernel
 	$(START_BUILD)
