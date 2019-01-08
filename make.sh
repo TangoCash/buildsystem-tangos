@@ -355,7 +355,7 @@ echo " "
 make printenv
 ##############################################
 echo "Your next step could be:"
-echo "  make neutrino-mp";;
+echo "  make neutrino-mp"
 echo "  make flashimage"
-echo "  make ofgimage";;
+echo "  make ofgimage"
 echo " "
