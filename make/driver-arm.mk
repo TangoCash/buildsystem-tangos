@@ -122,6 +122,10 @@ $(D)/install-extra-libs: $(ARCHIVE)/$(EXTRA_PLAYERLIB_SRC) $(ARCHIVE)/$(EXTRA_LI
 	install -d $(TARGET_DIR)/usr/lib/pkgconfig
 	cp $(PATCHES)/glesv2.pc $(TARGET_DIR)/usr/lib/pkgconfig
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/glesv2.pc
+	cp $(PATCHES)/glesv1_cm.pc $(TARGET_DIR)/usr/lib/pkgconfig
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/glesv1_cm.pc
+	cp $(PATCHES)/egl.pc $(TARGET_DIR)/usr/lib/pkgconfig
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/egl.pc
 
 $(D)/install-extra-preq: $(D)/zlib $(D)/libpng $(D)/freetype $(D)/libcurl $(D)/libxml2 $(D)/libjpeg_turbo2 $(D)/harfbuzz
 
