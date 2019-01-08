@@ -1,9 +1,3 @@
----
- net/wireless/scan.c              |   2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
-
-diff --git a/net/wireless/scan.c b/net/wireless/scan.c
-index 30f9676..14d5369 100644
 --- a/net/wireless/scan.c
 +++ b/net/wireless/scan.c
 @@ -56,7 +56,7 @@
@@ -15,5 +9,3 @@ index 30f9676..14d5369 100644
  
  static void bss_free(struct cfg80211_internal_bss *bss)
  {
--- 
-2.7.4
