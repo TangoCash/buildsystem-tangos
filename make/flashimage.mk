@@ -30,7 +30,7 @@ endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), bre2ze4k))
 	$(MAKE) flash-image-bre2ze4k-multi-disk flash-image-bre2ze4k-multi-rootfs
 endif
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd60))
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd60 hd61))
 	$(MAKE) flash-image-hd60-multi-disk
 endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k))

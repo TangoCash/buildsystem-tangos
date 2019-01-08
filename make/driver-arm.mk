@@ -1,7 +1,7 @@
 #
 # driver
 #
-ifeq ($(BOXTYPE), hd51)
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51 bre2ze4k))
 DRIVER_VER = 4.10.12
 DRIVER_DATE = 20180424
 DRIVER_SRC = $(KERNEL_TYPE)-drivers-$(DRIVER_VER)-$(DRIVER_DATE).zip
@@ -21,16 +21,7 @@ $(ARCHIVE)/$(EXTRA_LIBGLES_HEADERS):
 	$(WGET) http://downloads.mutant-digital.net/v3ddriver/$(EXTRA_LIBGLES_HEADERS)
 endif
 
-ifeq ($(BOXTYPE), bre2ze4k)
-DRIVER_VER = 4.10.12
-DRIVER_DATE = 20180424
-DRIVER_SRC = $(KERNEL_TYPE)-drivers-$(DRIVER_VER)-$(DRIVER_DATE).zip
-
-$(ARCHIVE)/$(DRIVER_SRC):
-	$(WGET) http://source.mynonpublic.com/gfutures/$(DRIVER_SRC)
-endif
-
-ifeq ($(BOXTYPE), hd60)
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd60 hd61))
 DRIVER_VER = 4.4.35
 DRIVER_DATE = 20181228
 DRIVER_SRC = $(KERNEL_TYPE)-drivers-$(DRIVER_VER)-$(DRIVER_DATE).zip
@@ -76,7 +67,7 @@ driver-clean:
 
 driver: $(D)/driver
 $(D)/driver: $(ARCHIVE)/$(DRIVER_SRC) $(D)/bootstrap $(D)/kernel
-ifeq ($(BOXTYPE), hd51)
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51 bre2ze4k))
 	$(START_BUILD)
 	install -d $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra
 	unzip -o $(ARCHIVE)/$(DRIVER_SRC) -d $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra
@@ -88,17 +79,21 @@ $(D)/install-extra-libs: $(ARCHIVE)/$(EXTRA_LIBGLES_HEADERS) $(ARCHIVE)/$(EXTRA_
 	install -d $(TARGET_DIR)/usr/lib
 	tar -xf $(ARCHIVE)/$(EXTRA_LIBGLES_HEADERS) -C $(TARGET_DIR)/usr/include
 	unzip -o $(ARCHIVE)/$(EXTRA_LIBGLES_SRC) -d $(TARGET_DIR)/usr/lib
-	ln -sf libv3ddriver.so $(TARGET_DIR)/usr/lib/libEGL.so
-	ln -sf libv3ddriver.so $(TARGET_DIR)/usr/lib/libGLESv2.so
+	#patchelf --set-soname libv3ddriver.so $(TARGET_DIR)/usr/lib/libv3ddriver.so
+	ln -sf libv3ddriver.so $(TARGET_DIR)/usr/lib/libEGL.so.1.4
+	ln -sf libEGL.so.1.4 $(TARGET_DIR)/usr/lib/libEGL.so.1
+	ln -sf libEGL.so.1 $(TARGET_DIR)/usr/lib/libEGL.so
+	ln -sf libv3ddriver.so $(TARGET_DIR)/usr/lib/libGLESv1_CM.so.1.1
+	ln -sf libGLESv1_CM.so.1.1 $(TARGET_DIR)/usr/lib/libGLESv1_CM.so.1
+	ln -sf libGLESv1_CM.so.1 $(TARGET_DIR)/usr/lib/libGLESv1_CM.so
+	ln -sf libv3ddriver.so $(TARGET_DIR)/usr/lib/libGLESv2.so.2.0
+	ln -sf libGLESv2.so.2.0 $(TARGET_DIR)/usr/lib/libGLESv2.so.2
+	ln -sf libGLESv2.so.2 $(TARGET_DIR)/usr/lib/libGLESv2.so
+	ln -sf libv3ddriver.so $(TARGET_DIR)/usr/lib/libgbm.so.1
+	ln -sf libgbm.so.1 $(TARGET_DIR)/usr/lib/libgbm.so
 endif
-ifeq ($(BOXTYPE), bre2ze4k)
-	$(START_BUILD)
-	install -d $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra
-	unzip -o $(ARCHIVE)/$(DRIVER_SRC) -d $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra
-	ls $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra | sed s/.ko//g > $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/modules.default
-	$(TOUCH)
-endif
-ifeq ($(BOXTYPE), hd60)
+
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd60 hd61))
 	$(START_BUILD)
 	install -d $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra
 	unzip -o $(ARCHIVE)/$(DRIVER_SRC) -d $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra

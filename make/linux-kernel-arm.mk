@@ -36,6 +36,17 @@ KERNEL_DIR             = $(BUILD_TMP)/linux-$(KERNEL_VER)
 KERNEL_PATCHES_ARM     = $(HD60_PATCHES)
 endif
 
+ifeq ($(BOXTYPE), hd61)
+KERNEL_VER             = 4.4.35
+KERNEL_DATE            = 20181228
+KERNEL_TYPE            = hd61
+KERNEL_SRC             = linux-$(KERNEL_VER)-$(KERNEL_DATE)-arm.tar.gz
+KERNEL_URL             = http://downloads.mutant-digital.net
+KERNEL_CONFIG          = hd60_defconfig
+KERNEL_DIR             = $(BUILD_TMP)/linux-$(KERNEL_VER)
+KERNEL_PATCHES_ARM     = $(HD60_PATCHES)
+endif
+
 ifeq ($(BOXTYPE), vusolo4k)
 KERNEL_VER             = 3.14.28-1.8
 KERNEL_TYPE            = vusolo4k
