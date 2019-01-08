@@ -92,7 +92,6 @@ $(D)/install-extra-libs: $(ARCHIVE)/$(EXTRA_LIBGLES_HEADERS) $(ARCHIVE)/$(EXTRA_
 	ln -sf libv3ddriver.so $(TARGET_DIR)/usr/lib/libgbm.so.1
 	ln -sf libgbm.so.1 $(TARGET_DIR)/usr/lib/libgbm.so
 endif
-
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd60 hd61))
 	$(START_BUILD)
 	install -d $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra

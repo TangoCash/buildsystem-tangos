@@ -78,7 +78,7 @@ CCACHE_DIR            = $(HOME)/.ccache-bs-arm
 export CCACHE_DIR
 TARGET               ?= arm-cortex-linux-gnueabihf
 BOXARCH              ?= arm
-ifeq ($(BOXTYPE), hd60)
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd60 hd61))
 KERNELNAME            = uImage
 else
 KERNELNAME            = zImage
