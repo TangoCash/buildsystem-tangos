@@ -2,7 +2,7 @@
 
 #Quick Building for e.g. Mutant HD51:
 
-- 1.) git clone github.com/TangoCash/buildsystem-ddt.git ~/DDT
+- 1.) git clone https://github.com/TangoCash/buildsystem-ddt.git ~/DDT
 - 2.) cd ~/DDT
 - 3.) sudo ./prepare-for-bs.sh
 - 4.) ./make.sh 51 1 1 1 1 4 3
