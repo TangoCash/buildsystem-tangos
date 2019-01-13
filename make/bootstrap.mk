@@ -194,6 +194,61 @@ $(D)/host_resize2fs: $(D)/directories $(ARCHIVE)/$(HOST_E2FSPROGS_SOURCE)
 	$(TOUCH)
 
 #
+# android tools
+#
+ANDROID_MIRROR = https://android.googlesource.com
+HAT_CORE_REV = 2314b11
+HAT_CORE_SOURCE = hat-core-git-$(HAT_CORE_REV).tar.bz2
+HAT_EXTRAS_REV = 3ecbe8d
+HAT_EXTRAS_SOURCE = hat-extras-git-$(HAT_EXTRAS_REV).tar.bz2
+#HAT_LIBHARDWARE_REV = be55eb1
+#HAT_LIBHARDWARE_SOURCE = hat-libhardware-git-$(HAT_LIBHARDWARE_REV).tar.bz2
+HAT_LIBSELINUX_REV = 07e9e13
+HAT_LIBSELINUX_SOURCE = hat-libselinux-git-$(HAT_LIBSELINUX_REV).tar.bz2
+#HAT_BUILD_REV = 16e987d
+#HAT_BUILD_SOURCE = hat-build-git-$(HAT_BUILD_REV).tar.bz2
+
+$(ARCHIVE)/$(HAT_CORE_SOURCE):
+	$(SCRIPTS_DIR)/get-git-archive.sh $(ANDROID_MIRROR)/platform/system/core $(HAT_CORE_REV) $(notdir $@) $(ARCHIVE)
+
+$(ARCHIVE)/$(HAT_EXTRAS_SOURCE):
+	$(SCRIPTS_DIR)/get-git-archive.sh $(ANDROID_MIRROR)/platform/system/extras $(HAT_EXTRAS_REV) $(notdir $@) $(ARCHIVE)
+
+#$(ARCHIVE)/$(HAT_LIBHARDWARE_SOURCE):
+#	$(SCRIPTS_DIR)/get-git-archive.sh $(ANDROID_MIRROR)/platform/hardware/libhardware $(HAT_LIBHARDWARE_REV) $(notdir $@) $(ARCHIVE)
+
+$(ARCHIVE)/$(HAT_LIBSELINUX_SOURCE):
+	$(SCRIPTS_DIR)/get-git-archive.sh $(ANDROID_MIRROR)/platform/external/libselinux $(HAT_LIBSELINUX_REV) $(notdir $@) $(ARCHIVE)
+
+#$(ARCHIVE)/$(HAT_BUILD_SOURCE):
+#	$(SCRIPTS_DIR)/get-git-archive.sh $(ANDROID_MIRROR)/platform/build $(HAT_BUILD_REV) $(notdir $@) $(ARCHIVE)
+
+$(D)/host_atools: $(ARCHIVE)/$(HAT_CORE_SOURCE) $(ARCHIVE)/$(HAT_EXTRAS_SOURCE) $(ARCHIVE)/$(HAT_LIBHARDWARE_SOURCE) $(ARCHIVE)/$(HAT_LIBSELINUX_SOURCE) $(ARCHIVE)/$(HAT_BUILD_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/hat
+	$(MKDIR)/hat/system/core
+	$(SILENT)tar --strip 1 -C $(BUILD_TMP)/hat/system/core -xf $(ARCHIVE)/$(HAT_CORE_SOURCE)
+	$(MKDIR)/hat/system/extras
+	$(SILENT)tar --strip 1 -C $(BUILD_TMP)/hat/system/extras -xf $(ARCHIVE)/$(HAT_EXTRAS_SOURCE)
+	#$(MKDIR)/hat/hardware/libhardware
+	#$(SILENT)tar --strip 1 -C $(BUILD_TMP)/hat/hardware/libhardware -xf $(ARCHIVE)/$(HAT_LIBHARDWARE_SOURCE)
+	$(MKDIR)/hat/external/libselinux
+	$(SILENT)tar --strip 1 -C $(BUILD_TMP)/hat/external/libselinux -xf $(ARCHIVE)/$(HAT_LIBSELINUX_SOURCE)
+	#$(MKDIR)/hat/build
+	#$(SILENT)tar --strip 1 -C $(BUILD_TMP)/hat/build -xf $(ARCHIVE)/$(HAT_BUILD_SOURCE)
+	cp $(PATCHES)/ext4_utils.mk $(BUILD_TMP)/hat
+	$(CHDIR)/hat; \
+		$(MAKE) --file=ext4_utils.mk SRCDIR=$(BUILD_TMP)/hat
+		install -D -m 0755 $(BUILD_TMP)/hat/ext2simg $(HOST_DIR)/bin/
+		install -D -m 0755 $(BUILD_TMP)/hat/ext4fixup $(HOST_DIR)/bin/
+		install -D -m 0755 $(BUILD_TMP)/hat/img2simg $(HOST_DIR)/bin/
+		install -D -m 0755 $(BUILD_TMP)/hat/make_ext4fs $(HOST_DIR)/bin/
+		install -D -m 0755 $(BUILD_TMP)/hat/simg2img $(HOST_DIR)/bin/
+		install -D -m 0755 $(BUILD_TMP)/hat/simg2simg $(HOST_DIR)/bin/
+	$(REMOVE)/hat
+	$(TOUCH)
+
+#
 # cortex-strings
 #
 CORTEX_STRINGS_VER = 48fd30c
@@ -238,6 +293,9 @@ BOOTSTRAP += $(D)/host_mksquashfs
 ifeq ($(BOXARCH), arm)
 BOOTSTRAP += $(D)/host_resize2fs
 BOOTSTRAP += $(D)/cortex_strings
+endif
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd60 hd61))
+BOOTSTRAP += $(D)/host_atools
 endif
 
 $(D)/bootstrap: $(BOOTSTRAP)
