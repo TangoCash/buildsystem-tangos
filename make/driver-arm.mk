@@ -115,7 +115,8 @@ $(D)/install-extra-libs: $(ARCHIVE)/$(EXTRA_PLAYERLIB_SRC) $(ARCHIVE)/$(EXTRA_LI
 	install -d $(TARGET_DIR)/usr/lib/hisilicon
 	install -m 0755 $(BUILD_TMP)/hiplay/hisilicon/* $(TARGET_DIR)/usr/lib/hisilicon
 	install -m 0755 $(BUILD_TMP)/hiplay/ffmpeg/* $(TARGET_DIR)/usr/lib/hisilicon
-	install -m 0755 $(BUILD_TMP)/hiplay/glibc/* $(TARGET_DIR)/usr/lib/hisilicon
+	#install -m 0755 $(BUILD_TMP)/hiplay/glibc/* $(TARGET_DIR)/usr/lib/hisilicon
+	ln -sf /lib/ld-linux-armhf.so.3 $(TARGET_DIR)/usr/lib/hisilicon/ld-linux.so
 	$(REMOVE)/hiplay
 	unzip -o $(PATCHES)/$(EXTRA_LIBGLES_HEADERS) -d $(TARGET_DIR)/usr/include
 	unzip -o $(ARCHIVE)/$(EXTRA_LIBGLES_SRC) -d $(TARGET_DIR)/usr/lib
