@@ -144,6 +144,11 @@ N_CONFIG_OPTS += \
 	--with-webtvdir=/usr/share/tuxbox/neutrino/webtv \
 	--with-webtvdir_var=/var/tuxbox/plugins/webtv
 
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k))
+N_CONFIG_OPTS += --enable-graphlcd
+NEUTRINO_DEPS += $(D)/graphlcd
+endif
+
 ifeq ($(EXTERNAL_LCD), externallcd)
 N_CONFIG_OPTS += --enable-graphlcd
 NEUTRINO_DEPS += $(D)/graphlcd
