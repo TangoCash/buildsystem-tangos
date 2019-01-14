@@ -298,21 +298,26 @@ flash-image-hd60-multi-disk: $(ARCHIVE)/$(HD60_BOOTARGS_SRC) $(ARCHIVE)/$(HD60_P
 	mkdir -p $(HD60_BUILD_TMP)/$(BOXTYPE)
 	unzip -o $(ARCHIVE)/$(HD60_BOOTARGS_SRC) -d $(HD60_BUILD_TMP)
 	unzip -o $(ARCHIVE)/$(HD60_PARTITONS_SRC) -d $(HD60_BUILD_TMP)
+	install -m 0755 $(HD60_BUILD_TMP)/bootargs-8gb.bin $(RELEASE_DIR)/usr/share/bootargs.bin
+	install -m 0755 $(HD60_BUILD_TMP)/fastboot.bin $(RELEASE_DIR)/usr/share/fastboot.bin
 	echo $(BOXTYPE)_DDT_usb_$(shell date '+%d%m%Y-%H%M%S') > $(HD60_BUILD_TMP)/$(BOXTYPE)/imageversion
 	$(HOST_DIR)/bin/make_ext4fs -l $(HD60_IMAGE_ROOTFS_SIZE) $(HD60_BUILD_TMP)/$(HD60_IMAGE_LINK) $(RELEASE_DIR)
-	dd if=/dev/zero of=$(HD60_BUILD_TMP)/$(HD60_BOOT_IMAGE) bs=1024 count=$(HD60_BOOTOPTIONS_PARTITION_SIZE)
-	mkfs.msdos -S 512 $(HD60_BUILD_TMP)/$(HD60_BOOT_IMAGE)
+	$(HOST_DIR)/bin/ext2simg -zv $(HD60_BUILD_TMP)/$(HD60_IMAGE_LINK) $(HD60_BUILD_TMP)/$(BOXTYPE)/rootfs.fastboot.gz
+	dd if=/dev/zero of=$(HD60_BUILD_TMP)/$(BOXTYPE)/$(HD60_BOOT_IMAGE) bs=1024 count=$(HD60_BOOTOPTIONS_PARTITION_SIZE)
+	mkfs.msdos -S 512 $(HD60_BUILD_TMP)/$(BOXTYPE)/$(HD60_BOOT_IMAGE)
 	echo "bootcmd=mmc read 0 0x1000000 0x54B000 0x8000; bootm 0x1000000 bootargs=console=ttyAMA0,115200 root=/dev/mmcblk0p21 rootfstype=ext4" > $(HD60_BUILD_TMP)/STARTUP
 	echo "bootcmd=mmc read 0 0x3F000000 0x7E000 0x4000; bootm 0x3F000000; mmc read 0 0x1FFBFC0 0x60000 0xC800; bootargs=androidboot.selinux=enforcing androidboot.serialno=0123456789 console=ttyAMA0,115200" > $(HD60_BUILD_TMP)/STARTUP_ANDROID
 	echo "bootcmd=mmc read 0 0x1000000 0x54B000 0x8000; bootm 0x1000000 bootargs=console=ttyAMA0,115200 root=/dev/mmcblk0p21 rootfstype=ext4" > $(HD60_BUILD_TMP)/STARTUP_LINUX
-	mcopy -i $(HD60_BUILD_TMP)/$(HD60_BOOT_IMAGE) -v $(HD60_BUILD_TMP)/STARTUP ::
-	mcopy -i $(HD60_BUILD_TMP)/$(HD60_BOOT_IMAGE) -v $(HD60_BUILD_TMP)/STARTUP_ANDROID ::
-	mcopy -i $(HD60_BUILD_TMP)/$(HD60_BOOT_IMAGE) -v $(HD60_BUILD_TMP)/STARTUP_LINUX ::
-	cp $(HD60_BUILD_TMP)/$(HD60_BOOT_IMAGE) $(HD60_BUILD_TMP)/$(BOXTYPE)/$(HD60_BOOT_IMAGE)
-	$(HOST_DIR)/bin/ext2simg -zv $(HD60_BUILD_TMP)/$(HD60_IMAGE_LINK) $(HD60_BUILD_TMP)/$(BOXTYPE)/rootfs.fastboot.gz
+	mcopy -i $(HD60_BUILD_TMP)/$(BOXTYPE)/$(HD60_BOOT_IMAGE) -v $(HD60_BUILD_TMP)/STARTUP ::
+	mcopy -i $(HD60_BUILD_TMP)/$(BOXTYPE)/$(HD60_BOOT_IMAGE) -v $(HD60_BUILD_TMP)/STARTUP_ANDROID ::
+	mcopy -i $(HD60_BUILD_TMP)/$(BOXTYPE)/$(HD60_BOOT_IMAGE) -v $(HD60_BUILD_TMP)/STARTUP_LINUX ::
 	mv $(HD60_BUILD_TMP)/bootargs-8gb.bin $(HD60_BUILD_TMP)/bootargs.bin
 	mv $(HD60_BUILD_TMP)/$(BOXTYPE)/bootargs-8gb.bin $(HD60_BUILD_TMP)/$(BOXTYPE)/bootargs.bin
-	cp $(RELEASE_DIR)/boot/uImage $(HD51_BUILD_TMP)/$(BOXTYPE)/uImage
+	cp $(RELEASE_DIR)/boot/uImage $(HD60_BUILD_TMP)/$(BOXTYPE)/uImage
+	rm -rf $(HD60_BUILD_TMP)/STARTUP*
+	rm -rf $(HD60_BUILD_TMP)/*.txt
+	rm -rf $(HD60_BUILD_TMP)/$(BOXTYPE)/*.txt
+	rm -rf $(HD60_BUILD_TMP)/$(HD60_IMAGE_LINK)
 	cd $(HD60_BUILD_TMP) && \
 	zip -r $(BASE_DIR)/$(BOXTYPE)_multi_usb_$(shell date '+%d.%m.%Y-%H.%M').zip *
 	# cleanup
