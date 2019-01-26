@@ -21,7 +21,7 @@ $(ARCHIVE)/$(EXTRA_LIBGLES_HEADERS):
 	$(WGET) http://downloads.mutant-digital.net/v3ddriver/$(EXTRA_LIBGLES_HEADERS)
 endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd60))
-DRIVER_DATE = 20190116
+DRIVER_DATE = 20190117
 endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd61))
 DRIVER_DATE = 20181221
