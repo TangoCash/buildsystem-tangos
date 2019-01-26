@@ -300,6 +300,9 @@ flash-image-hd60-multi-disk: $(ARCHIVE)/$(HD60_BOOTARGS_SRC) $(ARCHIVE)/$(HD60_P
 	unzip -o $(ARCHIVE)/$(HD60_PARTITONS_SRC) -d $(HD60_BUILD_TMP)
 	install -m 0755 $(HD60_BUILD_TMP)/bootargs-8gb.bin $(RELEASE_DIR)/usr/share/bootargs.bin
 	install -m 0755 $(HD60_BUILD_TMP)/fastboot.bin $(RELEASE_DIR)/usr/share/fastboot.bin
+	if [ -e $(RELEASE_DIR)/boot/logo.img ]; then \
+		cp -rf $(RELEASE_DIR)/boot/logo.img $(HD60_BUILD_TMP)/$(BOXTYPE); \
+	fi
 	echo $(BOXTYPE)_DDT_usb_$(shell date '+%d%m%Y-%H%M%S') > $(HD60_BUILD_TMP)/$(BOXTYPE)/imageversion
 	$(HOST_DIR)/bin/make_ext4fs -l $(HD60_IMAGE_ROOTFS_SIZE) $(HD60_BUILD_TMP)/$(HD60_IMAGE_LINK) $(RELEASE_DIR)
 	$(HOST_DIR)/bin/ext2simg -zv $(HD60_BUILD_TMP)/$(HD60_IMAGE_LINK) $(HD60_BUILD_TMP)/$(BOXTYPE)/rootfs.fastboot.gz
