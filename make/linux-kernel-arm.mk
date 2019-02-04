@@ -93,7 +93,8 @@ BRE2ZE4K_PATCHES = \
 		armbox/bre2ze4k_export_pmpoweroffprepare.patch
 
 HD60_PATCHES = \
-		armbox/hd60_ieee80211-increase-scan-result-expire-time.patch
+		armbox/hd60_ieee80211-increase-scan-result-expire-time.patch \
+		armbox/hd60_0001-remote.patch
 
 VUSOLO4K_PATCHES = \
 		armbox/vusolo4k_bcm_genet_disable_warn.patch \
