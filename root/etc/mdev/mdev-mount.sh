@@ -6,7 +6,7 @@
 # (e)udev compatibility
 [[ -z $MDEV ]] && MDEV=$(basename $DEVNAME)
 
-BLACKLISTED="mmcblk0"
+BLACKLISTED=""
 FIRST_MEDIA="hdd"
 
 ## device information log
