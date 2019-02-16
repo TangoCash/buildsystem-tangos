@@ -126,6 +126,12 @@ $(D)/module_init_tools: $(D)/bootstrap $(D)/lsb $(ARCHIVE)/$(MODULE_INIT_TOOLS_S
 #
 SYSVINIT_VER = 2.88dsf
 SYSVINIT_SOURCE = sysvinit_$(SYSVINIT_VER).orig.tar.gz
+SYSVINIT_PATCH  = sysvinit-$(SYSVINIT_VER)_crypt-lib.patch
+SYSVINIT_PATCH += sysvinit-$(SYSVINIT_VER)_pidof-add-m-option.patch
+SYSVINIT_PATCH += sysvinit-$(SYSVINIT_VER)_realpath.patch
+SYSVINIT_PATCH += sysvinit-$(SYSVINIT_VER)_0001-include-sys-sysmacros.h-for-major-minor-defines-in-g.patch
+SYSVINIT_PATCH += sysvinit-$(SYSVINIT_VER)_0001-This-fixes-an-issue-that-clang-reports-about-mutlipl.patch
+
 
 $(ARCHIVE)/$(SYSVINIT_SOURCE):
 	$(WGET) http://ftp.debian.org/debian/pool/main/s/sysvinit/$(SYSVINIT_SOURCE)
@@ -135,6 +141,7 @@ $(D)/sysvinit: $(D)/bootstrap $(ARCHIVE)/$(SYSVINIT_SOURCE)
 	$(REMOVE)/sysvinit-$(SYSVINIT_VER)
 	$(UNTAR)/$(SYSVINIT_SOURCE)
 	$(CHDIR)/sysvinit-$(SYSVINIT_VER); \
+		$(call apply_patches, $(SYSVINIT_PATCH)); \
 		sed -i -e 's/\ sulogin[^ ]*//' -e 's/pidof\.8//' -e '/ln .*pidof/d' \
 		-e '/bootlogd/d' -e '/utmpdump/d' -e '/mountpoint/d' -e '/mesg/d' src/Makefile; \
 		$(BUILDENV) \
