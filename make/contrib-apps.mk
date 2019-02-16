@@ -354,7 +354,13 @@ $(D)/portmap: $(D)/bootstrap $(D)/lsb $(ARCHIVE)/$(PORTMAP_SOURCE) $(ARCHIVE)/po
 #
 E2FSPROGS_VER = 1.44.5
 E2FSPROGS_SOURCE = e2fsprogs-$(E2FSPROGS_VER).tar.gz
-E2FSPROGS_PATCH = e2fsprogs-$(E2FSPROGS_VER).patch
+E2FSPROGS_PATCH  = e2fsprogs.patch
+E2FSPROGS_PATCH += e2fsprogs-001-exit_0_on_corrected_errors.patch
+E2FSPROGS_PATCH += e2fsprogs-002-dont-build-e4defrag.patch
+E2FSPROGS_PATCH += e2fsprogs-003-overridable-pc-exec-prefix.patch
+E2FSPROGS_PATCH += e2fsprogs-004-Revert-mke2fs-enable-the-metadata_csum-and-64bit-fea.patch
+E2FSPROGS_PATCH += e2fsprogs-005-misc-create_inode.c-set-dir-s-mode-correctly.patch
+E2FSPROGS_PATCH += e2fsprogs-006-mkdir_p.patch
 
 $(ARCHIVE)/$(E2FSPROGS_SOURCE):
 	$(WGET) https://sourceforge.net/projects/e2fsprogs/files/e2fsprogs/v$(E2FSPROGS_VER)/$(E2FSPROGS_SOURCE)
@@ -367,9 +373,10 @@ $(D)/e2fsprogs: $(D)/bootstrap $(D)/util_linux $(ARCHIVE)/$(E2FSPROGS_SOURCE)
 		$(call apply_patches, $(E2FSPROGS_PATCH)); \
 		PATH=$(BUILD_TMP)/e2fsprogs-$(E2FSPROGS_VER):$(PATH) \
 		autoreconf -fi $(SILENT_OPT); \
-		$(CONFIGURE) \
+		$(CONFIGURE) LIBS="-luuid -lblkid" \
 			--prefix=/usr \
 			--libdir=/usr/lib \
+			--datarootdir=/.remove \
 			--mandir=/.remove \
 			--infodir=/.remove \
 			--disable-rpath \
@@ -381,7 +388,6 @@ $(D)/e2fsprogs: $(D)/bootstrap $(D)/util_linux $(ARCHIVE)/$(E2FSPROGS_SOURCE)
 			--disable-testio-debug \
 			--disable-debugfs \
 			--disable-imager \
-			--disable-resizer \
 			--disable-backtrace \
 			--disable-mmp \
 			--disable-tdb \
@@ -389,8 +395,9 @@ $(D)/e2fsprogs: $(D)/bootstrap $(D)/util_linux $(ARCHIVE)/$(E2FSPROGS_SOURCE)
 			--disable-fuse2fs \
 			--enable-elf-shlibs \
 			--enable-fsck \
-			--enable-libblkid \
-			--enable-libuuid \
+			--disable-libblkid \
+			--disable-libuuid \
+			--disable-uuidd \
 			--enable-verbose-makecmds \
 			--enable-symlink-install \
 			--without-libintl-prefix \
@@ -398,13 +405,9 @@ $(D)/e2fsprogs: $(D)/bootstrap $(D)/util_linux $(ARCHIVE)/$(E2FSPROGS_SOURCE)
 			--with-root-prefix="" \
 		; \
 		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR); \
-		$(MAKE) -C lib/uuid  install DESTDIR=$(TARGET_DIR); \
-		$(MAKE) -C lib/blkid install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/uuid.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/blkid.pc
-	rm -f $(addprefix $(TARGET_DIR)/sbin/,badblocks dumpe2fs logsave e2undo)
-	rm -f $(addprefix $(TARGET_DIR)/usr/sbin/,filefrag e2freefrag mklost+found uuidd e4crypt)
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	rm -f $(addprefix $(TARGET_DIR)/sbin/,badblocks dumpe2fs e2mmpstatus e2undo logsave)
+	rm -f $(addprefix $(TARGET_DIR)/usr/sbin/,filefrag e2freefrag mk_cmds mklost+found uuidd e4crypt)
 	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,chattr lsattr uuidgen)
 	$(REMOVE)/e2fsprogs-$(E2FSPROGS_VER)
 	$(TOUCH)
@@ -412,92 +415,108 @@ $(D)/e2fsprogs: $(D)/bootstrap $(D)/util_linux $(ARCHIVE)/$(E2FSPROGS_SOURCE)
 #
 # util_linux
 #
-UTIL_LINUX_MAJOR = 2.26
-UTIL_LINUX_MINOR = 2
+UTIL_LINUX_MAJOR = 2.32
+UTIL_LINUX_MINOR = 1
 UTIL_LINUX_VER = $(UTIL_LINUX_MAJOR).$(UTIL_LINUX_MINOR)
 UTIL_LINUX_SOURCE = util-linux-$(UTIL_LINUX_VER).tar.xz
 
 $(ARCHIVE)/$(UTIL_LINUX_SOURCE):
 	$(WGET) https://www.kernel.org/pub/linux/utils/util-linux/v$(UTIL_LINUX_MAJOR)/$(UTIL_LINUX_SOURCE)
 
-$(D)/util_linux: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/$(UTIL_LINUX_SOURCE)
+$(D)/util_linux: $(D)/bootstrap $(D)/ncurses $(D)/zlib $(ARCHIVE)/$(UTIL_LINUX_SOURCE)
 	$(START_BUILD)
 	$(REMOVE)/util-linux-$(UTIL_LINUX_VER)
 	$(UNTAR)/$(UTIL_LINUX_SOURCE)
 	$(CHDIR)/util-linux-$(UTIL_LINUX_VER); \
 		$(CONFIGURE) \
 			--prefix=/usr \
+			--libdir=/usr/lib \
+			--localstatedir=/var/ \
+			--datarootdir=/.remove \
 			--mandir=/.remove \
-			--disable-shared \
 			--disable-gtk-doc \
-			--disable-nls \
-			--disable-rpath \
-			--enable-libuuid \
-			--disable-libblkid \
-			--disable-libmount \
-			--enable-libsmartcols \
-			--disable-mount \
-			--disable-partx \
-			--disable-mountpoint \
-			--disable-fallocate \
-			--disable-unshare \
-			--disable-nsenter \
-			--disable-setpriv \
-			--disable-eject \
+			--enable-line \
+			\
 			--disable-agetty \
-			--disable-cramfs \
+			--disable-bash-completion \
 			--disable-bfs \
-			--disable-minix \
+			--disable-cal \
+			--disable-chfn-chsh \
+			--disable-chmem \
+			--disable-cramfs \
+			--disable-eject \
+			--disable-fallocate \
 			--disable-fdformat \
 			--disable-hwclock \
-			--disable-wdctl \
-			--disable-switch_root \
-			--disable-pivot_root \
-			--enable-tunelp \
 			--disable-kill \
 			--disable-last \
-			--disable-utmpdump \
+			--enable-libblkid \
+			--enable-libmount \
+			--enable-libsmartcols \
+			--enable-libuuid \
 			--disable-line \
-			--disable-mesg \
-			--disable-raw \
-			--disable-rename \
-			--disable-reset \
-			--disable-vipw \
-			--disable-newgrp \
-			--disable-chfn-chsh \
+			--disable-logger \
 			--disable-login \
 			--disable-login-chown-vcs \
 			--disable-login-stat-mail \
-			--disable-nologin \
-			--disable-sulogin \
-			--disable-su \
-			--disable-runuser \
-			--disable-ul \
-			--disable-more \
-			--disable-pg \
-			--disable-setterm \
-			--disable-schedutils \
-			--disable-tunelp \
-			--disable-wall \
-			--disable-write \
-			--disable-bash-completion \
-			--disable-pylibmount \
-			--disable-pg-bell \
-			--disable-use-tty-group \
+			--disable-lslogins \
+			--disable-lsmem \
 			--disable-makeinstall-chown \
 			--disable-makeinstall-setuid \
-			--without-audit \
-			--without-ncurses \
-			--without-slang \
-			--without-utempter \
-			--disable-wall \
-			--without-python \
 			--disable-makeinstall-chown \
+			--disable-mesg \
+			--disable-minix \
+			--disable-more \
+			--disable-mount \
+			--disable-mountpoint \
+			--disable-newgrp \
+			--disable-nls \
+			--disable-nologin \
+			--disable-nsenter \
+			--disable-partx \
+			--disable-pg \
+			--disable-pg-bell \
+			--disable-pivot_root \
+			--disable-pylibmount \
+			--disable-raw \
+			--disable-rename \
+			--disable-rfkill \
+			--disable-runuser \
+			--disable-rpath \
+			--disable-schedutils \
+			--disable-setpriv \
+			--disable-setterm \
+			--disable-su \
+			--disable-sulogin \
+			--disable-switch_root \
+			--disable-tunelp \
+			--disable-ul \
+			--disable-unshare \
+			--disable-use-tty-group \
+			--disable-utmpdump \
+			--disable-vipw \
+			--disable-wall \
+			--disable-wdctl \
+			--disable-write \
+			--disable-zramctl \
+			\
+			--without-audit \
+			--without-ncursesw \
+			--without-python \
+			--without-slang \
 			--without-systemdsystemunitdir \
+			--without-tinfo \
+			--without-udev \
+			--without-utempter \
 		; \
-		$(MAKE) sfdisk mkfs; \
-		install -D -m 755 sfdisk $(TARGET_DIR)/sbin/sfdisk; \
-		install -D -m 755 mkfs $(TARGET_DIR)/sbin/mkfs
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REWRITE_LIBTOOLDEP)/libuuid.la
+	$(REWRITE_LIBTOOLDEP)/libblkid.la
+	rm -f $(addprefix $(TARGET_DIR)/bin/,findmnt)
+	rm -f $(addprefix $(TARGET_DIR)/sbin/,blkdiscard blkzone blockdev cfdisk chcpu ctrlaltdel fdisk findfs fsck fsfreeze fstrim losetup mkfs mkswap swaplabel wipefs)
+	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,col colcrt colrm column fincore flock getopt ipcmk ipcrm ipcs isosize linux32 linux64 look lscpu lsipc lslocks lsns mcookie namei prlimit renice rev script scriptreplay setarch setsid uname26 uuidgen uuidparse whereis)
+	rm -f $(addprefix $(TARGET_DIR)/usr/sbin/,ldattach readprofile rtcwake uuidd)
 	$(REMOVE)/util-linux-$(UTIL_LINUX_VER)
 	$(TOUCH)
 
