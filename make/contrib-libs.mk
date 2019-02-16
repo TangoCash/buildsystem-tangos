@@ -1,4 +1,28 @@
 #
+# libnsl
+#
+LIBNSL_VER = 1.2.0
+LIBNSL_SOURCE = libnsl-$(LIBNSL_VER).tar.gz
+
+$(ARCHIVE)/$(LIBNSL_SOURCE):
+	$(WGET) https://github.com/thkukuk/libnsl/archive/v1.2.0/$(LIBNSL_SOURCE)
+
+$(D)/libnsl: $(D)/bootstrap $(ARCHIVE)/$(LIBNSL_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/libnsl-$(LIBNSL_VER)
+	$(UNTAR)/$(LIBNSL_SOURCE)
+	$(CHDIR)/libnsl-$(LIBNSL_VER); \
+		$(CONFIGURE) \
+			--prefix=/usr \
+			; \
+		$(MAKE) all; \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+		$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libnsl.pc
+		$(REWRITE_LIBTOOL)/libnsl.la
+	$(REMOVE)/libnsl-$(LIBNSL_VER)
+	$(TOUCH)
+
+#
 # DirectFB
 #
 DIRECTFB_VER = 1.7.7
@@ -1520,6 +1544,7 @@ $(D)/expat: $(D)/bootstrap $(ARCHIVE)/$(EXPAT_SOURCE)
 #
 FONTCONFIG_VER = 2.11.93
 FONTCONFIG_SOURCE = fontconfig-$(FONTCONFIG_VER).tar.bz2
+FONTCONFIG_PATCH = fontconfig-glibc-$(FONTCONFIG_VER).patch
 
 $(ARCHIVE)/$(FONTCONFIG_SOURCE):
 	$(WGET) https://www.freedesktop.org/software/fontconfig/release/$(FONTCONFIG_SOURCE)
@@ -1529,6 +1554,7 @@ $(D)/fontconfig: $(D)/bootstrap $(D)/freetype $(D)/expat $(ARCHIVE)/$(FONTCONFIG
 	$(REMOVE)/fontconfig-$(FONTCONFIG_VER)
 	$(UNTAR)/$(FONTCONFIG_SOURCE)
 	$(CHDIR)/fontconfig-$(FONTCONFIG_VER); \
+		$(call apply_patches, $(FONTCONFIG_PATCH)); \
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--with-freetype-config=$(HOST_DIR)/bin/freetype-config \

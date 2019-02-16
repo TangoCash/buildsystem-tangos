@@ -305,6 +305,9 @@ $(D)/bootstrap: $(BOOTSTRAP)
 # system-tools
 #
 SYSTEM_TOOLS  = $(D)/busybox
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd60 hd61))
+SYSTEM_TOOLS += $(D)/libnsl
+endif
 SYSTEM_TOOLS += $(D)/zlib
 SYSTEM_TOOLS += $(D)/sysvinit
 SYSTEM_TOOLS += $(D)/diverse-tools
