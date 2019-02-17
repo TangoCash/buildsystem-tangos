@@ -1158,11 +1158,8 @@ $(D)/libconfig: $(D)/bootstrap $(ARCHIVE)/$(LIBCONFIG_SOURCE)
 	$(TOUCH)
 
 #
-# libcurl
+# ca-bundle
 #
-LIBCURL_VER = 7.64.0
-LIBCURL_SOURCE = curl-$(LIBCURL_VER).tar.bz2
-LIBCURL_PATCH = libcurl-$(LIBCURL_VER).patch
 CA-BUNDLE_SOURCE = cacert.pem
 CA-BUNDLE_URL = https://curl.haxx.se/ca/$(CA-BUNDLE_SOURCE)
 
@@ -1172,9 +1169,16 @@ $(ARCHIVE)/$(CA-BUNDLE_SOURCE):
 $(D)/ca-bundle: $(ARCHIVE)/$(CA-BUNDLE_SOURCE)
 	$(START_BUILD)
 	cd $(ARCHIVE); \
-		curl --remote-name --time-cond $(CA-BUNDLE_SOURCE) $(CA-BUNDLE_URL)
+		curl -s --remote-name --time-cond $(CA-BUNDLE_SOURCE) $(CA-BUNDLE_URL)
 	install -D -m 644 $(ARCHIVE)/$(CA-BUNDLE_SOURCE) $(TARGET_DIR)/$(CA_BUNDLE_DIR)/$(CA_BUNDLE)
 	$(TOUCH)
+
+#
+# libcurl
+#
+LIBCURL_VER = 7.64.0
+LIBCURL_SOURCE = curl-$(LIBCURL_VER).tar.bz2
+LIBCURL_PATCH = libcurl-$(LIBCURL_VER).patch
 
 $(ARCHIVE)/$(LIBCURL_SOURCE):
 	$(WGET) https://curl.haxx.se/download/$(LIBCURL_SOURCE)
