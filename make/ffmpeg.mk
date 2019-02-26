@@ -23,6 +23,7 @@ FFMPEG_DEPS = $(D)/librtmp
 FFMPEG_CONF_OPTS   = --enable-librtmp
 FFMPEG_CONF_OPTS  += --enable-openssl
 FFMPEG_CONF_OPTS  += --enable-libxml2
+FFMPEG_CONF_OPTS  += --enable-libfreetype
 FFMPEG_CONF_OPTS  += --disable-x86asm
 FFMPRG_EXTRA_CFLAGS  = -I$(TARGET_DIR)/usr/include/libxml2
 
