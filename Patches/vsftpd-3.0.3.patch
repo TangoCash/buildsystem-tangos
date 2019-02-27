@@ -11,24 +11,6 @@
  #endif /* VSF_BUILDDEFS_H */
 --- vsftpd-3.0.2-org/Makefile
 +++ vsftpd-3.0.2/Makefile
-@@ -3,14 +3,12 @@
- INSTALL	=	install
- IFLAGS  = -idirafter dummyinc
- #CFLAGS = -g
--CFLAGS	=	-O2 -fPIE -fstack-protector --param=ssp-buffer-size=4 \
--	-Wall -W -Wshadow -Werror -Wformat-security \
--	-D_FORTIFY_SOURCE=2 \
-+CFLAGS	=	-O2 -Wall -W -Wshadow
- 	#-pedantic -Wconversion
- 
--LIBS	=	`./vsf_findlibs.sh`
-+LIBS	=	-lcrypt -ldl -lnsl -lresolv -lutil
- LINK	=	-Wl,-s
--LDFLAGS	=	-fPIE -pie -Wl,-z,relro -Wl,-z,now
-+#LDFLAGS	=	-fPIE -pie -Wl,-z,relro -Wl,-z,now
- 
- OBJS	=	main.o utility.o prelogin.o ftpcmdio.o postlogin.o privsock.o \
- 		tunables.o ftpdataio.o secbuf.o ls.o \
 @@ -29,21 +27,7 @@
  	$(CC) -o vsftpd $(OBJS) $(LINK) $(LDFLAGS) $(LIBS)
  
@@ -48,7 +30,7 @@
 -		$(INSTALL) -m 644 vsftpd.conf.5 /usr/man/man5/vsftpd.conf.5; fi
 -	if [ -x /etc/xinetd.d ]; then \
 -		$(INSTALL) -m 644 xinetd.d/vsftpd /etc/xinetd.d/vsftpd; fi
-+	$(INSTALL) -m 755 vsftpd $(PREFIX)/usr/bin/vsftpd; $(INSTALL) -m 644 vsftpd.conf $(PREFIX)/etc/
++	$(INSTALL) -m 755 vsftpd $(PREFIX)/usr/sbin/vsftpd; $(INSTALL) -m 644 vsftpd.conf $(PREFIX)/etc/
  
  clean:
  	rm -f *.o *.swp vsftpd
@@ -245,7 +227,7 @@
  /* PAM support - we include our own dummy version if the system lacks this */
  #include <security/pam_appl.h>
  
-@@ -1262,11 +1267,36 @@
+@@ -1262,11 +1270,36 @@
  #endif
  }
  
@@ -283,7 +265,7 @@
    if (cloneflags_work)
    {
      int ret = syscall(__NR_clone,
-@@ -1312,7 +1342,11 @@ int
+@@ -1312,7 +1345,11 @@
  vsf_sysutil_fork_newnet()
  {
  #ifdef VSF_SYSDEP_HAVE_LINUX_CLONE
