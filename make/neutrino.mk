@@ -33,6 +33,7 @@ NEUTRINO_DEPS += $(D)/neutrino-mp-plugin-mediathek
 NEUTRINO_DEPS += $(D)/neutrino-mp-plugin-xupnpd
 NEUTRINO_DEPS += $(D)/neutrino-mp-plugin-channellogos
 NEUTRINO_DEPS += $(D)/neutrino-mp-plugin-iptvplayer
+NEUTRINO_DEPS += $(D)/neutrino-mp-plugin-settings-update
 NEUTRINO_DEPS += $(D)/links
 NEUTRINO_DEPS += $(LOCAL_NEUTRINO_DEPS)
 NEUTRINO_DEPS += $(LOCAL_NEUTRINO_PLUGINS)

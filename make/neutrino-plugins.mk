@@ -268,6 +268,21 @@ $(D)/neutrino-mp-plugin-l4l-skins:
 	$(TOUCH)
 
 #
+# annie's settingsupdater
+#
+$(D)/neutrino-mp-plugin-settings-update:
+	$(START_BUILD)
+	$(REMOVE)/settings-update
+	set -e; if [ -d $(ARCHIVE)/settings-update.git ]; \
+		then cd $(ARCHIVE)/settings-update.git; git pull; \
+		else cd $(ARCHIVE); git clone https://github.com/horsti58/lua-data.git settings-update.git; \
+		fi
+	cp -ra $(ARCHIVE)/settings-update.git $(BUILD_TMP)/settings-update
+	cp -R $(BUILD_TMP)/settings-update/lua/* $(TARGET_DIR)/lib/tuxbox/plugins/
+	$(REMOVE)/settings-update
+	$(TOUCH)
+
+#
 # neutrino-hd2 plugins
 #
 NEUTRINO_HD2_PLUGINS_PATCHES =
