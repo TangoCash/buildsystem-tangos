@@ -116,7 +116,7 @@ PACKAGES="\
 	${UBUNTU:+libmount-dev}                                                                                       \
 	${UBUNTU:+mtools}                                                                                             \
 	${UBUNTU:+u-boot-tools}                                                                                       \
-	${UBUNTU:+android-tools-fsutils}                                                                              \
+	${UBUNTU:+curl}                                                                                               \
 ";
 
 if [ "$UBUNTU" == 1 ]; then
