@@ -1687,7 +1687,7 @@ $(D)/harfbuzz: $(ARCHIVE)/$(HARFBUZZ_SOURCE) $(D)/bootstrap $(D)/fontconfig $(D)
 	$(UNTAR)/$(HARFBUZZ_SOURCE)
 	$(CHDIR)/harfbuzz-$(HARFBUZZ_VER); \
 		$(call apply_patches, $(HARFBUZZ_PATCH)); \
-		autoreconf --verbose --force --install; \
+		autoreconf -fi $(SILENT_OPT); \
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--with-cairo \
