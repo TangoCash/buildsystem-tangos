@@ -60,7 +60,6 @@ $(SOURCE_DIR)/tvheadend/config.status: $(D)/tvheadend.do_prepare
 			--enable-pngquant \
 			PKG_CONFIG=$(PKG_CONFIG) \
 			PKG_CONFIG_PATH=$(PKG_CONFIG_PATH)
-	@touch $@
 
 $(D)/tvheadend.do_compile: $(SOURCE_DIR)/tvheadend/config.status
 	$(CHDIR)/tvheadend-git-$(TVHEADEND_VER); \
