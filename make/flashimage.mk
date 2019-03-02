@@ -40,26 +40,26 @@ endif
 
 ofgimage:
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51))
-	$(MAKE) flash-image-hd51-multi-rootfs
+	$(MAKE) ITYPE=ofg flash-image-hd51-multi-rootfs
 endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), bre2ze4k))
-	$(MAKE) flash-image-bre2ze4k-multi-rootfs
+	$(MAKE) ITYPE=ofg flash-image-bre2ze4k-multi-rootfs
 endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k))
-	$(MAKE) flash-image-vusolo4k-multi-rootfs
+	$(MAKE) ITYPE=ofg flash-image-vusolo4k-multi-rootfs
 endif
 	$(TUXBOX_CUSTOMIZE)
 
 oi \
 online-image:
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51))
-	$(MAKE) flash-image-hd51-online
+	$(MAKE) ITYPE=online flash-image-hd51-online
 endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), bre2ze4k))
-	$(MAKE) flash-image-bre2ze4k-online
+	$(MAKE) ITYPE=online flash-image-bre2ze4k-online
 endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k))
-	$(MAKE) flash-image-vusolo4k-online
+	$(MAKE) ITYPE=online flash-image-vusolo4k-online
 endif
 	$(TUXBOX_CUSTOMIZE)
 
@@ -72,6 +72,8 @@ flash-clean:
 	cd $(BASE_DIR)/flash/ufc960 && $(SUDOCMD) rm -rf ./tmp ./out
 	cd $(BASE_DIR)/flash/tf7700 && $(SUDOCMD) rm -rf ./tmp ./out
 	echo ""
+
+ITYPE ?= usb
 
 ### armbox hd51
 
@@ -190,7 +192,7 @@ flash-image-hd51-multi-rootfs:
 	bzip2 $(HD51_BUILD_TMP)/$(BOXTYPE)/rootfs.tar
 	echo $(BOXTYPE)_DDT_usb_$(shell date '+%d%m%Y-%H%M%S') > $(HD51_BUILD_TMP)/$(BOXTYPE)/imageversion
 	cd $(HD51_BUILD_TMP) && \
-	zip -r $(BASE_DIR)/$(BOXTYPE)_multi_usb_$(shell date '+%d.%m.%Y-%H.%M').zip $(BOXTYPE)/rootfs.tar.bz2 $(BOXTYPE)/kernel.bin $(BOXTYPE)/disk.img $(BOXTYPE)/imageversion
+	zip -r $(BASE_DIR)/$(BOXTYPE)_multi_$(ITYPE)_$(shell date '+%d.%m.%Y-%H.%M').zip $(BOXTYPE)/rootfs.tar.bz2 $(BOXTYPE)/kernel.bin $(BOXTYPE)/disk.img $(BOXTYPE)/imageversion
 	# cleanup
 	rm -rf $(HD51_BUILD_TMP)
 
@@ -203,7 +205,7 @@ flash-image-hd51-online:
 	bzip2 $(HD51_BUILD_TMP)/$(BOXTYPE)/rootfs.tar
 	echo $(BOXTYPE)_DDT_usb_$(shell date '+%d%m%Y-%H%M%S') > $(HD51_BUILD_TMP)/$(BOXTYPE)/imageversion
 	cd $(HD51_BUILD_TMP)/$(BOXTYPE) && \
-	tar -cvzf $(BASE_DIR)/$(BOXTYPE)_multi_usb_$(shell date '+%d.%m.%Y-%H.%M').tgz rootfs.tar.bz2 kernel.bin imageversion
+	tar -cvzf $(BASE_DIR)/$(BOXTYPE)_multi_$(ITYPE)_$(shell date '+%d.%m.%Y-%H.%M').tgz rootfs.tar.bz2 kernel.bin imageversion
 	# cleanup
 	rm -rf $(HD51_BUILD_TMP)
 
@@ -256,7 +258,7 @@ flash-image-bre2ze4k-multi-rootfs:
 	bzip2 $(BRE2ZE4K_BUILD_TMP)/$(BOXTYPE)/rootfs.tar
 	echo $(BOXTYPE)_DDT_usb_$(shell date '+%d%m%Y-%H%M%S') > $(BRE2ZE4K_BUILD_TMP)/$(BOXTYPE)/imageversion
 	cd $(BRE2ZE4K_BUILD_TMP) && \
-	zip -r $(BASE_DIR)/$(BOXTYPE)_multi_usb_$(shell date '+%d.%m.%Y-%H.%M').zip $(BOXTYPE)/rootfs.tar.bz2 $(BOXTYPE)/kernel.bin $(BOXTYPE)/disk.img $(BOXTYPE)/imageversion
+	zip -r $(BASE_DIR)/$(BOXTYPE)_multi_$(ITYPE)_$(shell date '+%d.%m.%Y-%H.%M').zip $(BOXTYPE)/rootfs.tar.bz2 $(BOXTYPE)/kernel.bin $(BOXTYPE)/disk.img $(BOXTYPE)/imageversion
 	# cleanup
 	rm -rf $(BRE2ZE4K_BUILD_TMP)
 
@@ -269,7 +271,7 @@ flash-image-bre2ze4k-online:
 	bzip2 $(BRE2ZE4K_BUILD_TMP)/$(BOXTYPE)/rootfs.tar
 	echo $(BOXTYPE)_DDT_usb_$(shell date '+%d%m%Y-%H%M%S') > $(BRE2ZE4K_BUILD_TMP)/$(BOXTYPE)/imageversion
 	cd $(BRE2ZE4K_BUILD_TMP)/$(BOXTYPE) && \
-	tar -cvzf $(BASE_DIR)/$(BOXTYPE)_multi_usb_$(shell date '+%d.%m.%Y-%H.%M').tgz rootfs.tar.bz2 kernel.bin imageversion
+	tar -cvzf $(BASE_DIR)/$(BOXTYPE)_multi_$(ITYPE)_$(shell date '+%d.%m.%Y-%H.%M').tgz rootfs.tar.bz2 kernel.bin imageversion
 	# cleanup
 	rm -rf $(BRE2ZE4K_BUILD_TMP)
 
@@ -409,7 +411,7 @@ flash-image-vusolo4k-multi-rootfs:
 	echo This file forces a reboot after the update. > $(VUSOLO4K_BUILD_TMP)/$(VUSOLO4K_PREFIX)/reboot.update
 	echo $(BOXTYPE)_DDT_usb_$(shell date '+%d%m%Y-%H%M%S') > $(VUSOLO4K_BUILD_TMP)/$(VUSOLO4K_PREFIX)/imageversion
 	cd $(VUSOLO4K_BUILD_TMP) && \
-	zip -r $(BASE_DIR)/$(BOXTYPE)_multi_usb_$(shell date '+%d.%m.%Y-%H.%M').zip $(VUSOLO4K_PREFIX)/rootfs.tar.bz2 $(VUSOLO4K_PREFIX)/initrd_auto.bin $(VUSOLO4K_PREFIX)/kernel_auto.bin $(VUSOLO4K_PREFIX)/reboot.update $(VUSOLO4K_PREFIX)/imageversion
+	zip -r $(BASE_DIR)/$(BOXTYPE)_multi_$(ITYPE)_$(shell date '+%d.%m.%Y-%H.%M').zip $(VUSOLO4K_PREFIX)/rootfs.tar.bz2 $(VUSOLO4K_PREFIX)/initrd_auto.bin $(VUSOLO4K_PREFIX)/kernel_auto.bin $(VUSOLO4K_PREFIX)/reboot.update $(VUSOLO4K_PREFIX)/imageversion
 	# cleanup
 	rm -rf $(VUSOLO4K_BUILD_TMP)
 
@@ -424,6 +426,6 @@ flash-image-vusolo4k-online:
 	echo This file forces a reboot after the update. > $(VUSOLO4K_BUILD_TMP)/$(BOXTYPE)/reboot.update
 	echo $(BOXTYPE)_DDT_usb_$(shell date '+%d%m%Y-%H%M%S') > $(VUSOLO4K_BUILD_TMP)/$(BOXTYPE)/imageversion
 	cd $(VUSOLO4K_BUILD_TMP)/$(BOXTYPE) && \
-	tar -cvzf $(BASE_DIR)/$(BOXTYPE)_multi_usb_$(shell date '+%d.%m.%Y-%H.%M').tgz rootfs.tar.bz2 initrd_auto.bin kernel_auto.bin reboot.update imageversion
+	tar -cvzf $(BASE_DIR)/$(BOXTYPE)_multi_$(ITYPE)_$(shell date '+%d.%m.%Y-%H.%M').tgz rootfs.tar.bz2 initrd_auto.bin kernel_auto.bin reboot.update imageversion
 	# cleanup
 	rm -rf $(VUSOLO4K_BUILD_TMP)
