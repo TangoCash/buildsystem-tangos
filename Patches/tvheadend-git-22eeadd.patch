@@ -1,5 +1,5 @@
---- a/tvheadend-git-22eeadd/configure
-+++ b/tvheadend-git-22eeadd/configure
+--- tvheadend-git-22eeadd/configure
++++ tvheadend-git-22eeadd/configure
 @@ -176,20 +176,6 @@
    COMPILER=gcc
  fi

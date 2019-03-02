@@ -825,6 +825,12 @@ endif
 		cp $(TARGET_DIR)/usr/share/alsa/pcm/dmix.conf $(RELEASE_DIR)/usr/share/alsa/pcm/; \
 	fi
 #
+# tvheadend
+#
+	if [ -e $(TARGET_DIR)/usr/bin/tvheadend ]; then \
+		cp -aR $(TARGET_DIR)/usr/share/tvheadend $(RELEASE_DIR)/usr/share; \
+	fi
+#
 # xupnpd
 #
 	if [ -e $(TARGET_DIR)/usr/bin/xupnpd ]; then \

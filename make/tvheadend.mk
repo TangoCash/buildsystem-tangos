@@ -60,10 +60,9 @@ $(SOURCE_DIR)/tvheadend/config.status: $(D)/tvheadend.do_prepare
 			--enable-pngquant \
 			PKG_CONFIG=$(PKG_CONFIG) \
 			PKG_CONFIG_PATH=$(PKG_CONFIG_PATH)
-#	@touch $@
+	@touch $@
 
 $(D)/tvheadend.do_compile: $(SOURCE_DIR)/tvheadend/config.status
-	$(START_BUILD)
 	$(CHDIR)/tvheadend-git-$(TVHEADEND_VER); \
 		$(MAKE) all
 	@touch $@
@@ -71,4 +70,4 @@ $(D)/tvheadend.do_compile: $(SOURCE_DIR)/tvheadend/config.status
 $(D)/tvheadend: $(D)/tvheadend.do_prepare $(D)/tvheadend.do_compile
 	$(CHDIR)/tvheadend-git-$(TVHEADEND_VER); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	@touch $@
+	$(TOUCH)
