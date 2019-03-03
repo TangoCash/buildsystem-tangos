@@ -19,7 +19,7 @@ if [ "$1" == -h ] || [ "$1" == --help ]; then
 	echo "Parameter 4: Media Framework (1-2)"
 	echo "Parameter 5: Image Neutrino (1-2)"
 	echo "Parameter 6: Neutrino variant (1-5)"
-	echo "Parameter 7: External LCD support (1-3)"
+	echo "Parameter 7: External LCD support (1-4)"
 	exit
 fi
 
@@ -338,7 +338,8 @@ case $7 in
 		echo "   1)  No external LCD"
 		echo "   2)  graphlcd for external LCD"
 		echo "   3)  lcd4linux for external LCD"
-		read -p "Select external LCD support (1-3)? [3]"
+		echo "   4)  graphlcd and lcd4linux for external LCD"
+		read -p "Select external LCD support (1-4)? [3]"
 		REPLY="${REPLY:-3}";;
 esac
 
@@ -346,6 +347,7 @@ case "$REPLY" in
 	1) EXTERNAL_LCD="none";;
 	2) EXTERNAL_LCD="externallcd";;
 	3) EXTERNAL_LCD="lcd4linux";;
+	4) EXTERNAL_LCD="both";;
 	*) EXTERNAL_LCD="none";;
 esac
 echo "EXTERNAL_LCD=$EXTERNAL_LCD" >> config

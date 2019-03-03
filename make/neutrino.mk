@@ -160,6 +160,14 @@ N_CONFIG_OPTS += --enable-lcd4linux
 NEUTRINO_DEPS += $(D)/lcd4linux
 NEUTRINO_DEPS += $(D)/neutrino-mp-plugin-l4l-skins
 endif
+
+ifeq ($(EXTERNAL_LCD), both)
+N_CONFIG_OPTS += --enable-graphlcd
+N_CONFIG_OPTS += --enable-lcd4linux
+NEUTRINO_DEPS += $(D)/graphlcd
+NEUTRINO_DEPS += $(D)/lcd4linux
+NEUTRINO_DEPS += $(D)/neutrino-mp-plugin-l4l-skins
+endif
 # -----------------------------------------------------------------------------
 
 ifeq ($(MEDIAFW), gstreamer)
