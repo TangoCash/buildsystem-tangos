@@ -1352,6 +1352,7 @@ $(D)/libnfsidmap: $(D)/bootstrap $(ARCHIVE)/$(LIBNFSIDMAP_SOURCE)
 VSFTPD_VER = 3.0.3
 VSFTPD_SOURCE = vsftpd-$(VSFTPD_VER).tar.gz
 VSFTPD_PATCH = vsftpd-$(VSFTPD_VER).patch
+VSFTPD_PATCH += vsftpd-$(VSFTPD_VER)-find_libs.patch
 
 $(ARCHIVE)/$(VSFTPD_SOURCE):
 	$(WGET) https://security.appspot.com/downloads/$(VSFTPD_SOURCE)
