@@ -94,8 +94,8 @@ BRE2ZE4K_PATCHES = \
 
 HD60_PATCHES = \
 		armbox/hd60_ieee80211-increase-scan-result-expire-time.patch \
-		armbox/hd60_0001-remote.patch
-		armbox/hd60_0002-log2-give-up-on-gcc-constant-optimizations.patch
+		armbox/hd60_0001-remote.patch \
+		armbox/hd60_0002-log2-give-up-on-gcc-constant-optimizations.patch \
 		armbox/hd60_0003-dont-mark-register-as-const.patch
 
 VUSOLO4K_PATCHES = \
