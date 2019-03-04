@@ -15,9 +15,9 @@ $(TARGET_DIR)/lib/libc.so.6:
 #
 # crosstool-ng
 #
-CROSSTOOL_NG_VER = 872341e3
+CROSSTOOL_NG_VER = 106b188
 CROSSTOOL_NG_SOURCE = crosstool-ng-git-$(CROSSTOOL_NG_VER).tar.bz2
-CROSSTOOL_NG_URL = https://github.com/crosstool-ng/crosstool-ng.git
+CROSSTOOL_NG_URL = https://github.com/TangoCash/crosstool-ng.git
 CROSSTOOL_NG_BACKUP = $(ARCHIVE)/crosstool-ng-git-$(BOXARCH)-$(BOXCPU)-$(CROSSTOOL_NG_VER)-backup.tar.gz
 
 ifeq ($(BOXTYPE), vusolo4k)
@@ -41,11 +41,7 @@ endif
 ifeq ($(wildcard $(CROSS_BASE)/build.log.bz2),)
 CROSSTOOL = crosstool
 crosstool:
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd60 hd61))
-	make MAKEFLAGS=--no-print-directory crosstool-ng-own
-else
 	make MAKEFLAGS=--no-print-directory crosstool-ng
-endif
 	if [ ! -e $(CROSSTOOL_NG_BACKUP) ]; then \
 		make crosstool-backup; \
 	fi;
@@ -83,44 +79,6 @@ crosstool-ng: $(D)/directories $(ARCHIVE)/$(KERNEL_SRC) $(ARCHIVE)/$(CROSSTOOL_N
 	test -e $(CROSS_BASE)/$(TARGET)/lib || ln -sf sys-root/lib $(CROSS_BASE)/$(TARGET)/
 	rm -f $(CROSS_BASE)/$(TARGET)/sys-root/lib/libstdc++.so.6.0.20-gdb.py
 	$(REMOVE)/crosstool-ng-git-$(CROSSTOOL_NG_VER)
-
-crosstool-ng-own: $(D)/directories $(ARCHIVE)/$(KERNEL_SRC)
-	make $(BUILD_TMP)
-	if [ ! -e $(CROSS_BASE) ]; then \
-		mkdir -p $(CROSS_BASE); \
-	fi;
-	$(REMOVE)/crosstool-ng.git
-	[ -d "$(ARCHIVE)/crosstool-ng.git" ] && \
-	(cd $(ARCHIVE)/crosstool-ng.git; git pull;); \
-	[ -d "$(ARCHIVE)/crosstool-ng.git" ] || \
-	git clone https://github.com/TangoCash/crosstool-ng.git $(ARCHIVE)/crosstool-ng.git; \
-	cp -ra $(ARCHIVE)/crosstool-ng.git $(BUILD_TMP); \
-	unset CONFIG_SITE LIBRARY_PATH CPATH C_INCLUDE_PATH PKG_CONFIG_PATH CPLUS_INCLUDE_PATH INCLUDE; \
-	$(CHDIR)/crosstool-ng.git; \
-		cp -a $(PATCHES)/ct-ng/crosstool-ng-git-$(BOXARCH)-$(BOXCPU).config .config; \
-		NUM_CPUS=$$(expr `getconf _NPROCESSORS_ONLN` \* 2); \
-		MEM_512M=$$(awk '/MemTotal/ {M=int($$2/1024/512); print M==0?1:M}' /proc/meminfo); \
-		test $$NUM_CPUS -gt $$MEM_512M && NUM_CPUS=$$MEM_512M; \
-		test $$NUM_CPUS = 0 && NUM_CPUS=1; \
-		sed -i "s@^CT_PARALLEL_JOBS=.*@CT_PARALLEL_JOBS=$$NUM_CPUS@" .config; \
-		\
-		$(call apply_patches, $(CROSSTOOL_BOXTYPE_PATCH)); \
-		\
-		export CT_NG_ARCHIVE=$(ARCHIVE); \
-		export CT_NG_BASE_DIR=$(CROSS_BASE); \
-		export CT_NG_CUSTOM_KERNEL=$(CUSTOM_KERNEL); \
-		export CT_NG_CUSTOM_KERNEL_VER=$(CUSTOM_KERNEL_VER); \
-		export LD_LIBRARY_PATH=; \
-		test -f ./configure || ./bootstrap && \
-		./configure --enable-local; \
-		MAKELEVEL=0 make; \
-		chmod 0755 ct-ng; \
-		./ct-ng oldconfig; \
-		./ct-ng build
-	chmod -R +w $(CROSS_BASE)
-	test -e $(CROSS_BASE)/$(TARGET)/lib || ln -sf sys-root/lib $(CROSS_BASE)/$(TARGET)/
-	rm -f $(CROSS_BASE)/$(TARGET)/sys-root/lib/libstdc++.so.6.0.20-gdb.py
-	$(REMOVE)/crosstool-ng.git
 endif
 
 crosstool-backup:
@@ -142,21 +100,6 @@ crossmenuconfig: $(D)/directories $(ARCHIVE)/$(CROSSTOOL_NG_SOURCE)
 	$(UNTAR)/$(CROSSTOOL_NG_SOURCE)
 	set -e; unset CONFIG_SITE; cd $(BUILD_TMP)/crosstool-ng-git-$(CROSSTOOL_NG_VER); \
 		cp -a $(PATCHES)/ct-ng/crosstool-ng-$(CROSSTOOL_NG_VER)-$(BOXARCH)-$(BOXCPU).config .config; \
-		test -f ./configure || ./bootstrap && \
-		./configure --enable-local; \
-		MAKELEVEL=0 make; \
-		chmod 0755 ct-ng; \
-		./ct-ng menuconfig
-
-crossmenuconfig-own: $(D)/directories
-	$(REMOVE)/crosstool-ng.git
-	[ -d "$(ARCHIVE)/crosstool-ng.git" ] && \
-	(cd $(ARCHIVE)/crosstool-ng.git; git pull;); \
-	[ -d "$(ARCHIVE)/crosstool-ng.git" ] || \
-	git clone https://github.com/TangoCash/crosstool-ng.git $(ARCHIVE)/crosstool-ng.git; \
-	cp -ra $(ARCHIVE)/crosstool-ng.git $(BUILD_TMP); \
-	set -e; unset CONFIG_SITE; cd $(BUILD_TMP)/crosstool-ng.git; \
-		cp -a $(PATCHES)/ct-ng/crosstool-ng-git-$(BOXARCH)-$(BOXCPU).config .config; \
 		test -f ./configure || ./bootstrap && \
 		./configure --enable-local; \
 		MAKELEVEL=0 make; \

@@ -305,7 +305,7 @@ $(D)/bootstrap: $(BOOTSTRAP)
 # system-tools
 #
 SYSTEM_TOOLS  = $(D)/busybox
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd60 hd61))
+ifeq ($(BOXARCH), arm)
 SYSTEM_TOOLS += $(D)/libnsl
 endif
 SYSTEM_TOOLS += $(D)/zlib
