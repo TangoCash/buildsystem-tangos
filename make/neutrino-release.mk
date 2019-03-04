@@ -606,6 +606,9 @@ ifeq ($(BOXTYPE), $(filter $(BOXTYPE), atevio7500 fortis_hdbox octagon1008 ufs91
 	cp $(SKEL_ROOT)/release/fw_env.config_$(BOXTYPE) $(RELEASE_DIR)/etc/fw_env.config
 endif
 	install -m 0755 $(SKEL_ROOT)/release/rcS_neutrino_$(BOXTYPE) $(RELEASE_DIR)/etc/init.d/rcS
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51 hd60 hd61 bre2ze4k))
+	install -m 0755 $(SKEL_ROOT)/release/rcS_neutrino_$(BOXARCH) $(RELEASE_DIR)/etc/init.d/rcS
+endif
 #
 #
 ################################################################################
