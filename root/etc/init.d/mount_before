@@ -2,15 +2,23 @@
 for count in 0 1 2 3 4 5 6 7;
 do
   AUTOMOUNT=$(grep "network_nfs_automount_$count=" /var/tuxbox/config/neutrino.conf | awk -F "=" '{print $2}')
+  CIFS=$(grep "network_nfs_type_$count=" /var/tuxbox/config/neutrino.conf | awk -F "=" '{print $2}')
   if [ "$AUTOMOUNT" == "1" ]; then
     REM_IP=$(grep "network_nfs_ip_$count=" /var/tuxbox/config/neutrino.conf | awk -F "=" '{print $2}')
     REM_DIR=$(grep "network_nfs_dir_$count=" /var/tuxbox/config/neutrino.conf | awk -F "=" '{print $2}')
     LOC_DIR=$(grep "network_nfs_local_dir_$count=" /var/tuxbox/config/neutrino.conf | awk -F "=" '{print $2}')
+    USER=$(grep "network_nfs_username_$count=" /var/tuxbox/config/neutrino.conf | awk -F "=" '{print $2}')
+    PASS=$(grep "network_nfs_password_$count=" /var/tuxbox/config/neutrino.conf | awk -F "=" '{print $2}')
     OPT=$(grep "network_nfs_mount_options1_$count=" /var/tuxbox/config/neutrino.conf | awk -F "=" '{print $2}')
     OPT="$OPT,"$(grep "network_nfs_mount_options2_$count=" /var/tuxbox/config/neutrino.conf | awk -F "=" '{ st = index($0,"=");print substr($0,st+1)}')
     if [ `awk '{print $2}' /proc/mounts | grep -c $LOC_DIR` -eq 0 ]; then
        mkdir -p $LOC_DIR
+       if [ "$CIFS" == "1" ]; then
+       echo mount -t cifs //$REM_IP/$REM_DIR $LOC_DIR -o $OPT,user=$USER,password=$PASS
+       mount -t cifs //$REM_IP/$REM_DIR $LOC_DIR -o $OPT,user=$USER,password=$PASS
+       else
        mount -t nfs $REM_IP:$REM_DIR $LOC_DIR -o $OPT
+       fi
        ERR=$?
        if [ $ERR != 0 ]; then
          echo -e "\033[01;31mmounting: $LOC_DIR ($ERR) -> [ERROR]\033[00m"
