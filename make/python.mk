@@ -79,7 +79,7 @@ $(D)/python: $(D)/bootstrap $(D)/host_python $(D)/ncurses $(D)/zlib $(D)/openssl
 		$(call apply_patches, $(PYTHON_PATCH)); \
 		CONFIG_SITE= \
 		$(BUILDENV) \
-		autoreconf -fiv Modules/_ctypes/libffi; \
+		autoreconf -fiv Modules/_ctypes/libffi $(SILENT_OPT); \
 		autoconf $(SILENT_OPT); \
 		./configure $(SILENT_OPT) \
 			--build=$(BUILD) \
@@ -736,7 +736,7 @@ $(D)/python_small: $(D)/bootstrap $(D)/host_python $(D)/ncurses $(D)/zlib $(D)/o
 		$(call apply_patches, $(PYTHON_PATCH)); \
 		CONFIG_SITE= \
 		$(BUILDENV) \
-		autoreconf -fiv Modules/_ctypes/libffi; \
+		autoreconf -fiv Modules/_ctypes/libffi $(SILENT_OPT); \
 		autoconf $(SILENT_OPT); \
 		./configure $(SILENT_OPT) \
 			--build=$(BUILD) \
