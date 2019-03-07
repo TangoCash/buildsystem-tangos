@@ -166,7 +166,9 @@ case "$ACTION" in
 		NTFSMOUNT=$(which ntfs-3g)
 		RET2=$?
 		# remove old mountpoint symlinks we might have for this device
-		rm -f $MOUNTPOINT
+		if [ $MOUNTPOINT != "/swap" ]; then
+			rmdir $MOUNTPOINT
+		fi
 		mkdir -p $MOUNTPOINT
 		for i in 1 2 3 4 5; do # retry 5 times
 			# echo "mounting /dev/$MDEV to $MOUNTPOINT try $i" >> $LOG
