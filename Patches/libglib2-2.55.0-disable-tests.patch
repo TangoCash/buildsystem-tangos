@@ -1,6 +1,6 @@
 --- a/gio/Makefile.am
 +++ b/gio/Makefile.am
-@@ -244,7 +244,7 @@
+@@ -253,7 +253,7 @@
  platform_deps += win32/libgiowin32.la
  endif
  
@@ -41,9 +41,19 @@
  # Save this value here, since automake will set cflags later
  cflags_set=${CFLAGS:+set}
  
--AM_INIT_AUTOMAKE([1.11 -Wno-portability no-define no-dist-gzip dist-xz tar-ustar])
-+AM_INIT_AUTOMAKE([1.15 -Wno-portability no-define no-dist-gzip dist-xz tar-ustar])
+-AM_INIT_AUTOMAKE([1.13.3 -Wno-portability no-define no-dist-gzip dist-xz tar-ustar subdir-objects])
++AM_INIT_AUTOMAKE([1.15 -Wno-portability no-define no-dist-gzip dist-xz tar-ustar subdir-objects])
  AM_MAINTAINER_MODE([enable])
  
  # Support silent build rules. Disable
-
+--- a/gtk-doc.make
++++ b/gtk-doc.make
+@@ -277,7 +277,7 @@ uninstall-local:
+ #
+ # Require gtk-doc when making dist
+ #
+-if HAVE_GTK_DOC
++if ENABLE_GTK_DOC
+ dist-check-gtkdoc: docs
+ else
+ dist-check-gtkdoc:

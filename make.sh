@@ -126,7 +126,7 @@ echo "BOXTYPE=$BOXTYPE" >> config
 
 ##############################################
 
-if [ $BOXTYPE == 'hd51' ]; then
+if [ $BOXTYPE == 'hd51' -o 'bre2ze4k' ]; then
 
 		echo -e "\n*** boxmode=1 (Standard) ***"
 		echo -e "+++ Features +++"

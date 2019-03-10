@@ -293,7 +293,7 @@ $(D)/libffi: $(D)/bootstrap $(ARCHIVE)/$(LIBFFI_SOURCE)
 # host_libglib2_genmarshal
 #
 LIBGLIB2_VER_MAJOR = 2
-LIBGLIB2_VER_MINOR = 54
+LIBGLIB2_VER_MINOR = 55
 LIBGLIB2_VER_MICRO = 0
 LIBGLIB2_VER = $(LIBGLIB2_VER_MAJOR).$(LIBGLIB2_VER_MINOR).$(LIBGLIB2_VER_MICRO)
 LIBGLIB2_SOURCE = glib-$(LIBGLIB2_VER).tar.xz
@@ -348,12 +348,13 @@ $(D)/libglib2: $(D)/bootstrap $(D)/host_libglib2_genmarshal $(D)/zlib $(D)/libff
 			--disable-libmount \
 			--disable-gtk-doc \
 			--disable-gtk-doc-html \
+			--disable-gtk-doc-pdf \
 			--with-threads="posix" \
 			--with-html-dir=/.remove \
 			--with-pcre=internal \
 		; \
 		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
+		$(MAKE) install DESTDIR=$(TARGET_DIR) localedir=/.remove/locale gnulocaledir=/.remove/locale
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/glib-2.0.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gmodule-2.0.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gio-2.0.pc
@@ -1189,6 +1190,7 @@ $(D)/libcurl: $(D)/bootstrap $(D)/zlib $(D)/openssl $(D)/ca-bundle $(ARCHIVE)/$(
 	$(UNTAR)/$(LIBCURL_SOURCE)
 	$(CHDIR)/curl-$(LIBCURL_VER); \
 		$(call apply_patches, $(LIBCURL_PATCH)); \
+		autoreconf -fi $(SILENT_OPT); \
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--mandir=/.remove \
@@ -1262,8 +1264,8 @@ $(D)/libfribidi: $(D)/bootstrap $(ARCHIVE)/$(LIBFRIBIDI_SOURCE)
 # libsigc
 #
 LIBSIGC_VER_MAJOR = 2
-LIBSIGC_VER_MINOR = 4
-LIBSIGC_VER_MICRO = 1
+LIBSIGC_VER_MINOR = 10
+LIBSIGC_VER_MICRO = 0
 LIBSIGC_VER = $(LIBSIGC_VER_MAJOR).$(LIBSIGC_VER_MINOR).$(LIBSIGC_VER_MICRO)
 LIBSIGC_SOURCE = libsigc++-$(LIBSIGC_VER).tar.xz
 
@@ -1538,7 +1540,9 @@ $(D)/expat: $(D)/bootstrap $(ARCHIVE)/$(EXPAT_SOURCE)
 			--prefix=/usr \
 			--mandir=/.remove \
 			--bindir=/.remove \
+			--docdir=/.remove \
 			--without-xmlwf \
+			--without-docbook \
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -1723,6 +1727,7 @@ $(D)/libdvdcss: $(D)/bootstrap $(ARCHIVE)/$(LIBDVDCSS_SOURCE)
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--disable-doc \
+			--docdir=/.remove \
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -2023,6 +2028,8 @@ $(D)/libpopt: $(D)/bootstrap $(ARCHIVE)/$(LIBPOPT_SOURCE)
 	$(CHDIR)/popt-$(LIBPOPT_VER); \
 		$(CONFIGURE) \
 			--prefix=/usr \
+			--mandir=/.remove \
+			--localedir=/.remove/locale \
 			--disable-static \
 		; \
 		$(MAKE); \
@@ -2264,13 +2271,13 @@ $(D)/libusb_compat: $(D)/bootstrap $(D)/libusb $(ARCHIVE)/$(LIBUSB_COMPAT_SOURCE
 #
 # alsa_lib
 #
-ALSA_LIB_VER = 1.1.7
+ALSA_LIB_VER = 1.1.8
 ALSA_LIB_SOURCE = alsa-lib-$(ALSA_LIB_VER).tar.bz2
 ALSA_LIB_PATCH  = alsa-lib-$(ALSA_LIB_VER).patch
 ALSA_LIB_PATCH += alsa-lib-$(ALSA_LIB_VER)-link_fix.patch
 
 $(ARCHIVE)/$(ALSA_LIB_SOURCE):
-	$(WGET) ftp://ftp.alsa-project.org/pub/lib/$(ALSA_LIB_SOURCE)
+	$(WGET) https://www.alsa-project.org/files/pub/lib/$(ALSA_LIB_SOURCE)
 
 $(D)/alsa_lib: $(D)/bootstrap $(ARCHIVE)/$(ALSA_LIB_SOURCE)
 	$(START_BUILD)
@@ -2304,11 +2311,11 @@ $(D)/alsa_lib: $(D)/bootstrap $(ARCHIVE)/$(ALSA_LIB_SOURCE)
 #
 # alsa-utils
 #
-ALSA_UTILS_VER = 1.1.7
+ALSA_UTILS_VER = 1.1.8
 ALSA_UTILS_SOURCE = alsa-utils-$(ALSA_UTILS_VER).tar.bz2
 
 $(ARCHIVE)/$(ALSA_UTILS_SOURCE):
-	$(WGET) ftp://ftp.alsa-project.org/pub/utils/$(ALSA_UTILS_SOURCE)
+	$(WGET) https://www.alsa-project.org/files/pub/utils/$(ALSA_UTILS_SOURCE)
 
 $(D)/alsa_utils: $(D)/bootstrap $(D)/alsa_lib $(ARCHIVE)/$(ALSA_UTILS_SOURCE)
 	$(START_BUILD)
@@ -2321,6 +2328,7 @@ $(D)/alsa_utils: $(D)/bootstrap $(D)/alsa_lib $(ARCHIVE)/$(ALSA_UTILS_SOURCE)
 			--prefix=/usr \
 			--mandir=/.remove \
 			--with-curses=ncurses \
+			--with-udev-rules-dir=/.remove \
 			--disable-bat \
 			--disable-nls \
 			--disable-alsatest \
@@ -2665,6 +2673,7 @@ $(D)/libdaemon: $(D)/bootstrap $(ARCHIVE)/$(LIBDAEMON_SOURCE)
 		$(CONFIGURE) \
 			ac_cv_func_setpgrp_void=yes \
 			--prefix=/usr \
+			--docdir=/.remove \
 			--disable-static \
 			--disable-lynx \
 		; \

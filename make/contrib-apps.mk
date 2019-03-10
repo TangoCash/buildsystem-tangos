@@ -43,8 +43,10 @@ $(D)/busybox: $(D)/bootstrap $(ARCHIVE)/$(BUSYBOX_SOURCE) $(PATCHES)/$(BUSYBOX_C
 #
 # bash
 #
-BASH_VER = 4.4
+BASH_VER = 5.0
 BASH_SOURCE = bash-$(BASH_VER).tar.gz
+BASH_PATCH  = bash50-001.patch
+BASH_PATCH += bash50-002.patch
 
 $(ARCHIVE)/$(BASH_SOURCE):
 	$(WGET) http://ftp.gnu.org/gnu/bash/$(BASH_SOURCE)
@@ -54,6 +56,7 @@ $(D)/bash: $(D)/bootstrap $(ARCHIVE)/$(BASH_SOURCE)
 	$(REMOVE)/bash-$(BASH_VER)
 	$(UNTAR)/$(BASH_SOURCE)
 	$(CHDIR)/bash-$(BASH_VER); \
+		$(call apply_patches, $(BASH_PATCH), 0); \
 		$(CONFIGURE) \
 			--libdir=$(TARGET_DIR)/usr/lib \
 			--includedir=$(TARGET_DIR)/usr/include \
@@ -61,6 +64,7 @@ $(D)/bash: $(D)/bootstrap $(ARCHIVE)/$(BASH_SOURCE)
 			--infodir=$(TARGET_DIR)/.remove \
 			--mandir=$(TARGET_DIR)/.remove \
 			--localedir=$(TARGET_DIR)/.remove/locale \
+			--datarootdir=$(TARGET_DIR)/.remove \
 		; \
 		$(MAKE); \
 		$(MAKE) install prefix=$(TARGET_DIR)
@@ -511,6 +515,8 @@ $(D)/util_linux: $(D)/bootstrap $(D)/ncurses $(D)/zlib $(ARCHIVE)/$(UTIL_LINUX_S
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REWRITE_LIBTOOL)/libuuid.la
+	$(REWRITE_LIBTOOL)/libblkid.la
 	$(REWRITE_LIBTOOLDEP)/libuuid.la
 	$(REWRITE_LIBTOOLDEP)/libblkid.la
 	rm -f $(addprefix $(TARGET_DIR)/bin/,findmnt)
@@ -556,6 +562,7 @@ $(D)/parted: $(D)/bootstrap $(D)/e2fsprogs $(ARCHIVE)/$(PARTED_SOURCE)
 	$(UNTAR)/$(PARTED_SOURCE)
 	$(CHDIR)/parted-$(PARTED_VER); \
 		$(call apply_patches, $(PARTED_PATCH)); \
+		autoreconf -fi $(SILENT_OPT); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix=/usr \
@@ -954,10 +961,12 @@ $(D)/sysstat: $(D)/bootstrap $(ARCHIVE)/$(SYSSTAT_SOURCE)
 	$(CHDIR)/sysstat-$(SYSSTAT_VER); \
 		$(CONFIGURE) \
 			--prefix=/usr \
+			--mandir=/.remove \
+			--docdir=/.remove \
 			--disable-documentation \
 		; \
 		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
+		$(MAKE) install DESTDIR=$(TARGET_DIR) NLS_DIR=/.remove/locale
 	$(REMOVE)/sysstat-$(SYSSTAT_VER)
 	$(TOUCH)
 
@@ -1093,6 +1102,7 @@ $(D)/dbus: $(D)/bootstrap $(D)/expat $(ARCHIVE)/$(DBUS_SOURCE)
 		CFLAGS="$(TARGET_CFLAGS) -Wno-cast-align" \
 			--without-x \
 			--prefix=/usr \
+			--docdir=/.remove \
 			--sysconfdir=/etc \
 			--localstatedir=/var \
 			--with-console-auth-dir=/run/console/ \
@@ -1200,6 +1210,8 @@ $(D)/wget: $(D)/bootstrap $(D)/openssl $(ARCHIVE)/$(WGET_SOURCE)
 			--disable-nls \
 			--disable-opie \
 			--disable-digest \
+			--disable-rpath \
+			--disable-iri \
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -1209,9 +1221,8 @@ $(D)/wget: $(D)/bootstrap $(D)/openssl $(ARCHIVE)/$(WGET_SOURCE)
 #
 # coreutils
 #
-COREUTILS_VER = 8.23
+COREUTILS_VER = 8.30
 COREUTILS_SOURCE = coreutils-$(COREUTILS_VER).tar.xz
-COREUTILS_PATCH = coreutils-$(COREUTILS_VER).patch
 
 $(ARCHIVE)/$(COREUTILS_SOURCE):
 	$(WGET) https://ftp.gnu.org/gnu/coreutils/$(COREUTILS_SOURCE)
@@ -1221,11 +1232,20 @@ $(D)/coreutils: $(D)/bootstrap $(D)/openssl $(ARCHIVE)/$(COREUTILS_SOURCE)
 	$(REMOVE)/coreutils-$(COREUTILS_VER)
 	$(UNTAR)/$(COREUTILS_SOURCE)
 	$(CHDIR)/coreutils-$(COREUTILS_VER); \
-		$(call apply_patches, $(COREUTILS_PATCH)); \
 		export fu_cv_sys_stat_statfs2_bsize=yes; \
 		$(CONFIGURE) \
 			--prefix=/usr \
+			--bindir=/bin \
+			--mandir=/.remove \
+			--infodir=/.remove \
+			--localedir=/.remove/locale \
 			--enable-largefile \
+			--enable-silent-rules \
+			--disable-xattr \
+			--disable-libcap \
+			--disable-acl \
+			--without-gmp \
+			--without-selinux \
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -1357,7 +1377,7 @@ VSFTPD_PATCH += vsftpd-$(VSFTPD_VER)-find_libs.patch
 $(ARCHIVE)/$(VSFTPD_SOURCE):
 	$(WGET) https://security.appspot.com/downloads/$(VSFTPD_SOURCE)
 
-$(D)/vsftpd: $(D)/bootstrap $(ARCHIVE)/$(VSFTPD_SOURCE)
+$(D)/vsftpd: $(D)/bootstrap $(D)/openssl $(ARCHIVE)/$(VSFTPD_SOURCE)
 	$(START_BUILD)
 	$(REMOVE)/vsftpd-$(VSFTPD_VER)
 	$(UNTAR)/$(VSFTPD_SOURCE)
@@ -1434,7 +1454,7 @@ $(D)/htop: $(D)/bootstrap $(D)/ncurses $(ARCHIVE)/$(HTOP_SOURCE)
 #
 # ethtool
 #
-ETHTOOL_VER = 4.17
+ETHTOOL_VER = 4.19
 ETHTOOL_SOURCE = ethtool-$(ETHTOOL_VER).tar.xz
 
 $(ARCHIVE)/$(ETHTOOL_SOURCE):
@@ -1584,6 +1604,8 @@ $(D)/ntp: $(D)/bootstrap $(ARCHIVE)/$(NTP_SOURCE)
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix=/usr \
+			--mandir=/.remove \
+			--docdir=/.remove \
 			--disable-tick \
 			--disable-tickadj \
 			--with-yielding-select=yes \
@@ -1860,7 +1882,7 @@ $(D)/dropbearmulti: $(D)/bootstrap $(ARCHIVE)/$(DROPBEARMULTI_SOURCE)
 			--disable-syslog \
 			--disable-lastlog \
 			--infodir=/.remove \
-			--localedir=/.remove \
+			--localedir=/.remove/locale \
 			--mandir=/.remove \
 			--docdir=/.remove \
 			--htmldir=/.remove \

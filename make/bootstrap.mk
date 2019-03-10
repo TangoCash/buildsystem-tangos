@@ -269,6 +269,7 @@ $(D)/cortex_strings: $(D)/directories $(ARCHIVE)/$(CORTEX_STRINGS_SOURCE)
 			--build=$(BUILD) \
 			--host=$(TARGET) \
 			--prefix=/usr \
+			--mandir=/.remove \
 			--disable-shared \
 			--enable-static \
 		; \
@@ -415,8 +416,9 @@ CCACHE_ENV = install -d $(CCACHE_BINDIR); \
 	$(CCACHE_LINKS)
 
 $(D)/ccache:
+	$(START_BUILD)
 	$(CCACHE_ENV)
-	touch $@
+	$(TOUCH)
 
 # hack to make sure they are always copied
 PHONY += ccache
