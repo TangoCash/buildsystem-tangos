@@ -812,8 +812,9 @@ endif
 # httpd/icons/locale/themes
 #
 	cp -aR $(TARGET_DIR)/usr/share/tuxbox/neutrino/* $(RELEASE_DIR)/usr/share/tuxbox/neutrino
-ifeq ($(EXTERNAL_LCD), lcd4linux)
+ifeq ($(EXTERNAL_LCD), $(filter $(EXTERNAL_LCD), lcd4linux both))
 	cp -aR $(TARGET_DIR)/usr/share/lcd $(RELEASE_DIR)/usr/share
+	cp -aR $(TARGET_DIR)/var/lcd $(RELEASE_DIR)/var
 endif
 #
 # alsa
