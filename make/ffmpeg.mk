@@ -2,7 +2,7 @@
 # ffmpeg
 #
 ################################################################################
-ifeq ($(BOXARCH), arm)
+ifeq ($(BOXARCH), $(filter $(BOXARCH), arm mips))
 
 ifeq ($(FFMPEG_EXPERIMENTAL), 1)
 FFMPEG_VER = 4.1.2
@@ -25,6 +25,14 @@ FFMPEG_CONF_OPTS  += --enable-openssl
 FFMPEG_CONF_OPTS  += --enable-libxml2
 FFMPEG_CONF_OPTS  += --enable-libfreetype
 FFMPEG_CONF_OPTS  += --disable-x86asm
+
+ifeq ($(BOXARCH), arm)
+FFMPEG_CONF_OPTS  += --cpu=cortex-a15
+endif
+ifeq ($(BOXARCH), mips)
+FFMPEG_CONF_OPTS  += --cpu=generic
+endif
+
 FFMPRG_EXTRA_CFLAGS  = -I$(TARGET_DIR)/usr/include/libxml2
 
 $(ARCHIVE)/$(FFMPEG_SOURCE):
@@ -328,8 +336,7 @@ $(D)/ffmpeg: $(D)/bootstrap $(D)/openssl $(D)/bzip2 $(D)/freetype $(D)/alsa_lib 
 			--cross-prefix=$(TARGET)- \
 			--extra-cflags="$(TARGET_CFLAGS) $(FFMPRG_EXTRA_CFLAGS)" \
 			--extra-ldflags="$(TARGET_LDFLAGS) -lrt" \
-			--arch=arm \
-			--cpu=cortex-a15 \
+			--arch=$(BOXARCH) \
 			--target-os=linux \
 			--prefix=/usr \
 			--bindir=/sbin \
