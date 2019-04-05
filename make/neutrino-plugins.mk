@@ -74,6 +74,9 @@ $(D)/neutrino-mp-plugins.do_prepare: $(D)/bootstrap $(D)/ffmpeg $(D)/libcurl $(D
 ifeq ($(BOXARCH), arm)
 	sed -i -e 's#shellexec fx2#shellexec stb-startup#g' $(SOURCE_DIR)/neutrino-mp-plugins/Makefile.am
 endif
+ifeq ($(BOXARCH), mips)
+	sed -i -e 's#shellexec fx2#shellexec#g' $(SOURCE_DIR)/neutrino-mp-plugins/Makefile.am
+endif
 	cp -ra $(SOURCE_DIR)/neutrino-mp-plugins $(SOURCE_DIR)/neutrino-mp-plugins.org
 	@touch $@
 
