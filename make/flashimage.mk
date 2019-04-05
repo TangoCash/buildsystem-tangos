@@ -196,9 +196,8 @@ flash-image-hd51-multi-rootfs:
 	tar -cvf $(HD51_BUILD_TMP)/$(BOXTYPE)/rootfs.tar --exclude=zImage* . > /dev/null 2>&1; \
 	bzip2 $(HD51_BUILD_TMP)/$(BOXTYPE)/rootfs.tar
 	echo $(BOXTYPE)_DDT_usb_$(shell date '+%d%m%Y-%H%M%S') > $(HD51_BUILD_TMP)/$(BOXTYPE)/imageversion
-	mkdir -p $(IMAGE_RELEASE_DIR)
 	cd $(HD51_BUILD_TMP) && \
-	zip -r $(IMAGE_RELEASE_DIR)/$(BOXTYPE)_multi_$(ITYPE)_$(shell date '+%d.%m.%Y-%H.%M').zip $(BOXTYPE)/rootfs.tar.bz2 $(BOXTYPE)/kernel.bin $(BOXTYPE)/disk.img $(BOXTYPE)/imageversion
+	zip -r $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_multi_$(ITYPE)_$(shell date '+%d.%m.%Y-%H.%M').zip $(BOXTYPE)/rootfs.tar.bz2 $(BOXTYPE)/kernel.bin $(BOXTYPE)/disk.img $(BOXTYPE)/imageversion
 	# cleanup
 	rm -rf $(HD51_BUILD_TMP)
 
@@ -210,9 +209,8 @@ flash-image-hd51-online:
 	tar -cvf $(HD51_BUILD_TMP)/$(BOXTYPE)/rootfs.tar --exclude=zImage* . > /dev/null 2>&1; \
 	bzip2 $(HD51_BUILD_TMP)/$(BOXTYPE)/rootfs.tar
 	echo $(BOXTYPE)_DDT_usb_$(shell date '+%d%m%Y-%H%M%S') > $(HD51_BUILD_TMP)/$(BOXTYPE)/imageversion
-	mkdir -p $(IMAGE_RELEASE_DIR)
 	cd $(HD51_BUILD_TMP)/$(BOXTYPE) && \
-	tar -cvzf $(IMAGE_RELEASE_DIR)/$(BOXTYPE)_multi_$(ITYPE)_$(shell date '+%d.%m.%Y-%H.%M').tgz rootfs.tar.bz2 kernel.bin imageversion
+	tar -cvzf $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_multi_$(ITYPE)_$(shell date '+%d.%m.%Y-%H.%M').tgz rootfs.tar.bz2 kernel.bin imageversion
 	# cleanup
 	rm -rf $(HD51_BUILD_TMP)
 
@@ -264,9 +262,8 @@ flash-image-bre2ze4k-multi-rootfs:
 	tar -cvf $(BRE2ZE4K_BUILD_TMP)/$(BOXTYPE)/rootfs.tar --exclude=zImage* . > /dev/null 2>&1; \
 	bzip2 $(BRE2ZE4K_BUILD_TMP)/$(BOXTYPE)/rootfs.tar
 	echo $(BOXTYPE)_DDT_usb_$(shell date '+%d%m%Y-%H%M%S') > $(BRE2ZE4K_BUILD_TMP)/$(BOXTYPE)/imageversion
-	mkdir -p $(IMAGE_RELEASE_DIR)
 	cd $(BRE2ZE4K_BUILD_TMP) && \
-	zip -r $(IMAGE_RELEASE_DIR)/$(BOXTYPE)_multi_$(ITYPE)_$(shell date '+%d.%m.%Y-%H.%M').zip $(BOXTYPE)/rootfs.tar.bz2 $(BOXTYPE)/kernel.bin $(BOXTYPE)/disk.img $(BOXTYPE)/imageversion
+	zip -r $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_multi_$(ITYPE)_$(shell date '+%d.%m.%Y-%H.%M').zip $(BOXTYPE)/rootfs.tar.bz2 $(BOXTYPE)/kernel.bin $(BOXTYPE)/disk.img $(BOXTYPE)/imageversion
 	# cleanup
 	rm -rf $(BRE2ZE4K_BUILD_TMP)
 
@@ -278,9 +275,8 @@ flash-image-bre2ze4k-online:
 	tar -cvf $(BRE2ZE4K_BUILD_TMP)/$(BOXTYPE)/rootfs.tar --exclude=zImage* . > /dev/null 2>&1; \
 	bzip2 $(BRE2ZE4K_BUILD_TMP)/$(BOXTYPE)/rootfs.tar
 	echo $(BOXTYPE)_DDT_usb_$(shell date '+%d%m%Y-%H%M%S') > $(BRE2ZE4K_BUILD_TMP)/$(BOXTYPE)/imageversion
-	mkdir -p $(IMAGE_RELEASE_DIR)
 	cd $(BRE2ZE4K_BUILD_TMP)/$(BOXTYPE) && \
-	tar -cvzf $(IMAGE_RELEASE_DIR)/$(BOXTYPE)_multi_$(ITYPE)_$(shell date '+%d.%m.%Y-%H.%M').tgz rootfs.tar.bz2 kernel.bin imageversion
+	tar -cvzf $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_multi_$(ITYPE)_$(shell date '+%d.%m.%Y-%H.%M').tgz rootfs.tar.bz2 kernel.bin imageversion
 	# cleanup
 	rm -rf $(BRE2ZE4K_BUILD_TMP)
 
@@ -332,9 +328,8 @@ flash-image-hd60-multi-disk: $(ARCHIVE)/$(HD60_BOOTARGS_SRC) $(ARCHIVE)/$(HD60_P
 	rm -rf $(HD60_BUILD_TMP)/*.txt
 	rm -rf $(HD60_BUILD_TMP)/$(BOXTYPE)/*.txt
 	rm -rf $(HD60_BUILD_TMP)/$(HD60_IMAGE_LINK)
-	mkdir -p $(IMAGE_RELEASE_DIR)
 	cd $(HD60_BUILD_TMP) && \
-	zip -r $(IMAGE_RELEASE_DIR)/$(BOXTYPE)_multi_usb_$(shell date '+%d.%m.%Y-%H.%M').zip *
+	zip -r $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_multi_usb_$(shell date '+%d.%m.%Y-%H.%M').zip *
 	# cleanup
 	rm -rf $(HD60_BUILD_TMP)
 
@@ -420,9 +415,8 @@ flash-image-vusolo4k-multi-rootfs:
 	bzip2 $(VUSOLO4K_BUILD_TMP)/$(VUSOLO4K_PREFIX)/rootfs.tar
 	echo This file forces a reboot after the update. > $(VUSOLO4K_BUILD_TMP)/$(VUSOLO4K_PREFIX)/reboot.update
 	echo $(BOXTYPE)_DDT_usb_$(shell date '+%d%m%Y-%H%M%S') > $(VUSOLO4K_BUILD_TMP)/$(VUSOLO4K_PREFIX)/imageversion
-	mkdir -p $(IMAGE_RELEASE_DIR)
 	cd $(VUSOLO4K_BUILD_TMP) && \
-	zip -r $(IMAGE_RELEASE_DIR)/$(BOXTYPE)_multi_$(ITYPE)_$(shell date '+%d.%m.%Y-%H.%M').zip $(VUSOLO4K_PREFIX)/rootfs.tar.bz2 $(VUSOLO4K_PREFIX)/initrd_auto.bin $(VUSOLO4K_PREFIX)/kernel_auto.bin $(VUSOLO4K_PREFIX)/reboot.update $(VUSOLO4K_PREFIX)/imageversion
+	zip -r $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_multi_$(ITYPE)_$(shell date '+%d.%m.%Y-%H.%M').zip $(VUSOLO4K_PREFIX)/rootfs.tar.bz2 $(VUSOLO4K_PREFIX)/initrd_auto.bin $(VUSOLO4K_PREFIX)/kernel_auto.bin $(VUSOLO4K_PREFIX)/reboot.update $(VUSOLO4K_PREFIX)/imageversion
 	# cleanup
 	rm -rf $(VUSOLO4K_BUILD_TMP)
 
@@ -436,9 +430,8 @@ flash-image-vusolo4k-online:
 	bzip2 $(VUSOLO4K_BUILD_TMP)/$(BOXTYPE)/rootfs.tar
 	echo This file forces a reboot after the update. > $(VUSOLO4K_BUILD_TMP)/$(BOXTYPE)/reboot.update
 	echo $(BOXTYPE)_DDT_usb_$(shell date '+%d%m%Y-%H%M%S') > $(VUSOLO4K_BUILD_TMP)/$(BOXTYPE)/imageversion
-	mkdir -p $(IMAGE_RELEASE_DIR)
 	cd $(VUSOLO4K_BUILD_TMP)/$(BOXTYPE) && \
-	tar -cvzf $(IMAGE_RELEASE_DIR)/$(BOXTYPE)_multi_$(ITYPE)_$(shell date '+%d.%m.%Y-%H.%M').tgz rootfs.tar.bz2 initrd_auto.bin kernel_auto.bin reboot.update imageversion
+	tar -cvzf $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_multi_$(ITYPE)_$(shell date '+%d.%m.%Y-%H.%M').tgz rootfs.tar.bz2 initrd_auto.bin kernel_auto.bin reboot.update imageversion
 	# cleanup
 	rm -rf $(VUSOLO4K_BUILD_TMP)
 
@@ -461,8 +454,7 @@ flash-image-vuduo:
 	rm -f $(VUDUO_BUILD_TMP)/$(VUDUO_PREFIX)/root_cfe_auto.ubi
 	rm -f $(VUDUO_BUILD_TMP)/$(VUDUO_PREFIX)/ubinize.cfg
 	echo $(BOXTYPE)_DDT_usb_$(shell date '+%d%m%Y-%H%M%S') > $(VUDUO_BUILD_TMP)/$(VUDUO_PREFIX)/imageversion
-	mkdir -p $(IMAGE_RELEASE_DIR)
 	cd $(VUDUO_BUILD_TMP)/ && \
-	zip -r $(IMAGE_RELEASE_DIR)/$(BOXTYPE)_usb_$(shell date '+%d.%m.%Y-%H.%M').zip $(VUDUO_PREFIX)*
+	zip -r $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_usb_$(shell date '+%d.%m.%Y-%H.%M').zip $(VUDUO_PREFIX)*
 	# cleanup
 	rm -rf $(VUDUO_BUILD_TMP)
