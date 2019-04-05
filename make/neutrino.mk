@@ -56,7 +56,7 @@ N_CONFIG_OPTS += --enable-flac
 NEUTRINO_DEPS += $(D)/flac
 endif
 
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), atevio7500 spark spark7162 ufs912 ufs913 ufs910))
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), atevio7500 spark spark7162 ufs912 ufs913 ufs910 vuduo))
 NEUTRINO_DEPS += $(D)/ntfs_3g
 ifneq ($(BOXTYPE), $(filter $(BOXTYPE), ufs910))
 NEUTRINO_DEPS += $(D)/mtd_utils

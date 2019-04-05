@@ -329,7 +329,7 @@ SYSTEM_TOOLS += $(D)/dvbsnoop
 ifeq ($(BOXARCH), sh4)
 SYSTEM_TOOLS += $(D)/fbshot
 endif
-ifeq ($(BOXARCH), arm)
+ifeq ($(BOXARCH), $(filter $(BOXARCH), arm mips))
 SYSTEM_TOOLS += $(D)/ofgwrite
 SYSTEM_TOOLS += $(D)/ethtool
 endif
