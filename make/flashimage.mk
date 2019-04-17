@@ -353,10 +353,12 @@ HD60_IMAGE_LINK = $(HD60_IMAGE_NAME).ext4
 HD60_BOOTOPTIONS_PARTITION_SIZE = 32768
 HD60_IMAGE_ROOTFS_SIZE = 1024M
 
-HD60_BOOTARGS_DATE =20190201
+HD60_BOOTARGS_DATE = 20190329
 HD60_BOOTARGS_SRC = $(KERNEL_TYPE)-bootargs-$(HD60_BOOTARGS_DATE).zip
-HD60_PARTITONS_DATE = 20190201
+HD60_PARTITONS_DATE = 20190329
 HD60_PARTITONS_SRC = $(KERNEL_TYPE)-partitions-$(HD60_PARTITONS_DATE).zip
+HD60_RECOVERY_DATE = 20190415
+HD60_RECOVERY_SRC = $(KERNEL_TYPE)-recovery-$(HD60_RECOVERY_DATE).zip
 
 $(ARCHIVE)/$(HD60_BOOTARGS_SRC):
 	$(WGET) http://downloads.mutant-digital.net/$(KERNEL_TYPE)/$(HD60_BOOTARGS_SRC)
@@ -364,11 +366,15 @@ $(ARCHIVE)/$(HD60_BOOTARGS_SRC):
 $(ARCHIVE)/$(HD60_PARTITONS_SRC):
 	$(WGET) http://downloads.mutant-digital.net/$(KERNEL_TYPE)/$(HD60_PARTITONS_SRC)
 
-flash-image-hd60-multi-disk: $(ARCHIVE)/$(HD60_BOOTARGS_SRC) $(ARCHIVE)/$(HD60_PARTITONS_SRC)
+$(ARCHIVE)/$(HD60_RECOVERY_SRC):
+	$(WGET) http://downloads.mutant-digital.net/$(KERNEL_TYPE)/$(HD60_RECOVERY_SRC)
+
+flash-image-hd60-multi-disk: $(ARCHIVE)/$(HD60_BOOTARGS_SRC) $(ARCHIVE)/$(HD60_PARTITONS_SRC) $(ARCHIVE)/$(HD60_RECOVERY_SRC)
 	# Create image
 	mkdir -p $(HD60_BUILD_TMP)/$(BOXTYPE)
 	unzip -o $(ARCHIVE)/$(HD60_BOOTARGS_SRC) -d $(HD60_BUILD_TMP)
 	unzip -o $(ARCHIVE)/$(HD60_PARTITONS_SRC) -d $(HD60_BUILD_TMP)
+	unzip -o $(ARCHIVE)/$(HD60_RECOVERY_SRC) -d $(HD60_BUILD_TMP)
 	install -m 0755 $(HD60_BUILD_TMP)/bootargs-8gb.bin $(RELEASE_DIR)/usr/share/bootargs.bin
 	install -m 0755 $(HD60_BUILD_TMP)/fastboot.bin $(RELEASE_DIR)/usr/share/fastboot.bin
 	if [ -e $(RELEASE_DIR)/boot/logo.img ]; then \
@@ -379,12 +385,42 @@ flash-image-hd60-multi-disk: $(ARCHIVE)/$(HD60_BOOTARGS_SRC) $(ARCHIVE)/$(HD60_P
 	$(HOST_DIR)/bin/ext2simg -zv $(HD60_BUILD_TMP)/$(HD60_IMAGE_LINK) $(HD60_BUILD_TMP)/$(BOXTYPE)/rootfs.fastboot.gz
 	dd if=/dev/zero of=$(HD60_BUILD_TMP)/$(BOXTYPE)/$(HD60_BOOT_IMAGE) bs=1024 count=$(HD60_BOOTOPTIONS_PARTITION_SIZE)
 	mkfs.msdos -S 512 $(HD60_BUILD_TMP)/$(BOXTYPE)/$(HD60_BOOT_IMAGE)
-	echo "bootcmd=mmc read 0 0x1000000 0x54B000 0x8000; bootm 0x1000000 bootargs=console=ttyAMA0,115200 root=/dev/mmcblk0p21 rootfstype=ext4" > $(HD60_BUILD_TMP)/STARTUP
-	echo "bootcmd=mmc read 0 0x3F000000 0x7E000 0x4000; bootm 0x3F000000; mmc read 0 0x1FFBFC0 0x60000 0xC800; bootargs=androidboot.selinux=enforcing androidboot.serialno=0123456789 console=ttyAMA0,115200" > $(HD60_BUILD_TMP)/STARTUP_ANDROID
-	echo "bootcmd=mmc read 0 0x1000000 0x54B000 0x8000; bootm 0x1000000 bootargs=console=ttyAMA0,115200 root=/dev/mmcblk0p21 rootfstype=ext4" > $(HD60_BUILD_TMP)/STARTUP_LINUX
+	echo "bootcmd=setenv bootargs \$(bootargs) \$(bootargs_common); mmc read 0 0x1000000 0x3BD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD60_BUILD_TMP)/STARTUP
+	echo "bootargs=root=/dev/mmcblk0p20 rootsubdir=linuxrootfs1 rootfstype=ext4" >> $(HD60_BUILD_TMP)/STARTUP
+	echo "bootcmd=setenv vfd_msg andr;setenv bootargs \$(bootargs) \$(bootargs_common); \$(bootcmd_android)" > $(HD60_BUILD_TMP)/STARTUP_ANDROID
+	echo "bootargs=androidboot.selinux=disable androidboot.serialno=0123456789" >> $(HD60_BUILD_TMP)/STARTUP_ANDROID
+	echo "bootcmd=setenv vfd_msg andr;setenv bootargs \$(bootargs) \$(bootargs_common); \$(bootcmd_android)" > $(HD60_BUILD_TMP)/STARTUP_ANDROID_DISABLE_LINUXSE
+	echo "bootargs=androidboot.selinux=disable androidboot.serialno=0123456789" >> $(HD60_BUILD_TMP)/STARTUP_ANDROID_DISABLE_LINUXSE
+	echo "bootcmd=setenv bootargs \$(bootargs) \$(bootargs_common); mmc read 0 0x1000000 0x3BD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD60_BUILD_TMP)/STARTUP_LINUX_1
+	echo "bootargs=root=/dev/mmcblk0p20 rootsubdir=linuxrootfs1 rootfstype=ext4" >> $(HD60_BUILD_TMP)/STARTUP_LINUX_1
+	echo "bootcmd=setenv bootargs \$(bootargs) \$(bootargs_common); mmc read 0 0x1000000 0x545000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD60_BUILD_TMP)/STARTUP_LINUX_2
+	echo "bootargs=root=/dev/mmcblk0p24 rootsubdir=linuxrootfs2 rootfstype=ext4" >> $(HD60_BUILD_TMP)/STARTUP_LINUX_2
+	echo "bootcmd=setenv bootargs \$(bootargs) \$(bootargs_common); mmc read 0 0x1000000 0x54D000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD60_BUILD_TMP)/STARTUP_LINUX_3
+	echo "bootargs=root=/dev/mmcblk0p24 rootsubdir=linuxrootfs3 rootfstype=ext4" >> $(HD60_BUILD_TMP)/STARTUP_LINUX_3
+	echo "bootcmd=setenv bootargs \$(bootargs) \$(bootargs_common); mmc read 0 0x1000000 0x555000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD60_BUILD_TMP)/STARTUP_LINUX_4
+	echo "bootargs=root=/dev/mmcblk0p24 rootsubdir=linuxrootfs4 rootfstype=ext4" >> $(HD60_BUILD_TMP)/STARTUP_LINUX_4
+	echo "bootcmd=setenv bootargs \$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > $(HD60_BUILD_TMP)/STARTUP_RECOVERY
+	echo "bootcmd=setenv bootargs \$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > $(HD60_BUILD_TMP)/STARTUP_ONCE
+	echo "imageurl https://raw.githubusercontent.com/oe-alliance/bootmenu/master/$(BOXTYPE)/images" > $(HD60_BUILD_TMP)/bootmenu.conf
+	echo "# " >> $(HD60_BUILD_TMP)/bootmenu.conf
+	echo "iface eth0" >> $(HD60_BUILD_TMP)/bootmenu.conf
+	echo "dhcp yes" >> $(HD60_BUILD_TMP)/bootmenu.conf
+	echo "# " >> $(HD60_BUILD_TMP)/bootmenu.conf
+	echo "# for static config leave out 'dhcp yes' and add the following settings:" >> $(HD60_BUILD_TMP)/bootmenu.conf
+	echo "# " >> $(HD60_BUILD_TMP)/bootmenu.conf
+	echo "#ip 192.168.178.10" >> $(HD60_BUILD_TMP)/bootmenu.conf
+	echo "#netmask 255.255.255.0" >> $(HD60_BUILD_TMP)/bootmenu.conf
+	echo "#gateway 192.168.178.1" >> $(HD60_BUILD_TMP)/bootmenu.conf
+	echo "#dns 192.168.178.1" >> $(HD60_BUILD_TMP)/bootmenu.conf
 	mcopy -i $(HD60_BUILD_TMP)/$(BOXTYPE)/$(HD60_BOOT_IMAGE) -v $(HD60_BUILD_TMP)/STARTUP ::
 	mcopy -i $(HD60_BUILD_TMP)/$(BOXTYPE)/$(HD60_BOOT_IMAGE) -v $(HD60_BUILD_TMP)/STARTUP_ANDROID ::
-	mcopy -i $(HD60_BUILD_TMP)/$(BOXTYPE)/$(HD60_BOOT_IMAGE) -v $(HD60_BUILD_TMP)/STARTUP_LINUX ::
+	mcopy -i $(HD60_BUILD_TMP)/$(BOXTYPE)/$(HD60_BOOT_IMAGE) -v $(HD60_BUILD_TMP)/STARTUP_ANDROID_DISABLE_LINUXSE ::
+	mcopy -i $(HD60_BUILD_TMP)/$(BOXTYPE)/$(HD60_BOOT_IMAGE) -v $(HD60_BUILD_TMP)/STARTUP_LINUX_1 ::
+	mcopy -i $(HD60_BUILD_TMP)/$(BOXTYPE)/$(HD60_BOOT_IMAGE) -v $(HD60_BUILD_TMP)/STARTUP_LINUX_2 ::
+	mcopy -i $(HD60_BUILD_TMP)/$(BOXTYPE)/$(HD60_BOOT_IMAGE) -v $(HD60_BUILD_TMP)/STARTUP_LINUX_3 ::
+	mcopy -i $(HD60_BUILD_TMP)/$(BOXTYPE)/$(HD60_BOOT_IMAGE) -v $(HD60_BUILD_TMP)/STARTUP_LINUX_4 ::
+	mcopy -i $(HD60_BUILD_TMP)/$(BOXTYPE)/$(HD60_BOOT_IMAGE) -v $(HD60_BUILD_TMP)/STARTUP_RECOVERY ::
+	mcopy -i $(HD60_BUILD_TMP)/$(BOXTYPE)/$(HD60_BOOT_IMAGE) -v $(HD60_BUILD_TMP)/bootmenu.conf ::
 	mv $(HD60_BUILD_TMP)/bootargs-8gb.bin $(HD60_BUILD_TMP)/bootargs.bin
 	mv $(HD60_BUILD_TMP)/$(BOXTYPE)/bootargs-8gb.bin $(HD60_BUILD_TMP)/$(BOXTYPE)/bootargs.bin
 	cp $(RELEASE_DIR)/boot/uImage $(HD60_BUILD_TMP)/$(BOXTYPE)/uImage
@@ -394,6 +430,7 @@ flash-image-hd60-multi-disk: $(ARCHIVE)/$(HD60_BOOTARGS_SRC) $(ARCHIVE)/$(HD60_P
 	rm -rf $(HD60_BUILD_TMP)/$(HD60_IMAGE_LINK)
 	cd $(HD60_BUILD_TMP) && \
 	zip -r $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_multi_usb_$(shell date '+%d.%m.%Y-%H.%M').zip *
+	zip -r $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_multi_ofg_$(shell date '+%d.%m.%Y-%H.%M').zip imageversion uImage rootfs.tar.bz2
 	# cleanup
 	rm -rf $(HD60_BUILD_TMP)
 
