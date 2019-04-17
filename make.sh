@@ -24,13 +24,14 @@ if [ "$1" == -h ] || [ "$1" == --help ]; then
 	echo ""
 	echo "for arm/mips boxes:"
 	echo "Parameter 1: target system (50-70)"
-	echo "Parameter 2: image layout for hd51 / bre2ze4k (1-2)"
+	echo "Parameter 2: FFmpeg version (1-2)"
 	echo "Parameter 3: optimization (1-4)"
 	echo "Parameter 4: Media Framework (1-2)"
 	echo "Parameter 5: Image Neutrino (1-2)"
 	echo "Parameter 6: Neutrino variant (1-5)"
 	echo "Parameter 7: External LCD support (1-4)"
-	echo "Parameter 8: FFmpeg version (1-2)"
+	echo "optional:"
+	echo "Parameter 8: Image layout for hd51 / bre2ze4k (1-2)"
 	exit
 fi
 
@@ -140,23 +141,24 @@ echo "BOXTYPE=$BOXTYPE" >> config
 
 ##############################################
 
-if [ $BOXTYPE == 'hd51' -o $BOXTYPE == 'bre2ze4k' ]; then
+if [ $BOXARCH == "arm" ]; then
 
 case $2 in
 	[1-2]) REPLY=$2;;
-	*)	echo -e "\nImage-Layout:"
-		echo "   1)  4 single (default)"
-		echo "   2)  1 single + multiroot"
-		read -p "Select layout (1-2)? [1]"
-		REPLY="${REPLY:-1}";;
+	*)	echo -e "\nFFmpeg Version:"
+		echo "   1) standard"
+		echo "   2) experimental"
+		read -p "Select FFmpeg version (1-2)? [2]"
+		REPLY="${REPLY:-2}";;
 esac
 
 case "$REPLY" in
-	1)  NEWLAYOUT="0";;
-	2)  NEWLAYOUT="1";;
-	*)  NEWLAYOUT="0";;
+	1) FFMPEG_EXPERIMENTAL="1";;
+	2) FFMPEG_EXPERIMENTAL="0";;
+	*) FFMPEG_EXPERIMENTAL="1";;
 esac
-echo "NEWLAYOUT=$NEWLAYOUT" >> config
+echo "FFMPEG_EXPERIMENTAL=$FFMPEG_EXPERIMENTAL" >> config
+
 fi
 
 ##############################################
@@ -311,23 +313,24 @@ esac
 echo "EXTERNAL_LCD=$EXTERNAL_LCD" >> config
 
 ##############################################
-if [ $BOXARCH == "arm" ]; then
+
+if [ $BOXTYPE == 'hd51' -o $BOXTYPE == 'bre2ze4k' ]; then
 
 case $8 in
 	[1-2]) REPLY=$8;;
-	*)	echo -e "\nFFmpeg Version:"
-		echo "   1) standard"
-		echo "   2) experimental"
-		read -p "Select FFmpeg version (1-2)? [2]"
-		REPLY="${REPLY:-2}";;
+	*)	echo -e "\nImage-Layout:"
+		echo "   1)  4 single (default)"
+		echo "   2)  1 single + multiroot"
+		read -p "Select layout (1-2)? [1]"
+		REPLY="${REPLY:-1}";;
 esac
 
 case "$REPLY" in
-	1) FFMPEG_EXPERIMENTAL="1";;
-	2) FFMPEG_EXPERIMENTAL="0";;
-	*) FFMPEG_EXPERIMENTAL="1";;
+	1)  NEWLAYOUT="0";;
+	2)  NEWLAYOUT="1";;
+	*)  NEWLAYOUT="0";;
 esac
-echo "FFMPEG_EXPERIMENTAL=$FFMPEG_EXPERIMENTAL" >> config
+echo "NEWLAYOUT=$NEWLAYOUT" >> config
 
 fi
 
