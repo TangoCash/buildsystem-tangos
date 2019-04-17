@@ -145,7 +145,11 @@ flash-image-hd51-multi-disk: $(D)/host_resize2fs
 	mkdir -p $(HD51_BUILD_TMP)/$(BOXTYPE)
 	# Create a sparse image block
 	dd if=/dev/zero of=$(HD51_BUILD_TMP)/$(HD51_IMAGE_LINK) seek=$(shell expr $(HD51_IMAGE_ROOTFS_SIZE) \* $(BLOCK_SECTOR)) count=0 bs=$(BLOCK_SIZE)
+ifeq ($(NEWLAYOUT), $(filter $(NEWLAYOUT), 1))
+	$(HOST_DIR)/bin/mkfs.ext4 -v -F $(HD51_BUILD_TMP)/$(HD51_IMAGE_LINK) -d $(RELEASE_DIR)/..
+else
 	$(HOST_DIR)/bin/mkfs.ext4 -F $(HD51_BUILD_TMP)/$(HD51_IMAGE_LINK) -d $(RELEASE_DIR)
+endif
 	# Error codes 0-3 indicate successfull operation of fsck (no errors or errors corrected)
 	$(HOST_DIR)/bin/fsck.ext4 -pvfD $(HD51_BUILD_TMP)/$(HD51_IMAGE_LINK) || [ $? -le 3 ]
 	dd if=/dev/zero of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) count=0 seek=$(shell expr $(EMMC_IMAGE_SIZE) \* $(BLOCK_SECTOR))
@@ -243,7 +247,11 @@ flash-image-bre2ze4k-multi-disk: $(D)/host_resize2fs
 	mkdir -p $(BRE2ZE4K_BUILD_TMP)/$(BOXTYPE)
 	# Create a sparse image block
 	dd if=/dev/zero of=$(BRE2ZE4K_BUILD_TMP)/$(BRE2ZE4K_IMAGE_LINK) seek=$(shell expr $(BRE2ZE4K_IMAGE_ROOTFS_SIZE) \* $(BLOCK_SECTOR)) count=0 bs=$(BLOCK_SIZE)
+ifeq ($(NEWLAYOUT), $(filter $(NEWLAYOUT), 1))
+	$(HOST_DIR)/bin/mkfs.ext4 -F $(BRE2ZE4K_BUILD_TMP)/$(BRE2ZE4K_IMAGE_LINK) -d $(RELEASE_DIR)/..
+else
 	$(HOST_DIR)/bin/mkfs.ext4 -F $(BRE2ZE4K_BUILD_TMP)/$(BRE2ZE4K_IMAGE_LINK) -d $(RELEASE_DIR)
+endif
 	# Error codes 0-3 indicate successfull operation of fsck (no errors or errors corrected)
 	$(HOST_DIR)/bin/fsck.ext4 -pvfD $(BRE2ZE4K_BUILD_TMP)/$(BRE2ZE4K_IMAGE_LINK) || [ $? -le 3 ]
 	dd if=/dev/zero of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) count=0 seek=$(shell expr $(EMMC_IMAGE_SIZE) \* $(BLOCK_SECTOR))

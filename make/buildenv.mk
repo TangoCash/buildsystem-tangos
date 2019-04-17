@@ -59,7 +59,12 @@ TARGET_DIR            = $(TUFSBOX_DIR)/cdkroot
 BOOT_DIR              = $(TUFSBOX_DIR)/cdkroot-tftpboot
 CROSS_DIR             = $(TUFSBOX_DIR)/cross
 HOST_DIR              = $(TUFSBOX_DIR)/host
+RELEASE_DIR_CLEANUP   = $(TUFSBOX_DIR)/release
+ifeq ($(NEWLAYOUT), $(filter $(NEWLAYOUT), 1))
+RELEASE_DIR           = $(TUFSBOX_DIR)/release/linuxrootfs1
+else
 RELEASE_DIR           = $(TUFSBOX_DIR)/release
+endif
 
 CUSTOM_DIR            = $(BASE_DIR)/custom
 OWN_BUILD             = $(BASE_DIR)/own_build

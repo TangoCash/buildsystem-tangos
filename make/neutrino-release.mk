@@ -550,6 +550,7 @@ endif
 # the following target creates the common file base
 neutrino-mp-release-base:
 	rm -rf $(RELEASE_DIR) || true
+	rm -rf $(RELEASE_DIR_CLEANUP) || true
 	install -d $(RELEASE_DIR)
 	install -d $(RELEASE_DIR)/{autofs,bin,boot,dev,dev.static,etc,lib,media,mnt,proc,ram,root,sbin,swap,sys,tmp,usr,var}
 	install -d $(RELEASE_DIR)/etc/{init.d,network,mdev,ssl}
