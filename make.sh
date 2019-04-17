@@ -13,13 +13,24 @@ fi
 ##############################################
 
 if [ "$1" == -h ] || [ "$1" == --help ]; then
-	echo "Parameter 1: target system (1-38)"
-	echo "Parameter 2: kernel (1-2) for sh4 cpu"
+	echo "for sh4 boxes:"
+	echo "Parameter 1: target system (1-37)"
+	echo "Parameter 2: kernel (1-2)"
 	echo "Parameter 3: optimization (1-4)"
 	echo "Parameter 4: Media Framework (1-2)"
 	echo "Parameter 5: Image Neutrino (1-2)"
 	echo "Parameter 6: Neutrino variant (1-5)"
 	echo "Parameter 7: External LCD support (1-4)"
+	echo ""
+	echo "for arm/mips boxes:"
+	echo "Parameter 1: target system (50-70)"
+	echo "Parameter 2: image layout for hd51 / bre2ze4k (1-2)"
+	echo "Parameter 3: optimization (1-4)"
+	echo "Parameter 4: Media Framework (1-2)"
+	echo "Parameter 5: Image Neutrino (1-2)"
+	echo "Parameter 6: Neutrino variant (1-5)"
+	echo "Parameter 7: External LCD support (1-4)"
+	echo "Parameter 8: FFmpeg version (1-2)"
 	exit
 fi
 
@@ -298,6 +309,27 @@ case "$REPLY" in
 	*) EXTERNAL_LCD="none";;
 esac
 echo "EXTERNAL_LCD=$EXTERNAL_LCD" >> config
+
+##############################################
+if [ $BOXARCH == "arm" ]; then
+
+case $8 in
+	[1-2]) REPLY=$8;;
+	*)	echo -e "\nFFmpeg Version:"
+		echo "   1) standard"
+		echo "   2) experimental"
+		read -p "Select FFmpeg version (1-2)? [2]"
+		REPLY="${REPLY:-2}";;
+esac
+
+case "$REPLY" in
+	1) FFMPEG_EXPERIMENTAL="1";;
+	2) FFMPEG_EXPERIMENTAL="0";;
+	*) FFMPEG_EXPERIMENTAL="1";;
+esac
+echo "FFMPEG_EXPERIMENTAL=$FFMPEG_EXPERIMENTAL" >> config
+
+fi
 
 ##############################################
 echo " "
