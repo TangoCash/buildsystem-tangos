@@ -159,6 +159,8 @@ $(D)/neutrino-mp-plugin-xupnpd: $(D)/bootstrap $(D)/lua $(D)/openssl $(D)/neutri
 #
 # neutrino-plugin-scripts-lua
 #
+NEUTRINO_SCRIPTLUA_PATCH = netzkino-internal_curl.patch
+
 $(D)/neutrino-mp-plugin-scripts-lua: $(D)/bootstrap
 	$(START_BUILD)
 	$(REMOVE)/neutrino-mp-plugin-scripts-lua
@@ -168,9 +170,11 @@ $(D)/neutrino-mp-plugin-scripts-lua: $(D)/bootstrap
 		fi
 	cp -ra $(ARCHIVE)/plugin-scripts-lua.git/plugins $(BUILD_TMP)/neutrino-mp-plugin-scripts-lua
 	$(CHDIR)/neutrino-mp-plugin-scripts-lua; \
+		$(call apply_patches, $(NEUTRINO_SCRIPTLUA_PATCH))
+	$(CHDIR)/neutrino-mp-plugin-scripts-lua; \
 		install -d $(TARGET_DIR)/lib/tuxbox/plugins
-		cp -R $(BUILD_TMP)/neutrino-mp-plugin-scripts-lua/ard_mediathek/* $(TARGET_DIR)/lib/tuxbox/plugins/
-		cp -R $(BUILD_TMP)/neutrino-mp-plugin-scripts-lua/favorites2bin/* $(TARGET_DIR)/lib/tuxbox/plugins/
+#		cp -R $(BUILD_TMP)/neutrino-mp-plugin-scripts-lua/ard_mediathek/* $(TARGET_DIR)/lib/tuxbox/plugins/
+#		cp -R $(BUILD_TMP)/neutrino-mp-plugin-scripts-lua/favorites2bin/* $(TARGET_DIR)/lib/tuxbox/plugins/
 		cp -R $(BUILD_TMP)/neutrino-mp-plugin-scripts-lua/mtv/* $(TARGET_DIR)/lib/tuxbox/plugins/
 		cp -R $(BUILD_TMP)/neutrino-mp-plugin-scripts-lua/netzkino/* $(TARGET_DIR)/lib/tuxbox/plugins/
 	$(REMOVE)/neutrino-mp-plugin-scripts-lua

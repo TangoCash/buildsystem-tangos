@@ -1,0 +1,152 @@
+From e408c48ede039d76dd0fdc72cc4b1ebfdf014a13 Mon Sep 17 00:00:00 2001
+From: BPanther <bpanther_ts@hotmail.com>
+Date: Mon, 8 Apr 2019 16:10:08 +0200
+Subject: [PATCH] netzkino changed to internal curl
+
+---
+ plugins/netzkino/netzkino.lua | 72 +++++++++++++++++++++++++++--------
+ 1 file changed, 56 insertions(+), 16 deletions(-)
+
+diff --git a/plugins/netzkino/netzkino.lua b/plugins/netzkino/netzkino.lua
+index 64dedcd..7a9bb14 100644
+--- a/plugins/netzkino/netzkino.lua
++++ b/plugins/netzkino/netzkino.lua
+@@ -9,6 +9,8 @@
+ 	Copyright (c) 2014 micha_bbg, svenhoefer, bazi98 an many other db2w-user
+ 	with hints and codesniplets for db2w-Edition
+ 
++	Changed to internal curl by BPanther, 10. Feb 2019
++
+ 	Permission is hereby granted, free of charge, to any person obtaining a copy
+ 	of this software and associated documentation files (the "Software"), to deal
+ 	in the Software without restriction, including without limitation the rights
+@@ -117,7 +119,10 @@ function get_categories()
+ 	local h = hintbox.new{caption=caption, text="Kategorien werden geladen ...", icon=netzkino_png};
+ 	h:paint();
+ 
+-	os.execute("curl -s -o	 " .. fname .. " 'https://www.netzkino.de/capi/get_category_index'" );
++	if Curl == nil then
++		Curl = curl.new()
++	end
++	Curl:download { url = "https://www.netzkino.de/capi/get_category_index", A="Mozilla/5.0;", followRedir = true, o = fname }
+ 
+ 	local fp = io.open(fname, "r")
+ 	if fp == nil then
+@@ -204,7 +209,10 @@ function get_movies(_id)
+ 	local h = hintbox.new{caption=caption, text="Kategorie wird geladen ...", icon=netzkino_png};
+ 	h:paint();
+ 
+-	os.execute("curl -s -o " .. fname .. " 'https://www.netzkino.de/capi/get_category_posts&id=" .. categories[index].category_id .. "&count=" .. items .. "d&page=" .. page_nr .. "&custom_fields=Streaming'");
++	if Curl == nil then
++		Curl = curl.new()
++	end
++	Curl:download { url = "https://www.netzkino.de/capi/get_category_posts&id=" .. categories[index].category_id .. "&count=" .. items .. "d&page=" .. page_nr .. "&custom_fields=Streaming", A="Mozilla/5.0;", followRedir = true, o = fname }
+ 
+ 	local fp = io.open(fname, "r")
+ 	if fp == nil then
+@@ -465,7 +473,10 @@ end
+ --herunterladen des Bildes
+ function getPicture(_picture)
+ 	local fname = "/tmp/netzkino_cover.jpg";
+-	os.execute("curl -s -A 'Mozilla' -o " .. fname .. " '" .. _picture .. "'");
++	if Curl == nil then
++		Curl = curl.new()
++	end
++	Curl:download { url = _picture, A="Mozilla/5.0;", followRedir = true, o = fname }
+ end
+ 
+ --Stream starten
+@@ -507,29 +518,48 @@ function download_stream(_id)
+ 		end
+ 	end
+ 
+-	local movie_file = "'" .. d_path .. "/" .. conv_utf8(movies[index].title) .. ".mp4'" ;
++	local movie_file = d_path .. "/" .. conv_utf8(movies[index].title) .. ".mp4" ;
++	local inhalt = "Netzkino HD: Download " .. conv_utf8(movies[index].title) .. " - Bitte warten...";
++	local info_text = ctext.new{x=30, y=20, dx=900, dy=10, text=inhalt};
++	info_text:paint()
++
++	if Curl == nil then
++		Curl = curl.new()
++	end
++	local ret = Curl:download { url = "https://pmd.netzkino-seite.netzkino.de/" .. stream_name .. ".mp4", A="Mozilla/5.0;", followRedir = true, connectTimeout = 86400, o = movie_file }
++
++	info_text:hide();
++	local download_text = ctext.new{x=30, y=20, dx=900, dy=50};
++
++	if ret == CURL.OK then
++		download_text:setText{text="[" .. ret .. "] " .. "Der Stream wurde erfolgreich heruntergeladen. OK zum verlassen."};
++	else
++		download_text:setText{text="[" .. ret .. "] " .. "Unbekannter Zustand oder Fehler. Versuche Mirror Server.\n" .. inhalt};
++		download_text:paint();
++		local ret = Curl:download { url = "http://pmd.netzkino-and.netzkino.de/" .. stream_name .. ".mp4", A="Mozilla/5.0;", followRedir = true, connectTimeout = 86400, o = movie_file }
++		download_text:hide();
++		if ret == CURL.OK then
++			download_text:setText{text="[" .. ret .. "] " .. "Der Stream wurde erfolgreich heruntergeladen. OK zum verlassen."};
++		else
++			download_text:setText{text="[" .. ret .. "] " .. "Unbekannter Zustand oder Fehler. Bitte überprüfen sie die Datei. OK zum verlassen."};
++		end
++	end
++
++	download_text:paint();
+ 
+-	local h = hintbox.new{caption=caption, text="Download: "..conv_utf8(movies[index].title).."", icon=netzkino_png}
+-	h:paint()
+-	local i = 0
+ 	repeat
+-		i = i + 1
+ 		msg, data = n:GetInput(500)
+-	until msg == RC.ok or msg == RC.home or i == 4 -- 2 seconds
+-	print("downloading " .. movie_file .. " https://pmd.netzkino-seite.netzkino.de/" .. stream_name .. ".mp4")
+-	local a,b,c = os.execute("curl -C - -o " .. movie_file .. " https://pmd.netzkino-seite.netzkino.de/" .. stream_name .. ".mp4 &")
+-	if (c == 1) then
+-                print("Error while downloading https://pmd.netzkino-seite.netzkino.de/" .. stream_name .. ".mp4")
+-	end
+-	h:hide()
++	until msg == RC['home'] or msg == RC['setup'] or msg == RC['ok'];
+ 
++	download_text:hide();
+ end
+ 
+ -- UTF8 in Umlaute wandeln
+ function conv_utf8(_string)
+ 	if _string ~= nil then
+ 		_string = string.gsub(_string,"\\u0026","&");
+-		_string = string.gsub(_string,"\\u00a0"," ");
++		_string = string.gsub(_string,"\\u00a0"," ");
++		_string = string.gsub(_string,"\\u00b0","°");
+ 		_string = string.gsub(_string,"\\u00b4","´");
+ 		_string = string.gsub(_string,"\\u00c4","Ä");
+ 		_string = string.gsub(_string,"\\u00d6","Ö");
+@@ -539,21 +569,31 @@ function conv_utf8(_string)
+ 		_string = string.gsub(_string,"\\u00e4","ä");
+ 		_string = string.gsub(_string,"\\u00e8","è");
+ 		_string = string.gsub(_string,"\\u00e9","é");
++		_string = string.gsub(_string,"\\u00f3","ó");
+ 		_string = string.gsub(_string,"\\u00f4","ô");
+ 		_string = string.gsub(_string,"\\u00f6","ö");
++		_string = string.gsub(_string,"\\u00f8","ø");
+ 		_string = string.gsub(_string,"\\u00fb","û");
+ 		_string = string.gsub(_string,"\\u00fc","ü");
+ 		_string = string.gsub(_string,"\\u2013","–");
++		_string = string.gsub(_string,"\\u2018","'");
++		_string = string.gsub(_string,"\\u2019","'");
++		_string = string.gsub(_string,"\\u201a","'");
++		_string = string.gsub(_string,"\\u201b","'");
+ 		_string = string.gsub(_string,"\\u201c","“");
++		_string = string.gsub(_string,"\\u201d","\"");
+ 		_string = string.gsub(_string,"\\u201e","„");
++		_string = string.gsub(_string,"\\u201f","\"");
+ 		_string = string.gsub(_string,"\\u2026","…");
+ 		_string = string.gsub(_string,"&#038;","&");
++		_string = string.gsub(_string,"&#039;","'");
+ 		_string = string.gsub(_string,"&#8211;","–");
+ 		_string = string.gsub(_string,"&#8212;","—");
+ 		_string = string.gsub(_string,"&#8216;","‘");
+ 		_string = string.gsub(_string,"&#8217;","’");
+ 		_string = string.gsub(_string,"&#8230;","…");
+ 		_string = string.gsub(_string,"&#8243;","″");
++		_string = string.gsub(_string,"&amp;","&");
+ 		_string = string.gsub(_string,"<[^>]*>","");
+ 		_string = string.gsub(_string,"\\/","/");
+ 		_string = string.gsub(_string,"\\n","");
