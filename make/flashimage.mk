@@ -95,12 +95,6 @@ BRE2ZE4K_BOOT_IMAGE = boot.img
 BRE2ZE4K_IMAGE_LINK = $(BRE2ZE4K_IMAGE_NAME).ext4
 BRE2ZE4K_IMAGE_ROOTFS_SIZE = 294912
 BRE2ZE4K_BUILD_TMP = $(BUILD_TMP)/image-build
-BRE2ZE4K_BOXMODE ?= 1
-ifeq ($(BRE2ZE4K_BOXMODE), $(filter $(BRE2ZE4K_BOXMODE), 1))
-BRE2ZE4K_BOXMODE_MEM = brcm_cma=440M@328M brcm_cma=192M@768M
-else
-BRE2ZE4K_BOXMODE_MEM = brcm_cma=520M@248M brcm_cma=200M@768M
-endif
 
 # emmc image
 EMMC_IMAGE_SIZE = 3817472
@@ -140,6 +134,16 @@ SWAP_DATA_PARTITION_OFFSET = $(shell expr $(FOURTH_ROOTFS_PARTITION_OFFSET) \+ $
 
 SWAP_PARTITION_OFFSET = $(shell expr $(SWAP_DATA_PARTITION_OFFSET) \+ $(SWAP_DATA_PARTITION_SIZE))
 
+ifeq ($(NEWLAYOUT), $(filter $(NEWLAYOUT), 1))
+ROOTFS_PARTITION_SIZE_MULTI = 1048576
+KERNEL_PARTITION_OFFSET = "$(shell expr ${IMAGE_ROOTFS_ALIGNMENT} \+ ${BOOT_PARTITION_SIZE})"
+ROOTFS_PARTITION_OFFSET = "$(shell expr ${KERNEL_PARTITION_OFFSET} \+ ${KERNEL_PARTITION_SIZE})"
+SECOND_KERNEL_PARTITION_OFFSET = "$(shell expr ${ROOTFS_PARTITION_OFFSET} \+ ${ROOTFS_PARTITION_SIZE})"
+THIRD_KERNEL_PARTITION_OFFSET = "$(shell expr ${SECOND_KERNEL_PARTITION_OFFSET} \+ ${KERNEL_PARTITION_SIZE})"
+FOURTH_KERNEL_PARTITION_OFFSET = "$(shell expr ${THIRD_KERNEL_PARTITION_OFFSET} \+ ${KERNEL_PARTITION_SIZE})"
+MULTI_ROOTFS_PARTITION_OFFSET = "$(shell expr ${FOURTH_KERNEL_PARTITION_OFFSET} \+ ${KERNEL_PARTITION_SIZE})"
+endif
+
 flash-image-hd51-multi-disk: $(D)/host_resize2fs
 	rm -rf $(HD51_BUILD_TMP)
 	mkdir -p $(HD51_BUILD_TMP)/$(BOXTYPE)
@@ -151,6 +155,25 @@ flash-image-hd51-multi-disk: $(D)/host_resize2fs
 	dd if=/dev/zero of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) count=0 seek=$(shell expr $(EMMC_IMAGE_SIZE) \* $(BLOCK_SECTOR))
 	parted -s $(EMMC_IMAGE) mklabel gpt
 	parted -s $(EMMC_IMAGE) unit KiB mkpart boot fat16 $(IMAGE_ROOTFS_ALIGNMENT) $(shell expr $(IMAGE_ROOTFS_ALIGNMENT) \+ $(BOOT_PARTITION_SIZE))
+ifeq ($(NEWLAYOUT), $(filter $(NEWLAYOUT), 1))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart linuxkernel $(KERNEL_PARTITION_OFFSET) $(shell expr $(KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart linuxrootfs ext4 $(ROOTFS_PARTITION_OFFSET) $(shell expr $(ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart linuxkernel2 $(SECOND_KERNEL_PARTITION_OFFSET) $(shell expr $(SECOND_KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart linuxkernel3 $(THIRD_KERNEL_PARTITION_OFFSET) $(shell expr $(THIRD_KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart linuxkernel4 $(FOURTH_KERNEL_PARTITION_OFFSET) $(shell expr $(FOURTH_KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart userdata ext4 ${MULTI_ROOTFS_PARTITION_OFFSET} 100%
+	dd if=/dev/zero of=$(HD51_BUILD_TMP)/$(HD51_BOOT_IMAGE) bs=$(BLOCK_SIZE) count=$(shell expr $(BOOT_PARTITION_SIZE) \* $(BLOCK_SECTOR))
+	mkfs.msdos -S 512 $(HD51_BUILD_TMP)/$(HD51_BOOT_IMAGE)
+	echo "boot emmcflash0.linuxkernel 'root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(HD51_BUILD_TMP)/STARTUP
+	echo "boot emmcflash0.linuxkernel 'root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(HD51_BUILD_TMP)/STARTUP_1
+	echo "boot emmcflash0.linuxkernel2 'root=/dev/mmcblk0p7 rootsubdir=linuxrootfs2 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(HD51_BUILD_TMP)/STARTUP_2
+	echo "boot emmcflash0.linuxkernel3 'root=/dev/mmcblk0p7 rootsubdir=linuxrootfs3 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(HD51_BUILD_TMP)/STARTUP_3
+	echo "boot emmcflash0.linuxkernel4 'root=/dev/mmcblk0p7 rootsubdir=linuxrootfs4 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(HD51_BUILD_TMP)/STARTUP_4
+	echo "boot emmcflash0.linuxkernel 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(HD51_BUILD_TMP)/STARTUP_1_12
+	echo "boot emmcflash0.linuxkernel2 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p7 rootsubdir=linuxrootfs2 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(HD51_BUILD_TMP)/STARTUP_2_12
+	echo "boot emmcflash0.linuxkernel3 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p7 rootsubdir=linuxrootfs3 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(HD51_BUILD_TMP)/STARTUP_3_12
+	echo "boot emmcflash0.linuxkernel4 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p7 rootsubdir=linuxrootfs4 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(HD51_BUILD_TMP)/STARTUP_4_12
+else
 	parted -s $(EMMC_IMAGE) unit KiB mkpart kernel1 $(KERNEL_PARTITION_OFFSET) $(shell expr $(KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
 	parted -s $(EMMC_IMAGE) unit KiB mkpart rootfs1 ext4 $(ROOTFS_PARTITION_OFFSET) $(shell expr $(ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
 	parted -s $(EMMC_IMAGE) unit KiB mkpart kernel2 $(SECOND_KERNEL_PARTITION_OFFSET) $(shell expr $(SECOND_KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
@@ -172,6 +195,7 @@ flash-image-hd51-multi-disk: $(D)/host_resize2fs
 	echo "boot emmcflash0.kernel2 'brcm_cma=520M@248M brcm_cma=200M@768M root=/dev/mmcblk0p5 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(HD51_BUILD_TMP)/STARTUP_2_12
 	echo "boot emmcflash0.kernel3 'brcm_cma=520M@248M brcm_cma=200M@768M root=/dev/mmcblk0p7 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(HD51_BUILD_TMP)/STARTUP_3_12
 	echo "boot emmcflash0.kernel4 'brcm_cma=520M@248M brcm_cma=200M@768M root=/dev/mmcblk0p9 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(HD51_BUILD_TMP)/STARTUP_4_12
+endif
 	mcopy -i $(HD51_BUILD_TMP)/$(HD51_BOOT_IMAGE) -v $(HD51_BUILD_TMP)/STARTUP ::
 	mcopy -i $(HD51_BUILD_TMP)/$(HD51_BOOT_IMAGE) -v $(HD51_BUILD_TMP)/STARTUP_1 ::
 	mcopy -i $(HD51_BUILD_TMP)/$(HD51_BOOT_IMAGE) -v $(HD51_BUILD_TMP)/STARTUP_2 ::
@@ -225,6 +249,25 @@ flash-image-bre2ze4k-multi-disk: $(D)/host_resize2fs
 	dd if=/dev/zero of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) count=0 seek=$(shell expr $(EMMC_IMAGE_SIZE) \* $(BLOCK_SECTOR))
 	parted -s $(EMMC_IMAGE) mklabel gpt
 	parted -s $(EMMC_IMAGE) unit KiB mkpart boot fat16 $(IMAGE_ROOTFS_ALIGNMENT) $(shell expr $(IMAGE_ROOTFS_ALIGNMENT) \+ $(BOOT_PARTITION_SIZE))
+ifeq ($(NEWLAYOUT), $(filter $(NEWLAYOUT), 1))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart linuxkernel $(KERNEL_PARTITION_OFFSET) $(shell expr $(KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart linuxrootfs ext4 $(ROOTFS_PARTITION_OFFSET) $(shell expr $(ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart linuxkernel2 $(SECOND_KERNEL_PARTITION_OFFSET) $(shell expr $(SECOND_KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart linuxkernel3 $(THIRD_KERNEL_PARTITION_OFFSET) $(shell expr $(THIRD_KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart linuxkernel4 $(FOURTH_KERNEL_PARTITION_OFFSET) $(shell expr $(FOURTH_KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
+	parted -s $(EMMC_IMAGE) unit KiB mkpart userdata ext4 ${MULTI_ROOTFS_PARTITION_OFFSET} 100%
+	dd if=/dev/zero of=$(HD51_BUILD_TMP)/$(HD51_BOOT_IMAGE) bs=$(BLOCK_SIZE) count=$(shell expr $(BOOT_PARTITION_SIZE) \* $(BLOCK_SECTOR))
+	mkfs.msdos -S 512 $(HD51_BUILD_TMP)/$(HD51_BOOT_IMAGE)
+	echo "boot emmcflash0.linuxkernel 'root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP
+	echo "boot emmcflash0.linuxkernel 'root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_1
+	echo "boot emmcflash0.linuxkernel2 'root=/dev/mmcblk0p7 rootsubdir=linuxrootfs2 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_2
+	echo "boot emmcflash0.linuxkernel3 'root=/dev/mmcblk0p7 rootsubdir=linuxrootfs3 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_3
+	echo "boot emmcflash0.linuxkernel4 'root=/dev/mmcblk0p7 rootsubdir=linuxrootfs4 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_4
+	echo "boot emmcflash0.linuxkernel 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_1_12
+	echo "boot emmcflash0.linuxkernel2 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p7 rootsubdir=linuxrootfs2 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_2_12
+	echo "boot emmcflash0.linuxkernel3 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p7 rootsubdir=linuxrootfs3 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_3_12
+	echo "boot emmcflash0.linuxkernel4 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p7 rootsubdir=linuxrootfs4 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_4_12
+else
 	parted -s $(EMMC_IMAGE) unit KiB mkpart kernel1 $(KERNEL_PARTITION_OFFSET) $(shell expr $(KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
 	parted -s $(EMMC_IMAGE) unit KiB mkpart rootfs1 ext4 $(ROOTFS_PARTITION_OFFSET) $(shell expr $(ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
 	parted -s $(EMMC_IMAGE) unit KiB mkpart kernel2 $(SECOND_KERNEL_PARTITION_OFFSET) $(shell expr $(SECOND_KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
@@ -237,16 +280,25 @@ flash-image-bre2ze4k-multi-disk: $(D)/host_resize2fs
 	parted -s $(EMMC_IMAGE) unit KiB mkpart swap linux-swap $(SWAP_PARTITION_OFFSET) $(shell expr $(EMMC_IMAGE_SIZE) \- 1024)
 	dd if=/dev/zero of=$(BRE2ZE4K_BUILD_TMP)/$(BRE2ZE4K_BOOT_IMAGE) bs=$(BLOCK_SIZE) count=$(shell expr $(BOOT_PARTITION_SIZE) \* $(BLOCK_SECTOR))
 	mkfs.msdos -S 512 $(BRE2ZE4K_BUILD_TMP)/$(BRE2ZE4K_BOOT_IMAGE)
-	echo "boot emmcflash0.kernel1 '$(BRE2ZE4K_BOXMODE_MEM) root=/dev/mmcblk0p3 rw rootwait $(BOXTYPE)_4.boxmode=$(BRE2ZE4K_BOXMODE)'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP
-	echo "boot emmcflash0.kernel1 '$(BRE2ZE4K_BOXMODE_MEM) root=/dev/mmcblk0p3 rw rootwait $(BOXTYPE)_4.boxmode=$(BRE2ZE4K_BOXMODE)'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_1
-	echo "boot emmcflash0.kernel2 '$(BRE2ZE4K_BOXMODE_MEM) root=/dev/mmcblk0p5 rw rootwait $(BOXTYPE)_4.boxmode=$(BRE2ZE4K_BOXMODE)'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_2
-	echo "boot emmcflash0.kernel3 '$(BRE2ZE4K_BOXMODE_MEM) root=/dev/mmcblk0p7 rw rootwait $(BOXTYPE)_4.boxmode=$(BRE2ZE4K_BOXMODE)'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_3
-	echo "boot emmcflash0.kernel4 '$(BRE2ZE4K_BOXMODE_MEM) root=/dev/mmcblk0p9 rw rootwait $(BOXTYPE)_4.boxmode=$(BRE2ZE4K_BOXMODE)'" > $(HBRE2ZE4K_BUILD_TMP)/STARTUP_4
+	echo "boot emmcflash0.kernel1 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p3 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP
+	echo "boot emmcflash0.kernel1 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p3 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_1
+	echo "boot emmcflash0.kernel2 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p5 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_2
+	echo "boot emmcflash0.kernel3 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p7 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_3
+	echo "boot emmcflash0.kernel4 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p9 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_4
+	echo "boot emmcflash0.kernel1 'brcm_cma=520M@248M brcm_cma=200M@768M root=/dev/mmcblk0p3 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_1_12
+	echo "boot emmcflash0.kernel2 'brcm_cma=520M@248M brcm_cma=200M@768M root=/dev/mmcblk0p5 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_2_12
+	echo "boot emmcflash0.kernel3 'brcm_cma=520M@248M brcm_cma=200M@768M root=/dev/mmcblk0p7 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_3_12
+	echo "boot emmcflash0.kernel4 'brcm_cma=520M@248M brcm_cma=200M@768M root=/dev/mmcblk0p9 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_4_12
+endif
 	mcopy -i $(BRE2ZE4K_BUILD_TMP)/$(BRE2ZE4K_BOOT_IMAGE) -v $(BRE2ZE4K_BUILD_TMP)/STARTUP ::
 	mcopy -i $(BRE2ZE4K_BUILD_TMP)/$(BRE2ZE4K_BOOT_IMAGE) -v $(BRE2ZE4K_BUILD_TMP)/STARTUP_1 ::
 	mcopy -i $(BRE2ZE4K_BUILD_TMP)/$(BRE2ZE4K_BOOT_IMAGE) -v $(BRE2ZE4K_BUILD_TMP)/STARTUP_2 ::
 	mcopy -i $(BRE2ZE4K_BUILD_TMP)/$(BRE2ZE4K_BOOT_IMAGE) -v $(BRE2ZE4K_BUILD_TMP)/STARTUP_3 ::
 	mcopy -i $(BRE2ZE4K_BUILD_TMP)/$(BRE2ZE4K_BOOT_IMAGE) -v $(BRE2ZE4K_BUILD_TMP)/STARTUP_4 ::
+	mcopy -i $(BRE2ZE4K_BUILD_TMP)/$(BRE2ZE4K_BOOT_IMAGE) -v $(BRE2ZE4K_BUILD_TMP)/STARTUP_1_12 ::
+	mcopy -i $(BRE2ZE4K_BUILD_TMP)/$(BRE2ZE4K_BOOT_IMAGE) -v $(BRE2ZE4K_BUILD_TMP)/STARTUP_2_12 ::
+	mcopy -i $(BRE2ZE4K_BUILD_TMP)/$(BRE2ZE4K_BOOT_IMAGE) -v $(BRE2ZE4K_BUILD_TMP)/STARTUP_3_12 ::
+	mcopy -i $(BRE2ZE4K_BUILD_TMP)/$(BRE2ZE4K_BOOT_IMAGE) -v $(BRE2ZE4K_BUILD_TMP)/STARTUP_4_12 ::
 	dd conv=notrunc if=$(BRE2ZE4K_BUILD_TMP)/$(BRE2ZE4K_BOOT_IMAGE) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(IMAGE_ROOTFS_ALIGNMENT) \* $(BLOCK_SECTOR))
 	dd conv=notrunc if=$(RELEASE_DIR)/boot/zImage.dtb of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(KERNEL_PARTITION_OFFSET) \* $(BLOCK_SECTOR))
 	$(HOST_DIR)/bin/resize2fs $(BRE2ZE4K_BUILD_TMP)/$(BRE2ZE4K_IMAGE_LINK) $(ROOTFS_PARTITION_SIZE_MULTI)k
