@@ -159,7 +159,7 @@ $(D)/neutrino-mp-plugin-xupnpd: $(D)/bootstrap $(D)/lua $(D)/openssl $(D)/neutri
 #
 # neutrino-plugin-scripts-lua
 #
-NEUTRINO_SCRIPTLUA_PATCH = netzkino-internal_curl.patch
+NEUTRINO_SCRIPTLUA_PATCH =
 
 $(D)/neutrino-mp-plugin-scripts-lua: $(D)/bootstrap
 	$(START_BUILD)
