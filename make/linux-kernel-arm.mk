@@ -138,8 +138,8 @@ $(D)/kernel.do_prepare: $(ARCHIVE)/$(KERNEL_SRC) $(PATCHES)/armbox/$(KERNEL_CONF
 		done
 	install -m 644 $(PATCHES)/armbox/$(KERNEL_CONFIG) $(KERNEL_DIR)/.config
 ifeq ($(NEWLAYOUT), $(filter $(NEWLAYOUT), 1))
-	sed -i -e 's#CONFIG_INITRAMFS_SOURCE=""#CONFIG_INITRAMFS_SOURCE="initramfs-subdirboot.cpio.gz"#g' $(KERNEL_DIR)/.config
-	cp $(PATCHES)/initramfs-subdirboot.cpio.gz $(KERNEL_DIR)/usr
+	sed -i -e 's#CONFIG_INITRAMFS_SOURCE=""#CONFIG_INITRAMFS_SOURCE="initramfs-subdirboot.cpio.gz"\nCONFIG_INITRAMFS_ROOT_UID=0\nCONFIG_INITRAMFS_ROOT_GID=0#g' $(KERNEL_DIR)/.config
+	cp $(PATCHES)/initramfs-subdirboot.cpio.gz $(KERNEL_DIR)
 endif
 ifeq ($(OPTIMIZATIONS), $(filter $(OPTIMIZATIONS), kerneldebug debug))
 	@echo "Using kernel debug"
