@@ -334,6 +334,9 @@ echo "NEWLAYOUT=$NEWLAYOUT" >> config
 
 fi
 
+if [ $BOXTYPE == 'hd60' ]; then
+echo "NEWLAYOUT=1" >> config
+fi
 ##############################################
 echo " "
 make printenv
