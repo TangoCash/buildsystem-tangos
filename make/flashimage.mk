@@ -48,6 +48,9 @@ endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), bre2ze4k))
 	$(MAKE) ITYPE=ofg flash-image-bre2ze4k-multi-rootfs
 endif
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd60))
+	$(MAKE) ITYPE=ofg flash-image-hd60-multi-rootfs
+endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k))
 	$(MAKE) ITYPE=ofg flash-image-vusolo4k-multi-rootfs
 endif
@@ -60,6 +63,9 @@ ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51))
 endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), bre2ze4k))
 	$(MAKE) ITYPE=online flash-image-bre2ze4k-online
+endif
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd60))
+	$(MAKE) ITYPE=online flash-image-hd60-online
 endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k))
 	$(MAKE) ITYPE=online flash-image-vusolo4k-online
@@ -141,7 +147,7 @@ SWAP_PARTITION_OFFSET = $(shell expr $(SWAP_DATA_PARTITION_OFFSET) \+ $(SWAP_DAT
 MULTI_ROOTFS_PARTITION_OFFSET = "$(shell expr ${FOURTH_KERNEL_PARTITION_OFFSET_NL} \+ ${KERNEL_PARTITION_SIZE})"
 
 flash-image-hd51-multi-disk: $(D)/host_resize2fs
-	rm -rf $(HD51_BUILD_TMP)
+	rm -rf $(HD51_BUILD_TMP) || true
 	mkdir -p $(HD51_BUILD_TMP)/$(BOXTYPE)
 	# Create a sparse image block
 	dd if=/dev/zero of=$(HD51_BUILD_TMP)/$(HD51_IMAGE_LINK) seek=$(shell expr $(HD51_IMAGE_ROOTFS_SIZE) \* $(BLOCK_SECTOR)) count=0 bs=$(BLOCK_SIZE)
@@ -217,7 +223,6 @@ endif
 	mv $(HD51_BUILD_TMP)/disk.img $(HD51_BUILD_TMP)/$(BOXTYPE)/
 
 flash-image-hd51-multi-rootfs:
-	# Create final USB-image
 	mkdir -p $(HD51_BUILD_TMP)/$(BOXTYPE)
 	cp $(RELEASE_DIR)/boot/zImage.dtb $(HD51_BUILD_TMP)/$(BOXTYPE)/kernel.bin
 	cd $(RELEASE_DIR); \
@@ -230,7 +235,7 @@ flash-image-hd51-multi-rootfs:
 	rm -rf $(HD51_BUILD_TMP)
 
 flash-image-hd51-online:
-	# Create final USB-image
+	rm -rf $(HD51_BUILD_TMP) || true
 	mkdir -p $(HD51_BUILD_TMP)/$(BOXTYPE)
 	cp $(RELEASE_DIR)/boot/zImage.dtb $(HD51_BUILD_TMP)/$(BOXTYPE)/kernel.bin
 	cd $(RELEASE_DIR); \
@@ -243,7 +248,7 @@ flash-image-hd51-online:
 	rm -rf $(HD51_BUILD_TMP)
 
 flash-image-bre2ze4k-multi-disk: $(D)/host_resize2fs
-	rm -rf $(BRE2ZE4K_BUILD_TMP)
+	rm -rf $(BRE2ZE4K_BUILD_TMP) || true
 	mkdir -p $(BRE2ZE4K_BUILD_TMP)/$(BOXTYPE)
 	# Create a sparse image block
 	dd if=/dev/zero of=$(BRE2ZE4K_BUILD_TMP)/$(BRE2ZE4K_IMAGE_LINK) seek=$(shell expr $(BRE2ZE4K_IMAGE_ROOTFS_SIZE) \* $(BLOCK_SECTOR)) count=0 bs=$(BLOCK_SIZE)
@@ -319,7 +324,6 @@ endif
 	mv $(BRE2ZE4K_BUILD_TMP)/disk.img $(BRE2ZE4K_BUILD_TMP)/$(BOXTYPE)/
 
 flash-image-bre2ze4k-multi-rootfs:
-	# Create final USB-image
 	mkdir -p $(BRE2ZE4K_BUILD_TMP)/$(BOXTYPE)
 	cp $(RELEASE_DIR)/boot/zImage.dtb $(BRE2ZE4K_BUILD_TMP)/$(BOXTYPE)/kernel.bin
 	cd $(RELEASE_DIR); \
@@ -332,7 +336,7 @@ flash-image-bre2ze4k-multi-rootfs:
 	rm -rf $(BRE2ZE4K_BUILD_TMP)
 
 flash-image-bre2ze4k-online:
-	# Create final USB-image
+	rm -rf $(BRE2ZE4K_BUILD_TMP) || true
 	mkdir -p $(BRE2ZE4K_BUILD_TMP)/$(BOXTYPE)
 	cp $(RELEASE_DIR)/boot/zImage.dtb $(BRE2ZE4K_BUILD_TMP)/$(BOXTYPE)/kernel.bin
 	cd $(RELEASE_DIR); \
@@ -370,7 +374,7 @@ $(ARCHIVE)/$(HD60_RECOVERY_SRC):
 	$(WGET) http://downloads.mutant-digital.net/$(KERNEL_TYPE)/$(HD60_RECOVERY_SRC)
 
 flash-image-hd60-multi-disk: $(ARCHIVE)/$(HD60_BOOTARGS_SRC) $(ARCHIVE)/$(HD60_PARTITONS_SRC) $(ARCHIVE)/$(HD60_RECOVERY_SRC)
-	# Create image
+	rm -rf $(HD60_BUILD_TMP) || true
 	mkdir -p $(HD60_BUILD_TMP)/$(BOXTYPE)
 	unzip -o $(ARCHIVE)/$(HD60_BOOTARGS_SRC) -d $(HD60_BUILD_TMP)
 	unzip -o $(ARCHIVE)/$(HD60_PARTITONS_SRC) -d $(HD60_BUILD_TMP)
@@ -381,26 +385,26 @@ flash-image-hd60-multi-disk: $(ARCHIVE)/$(HD60_BOOTARGS_SRC) $(ARCHIVE)/$(HD60_P
 		cp -rf $(RELEASE_DIR)/boot/logo.img $(HD60_BUILD_TMP)/$(BOXTYPE); \
 	fi
 	echo $(BOXTYPE)_DDT_usb_$(shell date '+%d%m%Y-%H%M%S') > $(HD60_BUILD_TMP)/$(BOXTYPE)/imageversion
-	$(HOST_DIR)/bin/make_ext4fs -l $(HD60_IMAGE_ROOTFS_SIZE) $(HD60_BUILD_TMP)/$(HD60_IMAGE_LINK) $(RELEASE_DIR)
+	$(HOST_DIR)/bin/make_ext4fs -l $(HD60_IMAGE_ROOTFS_SIZE) $(HD60_BUILD_TMP)/$(HD60_IMAGE_LINK) $(RELEASE_DIR)/..
 	$(HOST_DIR)/bin/ext2simg -zv $(HD60_BUILD_TMP)/$(HD60_IMAGE_LINK) $(HD60_BUILD_TMP)/$(BOXTYPE)/rootfs.fastboot.gz
 	dd if=/dev/zero of=$(HD60_BUILD_TMP)/$(BOXTYPE)/$(HD60_BOOT_IMAGE) bs=1024 count=$(HD60_BOOTOPTIONS_PARTITION_SIZE)
 	mkfs.msdos -S 512 $(HD60_BUILD_TMP)/$(BOXTYPE)/$(HD60_BOOT_IMAGE)
-	echo "bootcmd=setenv bootargs \$(bootargs) \$(bootargs_common); mmc read 0 0x1000000 0x3BD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD60_BUILD_TMP)/STARTUP
+	echo "bootcmd=setenv bootargs $$(bootargs) $$(bootargs_common); mmc read 0 0x1000000 0x3BD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD60_BUILD_TMP)/STARTUP
 	echo "bootargs=root=/dev/mmcblk0p20 rootsubdir=linuxrootfs1 rootfstype=ext4" >> $(HD60_BUILD_TMP)/STARTUP
-	echo "bootcmd=setenv vfd_msg andr;setenv bootargs \$(bootargs) \$(bootargs_common); \$(bootcmd_android)" > $(HD60_BUILD_TMP)/STARTUP_ANDROID
+	echo "bootcmd=setenv vfd_msg andr;setenv bootargs $$(bootargs) $$(bootargs_common); $$(bootcmd_android)" > $(HD60_BUILD_TMP)/STARTUP_ANDROID
 	echo "bootargs=androidboot.selinux=disable androidboot.serialno=0123456789" >> $(HD60_BUILD_TMP)/STARTUP_ANDROID
-	echo "bootcmd=setenv vfd_msg andr;setenv bootargs \$(bootargs) \$(bootargs_common); \$(bootcmd_android)" > $(HD60_BUILD_TMP)/STARTUP_ANDROID_DISABLE_LINUXSE
+	echo "bootcmd=setenv vfd_msg andr;setenv bootargs $$(bootargs) $$(bootargs_common); $$(bootcmd_android)" > $(HD60_BUILD_TMP)/STARTUP_ANDROID_DISABLE_LINUXSE
 	echo "bootargs=androidboot.selinux=disable androidboot.serialno=0123456789" >> $(HD60_BUILD_TMP)/STARTUP_ANDROID_DISABLE_LINUXSE
-	echo "bootcmd=setenv bootargs \$(bootargs) \$(bootargs_common); mmc read 0 0x1000000 0x3BD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD60_BUILD_TMP)/STARTUP_LINUX_1
+	echo "bootcmd=setenv bootargs $$(bootargs) $$(bootargs_common); mmc read 0 0x1000000 0x3BD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD60_BUILD_TMP)/STARTUP_LINUX_1
 	echo "bootargs=root=/dev/mmcblk0p20 rootsubdir=linuxrootfs1 rootfstype=ext4" >> $(HD60_BUILD_TMP)/STARTUP_LINUX_1
-	echo "bootcmd=setenv bootargs \$(bootargs) \$(bootargs_common); mmc read 0 0x1000000 0x545000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD60_BUILD_TMP)/STARTUP_LINUX_2
+	echo "bootcmd=setenv bootargs $$(bootargs) $$(bootargs_common); mmc read 0 0x1000000 0x545000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD60_BUILD_TMP)/STARTUP_LINUX_2
 	echo "bootargs=root=/dev/mmcblk0p24 rootsubdir=linuxrootfs2 rootfstype=ext4" >> $(HD60_BUILD_TMP)/STARTUP_LINUX_2
-	echo "bootcmd=setenv bootargs \$(bootargs) \$(bootargs_common); mmc read 0 0x1000000 0x54D000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD60_BUILD_TMP)/STARTUP_LINUX_3
+	echo "bootcmd=setenv bootargs $$(bootargs) $$(bootargs_common); mmc read 0 0x1000000 0x54D000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD60_BUILD_TMP)/STARTUP_LINUX_3
 	echo "bootargs=root=/dev/mmcblk0p24 rootsubdir=linuxrootfs3 rootfstype=ext4" >> $(HD60_BUILD_TMP)/STARTUP_LINUX_3
-	echo "bootcmd=setenv bootargs \$(bootargs) \$(bootargs_common); mmc read 0 0x1000000 0x555000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD60_BUILD_TMP)/STARTUP_LINUX_4
+	echo "bootcmd=setenv bootargs $$(bootargs) $$(bootargs_common); mmc read 0 0x1000000 0x555000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD60_BUILD_TMP)/STARTUP_LINUX_4
 	echo "bootargs=root=/dev/mmcblk0p24 rootsubdir=linuxrootfs4 rootfstype=ext4" >> $(HD60_BUILD_TMP)/STARTUP_LINUX_4
-	echo "bootcmd=setenv bootargs \$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > $(HD60_BUILD_TMP)/STARTUP_RECOVERY
-	echo "bootcmd=setenv bootargs \$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > $(HD60_BUILD_TMP)/STARTUP_ONCE
+	echo "bootcmd=setenv bootargs $$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > $(HD60_BUILD_TMP)/STARTUP_RECOVERY
+	echo "bootcmd=setenv bootargs $$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > $(HD60_BUILD_TMP)/STARTUP_ONCE
 	echo "imageurl https://raw.githubusercontent.com/oe-alliance/bootmenu/master/$(BOXTYPE)/images" > $(HD60_BUILD_TMP)/bootmenu.conf
 	echo "# " >> $(HD60_BUILD_TMP)/bootmenu.conf
 	echo "iface eth0" >> $(HD60_BUILD_TMP)/bootmenu.conf
@@ -430,7 +434,31 @@ flash-image-hd60-multi-disk: $(ARCHIVE)/$(HD60_BOOTARGS_SRC) $(ARCHIVE)/$(HD60_P
 	rm -rf $(HD60_BUILD_TMP)/$(HD60_IMAGE_LINK)
 	cd $(HD60_BUILD_TMP) && \
 	zip -r $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_multi_usb_$(shell date '+%d.%m.%Y-%H.%M').zip *
-	zip -r $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_multi_ofg_$(shell date '+%d.%m.%Y-%H.%M').zip imageversion uImage rootfs.tar.bz2
+	# cleanup
+	rm -rf $(HD60_BUILD_TMP)
+
+flash-image-hd60-multi-rootfs:
+	mkdir -p $(HD60_BUILD_TMP)/$(BOXTYPE)
+	cp $(RELEASE_DIR)/boot/uImage $(HD60_BUILD_TMP)/$(BOXTYPE)/uImage
+	cd $(RELEASE_DIR); \
+	tar -cvf $(HD60_BUILD_TMP)/$(BOXTYPE)/rootfs.tar --exclude=uImage* . > /dev/null 2>&1; \
+	bzip2 $(HD60_BUILD_TMP)/$(BOXTYPE)/rootfs.tar
+	echo $(BOXTYPE)_DDT_usb_$(shell date '+%d%m%Y-%H%M%S') > $(HD60_BUILD_TMP)/$(BOXTYPE)/imageversion
+	cd $(HD60_BUILD_TMP) && \
+	zip -r $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_multi_$(ITYPE)_$(shell date '+%d.%m.%Y-%H.%M').zip $(BOXTYPE)/rootfs.tar.bz2 $(BOXTYPE)/uImage $(BOXTYPE)/imageversion
+	# cleanup
+	rm -rf $(HD60_BUILD_TMP)
+
+flash-image-hd60-online:
+	rm -rf $(HD60_BUILD_TMP) || true
+	mkdir -p $(HD60_BUILD_TMP)/$(BOXTYPE)
+	cp $(RELEASE_DIR)/boot/uImage $(HD60_BUILD_TMP)/$(BOXTYPE)/uImage
+	cd $(RELEASE_DIR); \
+	tar -cvf $(HD60_BUILD_TMP)/$(BOXTYPE)/rootfs.tar --exclude=uImage* . > /dev/null 2>&1; \
+	bzip2 $(HD60_BUILD_TMP)/$(BOXTYPE)/rootfs.tar
+	echo $(BOXTYPE)_DDT_usb_$(shell date '+%d%m%Y-%H%M%S') > $(HD60_BUILD_TMP)/$(BOXTYPE)/imageversion
+	cd $(HD60_BUILD_TMP)/$(BOXTYPE) && \
+	tar -cvzf $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_multi_$(ITYPE)_$(shell date '+%d.%m.%Y-%H.%M').tgz rootfs.tar.bz2 uImage imageversion
 	# cleanup
 	rm -rf $(HD60_BUILD_TMP)
 
@@ -477,7 +505,7 @@ SWAP_DATA_PARTITION_OFFSET = $(shell expr $(FOURTH_ROOTFS_PARTITION_OFFSET) \+ $
 SWAP_PARTITION_OFFSET = $(shell expr $(SWAP_DATA_PARTITION_OFFSET) \+ $(SWAP_DATA_PARTITION_SIZE))
 
 flash-image-vusolo4k-multi-disk: $(D)/host_resize2fs
-	rm -rf $(VUSOLO4K_BUILD_TMP)
+	rm -rf $(VUSOLO4K_BUILD_TMP) || true
 	mkdir -p $(VUSOLO4K_BUILD_TMP)/$(BOXTYPE)
 	# Create a sparse image block
 	dd if=/dev/zero of=$(VUSOLO4K_BUILD_TMP)/$(VUSOLO4K_IMAGE_LINK) seek=$(shell expr $(VUSOLO4K_IMAGE_ROOTFS_SIZE) \* $(BLOCK_SECTOR)) count=0 bs=$(BLOCK_SIZE)
@@ -540,6 +568,7 @@ VUDUO_PREFIX = vuplus/duo
 VUDUO_BUILD_TMP = $(BUILD_TMP)/image-build
 flash-image-vuduo:
 	# Create final USB-image
+	rm -rf $(VUDUO_BUILD_TMP) || true
 	mkdir -p $(VUDUO_BUILD_TMP)/$(VUDUO_PREFIX)
 	touch $(VUDUO_BUILD_TMP)/$(VUDUO_PREFIX)/reboot.update
 	cp $(RELEASE_DIR)/boot/kernel_cfe_auto.bin $(VUDUO_BUILD_TMP)/$(VUDUO_PREFIX)
