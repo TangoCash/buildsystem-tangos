@@ -170,15 +170,15 @@ ifeq ($(NEWLAYOUT), $(filter $(NEWLAYOUT), 1))
 	parted -s $(EMMC_IMAGE) unit KiB mkpart userdata ext4 ${MULTI_ROOTFS_PARTITION_OFFSET} 100%
 	dd if=/dev/zero of=$(HD51_BUILD_TMP)/$(HD51_BOOT_IMAGE) bs=$(BLOCK_SIZE) count=$(shell expr $(BOOT_PARTITION_SIZE) \* $(BLOCK_SECTOR))
 	mkfs.msdos -S 512 $(HD51_BUILD_TMP)/$(HD51_BOOT_IMAGE)
-	echo "boot emmcflash0.linuxkernel 'root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(HD51_BUILD_TMP)/STARTUP
-	echo "boot emmcflash0.linuxkernel 'root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(HD51_BUILD_TMP)/STARTUP_1
-	echo "boot emmcflash0.linuxkernel2 'root=/dev/mmcblk0p7 rootsubdir=linuxrootfs2 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(HD51_BUILD_TMP)/STARTUP_2
-	echo "boot emmcflash0.linuxkernel3 'root=/dev/mmcblk0p7 rootsubdir=linuxrootfs3 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(HD51_BUILD_TMP)/STARTUP_3
-	echo "boot emmcflash0.linuxkernel4 'root=/dev/mmcblk0p7 rootsubdir=linuxrootfs4 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(HD51_BUILD_TMP)/STARTUP_4
-	echo "boot emmcflash0.linuxkernel 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(HD51_BUILD_TMP)/STARTUP_1_12
-	echo "boot emmcflash0.linuxkernel2 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p7 rootsubdir=linuxrootfs2 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(HD51_BUILD_TMP)/STARTUP_2_12
-	echo "boot emmcflash0.linuxkernel3 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p7 rootsubdir=linuxrootfs3 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(HD51_BUILD_TMP)/STARTUP_3_12
-	echo "boot emmcflash0.linuxkernel4 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p7 rootsubdir=linuxrootfs4 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(HD51_BUILD_TMP)/STARTUP_4_12
+	echo "boot emmcflash0.linuxkernel 'root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 kernel=/dev/mmcblk0p2 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(HD51_BUILD_TMP)/STARTUP
+	echo "boot emmcflash0.linuxkernel 'root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 kernel=/dev/mmcblk0p2 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(HD51_BUILD_TMP)/STARTUP_1
+	echo "boot emmcflash0.linuxkernel2 'root=/dev/mmcblk0p7 rootsubdir=linuxrootfs2 kernel=/dev/mmcblk0p4 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(HD51_BUILD_TMP)/STARTUP_2
+	echo "boot emmcflash0.linuxkernel3 'root=/dev/mmcblk0p7 rootsubdir=linuxrootfs3 kernel=/dev/mmcblk0p5 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(HD51_BUILD_TMP)/STARTUP_3
+	echo "boot emmcflash0.linuxkernel4 'root=/dev/mmcblk0p7 rootsubdir=linuxrootfs4 kernel=/dev/mmcblk0p6 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(HD51_BUILD_TMP)/STARTUP_4
+	echo "boot emmcflash0.linuxkernel 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 kernel=/dev/mmcblk0p2 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(HD51_BUILD_TMP)/STARTUP_1_12
+	echo "boot emmcflash0.linuxkernel2 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p7 rootsubdir=linuxrootfs2 kernel=/dev/mmcblk0p4 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(HD51_BUILD_TMP)/STARTUP_2_12
+	echo "boot emmcflash0.linuxkernel3 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p7 rootsubdir=linuxrootfs3 kernel=/dev/mmcblk0p5 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(HD51_BUILD_TMP)/STARTUP_3_12
+	echo "boot emmcflash0.linuxkernel4 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p7 rootsubdir=linuxrootfs4 kernel=/dev/mmcblk0p6 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(HD51_BUILD_TMP)/STARTUP_4_12
 else
 	parted -s $(EMMC_IMAGE) unit KiB mkpart kernel1 $(KERNEL_PARTITION_OFFSET) $(shell expr $(KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
 	parted -s $(EMMC_IMAGE) unit KiB mkpart rootfs1 ext4 $(ROOTFS_PARTITION_OFFSET) $(shell expr $(ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
@@ -271,15 +271,15 @@ ifeq ($(NEWLAYOUT), $(filter $(NEWLAYOUT), 1))
 	parted -s $(EMMC_IMAGE) unit KiB mkpart userdata ext4 ${MULTI_ROOTFS_PARTITION_OFFSET} 100%
 	dd if=/dev/zero of=$(HD51_BUILD_TMP)/$(HD51_BOOT_IMAGE) bs=$(BLOCK_SIZE) count=$(shell expr $(BOOT_PARTITION_SIZE) \* $(BLOCK_SECTOR))
 	mkfs.msdos -S 512 $(HD51_BUILD_TMP)/$(HD51_BOOT_IMAGE)
-	echo "boot emmcflash0.linuxkernel 'root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP
-	echo "boot emmcflash0.linuxkernel 'root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_1
-	echo "boot emmcflash0.linuxkernel2 'root=/dev/mmcblk0p7 rootsubdir=linuxrootfs2 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_2
-	echo "boot emmcflash0.linuxkernel3 'root=/dev/mmcblk0p7 rootsubdir=linuxrootfs3 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_3
-	echo "boot emmcflash0.linuxkernel4 'root=/dev/mmcblk0p7 rootsubdir=linuxrootfs4 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_4
-	echo "boot emmcflash0.linuxkernel 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_1_12
-	echo "boot emmcflash0.linuxkernel2 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p7 rootsubdir=linuxrootfs2 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_2_12
-	echo "boot emmcflash0.linuxkernel3 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p7 rootsubdir=linuxrootfs3 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_3_12
-	echo "boot emmcflash0.linuxkernel4 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p7 rootsubdir=linuxrootfs4 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_4_12
+	echo "boot emmcflash0.linuxkernel 'root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 kernel=/dev/mmcblk0p2 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP
+	echo "boot emmcflash0.linuxkernel 'root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 kernel=/dev/mmcblk0p2 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_1
+	echo "boot emmcflash0.linuxkernel2 'root=/dev/mmcblk0p7 rootsubdir=linuxrootfs2 kernel=/dev/mmcblk0p4 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_2
+	echo "boot emmcflash0.linuxkernel3 'root=/dev/mmcblk0p7 rootsubdir=linuxrootfs3 kernel=/dev/mmcblk0p5 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_3
+	echo "boot emmcflash0.linuxkernel4 'root=/dev/mmcblk0p7 rootsubdir=linuxrootfs4 kernel=/dev/mmcblk0p6 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_4
+	echo "boot emmcflash0.linuxkernel 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 kernel=/dev/mmcblk0p2 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_1_12
+	echo "boot emmcflash0.linuxkernel2 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p7 rootsubdir=linuxrootfs2 kernel=/dev/mmcblk0p4 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_2_12
+	echo "boot emmcflash0.linuxkernel3 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p7 rootsubdir=linuxrootfs3 kernel=/dev/mmcblk0p5 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_3_12
+	echo "boot emmcflash0.linuxkernel4 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p7 rootsubdir=linuxrootfs4 kernel=/dev/mmcblk0p6 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(BRE2ZE4K_BUILD_TMP)/STARTUP_4_12
 else
 	parted -s $(EMMC_IMAGE) unit KiB mkpart kernel1 $(KERNEL_PARTITION_OFFSET) $(shell expr $(KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
 	parted -s $(EMMC_IMAGE) unit KiB mkpart rootfs1 ext4 $(ROOTFS_PARTITION_OFFSET) $(shell expr $(ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SIZE_MULTI))
@@ -390,19 +390,19 @@ flash-image-hd60-multi-disk: $(ARCHIVE)/$(HD60_BOOTARGS_SRC) $(ARCHIVE)/$(HD60_P
 	dd if=/dev/zero of=$(HD60_BUILD_TMP)/$(BOXTYPE)/$(HD60_BOOT_IMAGE) bs=1024 count=$(HD60_BOOTOPTIONS_PARTITION_SIZE)
 	mkfs.msdos -S 512 $(HD60_BUILD_TMP)/$(BOXTYPE)/$(HD60_BOOT_IMAGE)
 	echo "bootcmd=setenv bootargs $$(bootargs) $$(bootargs_common); mmc read 0 0x1000000 0x3BD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD60_BUILD_TMP)/STARTUP
-	echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs1 rootfstype=ext4" >> $(HD60_BUILD_TMP)/STARTUP
+	echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs1 rootfstype=ext4 kernel=/dev/mmcblk0p19" >> $(HD60_BUILD_TMP)/STARTUP
 	echo "bootcmd=setenv vfd_msg andr;setenv bootargs $$(bootargs) $$(bootargs_common); $$(bootcmd_android)" > $(HD60_BUILD_TMP)/STARTUP_ANDROID
 	echo "bootargs=androidboot.selinux=disable androidboot.serialno=0123456789" >> $(HD60_BUILD_TMP)/STARTUP_ANDROID
 	echo "bootcmd=setenv vfd_msg andr;setenv bootargs $$(bootargs) $$(bootargs_common); $$(bootcmd_android)" > $(HD60_BUILD_TMP)/STARTUP_ANDROID_DISABLE_LINUXSE
 	echo "bootargs=androidboot.selinux=disable androidboot.serialno=0123456789" >> $(HD60_BUILD_TMP)/STARTUP_ANDROID_DISABLE_LINUXSE
 	echo "bootcmd=setenv bootargs $$(bootargs) $$(bootargs_common); mmc read 0 0x1000000 0x3BD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD60_BUILD_TMP)/STARTUP_LINUX_1
-	echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs1 rootfstype=ext4" >> $(HD60_BUILD_TMP)/STARTUP_LINUX_1
+	echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs1 rootfstype=ext4 kernel=/dev/mmcblk0p19" >> $(HD60_BUILD_TMP)/STARTUP_LINUX_1
 	echo "bootcmd=setenv bootargs $$(bootargs) $$(bootargs_common); mmc read 0 0x1000000 0x545000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD60_BUILD_TMP)/STARTUP_LINUX_2
-	echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs2 rootfstype=ext4" >> $(HD60_BUILD_TMP)/STARTUP_LINUX_2
+	echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs2 rootfstype=ext4 kernel=/dev/mmcblk0p20" >> $(HD60_BUILD_TMP)/STARTUP_LINUX_2
 	echo "bootcmd=setenv bootargs $$(bootargs) $$(bootargs_common); mmc read 0 0x1000000 0x54D000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD60_BUILD_TMP)/STARTUP_LINUX_3
-	echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs3 rootfstype=ext4" >> $(HD60_BUILD_TMP)/STARTUP_LINUX_3
+	echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs3 rootfstype=ext4 kernel=/dev/mmcblk0p21" >> $(HD60_BUILD_TMP)/STARTUP_LINUX_3
 	echo "bootcmd=setenv bootargs $$(bootargs) $$(bootargs_common); mmc read 0 0x1000000 0x555000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD60_BUILD_TMP)/STARTUP_LINUX_4
-	echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs4 rootfstype=ext4" >> $(HD60_BUILD_TMP)/STARTUP_LINUX_4
+	echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs4 rootfstype=ext4 kernel=/dev/mmcblk0p22" >> $(HD60_BUILD_TMP)/STARTUP_LINUX_4
 	echo "bootcmd=setenv bootargs $$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > $(HD60_BUILD_TMP)/STARTUP_RECOVERY
 	echo "bootcmd=setenv bootargs $$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > $(HD60_BUILD_TMP)/STARTUP_ONCE
 	echo "imageurl https://raw.githubusercontent.com/oe-alliance/bootmenu/master/$(BOXTYPE)/images" > $(HD60_BUILD_TMP)/bootmenu.conf
