@@ -143,7 +143,9 @@ N_CONFIG_OPTS += \
 	--with-themesdir=/usr/share/tuxbox/neutrino/themes \
 	--with-themesdir_var=/var/tuxbox/themes \
 	--with-webtvdir=/usr/share/tuxbox/neutrino/webtv \
-	--with-webtvdir_var=/var/tuxbox/plugins/webtv
+	--with-webtvdir_var=/var/tuxbox/plugins/webtv \
+	--with-controldir=/usr/share/tuxbox/neutrino/control \
+	--with-controldir_var=/var/tuxbox/control
 
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k))
 N_CONFIG_OPTS += --enable-graphlcd
