@@ -31,7 +31,7 @@ if [ "$1" == -h ] || [ "$1" == --help ]; then
 	echo "Parameter 6: Neutrino variant (1-5)"
 	echo "Parameter 7: External LCD support (1-4)"
 	echo "optional:"
-	echo "Parameter 8: Image layout for hd51 / bre2ze4k (1-2)"
+	echo "Parameter 8: Image layout for hd51 / bre2ze4k / vusolo4k (1-2)"
 	exit
 fi
 
@@ -337,6 +337,24 @@ fi
 if [ $BOXTYPE == 'hd60' ]; then
 echo "NEWLAYOUT=1" >> config
 fi
+
+if [ $BOXTYPE == 'vusolo4k' ]; then
+case $8 in
+	[1-2]) REPLY=$8;;
+	*)	echo -e "\nNormal or MultiBoot:"
+		echo "   1)  Normal    (default)"
+		echo "   2)  Multiboot"
+		read -p "Select mode (1-2)? ";;
+esac
+
+case "$REPLY" in
+	1)  VUSOLO4K_MULTIBOOT="0";;
+	2)  VUSOLO4K_MULTIBOOT="1";;
+	*)  VUSOLO4K_MULTIBOOT="0";;
+esac
+echo "VUSOLO4K_MULTIBOOT=$VUSOLO4K_MULTIBOOT" >> config
+fi
+
 ##############################################
 echo " "
 make printenv

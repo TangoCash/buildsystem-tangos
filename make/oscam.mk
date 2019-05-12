@@ -54,25 +54,25 @@ $(D)/oscam.do_prepare:
 $(D)/oscam.do_compile:
 	cd $(SOURCE_DIR)/oscam-svn && \
 		$(BUILDENV) \
-		$(MAKE) CROSS=$(TARGET)- CONF_DIR=/var/keys
+		$(MAKE) EXTRA_LDFLAGS="$(TARGET_LDFLAGS)" CROSS=$(TARGET)- CONF_DIR=/var/keys
 	touch $@
 
 $(D)/oscam-emu.do_compile:
 	cd $(SOURCE_DIR)/oscam-svn && \
 		$(BUILDENV) \
-		$(MAKE) CROSS=$(TARGET)- CONF_DIR=/var/keys VER=emu_svn
+		$(MAKE) EXTRA_LDFLAGS="$(TARGET_LDFLAGS)" CROSS=$(TARGET)- CONF_DIR=/var/keys VER=emu_svn
 	touch $@
 
 $(D)/oscam-ssl.do_compile: openssl
 	cd $(SOURCE_DIR)/oscam-svn && \
 		$(BUILDENV) \
-		$(MAKE) CROSS=$(TARGET)- USE_SSL=1 CONF_DIR=/var/keys VER=ssl_svn
+		$(MAKE) EXTRA_LDFLAGS="$(TARGET_LDFLAGS)" CROSS=$(TARGET)- USE_SSL=1 CONF_DIR=/var/keys VER=ssl_svn
 	touch $@
 
 $(D)/oscam-libusb.do_compile: libusb
 	cd $(SOURCE_DIR)/oscam-svn && \
 		$(BUILDENV) \
-		$(MAKE) CROSS=$(TARGET)- USE_LIBUSB=1 CONF_DIR=/var/keys VER=libusb_svn
+		$(MAKE) EXTRA_LDFLAGS="$(TARGET_LDFLAGS)" CROSS=$(TARGET)- USE_LIBUSB=1 CONF_DIR=/var/keys VER=libusb_svn
 	touch $@
 
 $(D)/oscam: bootstrap oscam.do_prepare oscam.do_compile

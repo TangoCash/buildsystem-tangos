@@ -64,6 +64,9 @@ endif
 ifeq ($(NEWLAYOUT), 1)
 	@echo -e "IMAGE TYPE        : $(TERM_YELLOW)1 single + multirootfs$(TERM_NORMAL)"
 endif
+ifeq ($(VUSOLO4K_MULTIBOOT), 1)
+	@echo -e "IMAGE TYPE        : $(TERM_YELLOW)multiboot$(TERM_NORMAL)"
+endif
 	$(call draw_line,);
 ifeq ($(IMAGE), $(filter $(IMAGE), neutrino neutrino-wlandriver))
 	@echo -e "LOCAL_NEUTRINO_BUILD_OPTIONS : $(TERM_GREEN)$(LOCAL_NEUTRINO_BUILD_OPTIONS)$(TERM_NORMAL)"
