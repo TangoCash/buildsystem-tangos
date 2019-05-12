@@ -148,6 +148,11 @@ NFS=$(grep -c nfs /proc/cmdline)
     /var/tuxbox/plugins/fb.sh start >/dev/null 2>&1
   fi
 
+if [ -e /usr/share/tuxbox/neutrino/control/migration.sh ]; then
+    chmod 755 /usr/share/tuxbox/neutrino/control/migration.sh
+    /usr/share/tuxbox/neutrino/control/migration.sh
+fi
+
 if [ -e /var/bin/tangos ]; then
     chmod 755 /var/bin/tangos
     /var/bin/tangos
