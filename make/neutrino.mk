@@ -232,7 +232,9 @@ endif
 
 .version: $(TARGET_DIR)/.version
 $(TARGET_DIR)/.version:
-	echo "imagename=Neutrino MP" > $@
+	echo "distro=$(FLAVOUR)" > $@
+	echo "imagename=`sed -n 's/\#define PACKAGE_NAME "//p' $(N_OBJDIR)/config.h | sed 's/"//'`" >> $@
+	echo "imageversion=`sed -n 's/\#define PACKAGE_VERSION "//p' $(N_OBJDIR)/config.h | sed 's/"//'`" >> $@
 	echo "homepage=https://github.com/Duckbox-Developers" >> $@
 	echo "creator=$(MAINTAINER)" >> $@
 	echo "docs=https://github.com/Duckbox-Developers" >> $@
@@ -240,6 +242,18 @@ $(TARGET_DIR)/.version:
 	echo "version=0200`date +%Y%m%d%H%M`" >> $@
 	echo "builddate="`date` >> $@
 	echo "git=BS-rev$(BS_REV)_HAL-rev$(HAL_REV)_NMP-rev$(NMP_REV)" >> $@
+	echo "imagedir=$(BOXTYPE)" >> $@
+
+# -----------------------------------------------------------------------------
+
+e2-multiboot:
+	touch $(TARGET_DIR)/usr/bin/enigma2
+	#
+	echo -e "$(FLAVOUR) `sed -n 's/\#define PACKAGE_VERSION "//p' $(N_OBJDIR)/config.h | sed 's/"//'` \\\n \\\l\n" > $(TARGET_DIR)/etc/issue
+	#
+	touch $(TARGET_DIR)/var/lib/opkg/status 
+	#
+	cp -a $(TARGET_DIR)/.version $(TARGET_DIR)/etc/image-version
 
 # -----------------------------------------------------------------------------
 
@@ -370,6 +384,7 @@ $(D)/neutrino-mp: $(D)/neutrino-mp.do_prepare $(D)/neutrino-mp.config.status $(D
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 	$(MAKE) -C $(N_OBJDIR) install DESTDIR=$(TARGET_DIR)
 	make .version
+	make e2-multiboot
 	$(TOUCH)
 	make neutrino-mp-release
 	$(TUXBOX_CUSTOMIZE)
