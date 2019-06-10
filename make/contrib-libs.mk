@@ -498,7 +498,7 @@ $(D)/readline: $(D)/bootstrap $(ARCHIVE)/$(READLINE_SOURCE)
 # openssl
 #
 OPENSSL_MAJOR = 1.0.2
-OPENSSL_MINOR = r
+OPENSSL_MINOR = s
 OPENSSL_VER = $(OPENSSL_MAJOR)$(OPENSSL_MINOR)
 OPENSSL_SOURCE = openssl-$(OPENSSL_VER).tar.gz
 OPENSSL_PATCH  = openssl-$(OPENSSL_VER)-optimize-for-size.patch
@@ -1056,7 +1056,7 @@ $(D)/libjpeg_turbo: $(D)/bootstrap $(ARCHIVE)/$(LIBJPEG_TURBO_SOURCE)
 #
 # libpng
 #
-LIBPNG_VER = 1.6.36
+LIBPNG_VER = 1.6.37
 LIBPNG_VER_X = 16
 LIBPNG_SOURCE = libpng-$(LIBPNG_VER).tar.xz
 LIBPNG_PATCH = libpng-$(LIBPNG_VER)-disable-tools.patch
@@ -1180,7 +1180,7 @@ $(D)/ca-bundle: $(ARCHIVE)/$(CA-BUNDLE_SOURCE)
 ifeq ($(BOXARCH), sh4)
 LIBCURL_VER = 7.61.1
 else
-LIBCURL_VER = 7.64.1
+LIBCURL_VER = 7.65.0
 endif
 LIBCURL_SOURCE = curl-$(LIBCURL_VER).tar.bz2
 LIBCURL_PATCH = libcurl-$(LIBCURL_VER).patch
@@ -2100,7 +2100,7 @@ GRAPHLCD_VER = 55d4bd8
 GRAPHLCD_SOURCE = graphlcd-git-$(GRAPHLCD_VER).tar.bz2
 GRAPHLCD_URL = git://projects.vdr-developer.org/graphlcd-base.git
 GRAPHLCD_PATCH = graphlcd-git-$(GRAPHLCD_VER).patch
-ifeq ($(BOXTYPE), vusolo4k)
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k vuduo4k))
 GRAPHLCD_PATCH += graphlcd-vusolo4k.patch
 endif
 
@@ -2150,11 +2150,11 @@ $(D)/libdpf: $(D)/bootstrap $(D)/libusb_compat $(ARCHIVE)/$(LIBDPF_SOURCE)
 #
 # lcd4linux
 #
-LCD4LINUX_VER = ff5b5db
+LCD4LINUX_VER = 60925a0
 LCD4LINUX_SOURCE = lcd4linux-git-$(LCD4LINUX_VER).tar.bz2
 LCD4LINUX_URL = https://github.com/TangoCash/lcd4linux.git
-LCD4LINUX_PATCH =
-ifeq ($(BOXTYPE), vusolo4k)
+LCD4LINUX_PATCH = 
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k vuduo4k))
 LCD4LINUX_DRV = ,VUSOLO4K
 endif
 
@@ -2177,7 +2177,11 @@ $(D)/lcd4linux: $(D)/bootstrap $(D)/libusb_compat $(D)/gd $(D)/libusb $(D)/libdp
 		$(MAKE) vcs_version all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	install -m 755 $(SKEL_ROOT)/etc/init.d/lcd4linux $(TARGET_DIR)/etc/init.d/
-	install -D -m 0600 $(SKEL_ROOT)/etc/lcd4linux_ni.conf $(TARGET_DIR)/etc/lcd4linux.conf
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k vuduo4k))
+	install -D -m 0600 $(SKEL_ROOT)/etc/lcd4linux_vu.conf $(TARGET_DIR)/etc/lcd4linux.conf
+else
+	install -D -m 0600 $(SKEL_ROOT)/etc/lcd4linux.conf $(TARGET_DIR)/etc/lcd4linux.conf
+endif
 	$(REMOVE)/lcd4linux-git-$(LCD4LINUX_VER)
 	$(TOUCH)
 
@@ -2273,9 +2277,9 @@ $(D)/libusb_compat: $(D)/bootstrap $(D)/libusb $(ARCHIVE)/$(LIBUSB_COMPAT_SOURCE
 	$(TOUCH)
 
 #
-# alsa_lib
+# alsa-lib
 #
-ALSA_LIB_VER = 1.1.8
+ALSA_LIB_VER = 1.1.9
 ALSA_LIB_SOURCE = alsa-lib-$(ALSA_LIB_VER).tar.bz2
 ALSA_LIB_PATCH  = alsa-lib-$(ALSA_LIB_VER).patch
 ALSA_LIB_PATCH += alsa-lib-$(ALSA_LIB_VER)-link_fix.patch
@@ -2317,7 +2321,7 @@ $(D)/alsa_lib: $(D)/bootstrap $(ARCHIVE)/$(ALSA_LIB_SOURCE)
 #
 # alsa-utils
 #
-ALSA_UTILS_VER = 1.1.8
+ALSA_UTILS_VER = 1.1.9
 ALSA_UTILS_SOURCE = alsa-utils-$(ALSA_UTILS_VER).tar.bz2
 ALSA_UTILS_PATCH = alsa-utils-$(ALSA_UTILS_VER).patch
 

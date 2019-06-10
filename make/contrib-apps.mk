@@ -5,7 +5,7 @@ ifeq ($(BUSYBOX_SNAPSHOT), 1)
 BUSYBOX_VER = snapshot
 BB_SNAPSHOT =
 else
-BUSYBOX_VER = 1.29.3
+BUSYBOX_VER = 1.30.1
 BB_SNAPSHOT = -$(BUSYBOX_VER)
 endif
 BUSYBOX_SOURCE = busybox-$(BUSYBOX_VER).tar.bz2
@@ -156,7 +156,7 @@ $(D)/sysvinit: $(D)/bootstrap $(ARCHIVE)/$(SYSVINIT_SOURCE)
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), fortis_hdbox octagon1008 cuberevo cuberevo_mini2 cuberevo_2000hd cuberevo_3000hd))
 	install -m 644 $(SKEL_ROOT)/etc/inittab_ttyAS1 $(TARGET_DIR)/etc/inittab
 else
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51 vusolo4k vuduo))
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51 vusolo4k vuduo4k vuduo))
 	install -m 644 $(SKEL_ROOT)/etc/inittab_ttyS0 $(TARGET_DIR)/etc/inittab
 else
 	install -m 644 $(SKEL_ROOT)/etc/inittab $(TARGET_DIR)/etc/inittab
@@ -1281,7 +1281,7 @@ $(D)/smartmontools: $(D)/bootstrap $(ARCHIVE)/$(SMARTMONTOOLS_SOURCE)
 #
 # nfs_utils
 #
-NFS_UTILS_VER = 2.3.3
+NFS_UTILS_VER = 2.3.4
 NFS_UTILS_SOURCE = nfs-utils-$(NFS_UTILS_VER).tar.bz2
 NFS_UTILS_PATCH = nfs-utils-$(NFS_UTILS_VER).patch
 

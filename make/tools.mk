@@ -30,7 +30,10 @@ endif
 	-$(MAKE) -C $(APPS_DIR)/tools/vfdctl distclean
 	-$(MAKE) -C $(APPS_DIR)/tools/wait4button distclean
 endif
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k vuduo))
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k vuduo4k))
+	-$(MAKE) -C $(APPS_DIR)/tools/oled_ctrl distclean
+endif
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k vuduo4k vuduo))
 	-$(MAKE) -C $(APPS_DIR)/tools/initfb distclean
 	-$(MAKE) -C $(APPS_DIR)/tools/turnoff_power distclean
 endif
@@ -237,6 +240,21 @@ $(D)/tools-minimon: $(D)/bootstrap $(D)/libjpeg_turbo2
 	$(TOUCH)
 
 #
+# oled_ctrl
+#
+$(D)/tools-oled_ctrl: $(D)/bootstrap $(D)/freetype
+	$(START_BUILD)
+	set -e; cd $(APPS_DIR)/tools/oled_ctrl; \
+		$(CONFIGURE_TOOLS) \
+			--prefix= \
+			--with-boxmodel=$(BOXTYPE) \
+			--with-boxtype=$(BOXTYPE) \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(TOUCH)
+
+#
 # satfind
 #
 $(D)/tools-satfind: $(D)/bootstrap
@@ -425,7 +443,10 @@ TOOLS += $(D)/tools-ustslave
 TOOLS += $(D)/tools-vfdctl
 TOOLS += $(D)/tools-wait4button
 endif
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k vuduo))
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k vuduo4k))
+TOOLS += $(D)/tools-oled_ctrl
+endif
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k vuduo4k vuduo))
 TOOLS += $(D)/tools-initfb
 TOOLS += $(D)/tools-turnoff_power
 endif

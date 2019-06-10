@@ -176,7 +176,7 @@ $(D)/mali-gpu-modul: $(ARCHIVE)/$(EXTRA_MALI_MODULE_SRC) $(D)/bootstrap $(D)/ker
 	$(REMOVE)/$(EXTRA_MALI_MODULE_VER)
 	$(TOUCH)
 endif
-ifeq ($(BOXTYPE), vusolo4k)
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k vuduo4k))
 	$(START_BUILD)
 	install -d $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra
 	tar -xf $(ARCHIVE)/$(DRIVER_SRC) -C $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra
@@ -188,9 +188,16 @@ ifeq ($(BOXTYPE), vusolo4k)
 #
 # platform util
 #
+ifeq ($(BOXTYPE), vusolo4k)
 UTIL_VER = 17.1
-UTIL_DATE = 20181204
+UTIL_DATE = 20190424
 UTIL_REV = r0
+endif
+ifeq ($(BOXTYPE), vuduo4k)
+UTIL_VER = 18.1
+UTIL_DATE = 20190424
+UTIL_REV = r0
+endif
 UTIL_SRC = platform-util-$(KERNEL_TYPE)-$(UTIL_VER)-$(UTIL_DATE).$(UTIL_REV).tar.gz
 
 $(ARCHIVE)/$(UTIL_SRC):
@@ -206,9 +213,16 @@ $(D)/platform_util: $(D)/bootstrap $(ARCHIVE)/$(UTIL_SRC)
 #
 # libgles
 #
+ifeq ($(BOXTYPE), vusolo4k)
 GLES_VER = 17.1
-GLES_DATE = 20181204
+GLES_DATE = 20190424
 GLES_REV = r0
+endif
+ifeq ($(BOXTYPE), vuduo4k)
+GLES_VER = 18.1
+GLES_DATE = 20190424
+GLES_REV = r0
+endif
 GLES_SRC = libgles-$(KERNEL_TYPE)-$(GLES_VER)-$(GLES_DATE).$(GLES_REV).tar.gz
 
 $(ARCHIVE)/$(GLES_SRC):
@@ -227,7 +241,12 @@ $(D)/libgles: $(D)/bootstrap $(ARCHIVE)/$(GLES_SRC)
 #
 # vmlinuz initrd
 #
+ifeq ($(BOXTYPE), vusolo4k)
 INITRD_DATE = 20170209
+endif
+ifeq ($(BOXTYPE), vuduo4k)
+INITRD_DATE = 20181030
+endif
 INITRD_SRC = vmlinuz-initrd_$(KERNEL_TYPE)_$(INITRD_DATE).tar.gz
 
 $(ARCHIVE)/$(INITRD_SRC):

@@ -23,7 +23,7 @@ if [ "$1" == -h ] || [ "$1" == --help ]; then
 	echo "Parameter 7: External LCD support (1-4)"
 	echo ""
 	echo "for arm/mips boxes:"
-	echo "Parameter 1: target system (50-70)"
+	echo "Parameter 1: target system (40-70)"
 	echo "Parameter 2: FFmpeg version (1-2)"
 	echo "Parameter 3: optimization (1-4)"
 	echo "Parameter 4: Media Framework (1-2)"
@@ -31,7 +31,7 @@ if [ "$1" == -h ] || [ "$1" == --help ]; then
 	echo "Parameter 6: Neutrino variant (1-5)"
 	echo "Parameter 7: External LCD support (1-4)"
 	echo "optional:"
-	echo "Parameter 8: Image layout for hd51 / bre2ze4k / vusolo4k (1-2)"
+	echo "Parameter 8: Image layout for hd51 / bre2ze4k / vusolo4k / vuduo4k (1-2)"
 	exit
 fi
 
@@ -77,14 +77,17 @@ case $1 in
 		echo "   37)  Pace HDS-7241 (stm 217 only)"
 		echo
 		echo "  arm-based receivers"
-		echo "   50)  Vu Solo4K"
+		echo "   40)  VU+ Solo 4K"
+		echo "   41)  VU+ Duo 4K"
+		echo
 		echo "   51)  AX/Mut@nt HD51"
-		echo "   52)  BRE2ZE 4K"
+		echo "   52)  WWIO BRE2ZE 4K"
+		echo
 		echo "   60)  AX/Mut@nt HD60"
 		echo "   61)  AX/Mut@nt HD61"
 		echo
 		echo "  mips-based receivers"
-		echo "   70)  Vu Duo"
+		echo "   70)  VU+ Duo"
 		echo
 		read -p "Select target (1-70)? [51]"
 		REPLY="${REPLY:-51}";;
@@ -128,7 +131,8 @@ case "$REPLY" in
 	35) BOXARCH="sh4";BOXTYPE="sagemcom88";;
 	36) BOXARCH="sh4";BOXTYPE="arivalink200";;
 	37) BOXARCH="sh4";BOXTYPE="pace7241";;
-	50) BOXARCH="arm";BOXTYPE="vusolo4k";;
+	40) BOXARCH="arm";BOXTYPE="vusolo4k";;
+	41) BOXARCH="arm";BOXTYPE="vuduo4k";;
 	51) BOXARCH="arm";BOXTYPE="hd51";;
 	52) BOXARCH="arm";BOXTYPE="bre2ze4k";;
 	60) BOXARCH="arm";BOXTYPE="hd60";;
@@ -353,6 +357,23 @@ case "$REPLY" in
 	*)  VUSOLO4K_MULTIBOOT="0";;
 esac
 echo "VUSOLO4K_MULTIBOOT=$VUSOLO4K_MULTIBOOT" >> config
+fi
+
+if [ $BOXTYPE == 'vuduo4k' ]; then
+case $8 in
+	[1-2]) REPLY=$8;;
+	*)	echo -e "\nNormal or MultiBoot:"
+		echo "   1)  Normal    (default)"
+		echo "   2)  Multiboot"
+		read -p "Select mode (1-2)? ";;
+esac
+
+case "$REPLY" in
+	1)  VUDUO4K_MULTIBOOT="0";;
+	2)  VUDUO4K_MULTIBOOT="1";;
+	*)  VUDUO4K_MULTIBOOT="0";;
+esac
+echo "VUDUO4K_MULTIBOOT=$VUDUO4K_MULTIBOOT" >> config
 fi
 
 ##############################################

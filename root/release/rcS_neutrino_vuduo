@@ -24,6 +24,19 @@ if [ -e /var/backup_flash.tar.gz ]; then
 	rm -f /var/backup_flash.tar.gz
 fi
 
+if [ -e /sys/class/net/lo ]; then
+	/sbin/ifconfig lo up
+fi
+if [ -e /sys/class/net/eth0 ]; then
+	/sbin/ifconfig eth0 up
+fi
+if [ -e /sys/class/net/eth1 ]; then
+	/sbin/ifconfig eth1 up
+fi
+if [ -e /sys/class/net/sys0 ]; then
+	/sbin/ifconfig sys0 up
+fi
+
 # load moduls from modules.extra ( kerneloptions )
 [ -f /var/etc/modules.extra ] && eval `awk '{ if ($1) print "insmod /lib/modules/" $1 ".ko " $2,$3,$4,$5,$6,$7,$8,$9 "; "}' < /var/etc/modules.extra`
 
@@ -67,16 +80,16 @@ fi
 
 insmod /lib/modules/fpga_directc.ko
 
-echo "Booting... DDT" > /dev/dbox/oled0
-
 while [ ! -c /dev/fb0 ]; do
 	usleep 100000
 done
 
+echo 255 > /proc/stb/fp/oled_brightness
+echo "Booting... DDT" > /dev/dbox/oled0
+
 /bin/initfb $(sed -n 's/osd_resolution=//p' /var/tuxbox/config/neutrino.conf)
 
 echo "[rcS] starting mdev"
-echo /sbin/mdev >/proc/sys/kernel/hotplug
 mdev -s
 
 # set dummy time
