@@ -572,14 +572,12 @@ neutrino-mp-release-base:
 	install -d $(RELEASE_DIR)/{autofs,bin,boot,dev,dev.static,etc,lib,media,mnt,proc,ram,root,sbin,swap,sys,tmp,usr,var}
 	install -d $(RELEASE_DIR)/etc/{init.d,network,mdev,ssl}
 	install -d $(RELEASE_DIR)/etc/network/if-{post-{up,down},pre-{up,down},up,down}.d
-	install -d $(RELEASE_DIR)/lib/{modules,udev,firmware,tuxbox}
-	install -d $(RELEASE_DIR)/usr/share/tuxbox/neutrino/plugins
+	install -d $(RELEASE_DIR)/lib/{modules,udev,firmware}
 	install -d $(RELEASE_DIR)/media/{hdd,nfs,usb,mnt}
 	ln -sf /media/hdd $(RELEASE_DIR)/hdd
 	install -d $(RELEASE_DIR)/usr/{bin,lib,sbin,share}
-	install -d $(RELEASE_DIR)/usr/usr/share/tuxbox/neutrino/{luaplugins,plugins}
 	install -d $(RELEASE_DIR)/usr/share/{fonts,tuxbox,udhcpc,zoneinfo,lua}
-	install -d $(RELEASE_DIR)/usr/share/tuxbox/neutrino
+	install -d $(RELEASE_DIR)/usr/share/tuxbox/neutrino/{icons,luaplugins,plugins}
 	install -d $(RELEASE_DIR)/usr/share/tuxbox/neutrino/icons/logo
 	install -d $(RELEASE_DIR)/usr/share/tuxbox/neutrino/icons/logo/events
 	install -d $(RELEASE_DIR)/usr/share/lua/5.2
