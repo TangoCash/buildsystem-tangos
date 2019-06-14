@@ -135,7 +135,7 @@ NFS=$(grep -c nfs /proc/cmdline)
   ntp="$(sed -n 's/network_ntpserver=//p' /var/tuxbox/config/neutrino.conf)"
   rdate ${ntp:-time.fu-berlin.de}
   if [ "$?" != "0" ]; then
-    datefix=$(cat /.version | grep "version=" | awk -F "=" '{print $2}')
+    datefix=$(cat /.version | grep "version=" | grep -v image | awk -F "=" '{print $2}')
     if [ "$datefix" != "" ]; then
       date -s ${datefix:4}
     else
