@@ -172,11 +172,11 @@ $(D)/neutrino-mp-plugin-scripts-lua: $(D)/bootstrap
 	$(CHDIR)/neutrino-mp-plugin-scripts-lua; \
 		$(call apply_patches, $(NEUTRINO_SCRIPTLUA_PATCH))
 	$(CHDIR)/neutrino-mp-plugin-scripts-lua; \
-		install -d $(TARGET_DIR)/lib/tuxbox/plugins
-#		cp -R $(BUILD_TMP)/neutrino-mp-plugin-scripts-lua/ard_mediathek/* $(TARGET_DIR)/lib/tuxbox/plugins/
-#		cp -R $(BUILD_TMP)/neutrino-mp-plugin-scripts-lua/favorites2bin/* $(TARGET_DIR)/lib/tuxbox/plugins/
-		cp -R $(BUILD_TMP)/neutrino-mp-plugin-scripts-lua/mtv/* $(TARGET_DIR)/lib/tuxbox/plugins/
-		cp -R $(BUILD_TMP)/neutrino-mp-plugin-scripts-lua/netzkino/* $(TARGET_DIR)/lib/tuxbox/plugins/
+		install -d $(TARGET_DIR)/usr/share/tuxbox/neutrino/plugins
+#		cp -R $(BUILD_TMP)/neutrino-mp-plugin-scripts-lua/ard_mediathek/* $(TARGET_DIR)/usr/share/tuxbox/neutrino/plugins/
+#		cp -R $(BUILD_TMP)/neutrino-mp-plugin-scripts-lua/favorites2bin/* $(TARGET_DIR)/usr/share/tuxbox/neutrino/plugins/
+		cp -R $(BUILD_TMP)/neutrino-mp-plugin-scripts-lua/mtv/* $(TARGET_DIR)/usr/share/tuxbox/neutrino/plugins/
+		cp -R $(BUILD_TMP)/neutrino-mp-plugin-scripts-lua/netzkino/* $(TARGET_DIR)/usr/share/tuxbox/neutrino/plugins/
 	$(REMOVE)/neutrino-mp-plugin-scripts-lua
 	$(TOUCH)
 
@@ -193,11 +193,11 @@ $(D)/neutrino-mp-plugin-mediathek:
 		else cd $(ARCHIVE); git clone https://github.com/neutrino-mediathek/mediathek.git plugins-mediathek.git; \
 		fi
 	cp -ra $(ARCHIVE)/plugins-mediathek.git $(BUILD_TMP)/plugins-mediathek
-	install -d $(TARGET_DIR)/lib/tuxbox/plugins
+	install -d $(TARGET_DIR)/usr/share/tuxbox/neutrino/plugins
 	$(CHDIR)/plugins-mediathek; \
 		$(call apply_patches, $(NEUTRINO_MEDIATHEK_PATCH))
 	$(CHDIR)/plugins-mediathek; \
-		cp -a plugins/* $(TARGET_DIR)/lib/tuxbox/plugins/; \
+		cp -a plugins/* $(TARGET_DIR)/usr/share/tuxbox/neutrino/plugins/; \
 		cp -a share $(TARGET_DIR)/usr/
 	$(REMOVE)/plugins-mediathek
 	$(TOUCH)
@@ -217,7 +217,7 @@ $(D)/neutrino-mp-plugin-iptvplayer: $(D)/librtmp $(D)/python_twisted_small
 	@if [ "$@" = "$(D)/neutrino-mp-plugin-iptvplayer-nightly" ]; then \
 		$(BUILD_TMP)/iptvplayer/SyncWithGitLab.sh $(BUILD_TMP)/iptvplayer; \
 	fi
-	install -d $(TARGET_DIR)/lib/tuxbox/plugins
+	install -d $(TARGET_DIR)/usr/share/tuxbox/neutrino/plugins
 	install -d $(TARGET_DIR)/usr/share/E2emulator
 	cp -R $(BUILD_TMP)/iptvplayer/E2emulator/* $(TARGET_DIR)/usr/share/E2emulator/
 	install -d $(TARGET_DIR)/usr/share/E2emulator/Plugins/Extensions/IPTVPlayer
@@ -228,7 +228,7 @@ $(D)/neutrino-mp-plugin-iptvplayer: $(D)/librtmp $(D)/python_twisted_small
 	PYTHONPATH=$(TARGET_DIR)/$(PYTHON_DIR) \
 	$(HOST_DIR)/bin/python$(PYTHON_VER_MAJOR) -Wi -t -O $(TARGET_DIR)/$(PYTHON_DIR)/compileall.py \
 		-d /usr/share/E2emulator -f -x badsyntax $(TARGET_DIR)/usr/share/E2emulator
-	cp -R $(BUILD_TMP)/iptvplayer/addon4neutrino/neutrinoIPTV/* $(TARGET_DIR)/lib/tuxbox/plugins/
+	cp -R $(BUILD_TMP)/iptvplayer/addon4neutrino/neutrinoIPTV/* $(TARGET_DIR)/usr/share/tuxbox/neutrino/plugins/
 	$(REMOVE)/iptvplayer
 	$(TOUCH)
 
@@ -250,8 +250,8 @@ $(D)/neutrino-mp-plugin-channellogos:
 	install -m 0644 $(BUILD_TMP)/channellogos/logos-events/* $(TARGET_DIR)/usr/share/tuxbox/neutrino/icons/logo/events
 	cd $(BUILD_TMP)/channellogos/logo-links && \
 		./logo-linker.sh logo-links.db $(TARGET_DIR)/usr/share/tuxbox/neutrino/icons/logo
-	install -d $(TARGET_DIR)/lib/tuxbox/plugins
-	cp -a $(BUILD_TMP)/channellogos/logo-addon/* $(TARGET_DIR)/lib/tuxbox/plugins/
+	install -d $(TARGET_DIR)/usr/share/tuxbox/neutrino/plugins
+	cp -a $(BUILD_TMP)/channellogos/logo-addon/* $(TARGET_DIR)/usr/share/tuxbox/neutrino/plugins/
 	$(REMOVE)/channellogos
 	$(TOUCH)
 
@@ -285,7 +285,7 @@ $(D)/neutrino-mp-plugin-settings-update:
 		else cd $(ARCHIVE); git clone https://github.com/horsti58/lua-data.git settings-update.git; \
 		fi
 	cp -ra $(ARCHIVE)/settings-update.git $(BUILD_TMP)/settings-update
-	cp -R $(BUILD_TMP)/settings-update/lua/* $(TARGET_DIR)/lib/tuxbox/plugins/
+	cp -R $(BUILD_TMP)/settings-update/lua/* $(TARGET_DIR)/usr/share/tuxbox/neutrino/plugins/
 	$(REMOVE)/settings-update
 	$(TOUCH)
 

@@ -573,11 +573,11 @@ neutrino-mp-release-base:
 	install -d $(RELEASE_DIR)/etc/{init.d,network,mdev,ssl}
 	install -d $(RELEASE_DIR)/etc/network/if-{post-{up,down},pre-{up,down},up,down}.d
 	install -d $(RELEASE_DIR)/lib/{modules,udev,firmware,tuxbox}
-	install -d $(RELEASE_DIR)/lib/tuxbox/plugins
+	install -d $(RELEASE_DIR)/usr/share/tuxbox/neutrino/plugins
 	install -d $(RELEASE_DIR)/media/{hdd,nfs,usb,mnt}
 	ln -sf /media/hdd $(RELEASE_DIR)/hdd
 	install -d $(RELEASE_DIR)/usr/{bin,lib,sbin,share}
-	install -d $(RELEASE_DIR)/usr/lib/tuxbox/{luaplugins,plugins}
+	install -d $(RELEASE_DIR)/usr/usr/share/tuxbox/neutrino/{luaplugins,plugins}
 	install -d $(RELEASE_DIR)/usr/share/{fonts,tuxbox,udhcpc,zoneinfo,lua}
 	install -d $(RELEASE_DIR)/usr/share/tuxbox/neutrino
 	install -d $(RELEASE_DIR)/usr/share/tuxbox/neutrino/icons/logo
@@ -895,8 +895,8 @@ endif
 	if [ -d $(TARGET_DIR)/var/tuxbox/plugins ]; then \
 		cp -af $(TARGET_DIR)/var/tuxbox/plugins $(RELEASE_DIR)/var/tuxbox/; \
 	fi
-	if [ -d $(TARGET_DIR)/lib/tuxbox/plugins ]; then \
-		cp -af $(TARGET_DIR)/lib/tuxbox/plugins $(RELEASE_DIR)/lib/tuxbox/; \
+	if [ -d $(TARGET_DIR)/usr/share/tuxbox/neutrino/plugins ]; then \
+		cp -af $(TARGET_DIR)/usr/share/tuxbox/neutrino/plugins $(RELEASE_DIR)/usr/share/tuxbox/neutrino/; \
 	fi
 	if [ -e $(RELEASE_DIR)/var/tuxbox/plugins/tuxwetter.so ]; then \
 		cp -rf $(TARGET_DIR)/var/tuxbox/config/tuxwetter $(RELEASE_DIR)/var/tuxbox/config; \
