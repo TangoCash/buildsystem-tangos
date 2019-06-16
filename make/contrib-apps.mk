@@ -414,6 +414,10 @@ $(D)/e2fsprogs: $(D)/bootstrap $(D)/util_linux $(ARCHIVE)/$(E2FSPROGS_SOURCE)
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/com_err.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/ext2fs.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/e2p.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/ss.pc
 	rm -f $(addprefix $(TARGET_DIR)/sbin/,badblocks dumpe2fs e2mmpstatus e2undo logsave)
 	rm -f $(addprefix $(TARGET_DIR)/usr/sbin/,filefrag e2freefrag mk_cmds mklost+found uuidd e4crypt)
 	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,chattr lsattr uuidgen)
@@ -521,8 +525,19 @@ $(D)/util_linux: $(D)/bootstrap $(D)/ncurses $(D)/zlib $(ARCHIVE)/$(UTIL_LINUX_S
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libuuid.la
 	$(REWRITE_LIBTOOL)/libblkid.la
+	$(REWRITE_LIBTOOL)/libmount.la
+	$(REWRITE_LIBTOOL)/libsmartcols.la
+	$(REWRITE_LIBTOOL)/libfdisk.la
 	$(REWRITE_LIBTOOLDEP)/libuuid.la
 	$(REWRITE_LIBTOOLDEP)/libblkid.la
+	$(REWRITE_LIBTOOLDEP)/libmount.la
+	$(REWRITE_LIBTOOLDEP)/libsmartcols.la
+	$(REWRITE_LIBTOOLDEP)/libfdisk.la
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/blkid.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/uuid.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/fdisk.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/mount.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/smartcols.pc
 	rm -f $(addprefix $(TARGET_DIR)/bin/,findmnt)
 	rm -f $(addprefix $(TARGET_DIR)/sbin/,blkdiscard blkzone blockdev cfdisk chcpu ctrlaltdel fdisk findfs fsck fsfreeze fstrim losetup mkfs mkswap swaplabel wipefs)
 	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,col colcrt colrm column fincore flock getopt ipcmk ipcrm ipcs isosize linux32 linux64 look lscpu lsipc lslocks lsns mcookie namei prlimit renice rev script scriptreplay setarch setsid uname26 uuidgen uuidparse whereis)

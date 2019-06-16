@@ -1006,6 +1006,8 @@ $(D)/libjpeg_turbo2: $(D)/bootstrap $(ARCHIVE)/$(LIBJPEG_TURBO2_SOURCE)
 		$(CMAKE) -DWITH_SIMD=False ; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libturbojpeg.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libjpeg.pc
 	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,cjpeg djpeg jpegtran rdjpgcom tjbench wrjpgcom)
 	$(REMOVE)/libjpeg-turbo-$(LIBJPEG_TURBO2_VER)
 	rm -rf $(TARGET_LIB_DIR)/cmake
