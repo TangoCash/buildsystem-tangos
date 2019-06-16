@@ -17,6 +17,9 @@ FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-fix-hls.patch
 FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-fix_mpegts.patch
 FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-hls_replace_key_uri.patch
 FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-mips64_cpu_detection.patch
+FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-corrupt-h264-frames.patch
+FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-FFmpeg-devel-amfenc-Add-support-for-pict_type-field.patch
+FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-mpeg-quarter-sample.patch
 FFMPEG_SOURCE = ffmpeg-$(FFMPEG_VER).tar.xz
 
 FFMPEG_DEPS = $(D)/librtmp
