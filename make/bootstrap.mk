@@ -309,6 +309,7 @@ $(D)/bootstrap: $(BOOTSTRAP)
 # system-tools
 #
 SYSTEM_TOOLS  = $(D)/busybox
+SYSTEM_TOOLS += $(D)/bash
 ifeq ($(BOXARCH), arm)
 SYSTEM_TOOLS += $(D)/libnsl
 endif
@@ -367,9 +368,12 @@ $(FLASH_DIR):
 	fi
 	@echo ''
 
-PREQS  = $(DRIVER_DIR)
-PREQS += $(APPS_DIR)
+PREQS  = $(APPS_DIR)
+
+ifeq ($(BOXARCH), sh4)
+PREQS += $(DRIVER_DIR)
 PREQS += $(FLASH_DIR)
+endif
 
 preqs: $(PREQS)
 

@@ -47,6 +47,11 @@ BASH_VER = 5.0
 BASH_SOURCE = bash-$(BASH_VER).tar.gz
 BASH_PATCH  = bash50-001.patch
 BASH_PATCH += bash50-002.patch
+BASH_PATCH += bash50-003.patch
+BASH_PATCH += bash50-004.patch
+BASH_PATCH += bash50-005.patch
+BASH_PATCH += bash50-006.patch
+BASH_PATCH += bash50-007.patch
 
 $(ARCHIVE)/$(BASH_SOURCE):
 	$(WGET) http://ftp.gnu.org/gnu/bash/$(BASH_SOURCE)

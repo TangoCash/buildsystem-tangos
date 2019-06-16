@@ -263,23 +263,23 @@ TOUCH                 = @touch $@; \
                         echo
 
 #
-PATCH                 = patch -p1 $(SILENT_PATCH) -i $(PATCHES)
-APATCH                = patch -p1 $(SILENT_PATCH) -i
+PATCH                 = patch -Np1 $(SILENT_PATCH) -i $(PATCHES)
 define apply_patches
+    l=`echo $(2)`; test -z $$l && l=1; \
     for i in $(1); do \
         if [ -d $$i ]; then \
             for p in $$i/*; do \
                 if [ $${p:0:1} == "/" ]; then \
-                    echo -e "==> $(TERM_RED)Applying Patch:$(TERM_NORMAL) $$p"; $(APATCH) $$p; \
+                    echo -e "==> $(TERM_RED)Applying Patch:$(TERM_NORMAL) $$p"; patch -p$$l $(SILENT_PATCH) -i $$p; \
                 else \
-                    echo -e "==> $(TERM_RED)Applying Patch:$(TERM_NORMAL) $$p"; $(PATCH)/$$p; \
+                    echo -e "==> $(TERM_RED)Applying Patch:$(TERM_NORMAL) $$p"; patch -p$$l $(SILENT_PATCH) -i $(PATCHES)/$$p; \
                 fi; \
             done; \
         else \
             if [ $${i:0:1} == "/" ]; then \
-                echo -e "==> $(TERM_RED)Applying Patch:$(TERM_NORMAL) $$i"; $(APATCH) $$i; \
+                echo -e "==> $(TERM_RED)Applying Patch:$(TERM_NORMAL) $$i"; patch -p$$l $(SILENT_PATCH) -i $$i; \
             else \
-                echo -e "==> $(TERM_RED)Applying Patch:$(TERM_NORMAL) $$i"; $(PATCH)/$$i; \
+                echo -e "==> $(TERM_RED)Applying Patch:$(TERM_NORMAL) $$i"; patch -p$$l $(SILENT_PATCH) -i $(PATCHES)/$$i; \
             fi; \
         fi; \
     done; \
