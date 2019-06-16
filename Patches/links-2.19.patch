@@ -15,38 +15,38 @@
 #
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -13,7 +13,7 @@
- else
+@@ -16,7 +16,7 @@
+ links_LDADD=builtin.o context.o ipret.o javascr.o javascript.o md5.o md5hl.o ns.o pomocny.o regexp.o
  endif
  
--links_SOURCES=af_unix.c auth.c beos.c bfu.c block.c bookmarks.c cache.c charsets.c compress.c connect.c cookies.c default.c dip.c directfb.c directfb_cursors.h dither.c dns.c drivers.c error.c file.c finger.c fn_impl.c font_include.c framebuffer.c ftp.c gif.c html.c html_gr.c html_r.c html_tbl.c http.c https.c img.c imgcache.c jpeg.c jsint.c kbd.c language.c links_icon.c listedit.c lru.c mailto.c main.c memory.c menu.c objreq.c os_dep.c pmshell.c png.c sched.c select.c session.c smb.c svgalib.c terminal.c tiff.c types.c url.c view.c view_gr.c x.c xbm.c beos.h bits.h cfg.h codepage.h language.h links.h os_dep.h os_depx.h setup.h arrow.inc codepage.inc entity.inc fbcommon.inc language.inc uni_7b.inc upcase.inc
-+links_SOURCES=af_unix.c auth.c beos.c bfu.c block.c bookmarks.c cache.c charsets.c compress.c connect.c cookies.c default.c dip.c directfb.c directfb_cursors.h dither.c dns.c drivers.c error.c file.c finger.c fn_impl.c font_include.c framebuffer.c ftp.c gif.c html.c html_gr.c html_r.c html_tbl.c http.c https.c img.c imgcache.c jpeg.c jsint.c kbd.c language.c links_icon.c listedit.c lru.c mailto.c main.c memory.c menu.c objreq.c os_dep.c pmshell.c png.c sched.c select.c session.c smb.c svgalib.c terminal.c tiff.c types.c url.c view.c view_gr.c x.c xbm.c beos.h bits.h cfg.h codepage.h language.h links.h os_dep.h os_depx.h setup.h arrow.inc codepage.inc entity.inc fbcommon.inc language.inc uni_7b.inc upcase.inc rc.c rcinput.c rcinput.h
+-links_SOURCES=af_unix.c auth.c beos.c bfu.c block.c bookmark.c cache.c charsets.c compress.c connect.c cookies.c data.c default.c dip.c directfb.c dither.c dns.c dos.c drivers.c error.c file.c finger.c fn_impl.c fontconf.c font_inc.c framebuf.c freetype.c ftp.c gif.c grx.c hpux.c html.c html_gr.c html_r.c html_tbl.c http.c https.c img.c imgcache.c jpeg.c jsint.c kbd.c language.c listedit.c lru.c mailto.c main.c memory.c menu.c objreq.c os_dep.c pmshell.c png.c sched.c select.c session.c smb.c string.c suffix.c svg.c svgalib.c terminal.c tiff.c types.c url.c view.c view_gr.c vms.c x.c xbm.c beos.h bits.h cfg.h codepage.h com-defs.h config-vms.h dfb_cur.h hpux.h language.h links.h os_dep.h os_depx.h setup.h arrow.inc certs.inc codepage.inc entity.inc fbcommon.inc language.inc links_ic.inc locase.inc suffix.inc suffix_x.inc uni_7b.inc upcase.inc vpipe.inc
++links_SOURCES=af_unix.c auth.c beos.c bfu.c block.c bookmark.c cache.c charsets.c compress.c connect.c cookies.c data.c default.c dip.c directfb.c dither.c dns.c dos.c drivers.c error.c file.c finger.c fn_impl.c fontconf.c font_inc.c framebuf.c freetype.c ftp.c gif.c grx.c hpux.c html.c html_gr.c html_r.c html_tbl.c http.c https.c img.c imgcache.c jpeg.c jsint.c kbd.c language.c listedit.c lru.c mailto.c main.c memory.c menu.c objreq.c os_dep.c pmshell.c png.c sched.c select.c session.c smb.c string.c suffix.c svg.c svgalib.c terminal.c tiff.c types.c url.c view.c view_gr.c vms.c x.c xbm.c beos.h bits.h cfg.h codepage.h com-defs.h config-vms.h dfb_cur.h hpux.h language.h links.h os_dep.h os_depx.h setup.h arrow.inc certs.inc codepage.inc entity.inc fbcommon.inc language.inc links_ic.inc locase.inc suffix.inc suffix_x.inc uni_7b.inc upcase.inc vpipe.inc rcmouse.c rc.c rcinput.c rcinput.h
+ # builtin.c context.c ipret.c javascr.c javascript.c md5.c md5hl.c ns.c pomocny.c regexp.c md5.h ns.h struct.h tree.h typy.h ipret.h javascript.h builtin.h builtin_keys.h
  
  dist-hook:
- #remove the symlinka:
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -78,7 +78,7 @@
- 
+@@ -77,7 +77,7 @@
  @ATHEOS_GR_TRUE@links_LDADD = atheos.o
+ @JAVASCRIPT_TRUE@links_LDADD = builtin.o context.o ipret.o javascr.o javascript.o md5.o md5hl.o ns.o pomocny.o regexp.o
  
--links_SOURCES = af_unix.c auth.c beos.c bfu.c block.c bookmarks.c cache.c charsets.c compress.c connect.c cookies.c default.c dip.c directfb.c directfb_cursors.h dither.c dns.c drivers.c error.c file.c finger.c fn_impl.c font_include.c framebuffer.c ftp.c gif.c html.c html_gr.c html_r.c html_tbl.c http.c https.c img.c imgcache.c jpeg.c jsint.c kbd.c language.c links_icon.c listedit.c lru.c mailto.c main.c memory.c menu.c objreq.c os_dep.c pmshell.c png.c sched.c select.c session.c smb.c svgalib.c terminal.c tiff.c types.c url.c view.c view_gr.c x.c xbm.c beos.h bits.h cfg.h codepage.h language.h links.h os_dep.h os_depx.h setup.h arrow.inc codepage.inc entity.inc fbcommon.inc language.inc uni_7b.inc upcase.inc
-+links_SOURCES = af_unix.c auth.c beos.c bfu.c block.c bookmarks.c cache.c charsets.c compress.c connect.c cookies.c default.c dip.c directfb.c directfb_cursors.h dither.c dns.c drivers.c error.c file.c finger.c fn_impl.c font_include.c framebuffer.c ftp.c gif.c html.c html_gr.c html_r.c html_tbl.c http.c https.c img.c imgcache.c jpeg.c jsint.c kbd.c language.c links_icon.c listedit.c lru.c mailto.c main.c memory.c menu.c objreq.c os_dep.c pmshell.c png.c sched.c select.c session.c smb.c svgalib.c terminal.c tiff.c types.c url.c view.c view_gr.c x.c xbm.c beos.h bits.h cfg.h codepage.h language.h links.h os_dep.h os_depx.h setup.h arrow.inc codepage.inc entity.inc fbcommon.inc language.inc uni_7b.inc upcase.inc rc.c rcinput.c rcinput.h
+-links_SOURCES = af_unix.c auth.c beos.c bfu.c block.c bookmark.c cache.c charsets.c compress.c connect.c cookies.c data.c default.c dip.c directfb.c dither.c dns.c dos.c drivers.c error.c file.c finger.c fn_impl.c fontconf.c font_inc.c framebuf.c freetype.c ftp.c gif.c grx.c hpux.c html.c html_gr.c html_r.c html_tbl.c http.c https.c img.c imgcache.c jpeg.c jsint.c kbd.c language.c listedit.c lru.c mailto.c main.c memory.c menu.c objreq.c os_dep.c pmshell.c png.c sched.c select.c session.c smb.c string.c suffix.c svg.c svgalib.c terminal.c tiff.c types.c url.c view.c view_gr.c vms.c x.c xbm.c beos.h bits.h cfg.h codepage.h com-defs.h config-vms.h dfb_cur.h hpux.h language.h links.h os_dep.h os_depx.h setup.h arrow.inc certs.inc codepage.inc entity.inc fbcommon.inc language.inc links_ic.inc locase.inc suffix.inc suffix_x.inc uni_7b.inc upcase.inc vpipe.inc
++links_SOURCES = af_unix.c auth.c beos.c bfu.c block.c bookmark.c cache.c charsets.c compress.c connect.c cookies.c data.c default.c dip.c directfb.c dither.c dns.c dos.c drivers.c error.c file.c finger.c fn_impl.c fontconf.c font_inc.c framebuf.c freetype.c ftp.c gif.c grx.c hpux.c html.c html_gr.c html_r.c html_tbl.c http.c https.c img.c imgcache.c jpeg.c jsint.c kbd.c language.c listedit.c lru.c mailto.c main.c memory.c menu.c objreq.c os_dep.c pmshell.c png.c sched.c select.c session.c smb.c string.c suffix.c svg.c svgalib.c terminal.c tiff.c types.c url.c view.c view_gr.c vms.c x.c xbm.c beos.h bits.h cfg.h codepage.h com-defs.h config-vms.h dfb_cur.h hpux.h language.h links.h os_dep.h os_depx.h setup.h arrow.inc certs.inc codepage.inc entity.inc fbcommon.inc language.inc links_ic.inc locase.inc suffix.inc suffix_x.inc uni_7b.inc upcase.inc vpipe.inc rcmouse.c rc.c rcinput.c rcinput.h
  
  CXXFLAGS = @CXXFLAGS@
  
-@@ -102,7 +102,7 @@
- language.o links_icon.o listedit.o lru.o mailto.o main.o memory.o \
- menu.o objreq.o os_dep.o pmshell.o png.o sched.o select.o session.o \
- smb.o svgalib.o terminal.o tiff.o types.o url.o view.o view_gr.o x.o \
--xbm.o
-+xbm.o rc.o rcinput.o rcmouse.o
+@@ -101,7 +101,7 @@
+ imgcache.o jpeg.o jsint.o kbd.o language.o listedit.o lru.o mailto.o \
+ main.o memory.o menu.o objreq.o os_dep.o pmshell.o png.o sched.o \
+ select.o session.o smb.o string.o suffix.o svg.o svgalib.o terminal.o \
+-tiff.o types.o url.o view.o view_gr.o vms.o x.o xbm.o
++tiff.o types.o url.o view.o view_gr.o vms.o x.o xbm.o rcmouse.o rc.o rcinput.o
  @ATHEOS_GR_TRUE@links_DEPENDENCIES =  atheos.o
- links_LDFLAGS = 
- CFLAGS = @CFLAGS@
+ @JAVASCRIPT_TRUE@links_DEPENDENCIES =  builtin.o context.o ipret.o \
+ @JAVASCRIPT_TRUE@javascr.o javascript.o md5.o md5hl.o ns.o pomocny.o \
 --- a/bfu.c
 +++ b/bfu.c
-@@ -1411,7 +1411,7 @@
+@@ -1506,7 +1506,7 @@
  				x_display_dlg_item(dlg, di, 1);
  				break;
  			}
@@ -57,16 +57,18 @@
  			}
 --- a/bits.h
 +++ b/bits.h
-@@ -47,4 +47,6 @@
+@@ -47,6 +47,8 @@
  #elif defined(SIZEOF_UNSIGNED_LONG_LONG) && SIZEOF_UNSIGNED_LONG_LONG == 8
  #define t8c unsigned long long
  #endif /* #if sizeof(short) */
 +#undef t4c
 +#define t4c unsigned int
  
+ #ifdef t8c
+ #if SIZEOF_UNSIGNED_LONG >= 8 || defined(__x86_64__) || defined(__aarch64__)
 --- a/configure
 +++ b/configure
-@@ -8968,7 +8968,7 @@
+@@ -8399,7 +8399,7 @@
  fi
  done
  
@@ -75,43 +77,50 @@
  		cat >> confdefs.h <<\EOF
  #define GRDRV_FB 1
  EOF
+--- a/configure.in
++++ b/configure.in
+@@ -1050,7 +1050,7 @@
+ 
+ if test "$disable_fb" != yes; then
+ 	AC_CHECK_HEADERS(linux/fb.h linux/kd.h linux/vt.h sys/mman.h)
+-	if test "$ac_cv_header_linux_fb_h" = yes && test "$ac_cv_header_linux_kd_h" = yes && test "$ac_cv_header_linux_vt_h" = yes && test "$ac_cv_header_sys_mman_h" = yes && test "$ac_cv_header_sys_ioctl_h" = yes && test "$cf_have_gpm" = yes; then
++	if test "$ac_cv_header_linux_fb_h" = yes && test "$ac_cv_header_linux_kd_h" = yes && test "$ac_cv_header_linux_vt_h" = yes && test "$ac_cv_header_sys_mman_h" = yes && test "$ac_cv_header_sys_ioctl_h" = yes; then
+ 		AC_DEFINE(GRDRV_FB)
+ 		drivers="$drivers FB"
+ 	fi
 --- a/default.c
 +++ b/default.c
-@@ -634,7 +634,7 @@
+@@ -747,7 +747,7 @@
  		}
  	}
  #endif
 -	if (!home) home = stracpy(cast_uchar getenv("HOME"));
 +	if (!home) home = stracpy("/var/tuxbox/config");
- #ifdef WIN32
+ #ifdef WIN
  /* When we run in Cygwin without Cygwin environment, it reports home "/".
     Unfortunatelly, it can't write anything to that directory */
-@@ -672,10 +672,10 @@
- 			sleep(3);
- 			mem_free(home_links);
- 			home_links = stracpy(home);
--			add_to_strn(&home_links, cast_uchar ".links");
-+			add_to_strn(&home_links, cast_uchar "links");
- 		}
- 		mem_free(config_dir);
--	} else add_to_strn(&home_links, cast_uchar ".links");
-+	} else add_to_strn(&home_links, cast_uchar "links");
+@@ -796,7 +796,7 @@
+ #ifdef OPENVMS
+ 		add_to_strn(&home_links, cast_uchar "links");
+ #else
+-		add_to_strn(&home_links, cast_uchar ".links");
++		add_to_strn(&home_links, cast_uchar "links");
+ #endif
+ 	}
  	EINTRLOOP(rs, stat(cast_const_char home_links, &st));
- 	if (rs) {
- #ifdef HAVE_MKDIR
-@@ -1814,7 +1814,7 @@
+@@ -2042,7 +2042,7 @@
  	if (links_home) mem_free(links_home);
  }
  
 -int ggr = 0;
 +int ggr = 1;
+ int force_g = 0;
  unsigned char ggr_drv[MAX_STR_LEN] = "";
  unsigned char ggr_mode[MAX_STR_LEN] = "";
- unsigned char ggr_display[MAX_STR_LEN] = "";
 --- a/dither.c
 +++ b/dither.c
-@@ -341,7 +341,7 @@
- #define SAVE_CODE *outp=bt>>16;\
+@@ -321,7 +321,7 @@
+ 	outp[0]=bt>>16;\
  	outp[1]=gt>>16;\
  	outp[2]=rt>>16;\
 -	outp[3]=0;\
@@ -119,105 +128,18 @@
  	outp+=4;
  DITHER_TEMPLATE(dither_196)
  ROUND_TEMPLATE(round_196)
-@@ -459,7 +459,7 @@
- 	((char *)&ret)[0]=rgb;
- 	((char *)&ret)[1]=rgb>>8;
- 	((char *)&ret)[2]=rgb>>16;
--	((char *)&ret)[3]=0;
-+	((char *)&ret)[3]=0xFF;
+@@ -462,7 +462,7 @@
+ 	((unsigned char *)&ret)[0]=(unsigned char)rgb;
+ 	((unsigned char *)&ret)[1]=rgb>>8;
+ 	((unsigned char *)&ret)[2]=rgb>>16;
+-	((unsigned char *)&ret)[3]=0;
++	((unsigned char *)&ret)[3]=0xFF;
  
  	return ret;
  }
-@@ -775,6 +775,7 @@
- 	if (gamma_bits == 2 && x_slow_fpu == 1) slow_fpu = 1;
- }
- 
-+#if 0
- static void make_red_table(int bits, int pos, int dump_t2c, int be)
- {
- 	make_16_table(red_table,bits,pos,display_red_gamma,dump_t2c, be);
-@@ -789,7 +790,69 @@
- {
- 	make_16_table(blue_table,bits,pos,display_blue_gamma, dump_t2c, be);
- }
--
-+#endif
-+#define TABLE_DIR "/var/tmp/"
-+void make_red_table(int bits, int pos, int dump_t2c, int be)
-+{
-+	FILE *fd;
-+
-+	fd = fopen(TABLE_DIR "red_table","r");
-+	if (fd <= 0)
-+	{
-+		make_16_table(red_table,bits,pos,display_red_gamma,dump_t2c, be);
-+		fd = fopen(TABLE_DIR "red_table","w");
-+		fwrite(&red_table,sizeof(red_table),1,fd);
-+	}
-+	else
-+	{
-+		fread(&red_table,sizeof(red_table),1,fd);
-+	}
-+	fclose(fd);
-+#ifdef DEBUG_CALLS
-+	fprintf(stderr, "Red load complete\n");
-+#endif
-+}
-+
-+void make_green_table(int bits, int pos, int dump_t2c, int be)
-+{
-+	FILE *fd;
-+
-+	fd = fopen(TABLE_DIR "green_table","r");
-+	if (fd <= 0)
-+	{
-+		make_16_table(green_table,bits,pos,display_green_gamma,dump_t2c, be);
-+		fd = fopen(TABLE_DIR "green_table","w");
-+		fwrite(&green_table,sizeof(green_table),1,fd);
-+	}
-+	else
-+	{
-+		fread(&green_table,sizeof(green_table),1,fd);
-+	}
-+	fclose(fd);
-+#ifdef DEBUG_CALLS
-+	fprintf(stderr, "Green load complete\n");
-+#endif 
-+}
-+void make_blue_table(int bits, int pos,int dump_t2c, int be)
-+{
-+	FILE *fd;
-+
-+	fd = fopen(TABLE_DIR "blue_table","r");
-+	if (fd <= 0)
-+	{
-+		make_16_table(blue_table,bits,pos,display_blue_gamma, dump_t2c, be);
-+		fd = fopen(TABLE_DIR "blue_table","w");
-+		fwrite(&blue_table,sizeof(blue_table),1,fd);
-+	}
-+	else
-+	{
-+		fread(&blue_table,sizeof(blue_table),1,fd);
-+	}
-+	fclose(fd);
-+#ifdef DEBUG_CALLS
-+	fprintf(stderr, "Blue load complete\n");
-+#endif
-+}
- void dither(unsigned short *in, struct bitmap *out)
- {
- 	int *dregs;
---- a/framebuffer.c
-+++ b/framebuffer.c
-@@ -8,6 +8,7 @@
- 
- #ifdef GRDRV_FB
- 
-+//#define SVGA // FIXME
- #define USE_GPM_DX
- 
- /* #define FB_DEBUG */
-@@ -27,7 +28,7 @@
+--- a/framebuf.c
++++ b/framebuf.c
+@@ -28,7 +28,7 @@
  
  #include "bits.h"
  
@@ -226,61 +148,61 @@
  
  #include <sys/mman.h>
  #include <sys/ioctl.h>
-@@ -77,6 +78,7 @@
+@@ -112,6 +112,7 @@
  static struct fb_var_screeninfo vi;
  static struct fb_fix_screeninfo fi;
  
 +int xres, yres;
- static void fb_draw_bitmap(struct graphics_device *dev,struct bitmap* hndl, int x, int y);
+ static void fb_draw_bitmap(struct graphics_device *dev, struct bitmap *bmp, int x, int y);
  
  static unsigned char *fb_driver_param;
-@@ -234,7 +236,7 @@
+@@ -269,7 +270,7 @@
  
  static void redraw_mouse(void);
  
 -static void fb_mouse_move(int dx, int dy)
 +void fb_mouse_move(int dx, int dy)
  {
- 	struct event ev;
+ 	struct links_event ev;
  	mouse_x += dx;
-@@ -658,6 +660,7 @@
+@@ -692,6 +693,7 @@
  
  static void set_palette(struct palette *pal)
  {
 +	return;
  	struct fb_cmap cmap;
  	int i;
- 	unsigned short *red=pal->red;
-@@ -802,7 +805,7 @@
- 	install_signal_handler(SIG_ACQ, fb_switch_signal, (void*)SIG_ACQ, 0);
- 	EINTRLOOP(rs, ioctl(TTY,VT_GETMODE, &vt_omode));
+ 	unsigned short *red = pal->red;
+@@ -868,7 +870,7 @@
+ 	EINTRLOOP(rs, ioctl(TTY, VT_GETMODE, &vt_omode));
  	if (rs == -1) {
+ 		in_gr_operation--;
 -		return stracpy(cast_uchar "Could not get VT mode.\n");
 +//		return stracpy(cast_uchar "Could not get VT mode.\n");
  	}
  	memcpy(&vt_mode, &vt_omode, sizeof(vt_mode));
  
-@@ -813,7 +816,7 @@
- 
- 	EINTRLOOP(rs, ioctl(TTY,VT_SETMODE, &vt_mode));
+@@ -880,7 +882,7 @@
+ 	EINTRLOOP(rs, ioctl(TTY, VT_SETMODE, &vt_mode));
  	if (rs == -1) {
+ 		in_gr_operation--;
 -		return stracpy(cast_uchar "Could not set VT mode.\n");
 +//		return stracpy(cast_uchar "Could not set VT mode.\n");
  	}
- 	return NULL;
- }
-@@ -869,6 +872,7 @@
+ 
+ 	EINTRLOOP(rs, ioctl(TTY, VT_WAITACTIVE, fb_console));
+@@ -921,6 +923,7 @@
  
  static void fb_gpm_in(void *nic)
  {
 +#if 0
- #ifndef USE_GPM_DX
- 	static int lx = -1, ly = -1;
- #endif
-@@ -940,10 +944,12 @@
- 	if (!current_virtual_device) return;
- 	if (current_virtual_device->mouse_handler) current_virtual_device->mouse_handler(current_virtual_device, ev.x, ev.y, ev.b);
+ 	struct links_event ev;
+ 	int g;
+ 	Gpm_Event gev;
+@@ -1014,10 +1017,12 @@
+ 	if (current_virtual_device->mouse_handler) current_virtual_device->mouse_handler(current_virtual_device, ev.x, ev.y, (int)ev.b);
  	redraw_mouse();
+ 	EINTRLOOP(rs, fsync(fb_handle));
 +#endif
  }
  
@@ -288,26 +210,32 @@
  {
 +#if 0
  	Gpm_Connect conn;
- #ifndef USE_GPM_DX
- 	int gpm_ver = 0;
-@@ -986,6 +992,7 @@
+ 	fb_hgpm = -2;
+ 	conn.eventMask = (unsigned short)~0U;
+@@ -1042,6 +1047,7 @@
  #ifdef SIGTTIN
- 	install_signal_handler(SIGTTIN, (void (*)(void *))sig_tstp, NULL, 0);
+ 	install_signal_handler(SIGTTIN, sig_tstp, NULL, 0);
  #endif
 +#endif
  
  	return 0;
  }
-@@ -1001,7 +1008,7 @@
- 		fb_old_ws_v = 0;
+@@ -1049,12 +1055,14 @@
+ static void unhandle_fb_mouse(void)
+ {
+ 	if (fb_hgpm >= 0) set_handlers(fb_hgpm, (void (*)(void *))NULL, (void (*)(void *))NULL, NULL);
++#if 0
+ 	if (fb_hgpm >= -1) {
+ 		save_gpm_signals();
+ 		Gpm_Close();
+ 		restore_gpm_signals();
  	}
- #endif
--	Gpm_Close();
-+//	Gpm_Close();
+ 	fb_hgpm = -2;
++#endif
  #ifdef SIGTSTP
- 	install_signal_handler(SIGTSTP, (void (*)(void *))sig_tstp, NULL, 0);
+ 	install_signal_handler(SIGTSTP, sig_tstp, NULL, 0);
  #endif
-@@ -1033,14 +1040,77 @@
+@@ -1086,14 +1094,77 @@
  {
  	fb_print(seq_show_cursor);
  }
@@ -361,7 +289,7 @@
 +	}
 +
 +	struct fb_var_screeninfo s;
-+	if (ioctl(fb_handler, FBIOGET_VSCREENINFO, &s) == -1)
++	if (ioctl(fb_handle, FBIOGET_VSCREENINFO, &s) == -1)
 +		perror("blit FBIOGET_VSCREENINFO");
 +	*ex *= s.xres;
 +	*sx *= s.xres;
@@ -379,13 +307,13 @@
  	int rs;
  	vi.xoffset=0;
  	vi.yoffset=0;
- 	EINTRLOOP(rs, ioctl(fb_handler, FBIOPAN_DISPLAY, &vi));
+ 	EINTRLOOP(rs, ioctl(fb_handle, FBIOPAN_DISPLAY, &vi));
  	/* don't check error */
 +#endif
  }
  
  static unsigned char *fb_init_driver(unsigned char *param, unsigned char *ignore)
-@@ -1102,6 +1172,16 @@
+@@ -1205,6 +1276,16 @@
  	} else {
  		border_bottom = border_top;
  	}
@@ -402,12 +330,10 @@
  	if (*param) goto bad_p;
  
  	EINTRLOOP(rs, fstat(TTY, &st));
-@@ -1137,8 +1217,19 @@
- 		fb_show_cursor();
- 		return stracpy(cast_uchar "Cannot get FB VSCREENINFO.\n");
+@@ -1240,6 +1321,17 @@
+ 		e = stracpy(cast_uchar "Cannot get FB FSCREENINFO.\n");
+ 		goto fail4;
  	}
--
--	oldmode=vi;
 +	// fix to neutrino osd
 +	int ex = 0, sx = 0, ey = 0, sy = 0;
 +	read_neutrino_osd_conf (&ex, &sx, &ey, &sy);
@@ -419,73 +345,32 @@
 +		border_bottom = vi.yres - ey;
 +	if (border_top == 0)
 +		border_top = sy;
-+
-+//	oldmode=vi;
  
- 	EINTRLOOP(rs, ioctl (fb_handler, FBIOGET_FSCREENINFO, &fi));
- 	if (rs==-1)
-@@ -1237,7 +1328,9 @@
- 		fb_show_cursor();
- 		return stracpy(cast_uchar "Allocation of virtual devices failed.\n");
- 	}
+ #if 0
+ 	{
+@@ -1328,7 +1420,9 @@
+ 	fb_mem_size = fi.smem_len;
+ 
+ 	init_virtual_devices(&fb_driver, NUMBER_OF_DEVICES);
 +#ifdef SVGA
- 	fb_kbd = handle_svgalib_keyboard((void (*)(void *, unsigned char *, int))fb_key_in);
+ 	fb_kbd = handle_svgalib_keyboard(fb_key_in);
 +#endif
  
  	/* Mikulas: nechodi to na sparcu */
- 	if (fb_mem_size < (unsigned)((border_top + fb_ysize + border_bottom) * fb_linesize))
-@@ -1254,7 +1347,9 @@
- 
- 	if (vi.nonstd) {
- 		fb_shutdown_palette();
-+#ifdef SVGA
- 		svgalib_free_trm(fb_kbd);
-+#endif
- 		shutdown_virtual_devices();
- 		EINTRLOOP(rs, close(fb_handler));
- 		fb_switch_shutdown();
-@@ -1288,6 +1383,10 @@
- 			return stracpy(cast_uchar "Cannot mmap graphics memory.\n");
- 		}
+ 	if (fb_mem_size < (unsigned)((border_top + fb_ysize + border_bottom) * fb_linesize)) {
+@@ -1379,6 +1473,10 @@
+ 		e = stracpy(cast_uchar "Cannot mmap graphics memory.\n");
+ 		goto fail5;
  	}
 +
 +printf("Screen: %dx%dx%d, Visual: %d, colors %d, pixel size %d line size %d\n", vi.xres, vi.yres, vi.bits_per_pixel, fi.visual, fb_colors, fb_pixelsize, fi.line_length);
 +printf("Mem size: %d mem: %x\n", fb_mem_size, fb_mem);
 +
  	fb_vmem = fb_mem + border_left * fb_pixelsize + border_top * fb_linesize;
- 	fb_driver.depth=fb_pixelsize&7;
- 	fb_driver.depth|=(fb_bits_pp&31)<<3;
-@@ -1300,7 +1399,9 @@
- 	fb_driver.get_color=get_color_fn(fb_driver.depth);
- 	if (!fb_driver.get_color) {
- 		fb_shutdown_palette();
-+#ifdef SVGA
- 		svgalib_free_trm(fb_kbd);
-+#endif
- 		shutdown_virtual_devices();
- 
- 		EINTRLOOP(rs, close(fb_handler));
-@@ -1329,7 +1430,9 @@
- 		mem_free(background_buffer);
- 		mem_free(new_background_buffer);
- 		fb_shutdown_palette();
-+#ifdef SVGA
- 		svgalib_free_trm(fb_kbd);
-+#endif
- 		shutdown_virtual_devices();
- 
- 		EINTRLOOP(rs, close(fb_handler));
-@@ -1356,7 +1459,7 @@
- 	in_gr_operation++;
- 	if (fb_active) {
- 		fb_clear_videoram();
--		EINTRLOOP(rs, ioctl (fb_handler, FBIOPUT_VSCREENINFO, &oldmode));
-+//		EINTRLOOP(rs, ioctl (fb_handler, FBIOPUT_VSCREENINFO, &oldmode));
- 	}
- 	END_GR;
- 	fb_shutdown_palette();
-@@ -1365,7 +1468,9 @@
- 	EINTRLOOP(rs, munmap(fb_mem,fb_mapped_size));
+ 	fb_driver.depth = fb_pixelsize & 7;
+ 	fb_driver.depth |= (fb_bits_pp & 31) << 3;
+@@ -1496,7 +1594,9 @@
+ 	EINTRLOOP(rs, munmap(fb_mem, fb_mapped_size));
  	shutdown_virtual_devices();
  	fb_switch_shutdown();
 +#ifdef SVGA
@@ -494,13 +379,15 @@
  	if(fb_driver_param) mem_free(fb_driver_param);
  	/* show cursor */
  	fb_show_cursor();
-@@ -1411,6 +1516,26 @@
+@@ -1599,6 +1699,27 @@
+ 	dest->skip = dest->x * fb_pixelsize;
+ 	dest->flags = 0;
  	return 0;
- }
- */
++}
++
 +void fb_mouse_click(int val)
 +{
-+	struct event ev;
++	struct links_event ev;
 +	ev.ev = EV_MOUSE;
 +	ev.x = mouse_x;
 +	ev.y = mouse_y;
@@ -510,37 +397,36 @@
 +}
 +void fb_mouse_wheel(int val)
 +{
-+	struct event ev;
++	struct links_event ev;
 +	ev.ev = EV_MOUSE;
 +	ev.x = mouse_x;
 +	ev.y = mouse_y;
 +	ev.b = val;
 +	if (!current_virtual_device) return;
 +	if (current_virtual_device->mouse_handler) current_virtual_device->mouse_handler(current_virtual_device, ev.x, ev.y, ev.b);
-+}
+ }
  
  static void fb_register_bitmap(struct bitmap *bmp)
- {
-@@ -1614,7 +1739,9 @@
+@@ -1918,7 +2039,9 @@
  	unhandle_fb_mouse();
  	fb_old_vd = current_virtual_device;
  	current_virtual_device=NULL;
 +#ifdef SVGA
  	svgalib_block_itrm(fb_kbd);
 +#endif
- 	if (have_cmap) set_palette(&old_palette);
+ 	if (have_cmap && fb_active) set_palette(&old_palette);
+ 	EINTRLOOP(rs, fsync(fb_handle));
  	fb_switch_shutdown();
- 	fb_show_cursor();
-@@ -1628,7 +1755,9 @@
- 		return 0;
- 	}
+@@ -1933,7 +2056,9 @@
+ 	unsigned char *e;
+ 	if (current_virtual_device) return 0;
  	if (dev != fb_block_dev) return -2;
 +#ifdef SVGA
  	if (svgalib_unblock_itrm(fb_kbd)) return -1;
 +#endif
- 	fb_switch_init();
- 	fb_hide_cursor();
- 	fb_pan_display();
+ 	e = fb_switch_init();
+ 	if (e) {
+ 		fatal_exit("fb_switch_init failed: %s", e);
 --- a/input_fake.h
 +++ b/input_fake.h
 @@ -0,0 +1,84 @@
@@ -628,82 +514,39 @@
 +#endif  /* !defined(KEY_OK)  */
 +#endif  /* _INPUT_FAKE_H */
 +
---- a/language.inc
-+++ b/language.inc
-@@ -8812,7 +8812,7 @@
-   {T_TOGGLE_HTML_PLAIN, "Umschaltung HTML/Quelltext" },
-   {T_DOCUMENT_INFO, "Dokumentinformationen" },
-   {T_FRAME_AT_FULL_SCREEN, "Rahmen im Vollbildschirm" },
--  {T_SAVE_HTML_OPTIONS, "HTML Sicherheit" },
-+  {T_SAVE_HTML_OPTIONS, "HTML-Optionen speichern" },
-   {T_CHARACTER_SET, "Zeichensatz" },
-   {T_CACHE, "Cache" },
-   {T_MAIL_AND_TELNEL, "Mail und Telnet" },
-@@ -18067,7 +18067,7 @@
-   {T_TOGGLE_HTML_PLAIN, "Umschaltig HTML/Quelltext" },
-   {T_DOCUMENT_INFO, "Dokumentinformatione" },
-   {T_FRAME_AT_FULL_SCREEN, "Rahme im Vollbildschirm" },
--  {T_SAVE_HTML_OPTIONS, "HTML Sicherheit" },
-+  {T_SAVE_HTML_OPTIONS, "HTML-Optionen speichern" },
-   {T_CHARACTER_SET, "Zeichesatz" },
-   {T_CACHE, "Cache" },
-   {T_MAIL_AND_TELNEL, "Mail und Telnet" },
---- a/main.c
-+++ b/main.c
-@@ -446,6 +446,11 @@
- {
- 	g_argc = argc;
- 	g_argv = (unsigned char **)argv;
-+	if (access("/tmp/red_table", R_OK) != 0)
-+	{
-+		printf("Untaring the tables file\n");
-+		system("tar -xvzf /var/tuxbox/config/links/tables.tar.gz -C /tmp");
-+	}
- 
- 	init_os();
- 
 --- a/menu.c
 +++ b/menu.c
-@@ -180,7 +180,7 @@
- 
- static void menu_about(struct terminal *term, void *d, struct session *ses)
- {
--	msg_box(term, NULL, TEXT_(T_ABOUT), AL_CENTER, TEXT_(T_LINKS__LYNX_LIKE), term, 2, TEXT_(T_OK), NULL, B_ENTER | B_ESC, TEXT_(T_VERSION), menu_version, 0);
-+	msg_box(term, NULL, TEXT_(T_ABOUT), AL_CENTER | AL_EXTD_TEXT, TEXT_(T_LINKS__LYNX_LIKE), "\r\n\r\nadapted 2009 for Coolstream by focus\n","", NULL, term, 2, TEXT_(T_OK), NULL, B_ENTER | B_ESC, TEXT_(T_VERSION), menu_version, 0);
- }
- 
- static void menu_keys(struct terminal *term, void *d, struct session *ses)
-@@ -2594,16 +2594,16 @@
+@@ -3438,16 +3438,16 @@
  
  #ifdef G
- static struct menu_item file_menu111[] = {
--	{ TEXT_(T_GOTO_URL), cast_uchar "g", TEXT_(T_HK_GOTO_URL), MENU_FUNC menu_goto_url, (void *)0, 0, 0 },
--	{ TEXT_(T_GO_BACK), cast_uchar "z", TEXT_(T_HK_GO_BACK), MENU_FUNC menu_go_back, (void *)0, 0, 0 },
--	{ TEXT_(T_GO_FORWARD), cast_uchar "x", TEXT_(T_HK_GO_FORWARD), MENU_FUNC menu_go_forward, (void *)0, 0, 0 },
--	{ TEXT_(T_HISTORY), cast_uchar ">", TEXT_(T_HK_HISTORY), MENU_FUNC history_menu, (void *)0, 1, 0 },
-+	{ TEXT_(T_GOTO_URL), cast_uchar "[epg]", TEXT_(T_HK_GOTO_URL), MENU_FUNC menu_goto_url, (void *)0, 0, 0 },
-+	{ TEXT_(T_GO_BACK), cast_uchar "<", TEXT_(T_HK_GO_BACK), MENU_FUNC menu_go_back, (void *)0, 0, 0 },
-+	{ TEXT_(T_GO_FORWARD), cast_uchar ">", TEXT_(T_HK_GO_FORWARD), MENU_FUNC menu_go_forward, (void *)0, 0, 0 },
-+	{ TEXT_(T_HISTORY), cast_uchar "", TEXT_(T_HK_HISTORY), MENU_FUNC history_menu, (void *)0, 1, 0 },
- 	{ TEXT_(T_RELOAD), cast_uchar "Ctrl-R", TEXT_(T_HK_RELOAD), MENU_FUNC menu_reload, (void *)0, 0, 0 },
+ static_const struct menu_item file_menu111[] = {
+-	{ TEXT_(T_GOTO_URL), cast_uchar "g", TEXT_(T_HK_GOTO_URL), menu_goto_url, NULL, 0, 1 },
+-	{ TEXT_(T_GO_BACK), cast_uchar "z", TEXT_(T_HK_GO_BACK), menu_go_back, NULL, 0, 1 },
+-	{ TEXT_(T_GO_FORWARD), cast_uchar "x", TEXT_(T_HK_GO_FORWARD), menu_go_forward, NULL, 0, 1 },
+-	{ TEXT_(T_HISTORY), cast_uchar ">", TEXT_(T_HK_HISTORY), history_menu, NULL, 1, 1 },
++	{ TEXT_(T_GOTO_URL), cast_uchar "[epg]", TEXT_(T_HK_GOTO_URL), menu_goto_url, NULL, 0, 1 },
++	{ TEXT_(T_GO_BACK), cast_uchar "<", TEXT_(T_HK_GO_BACK), menu_go_back, NULL, 0, 1 },
++	{ TEXT_(T_GO_FORWARD), cast_uchar ">", TEXT_(T_HK_GO_FORWARD), menu_go_forward, NULL, 0, 1 },
++	{ TEXT_(T_HISTORY), cast_uchar "", TEXT_(T_HK_HISTORY), history_menu, NULL, 1, 1 },
+ 	{ TEXT_(T_RELOAD), cast_uchar "Ctrl-R", TEXT_(T_HK_RELOAD), menu_reload, NULL, 0, 1 },
  };
  #endif
  
- static struct menu_item file_menu12[] = {
--	{ TEXT_(T_BOOKMARKS), cast_uchar "s", TEXT_(T_HK_BOOKMARKS), MENU_FUNC menu_bookmark_manager, (void *)0, 0, 0 },
-+	{ TEXT_(T_BOOKMARKS), cast_uchar "[fav]", TEXT_(T_HK_BOOKMARKS), MENU_FUNC menu_bookmark_manager, (void *)0, 0, 0 },
+ static_const struct menu_item file_menu12[] = {
+-	{ TEXT_(T_BOOKMARKS), cast_uchar "s", TEXT_(T_HK_BOOKMARKS), menu_bookmark_manager, NULL, 0, 1 },
++	{ TEXT_(T_BOOKMARKS), cast_uchar "[fav]", TEXT_(T_HK_BOOKMARKS), menu_bookmark_manager, NULL, 0, 1 },
  };
  
- static struct menu_item file_menu21[] = {
-@@ -2702,6 +2702,7 @@
+ static_const struct menu_item file_menu21[] = {
+@@ -3547,6 +3547,7 @@
  	/*cast_uchar "", cast_uchar "", M_BAR, NULL, NULL, 0, 0,
- 	TEXT_(T_OS_SHELL), cast_uchar "", TEXT_(T_HK_OS_SHELL), MENU_FUNC menu_shell, NULL, 0, 0,*/
+ 	TEXT_(T_OS_SHELL), cast_uchar "", TEXT_(T_HK_OS_SHELL), menu_shell, NULL, 0, 0,*/
  	x = 1;
 +#if 0
  	if (!anonymous && can_open_os_shell(term->environment)) {
  		e->text = TEXT_(T_OS_SHELL);
  		e->rtext = cast_uchar "";
-@@ -2713,6 +2714,7 @@
+@@ -3558,6 +3559,7 @@
  		e++;
  		x = 0;
  	}
@@ -711,30 +554,30 @@
  	if (can_resize_window(term)) {
  		e->text = TEXT_(T_RESIZE_TERMINAL);
  		e->rtext = cast_uchar "";
-@@ -2731,15 +2733,15 @@
- }
+@@ -3581,15 +3583,15 @@
+ static void (* const set_frame_ptr)(struct session *ses, struct f_data_c *f, int a) = set_frame;
  
- static struct menu_item view_menu[] = {
--	{ TEXT_(T_SEARCH), cast_uchar "/", TEXT_(T_HK_SEARCH), MENU_FUNC menu_for_frame, (void *)search_dlg, 0, 0 },
--	{ TEXT_(T_SEARCH_BACK), cast_uchar "?", TEXT_(T_HK_SEARCH_BACK), MENU_FUNC menu_for_frame, (void *)search_back_dlg, 0, 0 },
--	{ TEXT_(T_FIND_NEXT), cast_uchar "n", TEXT_(T_HK_FIND_NEXT), MENU_FUNC menu_for_frame, (void *)find_next, 0, 0 },
--	{ TEXT_(T_FIND_PREVIOUS), cast_uchar "N", TEXT_(T_HK_FIND_PREVIOUS), MENU_FUNC menu_for_frame, (void *)find_next_back, 0, 0 },
-+	{ TEXT_(T_SEARCH), cast_uchar "[help]", TEXT_(T_HK_SEARCH), MENU_FUNC menu_for_frame, (void *)search_dlg, 0, 0 },
-+	{ TEXT_(T_SEARCH_BACK), cast_uchar "[audio]", TEXT_(T_HK_SEARCH_BACK), MENU_FUNC menu_for_frame, (void *)search_back_dlg, 0, 0 },
-+	{ TEXT_(T_FIND_NEXT), cast_uchar "[skip+]", TEXT_(T_HK_FIND_NEXT), MENU_FUNC menu_for_frame, (void *)find_next, 0, 0 },
-+	{ TEXT_(T_FIND_PREVIOUS), cast_uchar "[skip-]", TEXT_(T_HK_FIND_PREVIOUS), MENU_FUNC menu_for_frame, (void *)find_next_back, 0, 0 },
+ static_const struct menu_item view_menu[] = {
+-	{ TEXT_(T_SEARCH), cast_uchar "/", TEXT_(T_HK_SEARCH), menu_for_frame, (void *)&search_dlg_ptr, 0, 0 },
+-	{ TEXT_(T_SEARCH_BACK), cast_uchar "?", TEXT_(T_HK_SEARCH_BACK), menu_for_frame, (void *)&search_back_dlg_ptr, 0, 0 },
+-	{ TEXT_(T_FIND_NEXT), cast_uchar "n", TEXT_(T_HK_FIND_NEXT), menu_for_frame, (void *)&find_next_ptr, 0, 0 },
+-	{ TEXT_(T_FIND_PREVIOUS), cast_uchar "N", TEXT_(T_HK_FIND_PREVIOUS), menu_for_frame, (void *)&find_next_back_ptr, 0, 0 },
++	{ TEXT_(T_SEARCH), cast_uchar "[help]", TEXT_(T_HK_SEARCH), menu_for_frame, (void *)&search_dlg_ptr, 0, 0 },
++	{ TEXT_(T_SEARCH_BACK), cast_uchar "[audio]", TEXT_(T_HK_SEARCH_BACK), menu_for_frame, (void *)&search_back_dlg_ptr, 0, 0 },
++	{ TEXT_(T_FIND_NEXT), cast_uchar "[skip+]", TEXT_(T_HK_FIND_NEXT), menu_for_frame, (void *)&find_next_ptr, 0, 0 },
++	{ TEXT_(T_FIND_PREVIOUS), cast_uchar "[skip-]", TEXT_(T_HK_FIND_PREVIOUS), menu_for_frame, (void *)&find_next_back_ptr, 0, 0 },
  	{ cast_uchar "", cast_uchar "", M_BAR, NULL, NULL, 0, 0 },
--	{ TEXT_(T_TOGGLE_HTML_PLAIN), cast_uchar "\\", TEXT_(T_HK_TOGGLE_HTML_PLAIN), MENU_FUNC menu_toggle, NULL, 0, 0 },
--	{ TEXT_(T_DOCUMENT_INFO), cast_uchar "=", TEXT_(T_HK_DOCUMENT_INFO), MENU_FUNC menu_doc_info, NULL, 0, 0 },
--	{ TEXT_(T_HEADER_INFO), cast_uchar "|", TEXT_(T_HK_HEADER_INFO), MENU_FUNC menu_head_info, NULL, 0, 0 },
--	{ TEXT_(T_FRAME_AT_FULL_SCREEN), cast_uchar "f", TEXT_(T_HK_FRAME_AT_FULL_SCREEN), MENU_FUNC menu_for_frame, (void *)set_frame, 0, 0 },
-+	{ TEXT_(T_TOGGLE_HTML_PLAIN), cast_uchar "[ttx]", TEXT_(T_HK_TOGGLE_HTML_PLAIN), MENU_FUNC menu_toggle, NULL, 0, 0 },
-+	{ TEXT_(T_DOCUMENT_INFO), cast_uchar "[info]", TEXT_(T_HK_DOCUMENT_INFO), MENU_FUNC menu_doc_info, NULL, 0, 0 },
-+	{ TEXT_(T_HEADER_INFO), cast_uchar "[cool]", TEXT_(T_HK_HEADER_INFO), MENU_FUNC menu_head_info, NULL, 0, 0 },
-+//	{ TEXT_(T_FRAME_AT_FULL_SCREEN), cast_uchar "f", TEXT_(T_HK_FRAME_AT_FULL_SCREEN), MENU_FUNC menu_for_frame, (void *)set_frame, 0, 0 },
+-	{ TEXT_(T_TOGGLE_HTML_PLAIN), cast_uchar "\\", TEXT_(T_HK_TOGGLE_HTML_PLAIN), menu_toggle, NULL, 0, 0 },
+-	{ TEXT_(T_DOCUMENT_INFO), cast_uchar "=", TEXT_(T_HK_DOCUMENT_INFO), menu_doc_info, NULL, 0, 0 },
+-	{ TEXT_(T_HEADER_INFO), cast_uchar "|", TEXT_(T_HK_HEADER_INFO), menu_head_info, NULL, 0, 0 },
+-	{ TEXT_(T_FRAME_AT_FULL_SCREEN), cast_uchar "f", TEXT_(T_HK_FRAME_AT_FULL_SCREEN), menu_for_frame, (void *)&set_frame_ptr, 0, 0 },
++	{ TEXT_(T_TOGGLE_HTML_PLAIN), cast_uchar "[ttx]", TEXT_(T_HK_TOGGLE_HTML_PLAIN), menu_toggle, NULL, 0, 0 },
++	{ TEXT_(T_DOCUMENT_INFO), cast_uchar "[info]", TEXT_(T_HK_DOCUMENT_INFO), menu_doc_info, NULL, 0, 0 },
++	{ TEXT_(T_HEADER_INFO), cast_uchar "[cool]", TEXT_(T_HK_HEADER_INFO), menu_head_info, NULL, 0, 0 },
++//	{ TEXT_(T_FRAME_AT_FULL_SCREEN), cast_uchar "f", TEXT_(T_HK_FRAME_AT_FULL_SCREEN), menu_for_frame, (void *)&set_frame_ptr, 0, 0 },
  	{ cast_uchar "", cast_uchar "", M_BAR, NULL, NULL, 0, 0 },
- 	{ TEXT_(T_HTML_OPTIONS), cast_uchar "", TEXT_(T_HK_HTML_OPTIONS), MENU_FUNC menu_html_options, (void *)0, 0, 0 },
- 	{ TEXT_(T_SAVE_HTML_OPTIONS), cast_uchar "", TEXT_(T_HK_SAVE_HTML_OPTIONS), MENU_FUNC menu_save_html_options, (void *)0, 0, 0 },
+ 	{ TEXT_(T_HTML_OPTIONS), cast_uchar "", TEXT_(T_HK_HTML_OPTIONS), menu_html_options, NULL, 0, 0 },
+ 	{ TEXT_(T_SAVE_HTML_OPTIONS), cast_uchar "", TEXT_(T_HK_SAVE_HTML_OPTIONS), menu_save_html_options, NULL, 0, 0 },
 --- a/rc.c
 +++ b/rc.c
 @@ -0,0 +1,265 @@
@@ -759,12 +602,12 @@
 +{'p', 'q', 'r', 's', '7', 'P', 'Q', 'R', 'S'},
 +{'t', 'u', 'v', '8', 'T', 'U', 'V', 0, 0},
 +{'w', 'x', 'y', 'z', '9', 'W', 'X', 'Y', 'Z'},
-+{'#', '*', '0', '?', '!', ':', ';', ',', 0}
++{' ', '0', '#', '*', '?', '!', ':', ';', ','}
 +};
 +
 +void kbd_postevent(int x)
 +{
-+	struct event ev = { EV_KBD, x, 0, 0 };
++	struct links_event ev = { EV_KBD, x, 0, 0 };
 +
 +	if (current_virtual_device->keyboard_handler)
 +		current_virtual_device->keyboard_handler (current_virtual_device, ev.x, ev.y);
@@ -1416,24 +1259,24 @@
  */
 +//#define DEBUG_CALLS
  
- struct thread {
- 	void (*read_func)(void *);
-@@ -247,8 +248,12 @@
- 	threads[fd].write_func = write_func;
- 	threads[fd].error_func = error_func;
- 	threads[fd].data = data;
+ #ifdef USE_LIBEVENT
+ #if defined(evtimer_set) && !defined(timeout_set)
+@@ -649,8 +650,12 @@
+ 		return;
+ 	}
+ #endif
 -	if (read_func) FD_SET(fd, &w_read);
 -	else {
 +	if (read_func) {
 +		FD_SET(fd, &w_read);
 +#ifdef DEBUG_CALLS
-+printf("set_handlers: add read fd %d\n", fd);
++		printf("set_handlers: add read fd %d\n", fd);
 +#endif
-+	}else {
++	} else {
  		FD_CLR(fd, &w_read);
  		FD_CLR(fd, &x_read);
  	}
-@@ -422,14 +427,19 @@
+@@ -936,9 +941,14 @@
  }
  
  int terminate_loop = 0;
@@ -1445,60 +1288,40 @@
  {
 +	int rcfd=-1;
 +	int mousefd=-1;
- 	struct stat st;
- 	int rs;
- 	EINTRLOOP(rs, stat(".", &st));
--	if (rs && getenv("HOME"))
--		EINTRLOOP(rs, chdir(getenv("HOME")));
-+//	if (rs && getenv("HOME"))
-+//		EINTRLOOP(rs, chdir(getenv("HOME")));
- 	memset(&sa_zero, 0, sizeof sa_zero);
- 	memset(signal_mask, 0, sizeof signal_mask);
- 	memset(signal_handlers, 0, sizeof signal_handlers);
-@@ -447,6 +457,14 @@
- 	set_handlers(signal_pipe[0], signal_break, NULL, NULL, NULL);
- 	init();
- 	CHK_BH;
+ #if !defined(USE_LIBEVENT) || !defined(USE_POLL)
+ 	restrict_fds();
+ #endif
+@@ -993,6 +1003,15 @@
+ 		nopr();
+ 	} else
+ #endif
++
 +	rcfd = RcInitialize(rcfd);
 +printf("rcfd: %d\n", rcfd);
 +
-+	set_handlers(rcfd, (void (*)(void *))kbd_remoteControl, NULL, NULL, NULL);
++	set_handlers(rcfd, (void (*)(void *))kbd_remoteControl, NULL, NULL);
 +	mousefd = rc_mouse_init();
 +
 +	if (mousefd != -1)
-+		set_handlers(mousefd, (void (*)(void *))rc_mouse_event, NULL, NULL, NULL);
++		set_handlers(mousefd, (void (*)(void *))rc_mouse_event, NULL, NULL);
+ 
  	while (!terminate_loop) {
  		volatile int n;	/* volatile because of setjmp */
- 		int i;
-@@ -518,8 +536,10 @@
- 		i = -1;
- 		while (n > 0 && ++i < w_max) {
- 			int k = 0;
--			/*printf("C %d : %d,%d,%d\n",i,FD_ISSET(i, &w_read),FD_ISSET(i, &w_write),FD_ISSET(i, &w_error));
--			printf("A %d : %d,%d,%d\n",i,FD_ISSET(i, &x_read),FD_ISSET(i, &x_write),FD_ISSET(i, &x_error));*/
-+#ifdef DEBUG_CALLS
-+			printf("C %d : %d,%d,%d\n",i,FD_ISSET(i, &w_read),FD_ISSET(i, &w_write),FD_ISSET(i, &w_error));
-+			printf("A %d : %d,%d,%d\n",i,FD_ISSET(i, &x_read),FD_ISSET(i, &x_write),FD_ISSET(i, &x_error));
-+#endif
- 			if (FD_ISSET(i, &x_read)) {
- 				if (threads[i].read_func) {
- #ifdef DEBUG_CALLS
 --- a/view_gr.c
 +++ b/view_gr.c
-@@ -1026,7 +1026,7 @@
- 		redraw_link(fd, n);
- 	}
+@@ -1032,6 +1032,7 @@
+ 	return scroll_vh(&fd->vs->view_posx, &fd->vs->orig_view_posx, fd->ses->scrolling == 2 ? &fd->ses->scrolltype : NULL, x, fd->f_data->x - fd->xw + fd->vsb * G_SCROLL_BAR_WIDTH);
  }
--
+ 
 +extern int mousefd;
- int g_frame_ev(struct session *ses, struct f_data_c *fd, struct event *ev)
+ int g_frame_ev(struct session *ses, struct f_data_c *fd, struct links_event *ev)
  {
  	if (!fd->f_data) return 0;
-@@ -1068,6 +1068,25 @@
+@@ -1094,6 +1095,25 @@
  				process_sb_event(fd, ev->x, 1);
  				break;
  			}
-+			if(mousefd == -1) {
++			if (mousefd == -1) {
 +				if (fd->vsb && ev_in_rect(ev, fd->xw - G_SCROLL_BAR_WIDTH, 0, fd->xw, fd->yw))
 +				{
 +					ses->scrolltype=0;
