@@ -351,12 +351,12 @@ $(DRIVER_DIR):
 		git clone $(GITHUB)/$(GIT_NAME_DRIVER)/driver.git driver; \
 	fi
 
-$(APPS_DIR):
+$(TOOLS_DIR):
 	$(call draw_line,)
-	@echo '      Cloning $(GIT_NAME_APPS)-apps git repository'
+	@echo '      Cloning $(GIT_NAME_APPS)-tools git repository'
 	$(call draw_line,)
-	if [ ! -e $(APPS_DIR)/.git ]; then \
-		git clone $(GITHUB)/$(GIT_NAME_APPS)/apps.git apps; \
+	if [ ! -e $(TOOLS_DIR)/.git ]; then \
+		git clone $(GITHUB)/$(GIT_NAME_APPS)/tools.git apps; \
 	fi
 
 $(FLASH_DIR):
@@ -368,7 +368,7 @@ $(FLASH_DIR):
 	fi
 	@echo ''
 
-PREQS  = $(APPS_DIR)
+PREQS  = $(TOOLS_DIR)
 
 ifeq ($(BOXARCH), sh4)
 PREQS += $(DRIVER_DIR)
