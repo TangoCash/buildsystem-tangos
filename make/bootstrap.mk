@@ -356,7 +356,7 @@ $(TOOLS_DIR):
 	@echo '      Cloning $(GIT_NAME_APPS)-tools git repository'
 	$(call draw_line,)
 	if [ ! -e $(TOOLS_DIR)/.git ]; then \
-		git clone $(GITHUB)/$(GIT_NAME_APPS)/tools.git apps; \
+		git clone $(GITHUB)/$(GIT_NAME_APPS)/tools.git tools; \
 	fi
 
 $(FLASH_DIR):
