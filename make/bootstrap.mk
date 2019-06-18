@@ -353,10 +353,10 @@ $(DRIVER_DIR):
 
 $(TOOLS_DIR):
 	$(call draw_line,)
-	@echo '      Cloning $(GIT_NAME_APPS)-tools git repository'
+	@echo '      Cloning $(GIT_NAME_TOOLS)-tools git repository'
 	$(call draw_line,)
 	if [ ! -e $(TOOLS_DIR)/.git ]; then \
-		git clone $(GITHUB)/$(GIT_NAME_APPS)/tools.git tools; \
+		git clone $(GITHUB)/$(GIT_NAME_TOOLS)/tools.git tools; \
 	fi
 
 $(FLASH_DIR):
