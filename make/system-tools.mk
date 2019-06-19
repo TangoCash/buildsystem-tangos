@@ -544,7 +544,7 @@ $(D)/util_linux: $(D)/bootstrap $(D)/ncurses $(D)/zlib $(ARCHIVE)/$(UTIL_LINUX_S
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/mount.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/smartcols.pc
 	rm -f $(addprefix $(TARGET_DIR)/bin/,findmnt)
-	rm -f $(addprefix $(TARGET_DIR)/sbin/,blkdiscard blkzone blockdev cfdisk chcpu ctrlaltdel fdisk findfs fsck fsfreeze fstrim losetup mkfs mkswap swaplabel wipefs)
+	rm -f $(addprefix $(TARGET_DIR)/sbin/,blkdiscard blkzone blockdev cfdisk chcpu ctrlaltdel fdisk findfs fsck fsfreeze fstrim losetup mkfs swaplabel wipefs)
 	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,col colcrt colrm column fincore flock getopt ipcmk ipcrm ipcs isosize linux32 linux64 look lscpu lsipc lslocks lsns mcookie namei prlimit renice rev script scriptreplay setarch setsid uname26 uuidgen uuidparse whereis)
 	rm -f $(addprefix $(TARGET_DIR)/usr/sbin/,ldattach readprofile rtcwake uuidd)
 	$(REMOVE)/util-linux-$(UTIL_LINUX_VER)
