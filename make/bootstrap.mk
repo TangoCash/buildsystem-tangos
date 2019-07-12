@@ -37,12 +37,12 @@ $(D)/directories:
 	mkdir -p $(ARCHIVE)
 ifeq ($(BOXARCH), sh4)
 	mkdir -p $(STL_ARCHIVE)
+	mkdir -p $(CROSS_DIR)
 endif
 	mkdir -p $(BUILD_TMP)
 	mkdir -p $(HOST_DIR)
 	mkdir -p $(SOURCE_DIR)
 	mkdir -p $(RELEASE_IMAGE_DIR)
-	install -d $(CROSS_DIR)
 	install -d $(HOST_DIR)/{bin,lib,share}
 	install -d $(TARGET_DIR)/{bin,boot,etc,lib,sbin,usr,var}
 	install -d $(TARGET_DIR)/etc/{init.d,mdev,network,rc.d}

@@ -1,4 +1,7 @@
-#master makefile
+#
+# Master makefile
+#
+# -----------------------------------------------------------------------------
 
 SHELL = /bin/bash
 UID := $(shell id -u)
@@ -12,10 +15,6 @@ LANG:=C
 export TOPDIR LC_ALL LANG
 
 include make/buildenv.mk
-
-PARALLEL_JOBS := $(shell echo $$((1 + `getconf _NPROCESSORS_ONLN 2>/dev/null || echo 1`)))
-override MAKE = make $(if $(findstring j,$(filter-out --%,$(MAKEFLAGS))),,-j$(PARALLEL_JOBS)) $(SILENT_OPT)
-
 
 ############################################################################
 #  A print out of environment variables
@@ -190,7 +189,7 @@ update:
 	@echo;
 
 all:
-	@echo "'make all' is not a valid target. Please read the documentation."
+	@echo "'make all' is not a valid target. Please execute 'make print-targets' to display the alternatives."
 
 # target for testing only. not useful otherwise
 everything: $(shell sed -n 's/^\$$.D.\/\(.*\):.*/\1/p' make/*.mk)
@@ -198,7 +197,11 @@ everything: $(shell sed -n 's/^\$$.D.\/\(.*\):.*/\1/p' make/*.mk)
 # print all present targets...
 print-targets:
 	@sed -n 's/^\$$.D.\/\(.*\):.*/\1/p; s/^\([a-z].*\):\( \|$$\).*/\1/p;' \
-		`ls -1 make/*.mk|grep -v make/buildenv.mk|grep -v make/neutrino-release.mk` | \
+		`ls -1 make/*.mk | \
+		grep -v make/buildenv.mk | \
+		grep -v make/neutrino-release.mk | \
+		grep -v make/neutrino.mk | \
+		grep -v make/neutrino-plugins.mk` | \
 		sort -u | fold -s -w 65
 
 # for local extensions, e.g. special plugins or similar...
@@ -210,9 +213,10 @@ print-targets:
 .print-phony:
 	@echo $(PHONY)
 
-PHONY += everything print-targets
-PHONY += all printenv .print-phony
+PHONY += print-targets
+PHONY += printenv help all everything
 PHONY += update update-self
+PHONY += .print-phony
 .PHONY: $(PHONY)
 
 # this makes sure we do not build top-level dependencies in parallel

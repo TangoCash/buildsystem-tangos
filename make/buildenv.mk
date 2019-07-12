@@ -1,6 +1,9 @@
-# set up environment for other makefiles
-# print '+' before each executed command
-# SHELL := $(SHELL) -x
+#
+# set up build environment for other makefiles
+#
+# -----------------------------------------------------------------------------
+
+#SHELL := $(SHELL) -x
 
 CONFIG_SITE =
 export CONFIG_SITE
@@ -8,9 +11,19 @@ export CONFIG_SITE
 LD_LIBRARY_PATH =
 export LD_LIBRARY_PATH
 
-BASE_DIR             := $(shell pwd)
+# -----------------------------------------------------------------------------
 
-ARCHIVE               = $(HOME)/Archive
+# set up default parallelism
+PARALLEL_JOBS := $(shell echo $$((1 + `getconf _NPROCESSORS_ONLN 2>/dev/null || echo 1`)))
+override MAKE = make $(if $(findstring j,$(filter-out --%,$(MAKEFLAGS))),,-j$(PARALLEL_JOBS)) $(SILENT_OPT)
+
+MAKEFLAGS             += --no-print-directory
+
+# -----------------------------------------------------------------------------
+
+# default platform...
+BASE_DIR             := $(shell pwd)
+ARCHIVE              ?= $(HOME)/Archive
 TOOLS_DIR             = $(BASE_DIR)/tools
 BUILD_TMP             = $(BASE_DIR)/build_tmp
 SOURCE_DIR            = $(BASE_DIR)/build_source
@@ -23,8 +36,7 @@ RELEASE_IMAGE_DIR     = $(BASE_DIR)/release_image
 # for local extensions
 -include $(BASE_DIR)/config.local
 
-# default platform...
-MAKEFLAGS            += --no-print-directory
+
 GIT_PROTOCOL         ?= http
 ifneq ($(GIT_PROTOCOL), http)
 GITHUB               ?= git://github.com
@@ -86,8 +98,6 @@ PATCHES               = $(BASE_DIR)/patches
 SCRIPTS_DIR           = $(BASE_DIR)/scripts
 SKEL_ROOT             = $(BASE_DIR)/root
 D                     = $(BASE_DIR)/.deps
-# backwards compatibility
-DEPDIR                = $(D)
 
 ifneq ($(SUDOPASSWD),)
 SUDOCMD               = fakeroot
@@ -154,8 +164,11 @@ TARGET_EXTRA_CFLAGS   =
 TARGET_EXTRA_LDFLAGS  =
 endif
 
+# -----------------------------------------------------------------------------
+
 TARGET_LIB_DIR        = $(TARGET_DIR)/usr/lib
 TARGET_INCLUDE_DIR    = $(TARGET_DIR)/usr/include
+TARGET_SHARE_DIR      = $(TARGET_DIR)/usr/share
 
 TARGET_CFLAGS         = -pipe $(TARGET_O_CFLAGS) $(TARGET_MARCH_CFLAGS) $(TARGET_EXTRA_CFLAGS) -I$(TARGET_INCLUDE_DIR)
 TARGET_CPPFLAGS       = $(TARGET_CFLAGS)
@@ -177,7 +190,8 @@ TERM_YELLOW          := \033[00;33m
 TERM_YELLOW_BOLD     := \033[01;33m
 TERM_NORMAL          := \033[0m
 
-MAKEFLAGS            += --no-print-directory
+# -----------------------------------------------------------------------------
+
 # To put more focus on warnings, be less verbose as default
 # Use 'make V=1' to see the full commands
 ifeq ("$(origin V)", "command line")
@@ -199,9 +213,13 @@ WGET_SILENT_OPT       = -o /dev/null
 MAKEFLAGS            += --silent
 endif
 
+# -----------------------------------------------------------------------------
+
 # certificates
 CA_BUNDLE             = ca-certificates.crt
 CA_BUNDLE_DIR         = /etc/ssl/certs
+
+# -----------------------------------------------------------------------------
 
 # helper-"functions"
 REWRITE_LIBTOOL       = sed -i "s,^libdir=.*,libdir='$(TARGET_DIR)/usr/lib'," $(TARGET_DIR)/usr/lib
@@ -212,11 +230,16 @@ REWRITE_PKGCONF       = sed -i "s,^prefix=.*,prefix='$(TARGET_DIR)/usr',"
 UNTAR                 = $(SILENT)tar -C $(BUILD_TMP) -xf $(ARCHIVE)
 REMOVE                = $(SILENT)rm -rf $(BUILD_TMP)
 
-CHDIR                 = set -e; cd $(BUILD_TMP)
+# wget tarballs into archive directory
+WGET = wget --progress=bar:force --no-check-certificate $(WGET_SILENT_OPT) -t6 -T20 -c -P $(ARCHIVE)
+
+CD                    = set -e; cd
+CHDIR                 = $(CD) $(BUILD_TMP)
 MKDIR                 = mkdir -p $(BUILD_TMP)
 STRIP                 = $(TARGET)-strip
 
-#
+# -----------------------------------------------------------------------------
+
 split_deps_dir=$(subst ., ,$(1))
 DEPS_DIR              = $(subst $(D)/,,$@)
 PKG_NAME              = $(word 1,$(call split_deps_dir,$(DEPS_DIR)))
@@ -242,9 +265,6 @@ TOUCH                 = @touch $@; \
                         $(call draw_line,$(PKG_NAME),2); \
                         echo
 
-# wget tarballs into archive directory
-WGET = wget --progress=bar:force --no-check-certificate $(WGET_SILENT_OPT) -t6 -T20 -c -P $(ARCHIVE)
-
 TUXBOX_CUSTOMIZE = [ -x $(CUSTOM_DIR)/$(notdir $@)-local.sh ] && \
 	KERNEL_VER=$(KERNEL_VER) && \
 	BOXTYPE=$(BOXTYPE) && \
@@ -266,7 +286,7 @@ CONFIGURE_OPTS = \
 	--build=$(BUILD) \
 	--host=$(TARGET) \
 
-BUILDENV = \
+BUILDENV := \
 	CC=$(TARGET)-gcc \
 	CXX=$(TARGET)-g++ \
 	LD=$(TARGET)-ld \
