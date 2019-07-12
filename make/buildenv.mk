@@ -36,6 +36,17 @@ GIT_NAME_DRIVER      ?= Duckbox-Developers
 GIT_NAME_TOOLS       ?= Duckbox-Developers
 GIT_NAME_FLASH       ?= Duckbox-Developers
 
+# default config...
+BOXARCH              ?= arm
+BOXTYPE              ?= hd51
+FFMPEG_EXPERIMENTAL  ?= 1
+OPTIMIZATIONS        ?= size
+MEDIAFW              ?= buildinplayer
+IMAGE                ?= neutrino
+FLAVOUR              ?= neutrino-mp-tangos
+EXTERNAL_LCD         ?= both
+NEWLAYOUT            ?= 0
+
 TUFSBOX_DIR           = $(BASE_DIR)/tufsbox
 CROSS_BASE            = $(BASE_DIR)/cross/$(BOXARCH)/$(BOXTYPE)
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k))
@@ -96,7 +107,6 @@ ifeq ($(BOXARCH), sh4)
 CCACHE_DIR            = $(HOME)/.ccache-bs-sh4
 export CCACHE_DIR
 TARGET               ?= sh4-linux
-BOXARCH              ?= sh4
 KERNELNAME            = uImage
 TARGET_MARCH_CFLAGS   =
 CORTEX_STRINGS        =
@@ -106,7 +116,6 @@ ifeq ($(BOXARCH), arm)
 CCACHE_DIR            = $(HOME)/.ccache-bs-arm
 export CCACHE_DIR
 TARGET               ?= arm-cortex-linux-gnueabihf
-BOXARCH              ?= arm
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd60 hd61))
 KERNELNAME            = uImage
 else
@@ -120,13 +129,11 @@ ifeq ($(BOXARCH), mips)
 CCACHE_DIR            = $(HOME)/.ccache-bs-mips
 export CCACHE_DIR
 TARGET               ?= mipsel-unknown-linux-gnu
-BOXARCH              ?= mips
 KERNELNAME            = vmlinux
 TARGET_MARCH_CFLAGS   = -march=mips32 -mtune=mips32
 CORTEX_STRINGS        =
 endif
 
-OPTIMIZATIONS        ?= size
 ifeq ($(OPTIMIZATIONS), size)
 TARGET_O_CFLAGS       = -Os
 TARGET_EXTRA_CFLAGS   = -ffunction-sections -fdata-sections

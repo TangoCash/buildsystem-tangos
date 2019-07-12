@@ -104,39 +104,31 @@ help:
 	@echo "make distclean             - Clears the whole construction."
 	@echo
 
-# define package versions first...
-include make/system-libs.mk
-include make/system-tools.mk
-include make/system-lua.mk
-include make/ffmpeg.mk
-ifeq ($(BOXARCH), sh4)
-include make/linux-kernel-sh4.mk
-include make/crosstool-sh4.mk
-include make/driver-sh4.mk
-endif
-ifeq ($(BOXARCH), arm)
-include make/linux-kernel-arm.mk
-include make/crosstool-arm.mk
-include make/driver-arm.mk
-endif
-ifeq ($(BOXARCH), mips)
-include make/linux-kernel-mips.mk
-include make/crosstool-mips.mk
-include make/driver-mips.mk
-endif
-include make/gstreamer.mk
-include make/root-etc.mk
-include make/python.mk
-include make/tools.mk
-include make/tvheadend.mk
+# -----------------------------------------------------------------------------
+
+include make/target-ffmpeg.mk
+include make/target-gstreamer.mk
+include make/target-libs.mk
+include make/target-lua.mk
+include make/target-oscam.mk
+include make/target-python.mk
+include make/target-root-etc.mk
+include make/target-tools.mk
+include make/target-tools-git.mk
+include make/linux-driver-$(BOXARCH).mk
+include make/linux-kernel-$(BOXARCH).mk
+include make/images.mk
+include make/helpers.mk
+include make/crosstool-$(BOXARCH).mk
+include make/cleantargets.mk
 include make/neutrino.mk
 include make/neutrino-plugins.mk
 include make/neutrino-release.mk
-include make/flashimage.mk
-include make/cleantargets.mk
-include make/patches.mk
-include make/oscam.mk
+include make/tvheadend.mk
+
 include make/bootstrap.mk
+
+# -----------------------------------------------------------------------------
 
 update-self:
 	git pull
