@@ -119,6 +119,7 @@ include make/linux-driver-$(BOXARCH).mk
 include make/linux-kernel-$(BOXARCH).mk
 include make/images.mk
 include make/helpers.mk
+include make/host-tools.mk
 include make/crosstool-$(BOXARCH).mk
 include make/cleantargets.mk
 include make/neutrino.mk

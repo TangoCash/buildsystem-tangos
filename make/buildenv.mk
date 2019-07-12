@@ -71,7 +71,6 @@ CROSS_BASE            = $(BASE_DIR)/cross/$(BOXARCH)/$(BOXCPU)
 endif
 
 TARGET_DIR            = $(TUFSBOX_DIR)/cdkroot
-BOOT_DIR              = $(TUFSBOX_DIR)/cdkroot-tftpboot
 CROSS_DIR             = $(TUFSBOX_DIR)/cross
 HOST_DIR              = $(TUFSBOX_DIR)/host
 RELEASE_DIR_CLEANUP   = $(TUFSBOX_DIR)/release

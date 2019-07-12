@@ -335,7 +335,6 @@ $(D)/kernel.do_compile: $(D)/kernel.do_prepare
 
 KERNEL = $(D)/kernel
 $(D)/kernel: $(D)/bootstrap host_u_boot_tools $(D)/kernel.do_compile
-	install -m 644 $(KERNEL_DIR)/arch/sh/boot/uImage $(BOOT_DIR)/vmlinux.ub
 	install -m 644 $(KERNEL_DIR)/vmlinux $(TARGET_DIR)/boot/vmlinux-sh4-$(KERNEL_VER)
 	install -m 644 $(KERNEL_DIR)/System.map $(TARGET_DIR)/boot/System.map-sh4-$(KERNEL_VER)
 	cp $(KERNEL_DIR)/arch/sh/boot/uImage $(TARGET_DIR)/boot/
