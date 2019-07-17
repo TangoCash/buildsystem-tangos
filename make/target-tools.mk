@@ -16,7 +16,7 @@ BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-extra2.patch
 BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-flashcp-small-output.patch
 
 $(ARCHIVE)/$(BUSYBOX_SOURCE):
-	$(WGET) https://busybox.net/downloads/$(BUSYBOX_SOURCE)
+	$(DOWNLOAD) https://busybox.net/downloads/$(BUSYBOX_SOURCE)
 
 ifeq ($(BOXARCH), $(filter $(BOXARCH), arm mips))
 BUSYBOX_CONFIG = busybox-$(BUSYBOX_VER).config_arm
@@ -54,7 +54,7 @@ BASH_PATCH += bash50-006.patch
 BASH_PATCH += bash50-007.patch
 
 $(ARCHIVE)/$(BASH_SOURCE):
-	$(WGET) http://ftp.gnu.org/gnu/bash/$(BASH_SOURCE)
+	$(DOWNLOAD) http://ftp.gnu.org/gnu/bash/$(BASH_SOURCE)
 
 $(D)/bash: $(D)/bootstrap $(ARCHIVE)/$(BASH_SOURCE)
 	$(START_BUILD)
@@ -84,7 +84,7 @@ MTD_UTILS_VER = 1.5.2
 MTD_UTILS_SOURCE = mtd-utils-$(MTD_UTILS_VER).tar.bz2
 
 $(ARCHIVE)/$(MTD_UTILS_SOURCE):
-	$(WGET) ftp://ftp.infradead.org/pub/mtd-utils/$(MTD_UTILS_SOURCE)
+	$(DOWNLOAD) ftp://ftp.infradead.org/pub/mtd-utils/$(MTD_UTILS_SOURCE)
 
 $(D)/mtd_utils: $(D)/bootstrap $(D)/zlib $(D)/lzo $(D)/e2fsprogs $(ARCHIVE)/$(MTD_UTILS_SOURCE)
 	$(START_BUILD)
@@ -107,7 +107,7 @@ MODULE_INIT_TOOLS_SOURCE = module-init-tools-$(MODULE_INIT_TOOLS_VER).tar.bz2
 MODULE_INIT_TOOLS_PATCH = module-init-tools-$(MODULE_INIT_TOOLS_VER).patch
 
 $(ARCHIVE)/$(MODULE_INIT_TOOLS_SOURCE):
-	$(WGET) ftp.be.debian.org/pub/linux/utils/kernel/module-init-tools/$(MODULE_INIT_TOOLS_SOURCE)
+	$(DOWNLOAD) ftp.be.debian.org/pub/linux/utils/kernel/module-init-tools/$(MODULE_INIT_TOOLS_SOURCE)
 
 $(D)/module_init_tools: $(D)/bootstrap $(D)/lsb $(ARCHIVE)/$(MODULE_INIT_TOOLS_SOURCE)
 	$(START_BUILD)
@@ -143,7 +143,7 @@ SYSVINIT_PATCH += sysvinit-$(SYSVINIT_VER)_0001-This-fixes-an-issue-that-clang-r
 
 
 $(ARCHIVE)/$(SYSVINIT_SOURCE):
-	$(WGET) http://ftp.debian.org/debian/pool/main/s/sysvinit/$(SYSVINIT_SOURCE)
+	$(DOWNLOAD) http://ftp.debian.org/debian/pool/main/s/sysvinit/$(SYSVINIT_SOURCE)
 
 $(D)/sysvinit: $(D)/bootstrap $(ARCHIVE)/$(SYSVINIT_SOURCE)
 	$(START_BUILD)
@@ -178,7 +178,7 @@ GDB_SOURCE = gdb-$(GDB_VER).tar.xz
 GDB_PATCH = gdb-$(GDB_VER)-remove-builddate.patch
 
 $(ARCHIVE)/$(GDB_SOURCE):
-	$(WGET) ftp://sourceware.org/pub/gdb/releases/$(GDB_SOURCE)
+	$(DOWNLOAD) ftp://sourceware.org/pub/gdb/releases/$(GDB_SOURCE)
 
 # gdb-remote built for local-PC or target
 $(D)/gdb-remote: $(ARCHIVE)/$(GDB_SOURCE)
@@ -232,7 +232,7 @@ VALGRIND_VER = 3.13.0
 VALGRIND_SOURCE = valgrind-$(VALGRIND_VER).tar.bz2
 
 $(ARCHIVE)/$(VALGRIND_SOURCE):
-	$(WGET) ftp://sourceware.org/pub/valgrind/$(VALGRIND_SOURCE)
+	$(DOWNLOAD) ftp://sourceware.org/pub/valgrind/$(VALGRIND_SOURCE)
 
 $(D)/valgrind: $(D)/bootstrap $(ARCHIVE)/$(VALGRIND_SOURCE)
 	$(START_BUILD)
@@ -263,7 +263,7 @@ OPKG_PATCH = opkg-$(OPKG_VER).patch
 OPKG_HOST_PATCH = opkg-$(OPKG_VER).patch
 
 $(ARCHIVE)/$(OPKG_SOURCE):
-	$(WGET) https://git.yoctoproject.org/cgit/cgit.cgi/opkg/snapshot/$(OPKG_SOURCE)
+	$(DOWNLOAD) https://git.yoctoproject.org/cgit/cgit.cgi/opkg/snapshot/$(OPKG_SOURCE)
 
 $(D)/host_opkg: directories $(D)/host_libarchive $(ARCHIVE)/$(OPKG_SOURCE)
 	$(START_BUILD)
@@ -321,7 +321,7 @@ LSB_VER = $(LSB_MAJOR)-$(LSB_MINOR)
 LSB_SOURCE = lsb_$(LSB_VER).tar.gz
 
 $(ARCHIVE)/$(LSB_SOURCE):
-	$(WGET) https://debian.sdinet.de/etch/sdinet/lsb/$(LSB_SOURCE)
+	$(DOWNLOAD) https://debian.sdinet.de/etch/sdinet/lsb/$(LSB_SOURCE)
 
 $(D)/lsb: $(D)/bootstrap $(ARCHIVE)/$(LSB_SOURCE)
 	$(START_BUILD)
@@ -340,10 +340,10 @@ PORTMAP_SOURCE = portmap_$(PORTMAP_VER).orig.tar.gz
 PORTMAP_PATCH = portmap-$(PORTMAP_VER).patch
 
 $(ARCHIVE)/$(PORTMAP_SOURCE):
-	$(WGET) https://merges.ubuntu.com/p/portmap/$(PORTMAP_SOURCE)
+	$(DOWNLOAD) https://merges.ubuntu.com/p/portmap/$(PORTMAP_SOURCE)
 
 $(ARCHIVE)/portmap_$(PORTMAP_VER)-3.diff.gz:
-	$(WGET) https://merges.ubuntu.com/p/portmap/portmap_$(PORTMAP_VER)-3.diff.gz
+	$(DOWNLOAD) https://merges.ubuntu.com/p/portmap/portmap_$(PORTMAP_VER)-3.diff.gz
 
 $(D)/portmap: $(D)/bootstrap $(D)/lsb $(ARCHIVE)/$(PORTMAP_SOURCE) $(ARCHIVE)/portmap_$(PORTMAP_VER)-3.diff.gz
 	$(START_BUILD)
@@ -376,7 +376,7 @@ E2FSPROGS_PATCH += e2fsprogs-005-misc-create_inode.c-set-dir-s-mode-correctly.pa
 E2FSPROGS_PATCH += e2fsprogs-006-mkdir_p.patch
 
 $(ARCHIVE)/$(E2FSPROGS_SOURCE):
-	$(WGET) https://sourceforge.net/projects/e2fsprogs/files/e2fsprogs/v$(E2FSPROGS_VER)/$(E2FSPROGS_SOURCE)
+	$(DOWNLOAD) https://sourceforge.net/projects/e2fsprogs/files/e2fsprogs/v$(E2FSPROGS_VER)/$(E2FSPROGS_SOURCE)
 
 $(D)/e2fsprogs: $(D)/bootstrap $(D)/util_linux $(ARCHIVE)/$(E2FSPROGS_SOURCE)
 	$(START_BUILD)
@@ -438,7 +438,7 @@ UTIL_LINUX_VER = $(UTIL_LINUX_MAJOR).$(UTIL_LINUX_MINOR)
 UTIL_LINUX_SOURCE = util-linux-$(UTIL_LINUX_VER).tar.xz
 
 $(ARCHIVE)/$(UTIL_LINUX_SOURCE):
-	$(WGET) https://www.kernel.org/pub/linux/utils/util-linux/v$(UTIL_LINUX_MAJOR)/$(UTIL_LINUX_SOURCE)
+	$(DOWNLOAD) https://www.kernel.org/pub/linux/utils/util-linux/v$(UTIL_LINUX_MAJOR)/$(UTIL_LINUX_SOURCE)
 
 $(D)/util_linux: $(D)/bootstrap $(D)/ncurses $(D)/zlib $(ARCHIVE)/$(UTIL_LINUX_SOURCE)
 	$(START_BUILD)
@@ -557,7 +557,7 @@ GPTFDISK_VER = 1.0.4
 GPTFDISK_SOURCE = gptfdisk-$(GPTFDISK_VER).tar.gz
 
 $(ARCHIVE)/$(GPTFDISK_SOURCE):
-	$(WGET) https://sourceforge.net/projects/gptfdisk/files/gptfdisk/$(GPTFDISK_VER)/$(GPTFDISK_SOURCE)
+	$(DOWNLOAD) https://sourceforge.net/projects/gptfdisk/files/gptfdisk/$(GPTFDISK_VER)/$(GPTFDISK_SOURCE)
 
 $(D)/gptfdisk: $(D)/bootstrap $(D)/e2fsprogs $(D)/ncurses $(D)/libpopt $(ARCHIVE)/$(GPTFDISK_SOURCE)
 	$(START_BUILD)
@@ -578,7 +578,7 @@ PARTED_SOURCE = parted-$(PARTED_VER).tar.xz
 PARTED_PATCH = parted-$(PARTED_VER)-device-mapper.patch
 
 $(ARCHIVE)/$(PARTED_SOURCE):
-	$(WGET) https://ftp.gnu.org/gnu/parted/$(PARTED_SOURCE)
+	$(DOWNLOAD) https://ftp.gnu.org/gnu/parted/$(PARTED_SOURCE)
 
 $(D)/parted: $(D)/bootstrap $(D)/e2fsprogs $(ARCHIVE)/$(PARTED_SOURCE)
 	$(START_BUILD)
@@ -614,7 +614,7 @@ DOSFSTOOLS_VER = 4.1
 DOSFSTOOLS_SOURCE = dosfstools-$(DOSFSTOOLS_VER).tar.xz
 
 $(ARCHIVE)/$(DOSFSTOOLS_SOURCE):
-	$(WGET) https://github.com/dosfstools/dosfstools/releases/download/v$(DOSFSTOOLS_VER)/$(DOSFSTOOLS_SOURCE)
+	$(DOWNLOAD) https://github.com/dosfstools/dosfstools/releases/download/v$(DOSFSTOOLS_VER)/$(DOSFSTOOLS_SOURCE)
 
 DOSFSTOOLS_CFLAGS = $(TARGET_CFLAGS) -D_GNU_SOURCE -fomit-frame-pointer -D_FILE_OFFSET_BITS=64
 
@@ -645,7 +645,7 @@ JFSUTILS_SOURCE = jfsutils-$(JFSUTILS_VER).tar.gz
 JFSUTILS_PATCH = jfsutils-$(JFSUTILS_VER).patch
 
 $(ARCHIVE)/$(JFSUTILS_SOURCE):
-	$(WGET) http://jfs.sourceforge.net/project/pub/$(JFSUTILS_SOURCE)
+	$(DOWNLOAD) http://jfs.sourceforge.net/project/pub/$(JFSUTILS_SOURCE)
 
 $(D)/jfsutils: $(D)/bootstrap $(D)/e2fsprogs $(ARCHIVE)/$(JFSUTILS_SOURCE)
 	$(START_BUILD)
@@ -673,7 +673,7 @@ NTFS_3G_VER = 2017.3.23
 NTFS_3G_SOURCE = ntfs-3g_ntfsprogs-$(NTFS_3G_VER).tgz
 
 $(ARCHIVE)/$(NTFS_3G_SOURCE):
-	$(WGET) https://tuxera.com/opensource/$(NTFS_3G_SOURCE)
+	$(DOWNLOAD) https://tuxera.com/opensource/$(NTFS_3G_SOURCE)
 
 $(D)/ntfs_3g: $(D)/bootstrap $(ARCHIVE)/$(NTFS_3G_SOURCE)
 	$(START_BUILD)
@@ -709,7 +709,7 @@ MC_SOURCE = mc-$(MC_VER).tar.xz
 MC_PATCH = mc-$(MC_VER).patch
 
 $(ARCHIVE)/$(MC_SOURCE):
-	$(WGET) ftp.midnight-commander.org/$(MC_SOURCE)
+	$(DOWNLOAD) ftp.midnight-commander.org/$(MC_SOURCE)
 
 $(D)/mc: $(D)/bootstrap $(D)/ncurses $(D)/libglib2 $(ARCHIVE)/$(MC_SOURCE)
 	$(START_BUILD)
@@ -746,7 +746,7 @@ NANO_VER = 2.2.6
 NANO_SOURCE = nano-$(NANO_VER).tar.gz
 
 $(ARCHIVE)/$(NANO_SOURCE):
-	$(WGET) https://www.nano-editor.org/dist/v2.2/$(NANO_SOURCE)
+	$(DOWNLOAD) https://www.nano-editor.org/dist/v2.2/$(NANO_SOURCE)
 
 $(D)/nano: $(D)/bootstrap $(ARCHIVE)/$(NANO_SOURCE)
 	$(START_BUILD)
@@ -772,7 +772,7 @@ RSYNC_VER = 3.1.3
 RSYNC_SOURCE = rsync-$(RSYNC_VER).tar.gz
 
 $(ARCHIVE)/$(RSYNC_SOURCE):
-	$(WGET) https://ftp.samba.org/pub/rsync/$(RSYNC_SOURCE)
+	$(DOWNLOAD) https://ftp.samba.org/pub/rsync/$(RSYNC_SOURCE)
 
 $(D)/rsync: $(D)/bootstrap $(ARCHIVE)/$(RSYNC_SOURCE)
 	$(START_BUILD)
@@ -798,7 +798,7 @@ FUSE_VER = 2.9.7
 FUSE_SOURCE = fuse-$(FUSE_VER).tar.gz
 
 $(ARCHIVE)/$(FUSE_SOURCE):
-	$(WGET) https://github.com/libfuse/libfuse/releases/download/fuse-$(FUSE_VER)/$(FUSE_SOURCE)
+	$(DOWNLOAD) https://github.com/libfuse/libfuse/releases/download/fuse-$(FUSE_VER)/$(FUSE_SOURCE)
 
 $(D)/fuse: $(D)/bootstrap $(ARCHIVE)/$(FUSE_SOURCE)
 	$(START_BUILD)
@@ -831,7 +831,7 @@ CURLFTPFS_SOURCE = curlftpfs-$(CURLFTPFS_VER).tar.gz
 CURLFTPFS_PATCH = curlftpfs-$(CURLFTPFS_VER).patch
 
 $(ARCHIVE)/$(CURLFTPFS_SOURCE):
-	$(WGET) https://sourceforge.net/projects/curlftpfs/files/latest/download/$(CURLFTPFS_SOURCE)
+	$(DOWNLOAD) https://sourceforge.net/projects/curlftpfs/files/latest/download/$(CURLFTPFS_SOURCE)
 
 $(D)/curlftpfs: $(D)/bootstrap $(D)/libcurl $(D)/fuse $(D)/libglib2 $(ARCHIVE)/$(CURLFTPFS_SOURCE)
 	$(START_BUILD)
@@ -859,7 +859,7 @@ SDPARM_VER = 1.10
 SDPARM_SOURCE = sdparm-$(SDPARM_VER).tgz
 
 $(ARCHIVE)/$(SDPARM_SOURCE):
-	$(WGET) http://sg.danny.cz/sg/p/$(SDPARM_SOURCE)
+	$(DOWNLOAD) http://sg.danny.cz/sg/p/$(SDPARM_SOURCE)
 
 $(D)/sdparm: $(D)/bootstrap $(ARCHIVE)/$(SDPARM_SOURCE)
 	$(START_BUILD)
@@ -884,7 +884,7 @@ HDDTEMP_VER = 0.3-beta15
 HDDTEMP_SOURCE = hddtemp-$(HDDTEMP_VER).tar.bz2
 
 $(ARCHIVE)/$(HDDTEMP_SOURCE):
-	$(WGET) http://savannah.c3sl.ufpr.br/hddtemp/$(HDDTEMP_SOURCE)
+	$(DOWNLOAD) http://savannah.c3sl.ufpr.br/hddtemp/$(HDDTEMP_SOURCE)
 
 $(D)/hddtemp: $(D)/bootstrap $(ARCHIVE)/$(HDDTEMP_SOURCE)
 	$(START_BUILD)
@@ -911,7 +911,7 @@ HDPARM_VER = 9.54
 HDPARM_SOURCE = hdparm-$(HDPARM_VER).tar.gz
 
 $(ARCHIVE)/$(HDPARM_SOURCE):
-	$(WGET) https://sourceforge.net/projects/hdparm/files/hdparm/$(HDPARM_SOURCE)
+	$(DOWNLOAD) https://sourceforge.net/projects/hdparm/files/hdparm/$(HDPARM_SOURCE)
 
 $(D)/hdparm: $(D)/bootstrap $(ARCHIVE)/$(HDPARM_SOURCE)
 	$(START_BUILD)
@@ -932,7 +932,7 @@ HDIDLE_SOURCE = hd-idle-$(HDIDLE_VER).tgz
 HDIDLE_PATCH = hd-idle-$(HDIDLE_VER).patch
 
 $(ARCHIVE)/$(HDIDLE_SOURCE):
-	$(WGET) https://sourceforge.net/projects/hd-idle/files/$(HDIDLE_SOURCE)
+	$(DOWNLOAD) https://sourceforge.net/projects/hd-idle/files/$(HDIDLE_SOURCE)
 
 $(D)/hdidle: $(D)/bootstrap $(ARCHIVE)/$(HDIDLE_SOURCE)
 	$(START_BUILD)
@@ -954,7 +954,7 @@ FBSHOT_SOURCE = fbshot-$(FBSHOT_VER).tar.gz
 FBSHOT_PATCH = fbshot-$(FBSHOT_VER)-$(BOXARCH).patch
 
 $(ARCHIVE)/$(FBSHOT_SOURCE):
-	$(WGET) http://distro.ibiblio.org/amigolinux/download/Utils/fbshot/$(FBSHOT_SOURCE)
+	$(DOWNLOAD) http://distro.ibiblio.org/amigolinux/download/Utils/fbshot/$(FBSHOT_SOURCE)
 
 $(D)/fbshot: $(D)/bootstrap $(D)/libpng $(ARCHIVE)/$(FBSHOT_SOURCE)
 	$(START_BUILD)
@@ -976,7 +976,7 @@ SYSSTAT_VER = 11.5.7
 SYSSTAT_SOURCE = sysstat-$(SYSSTAT_VER).tar.bz2
 
 $(ARCHIVE)/$(SYSSTAT_SOURCE):
-	$(WGET) http://pagesperso-orange.fr/sebastien.godard/$(SYSSTAT_SOURCE)
+	$(DOWNLOAD) http://pagesperso-orange.fr/sebastien.godard/$(SYSSTAT_SOURCE)
 
 $(D)/sysstat: $(D)/bootstrap $(ARCHIVE)/$(SYSSTAT_SOURCE)
 	$(START_BUILD)
@@ -1002,7 +1002,7 @@ AUTOFS_SOURCE = autofs-$(AUTOFS_VER).tar.gz
 AUTOFS_PATCH = autofs-$(AUTOFS_VER).patch
 
 $(ARCHIVE)/$(AUTOFS_SOURCE):
-	$(WGET) https://www.kernel.org/pub/linux/daemons/autofs/v4/$(AUTOFS_SOURCE)
+	$(DOWNLOAD) https://www.kernel.org/pub/linux/daemons/autofs/v4/$(AUTOFS_SOURCE)
 
 $(D)/autofs: $(D)/bootstrap $(D)/e2fsprogs $(ARCHIVE)/$(AUTOFS_SOURCE)
 	$(START_BUILD)
@@ -1115,7 +1115,7 @@ DBUS_VER = 1.12.6
 DBUS_SOURCE = dbus-$(DBUS_VER).tar.gz
 
 $(ARCHIVE)/$(DBUS_SOURCE):
-	$(WGET) https://dbus.freedesktop.org/releases/dbus/$(DBUS_SOURCE)
+	$(DOWNLOAD) https://dbus.freedesktop.org/releases/dbus/$(DBUS_SOURCE)
 
 $(D)/dbus: $(D)/bootstrap $(D)/expat $(ARCHIVE)/$(DBUS_SOURCE)
 	$(START_BUILD)
@@ -1149,7 +1149,7 @@ AVAHI_VER = 0.7
 AVAHI_SOURCE = avahi-$(AVAHI_VER).tar.gz
 
 $(ARCHIVE)/$(AVAHI_SOURCE):
-	$(WGET) https://github.com/lathiat/avahi/releases/download/v$(AVAHI_VER)/$(AVAHI_SOURCE)
+	$(DOWNLOAD) https://github.com/lathiat/avahi/releases/download/v$(AVAHI_VER)/$(AVAHI_SOURCE)
 
 $(D)/avahi: $(D)/bootstrap $(D)/expat $(D)/libdaemon $(D)/dbus $(ARCHIVE)/$(AVAHI_SOURCE)
 	$(START_BUILD)
@@ -1215,7 +1215,7 @@ WGET_VER = 1.20.3
 WGET_SOURCE = wget-$(WGET_VER).tar.gz
 
 $(ARCHIVE)/$(WGET_SOURCE):
-	$(WGET) https://ftp.gnu.org/gnu/wget/$(WGET_SOURCE)
+	$(DOWNLOAD) https://ftp.gnu.org/gnu/wget/$(WGET_SOURCE)
 
 $(D)/wget: $(D)/bootstrap $(D)/openssl $(ARCHIVE)/$(WGET_SOURCE)
 	$(START_BUILD)
@@ -1249,7 +1249,7 @@ COREUTILS_VER = 8.30
 COREUTILS_SOURCE = coreutils-$(COREUTILS_VER).tar.xz
 
 $(ARCHIVE)/$(COREUTILS_SOURCE):
-	$(WGET) https://ftp.gnu.org/gnu/coreutils/$(COREUTILS_SOURCE)
+	$(DOWNLOAD) https://ftp.gnu.org/gnu/coreutils/$(COREUTILS_SOURCE)
 
 $(D)/coreutils: $(D)/bootstrap $(D)/openssl $(ARCHIVE)/$(COREUTILS_SOURCE)
 	$(START_BUILD)
@@ -1283,7 +1283,7 @@ SMARTMONTOOLS_VER = 6.6
 SMARTMONTOOLS_SOURCE = smartmontools-$(SMARTMONTOOLS_VER).tar.gz
 
 $(ARCHIVE)/$(SMARTMONTOOLS_SOURCE):
-	$(WGET) https://sourceforge.net/projects/smartmontools/files/smartmontools/$(SMARTMONTOOLS_VER)/$(SMARTMONTOOLS_SOURCE)
+	$(DOWNLOAD) https://sourceforge.net/projects/smartmontools/files/smartmontools/$(SMARTMONTOOLS_VER)/$(SMARTMONTOOLS_SOURCE)
 
 $(D)/smartmontools: $(D)/bootstrap $(ARCHIVE)/$(SMARTMONTOOLS_SOURCE)
 	$(START_BUILD)
@@ -1306,7 +1306,7 @@ NFS_UTILS_SOURCE = nfs-utils-$(NFS_UTILS_VER).tar.bz2
 NFS_UTILS_PATCH = nfs-utils-$(NFS_UTILS_VER).patch
 
 $(ARCHIVE)/$(NFS_UTILS_SOURCE):
-	$(WGET) https://sourceforge.net/projects/nfs/files/nfs-utils/$(NFS_UTILS_VER)/$(NFS_UTILS_SOURCE)
+	$(DOWNLOAD) https://sourceforge.net/projects/nfs/files/nfs-utils/$(NFS_UTILS_VER)/$(NFS_UTILS_SOURCE)
 
 $(D)/nfs_utils: $(D)/bootstrap $(D)/e2fsprogs $(ARCHIVE)/$(NFS_UTILS_SOURCE)
 	$(START_BUILD)
@@ -1342,7 +1342,7 @@ LIBEVENT_VER = 2.0.21-stable
 LIBEVENT_SOURCE = libevent-$(LIBEVENT_VER).tar.gz
 
 $(ARCHIVE)/$(LIBEVENT_SOURCE):
-	$(WGET) https://github.com/downloads/libevent/libevent/$(LIBEVENT_SOURCE)
+	$(DOWNLOAD) https://github.com/downloads/libevent/libevent/$(LIBEVENT_SOURCE)
 
 $(D)/libevent: $(D)/bootstrap $(ARCHIVE)/$(LIBEVENT_SOURCE)
 	$(START_BUILD)
@@ -1372,7 +1372,7 @@ LIBNFSIDMAP_VER = 0.25
 LIBNFSIDMAP_SOURCE = libnfsidmap-$(LIBNFSIDMAP_VER).tar.gz
 
 $(ARCHIVE)/$(LIBNFSIDMAP_SOURCE):
-	$(WGET) http://www.citi.umich.edu/projects/nfsv4/linux/libnfsidmap/$(LIBNFSIDMAP_SOURCE)
+	$(DOWNLOAD) http://www.citi.umich.edu/projects/nfsv4/linux/libnfsidmap/$(LIBNFSIDMAP_SOURCE)
 
 $(D)/libnfsidmap: $(D)/bootstrap $(ARCHIVE)/$(LIBNFSIDMAP_SOURCE)
 	$(START_BUILD)
@@ -1399,7 +1399,7 @@ VSFTPD_PATCH = vsftpd-$(VSFTPD_VER).patch
 VSFTPD_PATCH += vsftpd-$(VSFTPD_VER)-find_libs.patch
 
 $(ARCHIVE)/$(VSFTPD_SOURCE):
-	$(WGET) https://security.appspot.com/downloads/$(VSFTPD_SOURCE)
+	$(DOWNLOAD) https://security.appspot.com/downloads/$(VSFTPD_SOURCE)
 
 $(D)/vsftpd: $(D)/bootstrap $(D)/openssl $(ARCHIVE)/$(VSFTPD_SOURCE)
 	$(START_BUILD)
@@ -1422,7 +1422,7 @@ PROCPS_NG_VER = 3.3.12
 PROCPS_NG_SOURCE = procps-ng-$(PROCPS_NG_VER).tar.xz
 
 $(ARCHIVE)/$(PROCPS_NG_SOURCE):
-	$(WGET) http://sourceforge.net/projects/procps-ng/files/Production/$(PROCPS_NG_SOURCE)
+	$(DOWNLOAD) http://sourceforge.net/projects/procps-ng/files/Production/$(PROCPS_NG_SOURCE)
 
 $(D)/procps_ng: $(D)/bootstrap $(D)/ncurses $(ARCHIVE)/$(PROCPS_NG_SOURCE)
 	$(START_BUILD)
@@ -1450,7 +1450,7 @@ HTOP_SOURCE = htop-$(HTOP_VER).tar.gz
 HTOP_PATCH = htop-$(HTOP_VER).patch
 
 $(ARCHIVE)/$(HTOP_SOURCE):
-	$(WGET) http://hisham.hm/htop/releases/$(HTOP_VER)/$(HTOP_SOURCE)
+	$(DOWNLOAD) http://hisham.hm/htop/releases/$(HTOP_VER)/$(HTOP_SOURCE)
 
 $(D)/htop: $(D)/bootstrap $(D)/ncurses $(ARCHIVE)/$(HTOP_SOURCE)
 	$(START_BUILD)
@@ -1482,7 +1482,7 @@ ETHTOOL_VER = 4.19
 ETHTOOL_SOURCE = ethtool-$(ETHTOOL_VER).tar.xz
 
 $(ARCHIVE)/$(ETHTOOL_SOURCE):
-	$(WGET) https://www.kernel.org/pub/software/network/ethtool/$(ETHTOOL_SOURCE)
+	$(DOWNLOAD) https://www.kernel.org/pub/software/network/ethtool/$(ETHTOOL_SOURCE)
 
 $(D)/ethtool: $(D)/bootstrap $(ARCHIVE)/$(ETHTOOL_SOURCE)
 	$(START_BUILD)
@@ -1522,7 +1522,7 @@ SAMBA_INSTALL = \
 endif
 
 $(ARCHIVE)/$(SAMBA_SOURCE):
-	$(WGET) https://ftp.samba.org/pub/samba/stable/$(SAMBA_SOURCE)
+	$(DOWNLOAD) https://ftp.samba.org/pub/samba/stable/$(SAMBA_SOURCE)
 
 $(D)/samba: $(D)/bootstrap $(ARCHIVE)/$(SAMBA_SOURCE)
 	$(START_BUILD)
@@ -1637,7 +1637,7 @@ NTP_SOURCE = ntp-$(NTP_VER).tar.gz
 NTP_PATCH = ntp-$(NTP_VER).patch
 
 $(ARCHIVE)/$(NTP_SOURCE):
-	$(WGET) https://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-4.2/$(NTP_SOURCE)
+	$(DOWNLOAD) https://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-4.2/$(NTP_SOURCE)
 
 $(D)/ntp: $(D)/bootstrap $(ARCHIVE)/$(NTP_SOURCE)
 	$(START_BUILD)
@@ -1669,7 +1669,7 @@ WIRELESS_TOOLS_SOURCE = wireless_tools.$(WIRELESS_TOOLS_VER).tar.gz
 WIRELESS_TOOLS_PATCH = wireless-tools.$(WIRELESS_TOOLS_VER).patch
 
 $(ARCHIVE)/$(WIRELESS_TOOLS_SOURCE):
-	$(WGET) http://www.hpl.hp.com/personal/Jean_Tourrilhes/Linux/$(WIRELESS_TOOLS_SOURCE)
+	$(DOWNLOAD) http://www.hpl.hp.com/personal/Jean_Tourrilhes/Linux/$(WIRELESS_TOOLS_SOURCE)
 
 $(D)/wireless_tools: $(D)/bootstrap $(ARCHIVE)/$(WIRELESS_TOOLS_SOURCE)
 	$(START_BUILD)
@@ -1689,7 +1689,7 @@ LIBNL_VER = 3.2.25
 LIBNL_SOURCE = libnl-$(LIBNL_VER).tar.gz
 
 $(ARCHIVE)/$(LIBNL_SOURCE):
-	$(WGET) https://www.infradead.org/~tgr/libnl/files/$(LIBNL_SOURCE)
+	$(DOWNLOAD) https://www.infradead.org/~tgr/libnl/files/$(LIBNL_SOURCE)
 
 $(D)/libnl: $(D)/bootstrap $(D)/openssl $(ARCHIVE)/$(LIBNL_SOURCE)
 	$(START_BUILD)
@@ -1725,7 +1725,7 @@ WPA_SUPPLICANT_VER = 0.7.3
 WPA_SUPPLICANT_SOURCE = wpa_supplicant-$(WPA_SUPPLICANT_VER).tar.gz
 
 $(ARCHIVE)/$(WPA_SUPPLICANT_SOURCE):
-	$(WGET) https://w1.fi/releases/$(WPA_SUPPLICANT_SOURCE)
+	$(DOWNLOAD) https://w1.fi/releases/$(WPA_SUPPLICANT_SOURCE)
 
 $(D)/wpa_supplicant: $(D)/bootstrap $(D)/openssl $(D)/wireless_tools $(ARCHIVE)/$(WPA_SUPPLICANT_SOURCE)
 	$(START_BUILD)
@@ -1809,8 +1809,8 @@ OPENVPN_VER = 2.4.7
 OPENVPN_SOURCE = openvpn-$(OPENVPN_VER).tar.xz
 
 $(ARCHIVE)/$(OPENVPN_SOURCE):
-	$(WGET) http://swupdate.openvpn.org/community/releases/$(OPENVPN_SOURCE) || \
-	$(WGET) http://build.openvpn.net/downloads/releases/$(OPENVPN_SOURCE)
+	$(DOWNLOAD) http://swupdate.openvpn.org/community/releases/$(OPENVPN_SOURCE) || \
+	$(DOWNLOAD) http://build.openvpn.net/downloads/releases/$(OPENVPN_SOURCE)
 
 $(D)/openvpn: $(D)/bootstrap $(D)/openssl $(D)/lzo $(ARCHIVE)/$(OPENVPN_SOURCE)
 	$(START_BUILD)
@@ -1848,7 +1848,7 @@ OPENSSH_VER = 7.7p1
 OPENSSH_SOURCE = openssh-$(OPENSSH_VER).tar.gz
 
 $(ARCHIVE)/$(OPENSSH_SOURCE):
-	$(WGET) https://artfiles.org/openbsd/OpenSSH/portable/$(OPENSSH_SOURCE)
+	$(DOWNLOAD) https://artfiles.org/openbsd/OpenSSH/portable/$(OPENSSH_SOURCE)
 
 $(D)/openssh: $(D)/bootstrap $(D)/zlib $(D)/openssl $(ARCHIVE)/$(OPENSSH_SOURCE)
 	$(START_BUILD)
@@ -1880,7 +1880,7 @@ DROPBEAR_VER = 2018.76
 DROPBEAR_SOURCE = dropbear-$(DROPBEAR_VER).tar.bz2
 
 $(ARCHIVE)/$(DROPBEAR_SOURCE):
-	$(WGET) http://matt.ucc.asn.au/dropbear/releases/$(DROPBEAR_SOURCE)
+	$(DOWNLOAD) http://matt.ucc.asn.au/dropbear/releases/$(DROPBEAR_SOURCE)
 
 $(D)/dropbear: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/$(DROPBEAR_SOURCE)
 	$(START_BUILD)
@@ -1959,7 +1959,7 @@ USB_MODESWITCH_DATA_SOURCE = usb-modeswitch-data-$(USB_MODESWITCH_DATA_VER).tar.
 USB_MODESWITCH_DATA_PATCH = usb-modeswitch-data-$(USB_MODESWITCH_DATA_VER).patch
 
 $(ARCHIVE)/$(USB_MODESWITCH_DATA_SOURCE):
-	$(WGET) http://www.draisberghof.de/usb_modeswitch/$(USB_MODESWITCH_DATA_SOURCE)
+	$(DOWNLOAD) http://www.draisberghof.de/usb_modeswitch/$(USB_MODESWITCH_DATA_SOURCE)
 
 $(D)/usb_modeswitch_data: $(D)/bootstrap $(ARCHIVE)/$(USB_MODESWITCH_DATA_SOURCE)
 	$(START_BUILD)
@@ -1980,7 +1980,7 @@ USB_MODESWITCH_SOURCE = usb-modeswitch-$(USB_MODESWITCH_VER).tar.bz2
 USB_MODESWITCH_PATCH = usb-modeswitch-$(USB_MODESWITCH_VER).patch
 
 $(ARCHIVE)/$(USB_MODESWITCH_SOURCE):
-	$(WGET) http://www.draisberghof.de/usb_modeswitch/$(USB_MODESWITCH_SOURCE)
+	$(DOWNLOAD) http://www.draisberghof.de/usb_modeswitch/$(USB_MODESWITCH_SOURCE)
 
 $(D)/usb_modeswitch: $(D)/bootstrap $(D)/libusb $(D)/usb_modeswitch_data $(ARCHIVE)/$(USB_MODESWITCH_SOURCE)
 	$(START_BUILD)
@@ -2050,7 +2050,7 @@ IOZONE_SOURCE = iozone3_$(IOZONE_VER).tar
 IOZONE_PATCH =
 
 $(ARCHIVE)/$(IOZONE_SOURCE):
-	$(WGET) http://www.iozone.org/src/current/$(IOZONE_SOURCE)
+	$(DOWNLOAD) http://www.iozone.org/src/current/$(IOZONE_SOURCE)
 
 $(D)/iozone3: $(D)/bootstrap $(ARCHIVE)/$(IOZONE_SOURCE)
 	$(START_BUILD)

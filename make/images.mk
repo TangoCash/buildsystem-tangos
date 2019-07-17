@@ -386,13 +386,13 @@ HD60_RECOVERY_DATE = 20190417
 HD60_RECOVERY_SRC = $(KERNEL_TYPE)-recovery-$(HD60_RECOVERY_DATE).zip
 
 $(ARCHIVE)/$(HD60_BOOTARGS_SRC):
-	$(WGET) http://downloads.mutant-digital.net/$(KERNEL_TYPE)/$(HD60_BOOTARGS_SRC)
+	$(DOWNLOAD) http://downloads.mutant-digital.net/$(KERNEL_TYPE)/$(HD60_BOOTARGS_SRC)
 
 $(ARCHIVE)/$(HD60_PARTITONS_SRC):
-	$(WGET) http://downloads.mutant-digital.net/$(KERNEL_TYPE)/$(HD60_PARTITONS_SRC)
+	$(DOWNLOAD) http://downloads.mutant-digital.net/$(KERNEL_TYPE)/$(HD60_PARTITONS_SRC)
 
 $(ARCHIVE)/$(HD60_RECOVERY_SRC):
-	$(WGET) http://downloads.mutant-digital.net/$(KERNEL_TYPE)/$(HD60_RECOVERY_SRC)
+	$(DOWNLOAD) http://downloads.mutant-digital.net/$(KERNEL_TYPE)/$(HD60_RECOVERY_SRC)
 
 flash-image-hd60-multi-disk: $(ARCHIVE)/$(HD60_BOOTARGS_SRC) $(ARCHIVE)/$(HD60_PARTITONS_SRC) $(ARCHIVE)/$(HD60_RECOVERY_SRC)
 	rm -rf $(HD60_BUILD_TMP) || true

@@ -12,13 +12,13 @@ EXTRA_LIBGLES_SRC = $(KERNEL_TYPE)-v3ddriver-$(EXTRA_LIBGLES_DATE).zip
 EXTRA_LIBGLES_HEADERS = hd-v3ddriver-headers.tar.gz
 
 $(ARCHIVE)/$(DRIVER_SRC):
-	$(WGET) http://source.mynonpublic.com/gfutures/$(DRIVER_SRC)
+	$(DOWNLOAD) http://source.mynonpublic.com/gfutures/$(DRIVER_SRC)
 
 $(ARCHIVE)/$(EXTRA_LIBGLES_SRC):
-	$(WGET) http://downloads.mutant-digital.net/v3ddriver/$(EXTRA_LIBGLES_SRC)
+	$(DOWNLOAD) http://downloads.mutant-digital.net/v3ddriver/$(EXTRA_LIBGLES_SRC)
 
 $(ARCHIVE)/$(EXTRA_LIBGLES_HEADERS):
-	$(WGET) http://downloads.mutant-digital.net/v3ddriver/$(EXTRA_LIBGLES_HEADERS)
+	$(DOWNLOAD) http://downloads.mutant-digital.net/v3ddriver/$(EXTRA_LIBGLES_HEADERS)
 endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd60))
 DRIVER_DATE = 20190319
@@ -43,16 +43,16 @@ EXTRA_MALI_MODULE_SRC = $(EXTRA_MALI_MODULE_VER).tgz
 EXTRA_MALI_MODULE_PATCH = 0001-hi3798mv200-support.patch
 
 $(ARCHIVE)/$(DRIVER_SRC):
-	$(WGET) http://downloads.mutant-digital.net/$(KERNEL_TYPE)/$(DRIVER_SRC)
+	$(DOWNLOAD) http://downloads.mutant-digital.net/$(KERNEL_TYPE)/$(DRIVER_SRC)
 
 $(ARCHIVE)/$(EXTRA_PLAYERLIB_SRC):
-	$(WGET) http://downloads.mutant-digital.net/$(KERNEL_TYPE)/$(EXTRA_PLAYERLIB_SRC)
+	$(DOWNLOAD) http://downloads.mutant-digital.net/$(KERNEL_TYPE)/$(EXTRA_PLAYERLIB_SRC)
 
 $(ARCHIVE)/$(EXTRA_LIBGLES_SRC):
-	$(WGET) http://downloads.mutant-digital.net/$(KERNEL_TYPE)/$(EXTRA_LIBGLES_SRC)
+	$(DOWNLOAD) http://downloads.mutant-digital.net/$(KERNEL_TYPE)/$(EXTRA_LIBGLES_SRC)
 
 $(ARCHIVE)/$(EXTRA_MALI_MODULE_SRC):
-	$(WGET) https://developer.arm.com/-/media/Files/downloads/mali-drivers/kernel/mali-utgard-gpu/$(EXTRA_MALI_MODULE_SRC);name=driver
+	$(DOWNLOAD) https://developer.arm.com/-/media/Files/downloads/mali-drivers/kernel/mali-utgard-gpu/$(EXTRA_MALI_MODULE_SRC);name=driver
 
 endif
 
@@ -63,7 +63,7 @@ DRIVER_REV = r0
 DRIVER_SRC = vuplus-dvb-proxy-$(KERNEL_TYPE)-$(DRIVER_VER)-$(DRIVER_DATE).$(DRIVER_REV).tar.gz
 
 $(ARCHIVE)/$(DRIVER_SRC):
-	$(WGET) http://archive.vuplus.com/download/build_support/vuplus/$(DRIVER_SRC)
+	$(DOWNLOAD) http://archive.vuplus.com/download/build_support/vuplus/$(DRIVER_SRC)
 endif
 
 driver-clean:
@@ -201,7 +201,7 @@ endif
 UTIL_SRC = platform-util-$(KERNEL_TYPE)-$(UTIL_VER)-$(UTIL_DATE).$(UTIL_REV).tar.gz
 
 $(ARCHIVE)/$(UTIL_SRC):
-	$(WGET) http://archive.vuplus.com/download/build_support/vuplus/$(UTIL_SRC)
+	$(DOWNLOAD) http://archive.vuplus.com/download/build_support/vuplus/$(UTIL_SRC)
 
 $(D)/platform_util: $(D)/bootstrap $(ARCHIVE)/$(UTIL_SRC)
 	$(START_BUILD)
@@ -226,7 +226,7 @@ endif
 GLES_SRC = libgles-$(KERNEL_TYPE)-$(GLES_VER)-$(GLES_DATE).$(GLES_REV).tar.gz
 
 $(ARCHIVE)/$(GLES_SRC):
-	$(WGET) http://archive.vuplus.com/download/build_support/vuplus/$(GLES_SRC)
+	$(DOWNLOAD) http://archive.vuplus.com/download/build_support/vuplus/$(GLES_SRC)
 
 $(D)/libgles: $(D)/bootstrap $(ARCHIVE)/$(GLES_SRC)
 	$(START_BUILD)
@@ -250,7 +250,7 @@ endif
 INITRD_SRC = vmlinuz-initrd_$(KERNEL_TYPE)_$(INITRD_DATE).tar.gz
 
 $(ARCHIVE)/$(INITRD_SRC):
-	$(WGET) http://archive.vuplus.com/download/kernel/$(INITRD_SRC)
+	$(DOWNLOAD) http://archive.vuplus.com/download/kernel/$(INITRD_SRC)
 
 $(D)/vmlinuz_initrd: $(D)/bootstrap $(ARCHIVE)/$(INITRD_SRC)
 	$(START_BUILD)

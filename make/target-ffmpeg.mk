@@ -40,7 +40,7 @@ endif
 FFMPRG_EXTRA_CFLAGS  = -I$(TARGET_DIR)/usr/include/libxml2
 
 $(ARCHIVE)/$(FFMPEG_SOURCE):
-	$(WGET) http://www.ffmpeg.org/releases/$(FFMPEG_SOURCE)
+	$(DOWNLOAD) http://www.ffmpeg.org/releases/$(FFMPEG_SOURCE)
 
 $(D)/ffmpeg: $(D)/bootstrap $(D)/openssl $(D)/bzip2 $(D)/freetype $(D)/alsa_lib $(D)/libass $(D)/libxml2 $(D)/libroxml $(FFMPEG_DEPS) $(ARCHIVE)/$(FFMPEG_SOURCE)
 	$(START_BUILD)
@@ -379,7 +379,7 @@ FFMPEG_CONF_OPTS =
 FFMPRG_EXTRA_CFLAGS =
 
 $(ARCHIVE)/$(FFMPEG_SOURCE):
-	$(WGET) http://www.ffmpeg.org/releases/$(FFMPEG_SOURCE)
+	$(DOWNLOAD) http://www.ffmpeg.org/releases/$(FFMPEG_SOURCE)
 
 $(D)/ffmpeg: $(D)/bootstrap $(D)/openssl $(D)/bzip2 $(D)/libass $(D)/libroxml $(FFMPEG_DEPS) $(ARCHIVE)/$(FFMPEG_SOURCE)
 	$(START_BUILD)

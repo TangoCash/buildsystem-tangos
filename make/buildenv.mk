@@ -204,12 +204,12 @@ ifeq ($(VERBOSE),1)
 SILENT_PATCH          =
 SILENT_OPT            =
 SILENT                =
-WGET_SILENT_OPT       =
+DOWNLOAD_SILENT_OPT   =
 else
 SILENT_PATCH          = -s
 SILENT_OPT           := >/dev/null 2>&1
 SILENT                = @
-WGET_SILENT_OPT       = -o /dev/null
+DOWNLOAD_SILENT_OPT   = -o /dev/null
 MAKEFLAGS            += --silent
 endif
 
@@ -230,8 +230,8 @@ REWRITE_PKGCONF       = sed -i "s,^prefix=.*,prefix='$(TARGET_DIR)/usr',"
 UNTAR                 = $(SILENT)tar -C $(BUILD_TMP) -xf $(ARCHIVE)
 REMOVE                = $(SILENT)rm -rf $(BUILD_TMP)
 
-# wget tarballs into archive directory
-WGET = wget --progress=bar:force --no-check-certificate $(WGET_SILENT_OPT) -t6 -T20 -c -P $(ARCHIVE)
+# download tarballs into archive directory
+DOWNLOAD = wget --progress=bar:force --no-check-certificate $(DOWNLOAD_SILENT_OPT) -t6 -T20 -c -P $(ARCHIVE)
 
 CD                    = set -e; cd
 CHDIR                 = $(CD) $(BUILD_TMP)
