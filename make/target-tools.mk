@@ -1084,7 +1084,7 @@ SHAIRPLAY_URL = https://github.com/juhovh/shairplay.git
 SHAIRPLAY_PATCH = shairplay-howl.diff
 
 $(ARCHIVE)/$(SHAIRPLAY_SOURCE):
-	$(SCRIPTS_DIR)/get-git-archive.sh $(SHAIRPLAY_URL) $(SHAIRPLAY_VER) $(notdir $@) $(ARCHIVE)
+	$(HELPERS_DIR)/get-git-archive.sh $(SHAIRPLAY_URL) $(SHAIRPLAY_VER) $(notdir $@) $(ARCHIVE)
 
 $(D)/shairplay: libao $(D)/howl $(ARCHIVE)/$(SHAIRPLAY_SOURCE)
 	$(START_BUILD)
@@ -1757,7 +1757,7 @@ DVBSNOOP_SOURCE = dvbsnoop-git-$(DVBSNOOP_VER).tar.bz2
 DVBSNOOP_URL = https://github.com/Duckbox-Developers/dvbsnoop.git
 
 $(ARCHIVE)/$(DVBSNOOP_SOURCE):
-	$(SCRIPTS_DIR)/get-git-archive.sh $(DVBSNOOP_URL) $(DVBSNOOP_VER) $(notdir $@) $(ARCHIVE)
+	$(HELPERS_DIR)/get-git-archive.sh $(DVBSNOOP_URL) $(DVBSNOOP_VER) $(notdir $@) $(ARCHIVE)
 
 ifeq ($(BOXARCH), sh4)
 DVBSNOOP_CONF_OPTS = --with-dvbincludes=$(KERNEL_DIR)/include
@@ -1788,7 +1788,7 @@ UDPXY_URL = https://github.com/pcherenkov/udpxy.git
 UDPXY_PATCH = udpxy-git-$(UDPXY_VER).patch
 
 $(ARCHIVE)/$(UDPXY_SOURCE):
-	$(SCRIPTS_DIR)/get-git-archive.sh $(UDPXY_URL) $(UDPXY_VER) $(notdir $@) $(ARCHIVE)
+	$(HELPERS_DIR)/get-git-archive.sh $(UDPXY_URL) $(UDPXY_VER) $(notdir $@) $(ARCHIVE)
 
 $(D)/udpxy: $(D)/bootstrap $(ARCHIVE)/$(UDPXY_SOURCE)
 	$(START_BUILD)
@@ -1912,7 +1912,7 @@ DROPBEARMULTI_SOURCE = dropbearmulti-git-$(DROPBEARMULTI_VER).tar.bz2
 DROPBEARMULTI_URL = https://github.com/mkj/dropbear.git
 
 $(ARCHIVE)/$(DROPBEARMULTI_SOURCE):
-	$(SCRIPTS_DIR)/get-git-archive.sh $(DROPBEARMULTI_URL) $(DROPBEARMULTI_VER) $(notdir $@) $(ARCHIVE)
+	$(HELPERS_DIR)/get-git-archive.sh $(DROPBEARMULTI_URL) $(DROPBEARMULTI_VER) $(notdir $@) $(ARCHIVE)
 
 $(D)/dropbearmulti: $(D)/bootstrap $(ARCHIVE)/$(DROPBEARMULTI_SOURCE)
 	$(START_BUILD)
@@ -2075,7 +2075,7 @@ MUPEN64CORE_SOURCE = mupen64core-git-$(MUPEN64CORE_VER).tar.bz2
 MUPEN64CORE_URL = https://github.com/mupen64plus/mupen64plus-core.git
 
 $(ARCHIVE)/$(MUPEN64CORE_SOURCE):
-	$(SCRIPTS_DIR)/get-git-archive.sh $(MUPEN64CORE_URL) $(MUPEN64CORE_VER) $(notdir $@) $(ARCHIVE)
+	$(HELPERS_DIR)/get-git-archive.sh $(MUPEN64CORE_URL) $(MUPEN64CORE_VER) $(notdir $@) $(ARCHIVE)
 
 $(D)/mupen64core: $(D)/bootstrap $(ARCHIVE)/$(MUPEN64CORE_SOURCE) $(D)/libsdl2 $(D)/libpng $(D)/freetype $(D)/zlib
 	$(START_BUILD)
@@ -2101,7 +2101,7 @@ MUPEN64CMD_SOURCE = mupen64cmd-git-$(MUPEN64CMD_VER).tar.bz2
 MUPEN64CMD_URL = https://github.com/mupen64plus/mupen64plus-ui-console.git
 
 $(ARCHIVE)/$(MUPEN64CMD_SOURCE):
-	$(SCRIPTS_DIR)/get-git-archive.sh $(MUPEN64CMD_URL) $(MUPEN64CMD_VER) $(notdir $@) $(ARCHIVE)
+	$(HELPERS_DIR)/get-git-archive.sh $(MUPEN64CMD_URL) $(MUPEN64CMD_VER) $(notdir $@) $(ARCHIVE)
 
 $(D)/mupen64cmd: $(D)/bootstrap $(ARCHIVE)/$(MUPEN64CMD_SOURCE) $(D)/mupen64core
 	$(START_BUILD)
@@ -2131,7 +2131,7 @@ MUPEN64VID_SOURCE = mupen64vid-git-$(MUPEN64VID_VER).tar.bz2
 MUPEN64VID_URL = https://github.com/mupen64plus/mupen64plus-video-rice.git
 
 $(ARCHIVE)/$(MUPEN64VID_SOURCE):
-	$(SCRIPTS_DIR)/get-git-archive.sh $(MUPEN64VID_URL) $(MUPEN64VID_VER) $(notdir $@) $(ARCHIVE)
+	$(HELPERS_DIR)/get-git-archive.sh $(MUPEN64VID_URL) $(MUPEN64VID_VER) $(notdir $@) $(ARCHIVE)
 
 $(D)/mupen64vid: $(D)/bootstrap $(ARCHIVE)/$(MUPEN64VID_SOURCE) $(D)/mupen64core
 	$(START_BUILD)
@@ -2161,7 +2161,7 @@ MUPEN64AUD_SOURCE = mupen64aud-git-$(MUPEN64AUD_VER).tar.bz2
 MUPEN64AUD_URL = https://github.com/mupen64plus/mupen64plus-audio-sdl.git
 
 $(ARCHIVE)/$(MUPEN64AUD_SOURCE):
-	$(SCRIPTS_DIR)/get-git-archive.sh $(MUPEN64AUD_URL) $(MUPEN64AUD_VER) $(notdir $@) $(ARCHIVE)
+	$(HELPERS_DIR)/get-git-archive.sh $(MUPEN64AUD_URL) $(MUPEN64AUD_VER) $(notdir $@) $(ARCHIVE)
 
 $(D)/mupen64aud: $(D)/bootstrap $(ARCHIVE)/$(MUPEN64AUD_SOURCE) $(D)/mupen64core
 	$(START_BUILD)
@@ -2192,7 +2192,7 @@ MUPEN64INP_SOURCE = mupen64inp-git-$(MUPEN64INP_VER).tar.bz2
 MUPEN64INP_URL = https://github.com/mupen64plus/mupen64plus-input-sdl.git
 
 $(ARCHIVE)/$(MUPEN64INP_SOURCE):
-	$(SCRIPTS_DIR)/get-git-archive.sh $(MUPEN64INP_URL) $(MUPEN64INP_VER) $(notdir $@) $(ARCHIVE)
+	$(HELPERS_DIR)/get-git-archive.sh $(MUPEN64INP_URL) $(MUPEN64INP_VER) $(notdir $@) $(ARCHIVE)
 
 $(D)/mupen64inp: $(D)/bootstrap $(ARCHIVE)/$(MUPEN64INP_SOURCE) $(D)/mupen64core
 	$(START_BUILD)

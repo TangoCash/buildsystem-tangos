@@ -95,7 +95,7 @@ endif
 CUSTOM_DIR            = $(BASE_DIR)/custom
 OWN_BUILD             = $(BASE_DIR)/own_build
 PATCHES               = $(BASE_DIR)/patches
-SCRIPTS_DIR           = $(BASE_DIR)/scripts
+HELPERS_DIR           = $(BASE_DIR)/helpers
 SKEL_ROOT             = $(BASE_DIR)/root
 D                     = $(BASE_DIR)/.deps
 

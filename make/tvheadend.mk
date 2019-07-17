@@ -14,7 +14,7 @@ TVHEADEND_SOURCE = tvheadend-git-$(TVHEADEND_VER).tar.bz2
 TVHEADEND_URL = https://github.com/tvheadend/tvheadend.git
 
 $(ARCHIVE)/$(TVHEADEND_SOURCE):
-	$(SCRIPTS_DIR)/get-git-archive.sh $(TVHEADEND_URL) $(TVHEADEND_VER) $(notdir $@) $(ARCHIVE)
+	$(HELPERS_DIR)/get-git-archive.sh $(TVHEADEND_URL) $(TVHEADEND_VER) $(notdir $@) $(ARCHIVE)
 
 $(D)/tvheadend.do_prepare: $(ARCHIVE)/$(TVHEADEND_SOURCE) $(TVHEADEND_DEPS)
 	$(START_BUILD)

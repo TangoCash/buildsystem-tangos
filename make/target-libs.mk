@@ -173,7 +173,7 @@ CORTEX_STRINGS_SOURCE = cortex-strings-git-$(CORTEX_STRINGS_VER).tar.bz2
 CORTEX_STRINGS_URL = http://git.linaro.org/git-ro/toolchain/cortex-strings.git
 
 $(ARCHIVE)/$(CORTEX_STRINGS_SOURCE):
-	$(SCRIPTS_DIR)/get-git-archive.sh $(CORTEX_STRINGS_URL) $(CORTEX_STRINGS_VER) $(notdir $@) $(ARCHIVE)
+	$(HELPERS_DIR)/get-git-archive.sh $(CORTEX_STRINGS_URL) $(CORTEX_STRINGS_VER) $(notdir $@) $(ARCHIVE)
 
 $(D)/cortex_strings: $(D)/directories $(ARCHIVE)/$(CORTEX_STRINGS_SOURCE)
 	$(START_BUILD)
@@ -1988,7 +1988,7 @@ GRAPHLCD_PATCH += graphlcd-vusolo4k.patch
 endif
 
 $(ARCHIVE)/$(GRAPHLCD_SOURCE):
-	$(SCRIPTS_DIR)/get-git-archive.sh $(GRAPHLCD_URL) $(GRAPHLCD_VER) $(notdir $@) $(ARCHIVE)
+	$(HELPERS_DIR)/get-git-archive.sh $(GRAPHLCD_URL) $(GRAPHLCD_VER) $(notdir $@) $(ARCHIVE)
 
 $(D)/graphlcd: $(D)/bootstrap $(D)/freetype $(D)/libusb $(ARCHIVE)/$(GRAPHLCD_SOURCE)
 	$(START_BUILD)
@@ -2013,7 +2013,7 @@ LIBDPF_URL = https://github.com/Duckbox-Developers/dpf-ax.git
 LIBDPF_PATCH = libdpf-crossbuild.patch
 
 $(ARCHIVE)/$(LIBDPF_SOURCE):
-	$(SCRIPTS_DIR)/get-git-archive.sh $(LIBDPF_URL) $(LIBDPF_VER) $(notdir $@) $(ARCHIVE)
+	$(HELPERS_DIR)/get-git-archive.sh $(LIBDPF_URL) $(LIBDPF_VER) $(notdir $@) $(ARCHIVE)
 
 $(D)/libdpf: $(D)/bootstrap $(D)/libusb_compat $(ARCHIVE)/$(LIBDPF_SOURCE)
 	$(START_BUILD)
@@ -2042,7 +2042,7 @@ LCD4LINUX_DRV = ,VUSOLO4K
 endif
 
 $(ARCHIVE)/$(LCD4LINUX_SOURCE):
-	$(SCRIPTS_DIR)/get-git-archive.sh $(LCD4LINUX_URL) $(LCD4LINUX_VER) $(notdir $@) $(ARCHIVE)
+	$(HELPERS_DIR)/get-git-archive.sh $(LCD4LINUX_URL) $(LCD4LINUX_VER) $(notdir $@) $(ARCHIVE)
 
 $(D)/lcd4linux: $(D)/bootstrap $(D)/libusb_compat $(D)/gd $(D)/libusb $(D)/libdpf $(ARCHIVE)/$(LCD4LINUX_SOURCE)
 	$(START_BUILD)
@@ -2277,7 +2277,7 @@ LIBRTMP_URL = git://github.com/oe-alliance/rtmpdump.git
 LIBRTMP_PATCH = rtmpdump-git-$(LIBRTMP_VER).patch
 
 $(ARCHIVE)/$(LIBRTMP_SOURCE):
-	$(SCRIPTS_DIR)/get-git-archive.sh $(LIBRTMP_URL) $(LIBRTMP_VER) $(notdir $@) $(ARCHIVE)
+	$(HELPERS_DIR)/get-git-archive.sh $(LIBRTMP_URL) $(LIBRTMP_VER) $(notdir $@) $(ARCHIVE)
 
 $(D)/librtmp: $(D)/bootstrap $(D)/zlib $(D)/openssl $(ARCHIVE)/$(LIBRTMP_SOURCE)
 	$(START_BUILD)
@@ -2301,7 +2301,7 @@ LIBDVBSI_URL = git://git.opendreambox.org/git/obi/libdvbsi++.git
 LIBDVBSI_PATCH = libdvbsi-git-$(LIBDVBSI_VER).patch
 
 $(ARCHIVE)/$(LIBDVBSI_SOURCE):
-	$(SCRIPTS_DIR)/get-git-archive.sh $(LIBDVBSI_URL) $(LIBDVBSI_VER) $(notdir $@) $(ARCHIVE)
+	$(HELPERS_DIR)/get-git-archive.sh $(LIBDVBSI_URL) $(LIBDVBSI_VER) $(notdir $@) $(ARCHIVE)
 
 $(D)/libdvbsi: $(D)/bootstrap $(ARCHIVE)/$(LIBDVBSI_SOURCE)
 	$(START_BUILD)

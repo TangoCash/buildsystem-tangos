@@ -180,19 +180,19 @@ HAT_LIBSELINUX_SOURCE = hat-libselinux-git-$(HAT_LIBSELINUX_REV).tar.bz2
 #HAT_BUILD_SOURCE = hat-build-git-$(HAT_BUILD_REV).tar.bz2
 
 $(ARCHIVE)/$(HAT_CORE_SOURCE):
-	$(SCRIPTS_DIR)/get-git-archive.sh $(ANDROID_MIRROR)/platform/system/core $(HAT_CORE_REV) $(notdir $@) $(ARCHIVE)
+	$(HELPERS_DIR)/get-git-archive.sh $(ANDROID_MIRROR)/platform/system/core $(HAT_CORE_REV) $(notdir $@) $(ARCHIVE)
 
 $(ARCHIVE)/$(HAT_EXTRAS_SOURCE):
-	$(SCRIPTS_DIR)/get-git-archive.sh $(ANDROID_MIRROR)/platform/system/extras $(HAT_EXTRAS_REV) $(notdir $@) $(ARCHIVE)
+	$(HELPERS_DIR)/get-git-archive.sh $(ANDROID_MIRROR)/platform/system/extras $(HAT_EXTRAS_REV) $(notdir $@) $(ARCHIVE)
 
 #$(ARCHIVE)/$(HAT_LIBHARDWARE_SOURCE):
-#	$(SCRIPTS_DIR)/get-git-archive.sh $(ANDROID_MIRROR)/platform/hardware/libhardware $(HAT_LIBHARDWARE_REV) $(notdir $@) $(ARCHIVE)
+#	$(HELPERS_DIR)/get-git-archive.sh $(ANDROID_MIRROR)/platform/hardware/libhardware $(HAT_LIBHARDWARE_REV) $(notdir $@) $(ARCHIVE)
 
 $(ARCHIVE)/$(HAT_LIBSELINUX_SOURCE):
-	$(SCRIPTS_DIR)/get-git-archive.sh $(ANDROID_MIRROR)/platform/external/libselinux $(HAT_LIBSELINUX_REV) $(notdir $@) $(ARCHIVE)
+	$(HELPERS_DIR)/get-git-archive.sh $(ANDROID_MIRROR)/platform/external/libselinux $(HAT_LIBSELINUX_REV) $(notdir $@) $(ARCHIVE)
 
 #$(ARCHIVE)/$(HAT_BUILD_SOURCE):
-#	$(SCRIPTS_DIR)/get-git-archive.sh $(ANDROID_MIRROR)/platform/build $(HAT_BUILD_REV) $(notdir $@) $(ARCHIVE)
+#	$(HELPERS_DIR)/get-git-archive.sh $(ANDROID_MIRROR)/platform/build $(HAT_BUILD_REV) $(notdir $@) $(ARCHIVE)
 
 $(D)/host_atools: $(ARCHIVE)/$(HAT_CORE_SOURCE) $(ARCHIVE)/$(HAT_EXTRAS_SOURCE) $(ARCHIVE)/$(HAT_LIBHARDWARE_SOURCE) $(ARCHIVE)/$(HAT_LIBSELINUX_SOURCE) $(ARCHIVE)/$(HAT_BUILD_SOURCE)
 	$(START_BUILD)
