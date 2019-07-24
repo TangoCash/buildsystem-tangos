@@ -5,7 +5,7 @@
 ifeq ($(BOXARCH), $(filter $(BOXARCH), arm mips))
 
 ifeq ($(FFMPEG_EXPERIMENTAL), 1)
-FFMPEG_VER = 4.1.3
+FFMPEG_VER = 4.1.4
 else
 FFMPEG_VER = 4.0.3
 endif
