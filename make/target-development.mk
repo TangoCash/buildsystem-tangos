@@ -85,7 +85,7 @@ $(D)/gdb: $(D)/bootstrap $(D)/zlib $(D)/ncurses $(ARCHIVE)/$(GDB_SOURCE)
 			--with-curses \
 			--with-zlib \
 			--enable-static \
-			--with-system-gdbinit=$(TARGET_SHARE_DIR)/gdb/gdbinit \
+			--with-system-gdbinit=/usr/share/gdb/gdbinit \
 		; \
 		$(MAKE) all-gdb; \
 		$(MAKE) install-gdb DESTDIR=$(TARGET_DIR)
