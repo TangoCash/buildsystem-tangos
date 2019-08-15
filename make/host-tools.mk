@@ -167,19 +167,11 @@ $(D)/host_resize2fs: $(D)/directories $(ARCHIVE)/$(HOST_E2FSPROGS_SOURCE)
 #
 # host-gdb
 #
-HOST_GDB_VER    = 8.1.1
-HOST_GDB        = gdb-$(HOST_GDB_VER)
-HOST_GDB_SOURCE = gdb-$(HOST_GDB_VER).tar.xz
-HOST_GDB_URL    = https://sourceware.org/pub/gdb/releases
-
-$(ARCHIVE)/$(HOST_GDB_SOURCE):
-	$(DOWNLOAD) $(HOST_GDB_URL)/$(HOST_GDB_SOURCE)
-
-$(D)/host-gdb: $(D)/bootstrap $(D)/zlib $(D)/ncurses $(ARCHIVE)/$(HOST_GDB_SOURCE)
+$(D)/host-gdb: $(D)/bootstrap $(D)/zlib $(D)/ncurses $(ARCHIVE)/$(GDB_SOURCE)
 	$(START_BUILD)
-	$(REMOVE)/$(HOST_GDB)
-	$(UNTAR)/$(HOST_GDB_SOURCE)
-	$(CHDIR)/$(HOST_GDB); \
+	$(REMOVE)/$(GDB)
+	$(UNTAR)/$(GDB_SOURCE)
+	$(CHDIR)/$(GDB); \
 		./configure $(SILENT_OPT) \
 			--host=$(BUILD) \
 			--build=$(BUILD) \
@@ -196,8 +188,8 @@ $(D)/host-gdb: $(D)/bootstrap $(D)/zlib $(D)/ncurses $(ARCHIVE)/$(HOST_GDB_SOURC
 		; \
 		$(MAKE) all-gdb; \
 		$(MAKE) install-gdb
-		echo "handle SIG32 nostop" > $(HOST_DIR)/share/gdb/gdbinit; \
-	$(REMOVE)/$(HOST_GDB)
+		echo "handle SIG32 nostop" > $(HOST_DIR)/share/gdb/gdbinit
+	$(REMOVE)/$(GDB)
 	$(TOUCH)
 
 #
