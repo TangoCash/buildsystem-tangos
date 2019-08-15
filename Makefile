@@ -105,6 +105,7 @@ help:
 
 # -----------------------------------------------------------------------------
 
+include make/target-development.mk
 include make/target-ffmpeg.mk
 include make/target-gstreamer.mk
 include make/target-libs.mk
