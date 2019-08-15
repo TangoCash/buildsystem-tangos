@@ -91,6 +91,6 @@ $(D)/gdb: $(D)/bootstrap $(D)/zlib $(D)/ncurses $(ARCHIVE)/$(GDB_SOURCE)
 		$(MAKE) install-gdb DESTDIR=$(TARGET_DIR)
 	rm -rf $(addprefix $(TARGET_SHARE_DIR)/gdb/,system-gdbinit)
 	find $(TARGET_SHARE_DIR)/gdb/syscalls -type f -not -name 'arm-linux.xml' -not -name 'gdb-syscalls.dtd' -print0 | xargs -0 rm --
-	echo "handle SIG32 nostop" > $(TARGET_SHARE_DIR)/gdb/gdbinit; \
+	echo "handle SIG32 nostop" > $(TARGET_SHARE_DIR)/gdb/gdbinit
 	$(REMOVE)/$(GDB)
 	$(TOUCH)
