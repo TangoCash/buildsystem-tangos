@@ -856,6 +856,12 @@ endif
 		cp $(TARGET_DIR)/usr/share/alsa/pcm/dmix.conf $(RELEASE_DIR)/usr/share/alsa/pcm/; \
 	fi
 #
+# gdb
+#
+	if [ -e $(TARGET_DIR)/usr/bin/gdb ]; then \
+		cp -aR $(TARGET_DIR)/usr/share/gdb $(RELEASE_DIR)/usr/share; \
+	fi
+#
 # tvheadend
 #
 	if [ -e $(TARGET_DIR)/usr/bin/tvheadend ]; then \

@@ -165,6 +165,42 @@ $(D)/host_resize2fs: $(D)/directories $(ARCHIVE)/$(HOST_E2FSPROGS_SOURCE)
 	$(TOUCH)
 
 #
+# host-gdb
+#
+HOST_GDB_VER    = 8.1.1
+HOST_GDB        = gdb-$(HOST_GDB_VER)
+HOST_GDB_SOURCE = gdb-$(HOST_GDB_VER).tar.xz
+HOST_GDB_URL    = https://sourceware.org/pub/gdb/releases
+
+$(ARCHIVE)/$(HOST_GDB_SOURCE):
+	$(DOWNLOAD) $(HOST_GDB_URL)/$(HOST_GDB_SOURCE)
+
+$(D)/host-gdb: $(D)/bootstrap $(D)/zlib $(D)/ncurses $(ARCHIVE)/$(HOST_GDB_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/$(HOST_GDB)
+	$(UNTAR)/$(HOST_GDB_SOURCE)
+	$(CHDIR)/$(HOST_GDB); \
+		./configure $(SILENT_OPT) \
+			--host=$(BUILD) \
+			--build=$(BUILD) \
+			--target=$(TARGET) \
+			--prefix=$(HOST_DIR) \
+			--mandir=$(TARGET_DIR)/.remove \
+			--infodir=$(TARGET_DIR)/.remove \
+			--disable-binutils \
+			--disable-werror \
+			--with-curses \
+			--with-zlib \
+			--enable-static \
+			--with-system-gdbinit=$(HOST_DIR)/share/gdb/gdbinit \
+		; \
+		$(MAKE) all-gdb; \
+		$(MAKE) install-gdb
+		echo "handle SIG32 nostop" > $(HOST_DIR)/share/gdb/gdbinit; \
+	$(REMOVE)/$(HOST_GDB)
+	$(TOUCH)
+
+#
 # android tools
 #
 ANDROID_MIRROR = https://android.googlesource.com
