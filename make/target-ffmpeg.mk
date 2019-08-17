@@ -4,11 +4,21 @@
 ################################################################################
 ifeq ($(BOXARCH), $(filter $(BOXARCH), arm mips))
 
+FFMPEG_DEPS = $(D)/librtmp
+
 ifeq ($(FFMPEG_EXPERIMENTAL), 1)
-FFMPEG_VER = 4.1.4
+FFMPEG_VER = snapshot
+FFMPEG_SOURCE =
 else
-FFMPEG_VER = 4.0.3
+FFMPEG_VER = 4.2
+FFMPEG_SOURCE = ffmpeg-$(FFMPEG_VER).tar.xz
+FFMPEG_DEPS += $(ARCHIVE)/$(FFMPEG_SOURCE)
+
+$(ARCHIVE)/$(FFMPEG_SOURCE):
+	$(DOWNLOAD) http://www.ffmpeg.org/releases/$(FFMPEG_SOURCE)
+
 endif
+
 FFMPEG_PATCH = ffmpeg-$(FFMPEG_VER)-aac.patch
 FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-allow_to_choose_rtmp_impl_at_runtime.patch
 FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-buffer-size.patch
@@ -17,13 +27,9 @@ FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-fix-hls.patch
 FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-fix_mpegts.patch
 FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-hls_replace_key_uri.patch
 FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-mips64_cpu_detection.patch
-FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-remove_avpriv_request_sample.patch
 FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-corrupt-h264-frames.patch
 FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-FFmpeg-devel-amfenc-Add-support-for-pict_type-field.patch
-FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-mpeg-quarter-sample.patch
-FFMPEG_SOURCE = ffmpeg-$(FFMPEG_VER).tar.xz
 
-FFMPEG_DEPS = $(D)/librtmp
 FFMPEG_CONF_OPTS   = --enable-librtmp
 FFMPEG_CONF_OPTS  += --enable-openssl
 FFMPEG_CONF_OPTS  += --enable-libxml2
@@ -39,13 +45,18 @@ endif
 
 FFMPRG_EXTRA_CFLAGS  = -I$(TARGET_DIR)/usr/include/libxml2
 
-$(ARCHIVE)/$(FFMPEG_SOURCE):
-	$(DOWNLOAD) http://www.ffmpeg.org/releases/$(FFMPEG_SOURCE)
-
-$(D)/ffmpeg: $(D)/bootstrap $(D)/openssl $(D)/bzip2 $(D)/freetype $(D)/alsa_lib $(D)/libass $(D)/libxml2 $(D)/libroxml $(FFMPEG_DEPS) $(ARCHIVE)/$(FFMPEG_SOURCE)
+$(D)/ffmpeg: $(D)/bootstrap $(D)/openssl $(D)/bzip2 $(D)/freetype $(D)/alsa_lib $(D)/libass $(D)/libxml2 $(D)/libroxml $(FFMPEG_DEPS)
 	$(START_BUILD)
 	$(REMOVE)/ffmpeg-$(FFMPEG_VER)
+ifeq ($(FFMPEG_EXPERIMENTAL), 1)
+	set -e; if [ -d $(ARCHIVE)/ffmpeg.git ]; \
+		then cd $(ARCHIVE)/ffmpeg.git; git pull; \
+		else cd $(ARCHIVE); git clone git://git.ffmpeg.org/ffmpeg.git ffmpeg.git; \
+		fi
+	cp -ra $(ARCHIVE)/ffmpeg.git $(BUILD_TMP)/ffmpeg-$(FFMPEG_VER)
+else
 	$(UNTAR)/$(FFMPEG_SOURCE)
+endif
 	$(CHDIR)/ffmpeg-$(FFMPEG_VER); \
 		$(call apply_patches, $(FFMPEG_PATCH)); \
 		./configure $(SILENT_OPT) \
