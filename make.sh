@@ -150,10 +150,10 @@ if [ $BOXARCH == "arm" ]; then
 case $2 in
 	[1-2]) REPLY=$2;;
 	*)	echo -e "\nFFmpeg Version:"
-		echo "   1) standard"
-		echo "   2) experimental"
-		read -p "Select FFmpeg version (1-2)? [2]"
-		REPLY="${REPLY:-2}";;
+		echo "   1) buildsystem standard"
+		echo "   2) ffmpeg git snapshot"
+		read -p "Select FFmpeg version (1-2)? [1]"
+		REPLY="${REPLY:-1}";;
 esac
 
 case "$REPLY" in
@@ -238,7 +238,7 @@ case $4 in
 	[1-2]) REPLY=$4;;
 	*)	echo -e "\nMedia Framework:"
 		echo "   1) libeplayer3"
-		echo "   2) gstreamer"
+		echo "   2) gstreamer (not fully supported)"
 		read -p "Select media framework (1-2)? [1]"
 		REPLY="${REPLY:-1}";;
 esac
