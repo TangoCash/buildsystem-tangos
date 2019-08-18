@@ -3,20 +3,30 @@
 #
 ifeq ($(BUSYBOX_SNAPSHOT), 1)
 BUSYBOX_VER = snapshot
-BB_SNAPSHOT =
+BUSYBOX_SOURCE =
+BUSYBOX_DEPS =
 else
 BUSYBOX_VER = 1.30.1
-BB_SNAPSHOT = -$(BUSYBOX_VER)
-endif
 BUSYBOX_SOURCE = busybox-$(BUSYBOX_VER).tar.bz2
+BUSYBOX_DEPS = $(ARCHIVE)/$(BUSYBOX_SOURCE)
+
+$(ARCHIVE)/$(BUSYBOX_SOURCE):
+	$(DOWNLOAD) https://busybox.net/downloads/$(BUSYBOX_SOURCE)
+
+endif
+
+BUSYBOX = busybox-$(BUSYBOX_VER)
+
 BUSYBOX_PATCH  = busybox-$(BUSYBOX_VER)-nandwrite.patch
 BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-unicode.patch
 BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-extra.patch
 BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-extra2.patch
 BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-flashcp-small-output.patch
+BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-block-telnet-internet.patch
 
-$(ARCHIVE)/$(BUSYBOX_SOURCE):
-	$(DOWNLOAD) https://busybox.net/downloads/$(BUSYBOX_SOURCE)
+ifeq ($(BUSYBOX_SNAPSHOT), 1)
+BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-tar-fix.patch
+endif
 
 ifeq ($(BOXARCH), $(filter $(BOXARCH), arm mips))
 BUSYBOX_CONFIG = busybox-$(BUSYBOX_VER).config_arm
@@ -26,18 +36,26 @@ else
 BUSYBOX_CONFIG = busybox-$(BUSYBOX_VER).config
 endif
 
-$(D)/busybox: $(D)/bootstrap $(ARCHIVE)/$(BUSYBOX_SOURCE) $(PATCHES)/$(BUSYBOX_CONFIG)
+$(D)/busybox: $(D)/bootstrap $(BUSYBOX_DEPS) $(PATCHES)/$(BUSYBOX_CONFIG)
 	$(START_BUILD)
-	$(REMOVE)/busybox$(BB_SNAPSHOT)
+	$(REMOVE)/$(BUSYBOX)
+ifeq ($(BUSYBOX_SNAPSHOT), 1)
+	set -e; if [ -d $(ARCHIVE)/busybox.git ]; \
+		then cd $(ARCHIVE)/busybox.git; git pull; \
+		else cd $(ARCHIVE); git clone git://git.busybox.net/busybox.git busybox.git; \
+		fi
+	cp -ra $(ARCHIVE)/busybox.git $(BUILD_TMP)/$(BUSYBOX)
+else
 	$(UNTAR)/$(BUSYBOX_SOURCE)
-	$(CHDIR)/busybox$(BB_SNAPSHOT); \
+endif
+	$(CHDIR)/$(BUSYBOX); \
 		$(call apply_patches, $(BUSYBOX_PATCH)); \
 		install -m 0644 $(lastword $^) .config; \
 		sed -i -e 's#^CONFIG_PREFIX.*#CONFIG_PREFIX="$(TARGET_DIR)"#' .config; \
 		$(BUILDENV) \
 		$(MAKE) ARCH=$(BOXARCH) CROSS_COMPILE=$(TARGET)- CFLAGS_EXTRA="$(TARGET_CFLAGS)" busybox; \
 		$(MAKE) ARCH=$(BOXARCH) CROSS_COMPILE=$(TARGET)- CFLAGS_EXTRA="$(TARGET_CFLAGS)" CONFIG_PREFIX=$(TARGET_DIR) install-noclobber 
-	$(REMOVE)/busybox$(BB_SNAPSHOT)
+	$(REMOVE)/$(BUSYBOX)
 	$(TOUCH)
 
 #
