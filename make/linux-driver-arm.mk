@@ -24,7 +24,7 @@ ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd60))
 DRIVER_DATE = 20190319
 endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd61))
-DRIVER_DATE = 20181221
+DRIVER_DATE = 20190711
 endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd60 hd61))
 DRIVER_VER = 4.4.35
