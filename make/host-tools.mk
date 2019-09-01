@@ -193,6 +193,37 @@ $(D)/host-gdb: $(D)/bootstrap $(D)/zlib $(D)/ncurses $(ARCHIVE)/$(GDB_SOURCE)
 	$(TOUCH)
 
 #
+# host_opkg
+#
+OPKG_VER = 0.3.3
+OPKG_SOURCE = opkg-$(OPKG_VER).tar.gz
+OPKG_PATCH = opkg-$(OPKG_VER).patch
+OPKG_HOST_PATCH = opkg-$(OPKG_VER).patch
+
+$(ARCHIVE)/$(OPKG_SOURCE):
+	$(DOWNLOAD) https://git.yoctoproject.org/cgit/cgit.cgi/opkg/snapshot/$(OPKG_SOURCE)
+
+$(D)/host_opkg: directories $(D)/host_libarchive $(ARCHIVE)/$(OPKG_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/opkg-$(OPKG_VER)
+	$(UNTAR)/$(OPKG_SOURCE)
+	$(CHDIR)/opkg-$(OPKG_VER); \
+		$(call apply_patches, $(OPKG_HOST_PATCH)); \
+		./autogen.sh $(SILENT_OPT); \
+		CFLAGS="-I$(HOST_DIR)/include" \
+		LDFLAGS="-L$(HOST_DIR)/lib" \
+		./configure $(SILENT_OPT) \
+			PKG_CONFIG_PATH=$(HOST_DIR)/lib/pkgconfig \
+			--prefix= \
+			--disable-curl \
+			--disable-gpg \
+		; \
+		$(MAKE) all; \
+		$(MAKE) install DESTDIR=$(HOST_DIR)
+	$(REMOVE)/opkg-$(OPKG_VER)
+	$(TOUCH)
+
+#
 # android tools
 #
 ANDROID_MIRROR = https://android.googlesource.com
