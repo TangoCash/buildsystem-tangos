@@ -241,7 +241,7 @@ $(D)/neutrino-mp-plugin-channellogos:
 	$(REMOVE)/channellogos
 	set -e; if [ -d $(ARCHIVE)/channellogos.git ]; \
 		then cd $(ARCHIVE)/channellogos.git; git pull; \
-		else cd $(ARCHIVE); git clone https://bitbucket.org/neutrino-images/ni-logo-stuff.git channellogos.git; \
+		else cd $(ARCHIVE); git clone https://github.com/neutrino-images/ni-logo-stuff.git channellogos.git; \
 		fi
 	cp -ra $(ARCHIVE)/channellogos.git $(BUILD_TMP)/channellogos
 	rm -rf $(TARGET_DIR)/usr/share/tuxbox/neutrino/icons/logo
