@@ -419,22 +419,22 @@ flash-image-hd60-multi-disk: $(ARCHIVE)/$(HD60_BOOTARGS_SRC) $(ARCHIVE)/$(HD60_P
 	$(HOST_DIR)/bin/ext2simg -zv $(HD60_BUILD_TMP)/$(HD60_IMAGE_LINK) $(HD60_BUILD_TMP)/$(BOXTYPE)/rootfs.fastboot.gz
 	dd if=/dev/zero of=$(HD60_BUILD_TMP)/$(BOXTYPE)/$(HD60_BOOT_IMAGE) bs=1024 count=$(HD60_BOOTOPTIONS_PARTITION_SIZE)
 	mkfs.msdos -S 512 $(HD60_BUILD_TMP)/$(BOXTYPE)/$(HD60_BOOT_IMAGE)
-	echo "bootcmd=setenv bootargs $$(bootargs) $$(bootargs_common); mmc read 0 0x1000000 0x3BD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD60_BUILD_TMP)/STARTUP
+	echo "bootcmd=setenv bootargs \$$(bootargs) \$$(bootargs_common); mmc read 0 0x1000000 0x3BD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD60_BUILD_TMP)/STARTUP
 	echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs1 rootfstype=ext4 kernel=/dev/mmcblk0p19" >> $(HD60_BUILD_TMP)/STARTUP
-	echo "bootcmd=setenv vfd_msg andr;setenv bootargs $$(bootargs) $$(bootargs_common); run bootcmd_android; run bootcmd_fallback" > $(HD60_BUILD_TMP)/STARTUP_ANDROID
+	echo "bootcmd=setenv vfd_msg andr;setenv bootargs \$$(bootargs) \$$(bootargs_common); run bootcmd_android; run bootcmd_fallback" > $(HD60_BUILD_TMP)/STARTUP_ANDROID
 	echo "bootargs=androidboot.selinux=disable androidboot.serialno=0123456789" >> $(HD60_BUILD_TMP)/STARTUP_ANDROID
-	echo "bootcmd=setenv vfd_msg andr;setenv bootargs $$(bootargs) $$(bootargs_common); run bootcmd_android; run bootcmd_fallback" > $(HD60_BUILD_TMP)/STARTUP_ANDROID_DISABLE_LINUXSE
+	echo "bootcmd=setenv vfd_msg andr;setenv bootargs \$$(bootargs) \$$(bootargs_common); run bootcmd_android; run bootcmd_fallback" > $(HD60_BUILD_TMP)/STARTUP_ANDROID_DISABLE_LINUXSE
 	echo "bootargs=androidboot.selinux=disable androidboot.serialno=0123456789" >> $(HD60_BUILD_TMP)/STARTUP_ANDROID_DISABLE_LINUXSE
-	echo "bootcmd=setenv bootargs $$(bootargs) $$(bootargs_common); mmc read 0 0x1000000 0x3BD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD60_BUILD_TMP)/STARTUP_LINUX_1
+	echo "bootcmd=setenv bootargs \$$(bootargs) \$$(bootargs_common); mmc read 0 0x1000000 0x3BD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD60_BUILD_TMP)/STARTUP_LINUX_1
 	echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs1 rootfstype=ext4 kernel=/dev/mmcblk0p19" >> $(HD60_BUILD_TMP)/STARTUP_LINUX_1
-	echo "bootcmd=setenv bootargs $$(bootargs) $$(bootargs_common); mmc read 0 0x1000000 0x545000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD60_BUILD_TMP)/STARTUP_LINUX_2
+	echo "bootcmd=setenv bootargs \$$(bootargs) \$$(bootargs_common); mmc read 0 0x1000000 0x3C5000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD60_BUILD_TMP)/STARTUP_LINUX_2
 	echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs2 rootfstype=ext4 kernel=/dev/mmcblk0p20" >> $(HD60_BUILD_TMP)/STARTUP_LINUX_2
-	echo "bootcmd=setenv bootargs $$(bootargs) $$(bootargs_common); mmc read 0 0x1000000 0x54D000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD60_BUILD_TMP)/STARTUP_LINUX_3
+	echo "bootcmd=setenv bootargs \$$(bootargs) \$$(bootargs_common); mmc read 0 0x1000000 0x3CD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD60_BUILD_TMP)/STARTUP_LINUX_3
 	echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs3 rootfstype=ext4 kernel=/dev/mmcblk0p21" >> $(HD60_BUILD_TMP)/STARTUP_LINUX_3
-	echo "bootcmd=setenv bootargs $$(bootargs) $$(bootargs_common); mmc read 0 0x1000000 0x555000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD60_BUILD_TMP)/STARTUP_LINUX_4
+	echo "bootcmd=setenv bootargs \$$(bootargs) \$$(bootargs_common); mmc read 0 0x1000000 0x3D5000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD60_BUILD_TMP)/STARTUP_LINUX_4
 	echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs4 rootfstype=ext4 kernel=/dev/mmcblk0p22" >> $(HD60_BUILD_TMP)/STARTUP_LINUX_4
-	echo "bootcmd=setenv bootargs $$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > $(HD60_BUILD_TMP)/STARTUP_RECOVERY
-	echo "bootcmd=setenv bootargs $$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > $(HD60_BUILD_TMP)/STARTUP_ONCE
+	echo "bootcmd=setenv bootargs \$$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > $(HD60_BUILD_TMP)/STARTUP_RECOVERY
+	echo "bootcmd=setenv bootargs \$$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > $(HD60_BUILD_TMP)/STARTUP_ONCE
 	echo "imageurl https://raw.githubusercontent.com/oe-alliance/bootmenu/master/$(BOXTYPE)/images" > $(HD60_BUILD_TMP)/bootmenu.conf
 	echo "# " >> $(HD60_BUILD_TMP)/bootmenu.conf
 	echo "iface eth0" >> $(HD60_BUILD_TMP)/bootmenu.conf
@@ -538,22 +538,22 @@ flash-image-hd61-multi-disk: $(ARCHIVE)/$(HD61_BOOTARGS_SRC) $(ARCHIVE)/$(HD61_P
 	$(HOST_DIR)/bin/ext2simg -zv $(HD61_BUILD_TMP)/$(HD61_IMAGE_LINK) $(HD61_BUILD_TMP)/$(BOXTYPE)/rootfs.fastboot.gz
 	dd if=/dev/zero of=$(HD61_BUILD_TMP)/$(BOXTYPE)/$(HD61_BOOT_IMAGE) bs=1024 count=$(HD61_BOOTOPTIONS_PARTITION_SIZE)
 	mkfs.msdos -S 512 $(HD61_BUILD_TMP)/$(BOXTYPE)/$(HD61_BOOT_IMAGE)
-	echo "bootcmd=setenv bootargs $$(bootargs) $$(bootargs_common); mmc read 0 0x1000000 0x3BD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD61_BUILD_TMP)/STARTUP
+	echo "bootcmd=setenv bootargs \$$(bootargs) \$$(bootargs_common); mmc read 0 0x1000000 0x3BD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD61_BUILD_TMP)/STARTUP
 	echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs1 rootfstype=ext4 kernel=/dev/mmcblk0p19" >> $(HD61_BUILD_TMP)/STARTUP
-	echo "bootcmd=setenv vfd_msg andr;setenv bootargs $$(bootargs) $$(bootargs_common); run bootcmd_android; run bootcmd_fallback" > $(HD61_BUILD_TMP)/STARTUP_ANDROID
+	echo "bootcmd=setenv vfd_msg andr;setenv bootargs \$$(bootargs) \$$(bootargs_common); run bootcmd_android; run bootcmd_fallback" > $(HD61_BUILD_TMP)/STARTUP_ANDROID
 	echo "bootargs=androidboot.selinux=disable androidboot.serialno=0123456789" >> $(HD61_BUILD_TMP)/STARTUP_ANDROID
-	echo "bootcmd=setenv vfd_msg andr;setenv bootargs $$(bootargs) $$(bootargs_common); run bootcmd_android; run bootcmd_fallback" > $(HD61_BUILD_TMP)/STARTUP_ANDROID_DISABLE_LINUXSE
+	echo "bootcmd=setenv vfd_msg andr;setenv bootargs \$$(bootargs) \$$(bootargs_common); run bootcmd_android; run bootcmd_fallback" > $(HD61_BUILD_TMP)/STARTUP_ANDROID_DISABLE_LINUXSE
 	echo "bootargs=androidboot.selinux=disable androidboot.serialno=0123456789" >> $(HD61_BUILD_TMP)/STARTUP_ANDROID_DISABLE_LINUXSE
-	echo "bootcmd=setenv bootargs $$(bootargs) $$(bootargs_common); mmc read 0 0x1000000 0x3BD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD61_BUILD_TMP)/STARTUP_LINUX_1
+	echo "bootcmd=setenv bootargs \$$(bootargs) \$$(bootargs_common); mmc read 0 0x1000000 0x3BD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD61_BUILD_TMP)/STARTUP_LINUX_1
 	echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs1 rootfstype=ext4 kernel=/dev/mmcblk0p19" >> $(HD61_BUILD_TMP)/STARTUP_LINUX_1
-	echo "bootcmd=setenv bootargs $$(bootargs) $$(bootargs_common); mmc read 0 0x1000000 0x545000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD61_BUILD_TMP)/STARTUP_LINUX_2
+	echo "bootcmd=setenv bootargs \$$(bootargs) \$$(bootargs_common); mmc read 0 0x1000000 0x3C5000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD61_BUILD_TMP)/STARTUP_LINUX_2
 	echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs2 rootfstype=ext4 kernel=/dev/mmcblk0p20" >> $(HD61_BUILD_TMP)/STARTUP_LINUX_2
-	echo "bootcmd=setenv bootargs $$(bootargs) $$(bootargs_common); mmc read 0 0x1000000 0x54D000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD61_BUILD_TMP)/STARTUP_LINUX_3
+	echo "bootcmd=setenv bootargs \$$(bootargs) \$$(bootargs_common); mmc read 0 0x1000000 0x3CD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD61_BUILD_TMP)/STARTUP_LINUX_3
 	echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs3 rootfstype=ext4 kernel=/dev/mmcblk0p21" >> $(HD61_BUILD_TMP)/STARTUP_LINUX_3
-	echo "bootcmd=setenv bootargs $$(bootargs) $$(bootargs_common); mmc read 0 0x1000000 0x555000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD61_BUILD_TMP)/STARTUP_LINUX_4
+	echo "bootcmd=setenv bootargs \$$(bootargs) \$$(bootargs_common); mmc read 0 0x1000000 0x3D5000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(HD61_BUILD_TMP)/STARTUP_LINUX_4
 	echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs4 rootfstype=ext4 kernel=/dev/mmcblk0p22" >> $(HD61_BUILD_TMP)/STARTUP_LINUX_4
-	echo "bootcmd=setenv bootargs $$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > $(HD61_BUILD_TMP)/STARTUP_RECOVERY
-	echo "bootcmd=setenv bootargs $$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > $(HD61_BUILD_TMP)/STARTUP_ONCE
+	echo "bootcmd=setenv bootargs \$$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > $(HD61_BUILD_TMP)/STARTUP_RECOVERY
+	echo "bootcmd=setenv bootargs \$$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > $(HD61_BUILD_TMP)/STARTUP_ONCE
 	echo "imageurl https://raw.githubusercontent.com/oe-alliance/bootmenu/master/$(BOXTYPE)/images" > $(HD61_BUILD_TMP)/bootmenu.conf
 	echo "# " >> $(HD61_BUILD_TMP)/bootmenu.conf
 	echo "iface eth0" >> $(HD61_BUILD_TMP)/bootmenu.conf
