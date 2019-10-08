@@ -1423,6 +1423,7 @@ $(D)/expat: $(D)/bootstrap $(ARCHIVE)/$(EXPAT_SOURCE)
 	$(UNTAR)/$(EXPAT_SOURCE)
 	$(CHDIR)/expat-$(EXPAT_VER); \
 		$(call apply_patches, $(EXPAT_PATCH)); \
+		autoreconf -fi $(SILENT_OPT); \
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--mandir=/.remove \
