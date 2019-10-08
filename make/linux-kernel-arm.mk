@@ -34,6 +34,7 @@ KERNEL_URL             = http://downloads.mutant-digital.net
 KERNEL_CONFIG          = hd60_defconfig
 KERNEL_DIR             = $(BUILD_TMP)/linux-$(KERNEL_VER)
 KERNEL_PATCHES_ARM     = $(HD60_PATCHES)
+KERNEL_DTB_VER         = hi3798mv200.dtb
 endif
 
 ifeq ($(BOXTYPE), hd61)
@@ -45,6 +46,7 @@ KERNEL_URL             = http://downloads.mutant-digital.net
 KERNEL_CONFIG          = hd60_defconfig
 KERNEL_DIR             = $(BUILD_TMP)/linux-$(KERNEL_VER)
 KERNEL_PATCHES_ARM     = $(HD60_PATCHES)
+KERNEL_DTB_VER         = hi3798mv200.dtb
 endif
 
 ifeq ($(BOXTYPE), vusolo4k)
@@ -186,7 +188,7 @@ endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd60 hd61))
 	set -e; cd $(KERNEL_DIR); \
 		$(MAKE) -C $(KERNEL_DIR) ARCH=arm oldconfig
-		$(MAKE) -C $(KERNEL_DIR) ARCH=arm CROSS_COMPILE=$(TARGET)- uImage modules
+		$(MAKE) -C $(KERNEL_DIR) ARCH=arm CROSS_COMPILE=$(TARGET)- $(KERNEL_DTB_VER) uImage modules
 		$(MAKE) -C $(KERNEL_DIR) ARCH=arm CROSS_COMPILE=$(TARGET)- DEPMOD=$(DEPMOD) INSTALL_MOD_PATH=$(TARGET_DIR) modules_install
 	@touch $@
 endif
