@@ -31,7 +31,7 @@ if [ "$1" == -h ] || [ "$1" == --help ]; then
 	echo "Parameter 6: Neutrino variant (1-5)"
 	echo "Parameter 7: External LCD support (1-4)"
 	echo "optional:"
-	echo "Parameter 8: Image layout for hd51 / bre2ze4k / vusolo4k / vuduo4k (1-2)"
+	echo "Parameter 8: Image layout for hd51 / bre2ze4k / vuboxes (1-2)"
 	exit
 fi
 
@@ -256,7 +256,7 @@ case $5 in
 	[1-2]) REPLY=$5;;
 	*)	echo -e "\nWhich Image do you want to build:"
 		echo "   1)  Neutrino"
-		echo "   2)  Neutrino (includes WLAN drivers sh4)"
+		echo "   2)  Neutrino (includes WLAN drivers)"
 		read -p "Select Image to build (1-2)? [1]"
 		REPLY="${REPLY:-1}";;
 esac
@@ -271,40 +271,40 @@ echo "IMAGE=$IMAGE" >> config
 ##############################################
 
 case $6 in
-	[1-5]) REPLY=$6;;
+	[1-6]) REPLY=$6;;
 	*)	echo -e "\nWhich Neutrino variant do you want to build?:"
-		echo "   1)  neutrino-mp-ddt    [ arm/sh4 ]"
-		echo "   2)  neutrino-mp-max    [ arm     ]"
-		echo "   3)  neutrino-mp-ni     [ arm     ]"
-		echo "   4)  neutrino-mp-tangos [ arm/sh4 ]"
-		echo "   5)  neutrino-tuxbox    [ arm/sh4 ]"
-		echo "   6)  neutrino-hd2       [ arm/sh4 ]"
+		echo "   1)  neutrino-ddt    [ arm/sh4 ]"
+		echo "   2)  neutrino-max    [ arm     ]"
+		echo "   3)  neutrino-ni     [ arm     ]"
+		echo "   4)  neutrino-tangos [ arm/sh4 ]"
+		echo "   5)  neutrino-tuxbox [ arm/sh4 ]"
+		echo "   6)  neutrino-hd2    [ arm/sh4 ]"
 		read -p "Select Image to build (1-6)? [4]"
 		REPLY="${REPLY:-4}";;
 esac
 
 case "$REPLY" in
-	1) FLAVOUR="neutrino-mp-ddt";;
-	2) FLAVOUR="neutrino-mp-max";;
-	3) FLAVOUR="neutrino-mp-ni";;
-	4) FLAVOUR="neutrino-mp-tangos";;
+	1) FLAVOUR="neutrino-ddt";;
+	2) FLAVOUR="neutrino-max";;
+	3) FLAVOUR="neutrino-ni";;
+	4) FLAVOUR="neutrino-tangos";;
 	5) FLAVOUR="neutrino-tuxbox";;
 	6) FLAVOUR="neutrino-hd2";;
-	*) FLAVOUR="neutrino-mp-ddt";;
+	*) FLAVOUR="neutrino-tangos";;
 esac
 echo "FLAVOUR=$FLAVOUR" >> config
 
 ##############################################
 
 case $7 in
-	[1-3]) REPLY=$7;;
+	[1-4]) REPLY=$7;;
 	*)	echo -e "\nExternal LCD support:"
 		echo "   1)  No external LCD"
 		echo "   2)  graphlcd for external LCD"
 		echo "   3)  lcd4linux for external LCD"
 		echo "   4)  graphlcd and lcd4linux for external LCD"
-		read -p "Select external LCD support (1-4)? [3]"
-		REPLY="${REPLY:-3}";;
+		read -p "Select external LCD support (1-4)? [4]"
+		REPLY="${REPLY:-4}";;
 esac
 
 case "$REPLY" in
@@ -381,7 +381,7 @@ echo " "
 make printenv
 ##############################################
 echo "Your next step could be:"
-echo "  make neutrino-mp"
+echo "  make neutrino"
 echo "  make flashimage"
 echo "  make ofgimage"
 echo " "

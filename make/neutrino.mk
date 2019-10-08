@@ -27,14 +27,16 @@ NEUTRINO_DEPS += $(D)/luasocket
 NEUTRINO_DEPS += $(D)/luafeedparser
 NEUTRINO_DEPS += $(D)/luasoap
 NEUTRINO_DEPS += $(D)/luajson
-NEUTRINO_DEPS += $(D)/neutrino-mp-plugins
-NEUTRINO_DEPS += $(D)/neutrino-mp-plugin-scripts-lua
-NEUTRINO_DEPS += $(D)/neutrino-mp-plugin-mediathek
-NEUTRINO_DEPS += $(D)/neutrino-mp-plugin-xupnpd
-NEUTRINO_DEPS += $(D)/neutrino-mp-plugin-channellogos
-NEUTRINO_DEPS += $(D)/neutrino-mp-plugin-iptvplayer
-NEUTRINO_DEPS += $(D)/neutrino-mp-plugin-settings-update
+NEUTRINO_DEPS += $(D)/neutrino-plugins
+NEUTRINO_DEPS += $(D)/neutrino-plugin-scripts-lua
+NEUTRINO_DEPS += $(D)/neutrino-plugin-mediathek
+NEUTRINO_DEPS += $(D)/neutrino-plugin-xupnpd
+NEUTRINO_DEPS += $(D)/neutrino-plugin-channellogos
+NEUTRINO_DEPS += $(D)/neutrino-plugin-iptvplayer
+NEUTRINO_DEPS += $(D)/neutrino-plugin-settings-update
+ifeq ($(BOXTYPE), hd51)
 NEUTRINO_DEPS += $(D)/links
+endif
 NEUTRINO_DEPS += $(LOCAL_NEUTRINO_DEPS)
 NEUTRINO_DEPS += $(LOCAL_NEUTRINO_PLUGINS)
 
@@ -110,7 +112,7 @@ LH_CONFIG_OPTS =
 #LH_CONFIG_OPTS += --enable-flv2mpeg4
 
 
-ifeq ($(FLAVOUR), $(filter $(FLAVOUR), neutrino-mp-ni neutrino-tuxbox))
+ifeq ($(FLAVOUR), $(filter $(FLAVOUR), neutrino-ni neutrino-tuxbox))
 N_CONFIG_OPTS += --with-boxtype=armbox
 N_CONFIG_OPTS += --with-boxmodel=$(BOXTYPE)
 else
@@ -160,7 +162,7 @@ endif
 ifeq ($(EXTERNAL_LCD), lcd4linux)
 N_CONFIG_OPTS += --enable-lcd4linux
 NEUTRINO_DEPS += $(D)/lcd4linux
-NEUTRINO_DEPS += $(D)/neutrino-mp-plugin-l4l-skins
+NEUTRINO_DEPS += $(D)/neutrino-plugin-l4l-skins
 endif
 
 ifeq ($(EXTERNAL_LCD), both)
@@ -168,7 +170,7 @@ N_CONFIG_OPTS += --enable-graphlcd
 N_CONFIG_OPTS += --enable-lcd4linux
 NEUTRINO_DEPS += $(D)/graphlcd
 NEUTRINO_DEPS += $(D)/lcd4linux
-NEUTRINO_DEPS += $(D)/neutrino-mp-plugin-l4l-skins
+NEUTRINO_DEPS += $(D)/neutrino-plugin-l4l-skins
 endif
 # -----------------------------------------------------------------------------
 
@@ -186,7 +188,7 @@ endif
 N_OBJDIR = $(BUILD_TMP)/$(NEUTRINO_MP)
 LH_OBJDIR = $(BUILD_TMP)/$(LIBSTB_HAL)
 
-ifeq ($(FLAVOUR), neutrino-mp-max)
+ifeq ($(FLAVOUR), neutrino-max)
 GIT_URL     ?= https://github.com/MaxWiesel
 NEUTRINO_MP  = neutrino-mp-max
 LIBSTB_HAL   = libstb-hal-max
@@ -194,7 +196,7 @@ NMP_BRANCH  ?= master
 HAL_BRANCH  ?= master
 NMP_PATCHES  = $(NEUTRINO_MP_MAX_PATCHES)
 HAL_PATCHES  = $(NEUTRINO_MP_LIBSTB_MAX_PATCHES)
-else ifeq  ($(FLAVOUR), neutrino-mp-ni)
+else ifeq  ($(FLAVOUR), neutrino-ni)
 GIT_URL     ?= https://github.com/neutrino-images
 NEUTRINO_MP  = ni-neutrino
 LIBSTB_HAL   = ni-libstb-hal
@@ -202,7 +204,7 @@ NMP_BRANCH  ?= master
 HAL_BRANCH  ?= master
 NMP_PATCHES  = $(NEUTRINO_MP_NI_PATCHES)
 HAL_PATCHES  = $(NEUTRINO_MP_LIBSTB_NI_PATCHES)
-else ifeq  ($(FLAVOUR), neutrino-mp-tangos)
+else ifeq  ($(FLAVOUR), neutrino-tangos)
 GIT_URL     ?= https://github.com/TangoCash
 NEUTRINO_MP  = neutrino-mp-tangos
 LIBSTB_HAL   = libstb-hal-tangos
@@ -210,7 +212,7 @@ NMP_BRANCH  ?= master
 HAL_BRANCH  ?= master
 NMP_PATCHES  = $(NEUTRINO_MP_TANGOS_PATCHES)
 HAL_PATCHES  = $(NEUTRINO_MP_LIBSTB_TANGOS_PATCHES)
-else ifeq  ($(FLAVOUR), neutrino-mp-ddt)
+else ifeq  ($(FLAVOUR), neutrino-ddt)
 GIT_URL     ?= https://github.com/Duckbox-Developers
 NEUTRINO_MP  = neutrino-mp-ddt
 LIBSTB_HAL   = libstb-hal-ddt
@@ -330,7 +332,7 @@ libstb-hal-distclean:
 
 # -----------------------------------------------------------------------------
 
-$(D)/neutrino-mp.do_prepare: | $(NEUTRINO_DEPS) $(D)/libstb-hal
+$(D)/neutrino.do_prepare: | $(NEUTRINO_DEPS) $(D)/libstb-hal
 	$(START_BUILD)
 	rm -rf $(SOURCE_DIR)/$(NEUTRINO_MP)
 	rm -rf $(SOURCE_DIR)/$(NEUTRINO_MP).org
@@ -346,7 +348,7 @@ $(D)/neutrino-mp.do_prepare: | $(NEUTRINO_DEPS) $(D)/libstb-hal
 		$(call apply_patches, $(NMP_PATCHES))
 	@touch $@
 
-$(D)/neutrino-mp.config.status:
+$(D)/neutrino.config.status:
 	rm -rf $(N_OBJDIR)
 	test -d $(N_OBJDIR) || mkdir -p $(N_OBJDIR)
 	cd $(N_OBJDIR); \
@@ -373,34 +375,34 @@ $(D)/neutrino-mp.config.status:
 		+make $(SOURCE_DIR)/$(NEUTRINO_MP)/src/gui/version.h
 #	@touch $@
 
-$(D)/neutrino-mp.do_compile:
+$(D)/neutrino.do_compile:
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 	$(MAKE) -C $(N_OBJDIR) all DESTDIR=$(TARGET_DIR)
 	@touch $@
 
 mp \
-neutrino-mp: $(D)/neutrino-mp
-$(D)/neutrino-mp: $(D)/neutrino-mp.do_prepare $(D)/neutrino-mp.config.status $(D)/neutrino-mp.do_compile
+neutrino: $(D)/neutrino
+$(D)/neutrino: $(D)/neutrino.do_prepare $(D)/neutrino.config.status $(D)/neutrino.do_compile
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 	$(MAKE) -C $(N_OBJDIR) install DESTDIR=$(TARGET_DIR)
 	make .version
 	make e2-multiboot
 	$(TOUCH)
-	make neutrino-mp-release
+	make neutrino-release
 	$(TUXBOX_CUSTOMIZE)
 
 mp-clean \
-neutrino-mp-clean:
-	rm -f $(D)/neutrino-mp
-	rm -f $(D)/neutrino-mp.config.status
+neutrino-clean:
+	rm -f $(D)/neutrino
+	rm -f $(D)/neutrino.config.status
 	rm -f $(SOURCE_DIR)/$(NEUTRINO_MP)/src/gui/version.h
 	cd $(N_OBJDIR); \
 		$(MAKE) -C $(N_OBJDIR) distclean
 
 mp-distclean \
-neutrino-mp-distclean:
+neutrino-distclean:
 	rm -rf $(N_OBJDIR)
-	rm -f $(D)/neutrino-mp*
+	rm -f $(D)/neutrino*
 
 # -----------------------------------------------------------------------------
 #
@@ -463,7 +465,7 @@ neutrino-hd2: $(D)/neutrino-hd2.do_prepare $(D)/neutrino-hd2.do_compile
 	$(MAKE) -C $(SOURCE_DIR)/neutrino-hd2 install DESTDIR=$(TARGET_DIR)
 	make $(TARGET_DIR)/.version
 	touch $(D)/$(notdir $@)
-	make neutrino-mp-release
+	make neutrino-release
 	$(TUXBOX_CUSTOMIZE)
 
 nhd2 \
@@ -472,7 +474,7 @@ neutrino-hd2-plugins: $(D)/neutrino-hd2.do_prepare $(D)/neutrino-hd2.do_compile
 	make $(TARGET_DIR)/.version
 	touch $(D)/$(notdir $@)
 	make neutrino-hd2-plugins.build
-	make neutrino-mp-release
+	make neutrino-release
 	$(TUXBOX_CUSTOMIZE)
 
 nhd2-clean \

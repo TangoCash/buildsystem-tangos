@@ -55,7 +55,7 @@ FFMPEG_EXPERIMENTAL  ?= 1
 OPTIMIZATIONS        ?= size
 MEDIAFW              ?= buildinplayer
 IMAGE                ?= neutrino
-FLAVOUR              ?= neutrino-mp-tangos
+FLAVOUR              ?= neutrino-tangos
 EXTERNAL_LCD         ?= both
 NEWLAYOUT            ?= 0
 
