@@ -82,6 +82,7 @@ case $1 in
 		echo
 		echo "   51)  AX/Mut@nt HD51"
 		echo "   52)  WWIO BRE2ZE 4K"
+		echo "   53)  ZGEMMA H7"
 		echo
 		echo "   60)  AX/Mut@nt HD60"
 		echo "   61)  AX/Mut@nt HD61"
@@ -135,6 +136,7 @@ case "$REPLY" in
 	41) BOXARCH="arm";BOXTYPE="vuduo4k";;
 	51) BOXARCH="arm";BOXTYPE="hd51";;
 	52) BOXARCH="arm";BOXTYPE="bre2ze4k";;
+	53) BOXARCH="arm";BOXTYPE="h7";;
 	60) BOXARCH="arm";BOXTYPE="hd60";;
 	61) BOXARCH="arm";BOXTYPE="hd61";;
 	70) BOXARCH="mips";BOXTYPE="vuduo";;

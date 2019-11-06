@@ -20,6 +20,25 @@ $(ARCHIVE)/$(EXTRA_LIBGLES_SRC):
 $(ARCHIVE)/$(EXTRA_LIBGLES_HEADERS):
 	$(DOWNLOAD) http://downloads.mutant-digital.net/v3ddriver/$(EXTRA_LIBGLES_HEADERS)
 endif
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), h7))
+DRIVER_VER = 4.10.12
+DRIVER_DATE = 20190405
+DRIVER_SRC = $(KERNEL_TYPE)-drivers-$(DRIVER_VER)-$(DRIVER_DATE).zip
+
+EXTRA_LIBGLES_DATE = 20170320
+EXTRA_LIBGLES_SRC = $(KERNEL_TYPE)-v3ddriver-$(EXTRA_LIBGLES_DATE).zip
+
+EXTRA_LIBGLES_HEADERS = hd-v3ddriver-headers.tar.gz
+
+$(ARCHIVE)/$(DRIVER_SRC):
+	$(DOWNLOAD) http://source.mynonpublic.com/zgemma/$(DRIVER_SRC)
+
+$(ARCHIVE)/$(EXTRA_LIBGLES_SRC):
+	$(DOWNLOAD) http://source.mynonpublic.com/zgemma/$(EXTRA_LIBGLES_SRC)
+
+$(ARCHIVE)/$(EXTRA_LIBGLES_HEADERS):
+	$(DOWNLOAD) http://downloads.mutant-digital.net/v3ddriver/$(EXTRA_LIBGLES_HEADERS)
+endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd60))
 DRIVER_DATE = 20190319
 endif
@@ -71,7 +90,7 @@ driver-clean:
 
 driver: $(D)/driver
 $(D)/driver: $(ARCHIVE)/$(DRIVER_SRC) $(D)/bootstrap $(D)/kernel
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51 bre2ze4k))
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51 bre2ze4k h7))
 	$(START_BUILD)
 	install -d $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra
 	unzip -o $(ARCHIVE)/$(DRIVER_SRC) -d $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra

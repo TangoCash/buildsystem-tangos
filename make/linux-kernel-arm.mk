@@ -13,6 +13,18 @@ KERNEL_PATCHES_ARM     = $(HD51_PATCHES)
 KERNEL_DTB_VER         = bcm7445-bcm97445svmb.dtb
 endif
 
+ifeq ($(BOXTYPE), h7)
+KERNEL_VER             = 4.10.12
+KERNEL_DATE            = 20180424
+KERNEL_TYPE            = h7
+KERNEL_SRC             = linux-$(KERNEL_VER)-arm.tar.gz
+KERNEL_URL             = http://source.mynonpublic.com/zgemma
+KERNEL_CONFIG          = h7_defconfig
+KERNEL_DIR             = $(BUILD_TMP)/linux-$(KERNEL_VER)
+KERNEL_PATCHES_ARM     = $(H7_PATCHES)
+KERNEL_DTB_VER         = bcm7445-bcm97445svmb.dtb
+endif
+
 ifeq ($(BOXTYPE), bre2ze4k)
 KERNEL_VER             = 4.10.12
 KERNEL_DATE            = 20180424
@@ -101,6 +113,18 @@ HD51_PATCHES = \
 		armbox/hd51_blacklist_mmc0.patch \
 		armbox/hd51_export_pmpoweroffprepare.patch
 
+H7_PATCHES = \
+		armbox/h7_TBS-fixes-for-4.10-kernel.patch \
+		armbox/h7_0001-Support-TBS-USB-drivers-for-4.6-kernel.patch \
+		armbox/h7_0001-TBS-fixes-for-4.6-kernel.patch \
+		armbox/h7_0001-STV-Add-PLS-support.patch \
+		armbox/h7_0001-STV-Add-SNR-Signal-report-parameters.patch \
+		armbox/h7_blindscan2.patch \
+		armbox/h7_0001-stv090x-optimized-TS-sync-control.patch \
+		armbox/h7_reserve_dvb_adapter_0.patch \
+		armbox/h7_blacklist_mmc0.patch \
+		armbox/h7_export_pmpoweroffprepare.patch
+
 BRE2ZE4K_PATCHES = \
 		armbox/bre2ze4k_TBS-fixes-for-4.10-kernel.patch \
 		armbox/bre2ze4k_0001-Support-TBS-USB-drivers-for-4.6-kernel.patch \
@@ -178,7 +202,7 @@ endif
 	@touch $@
 
 $(D)/kernel.do_compile: $(D)/kernel.do_prepare
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51 bre2ze4k))
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51 h7 bre2ze4k))
 	set -e; cd $(KERNEL_DIR); \
 		$(MAKE) -C $(KERNEL_DIR) ARCH=arm oldconfig
 		$(MAKE) -C $(KERNEL_DIR) ARCH=arm CROSS_COMPILE=$(TARGET)- $(KERNEL_DTB_VER) zImage modules
@@ -209,7 +233,7 @@ endif
 
 KERNEL = $(D)/kernel
 $(D)/kernel: $(D)/bootstrap $(D)/kernel.do_compile
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51 bre2ze4k))
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51 h7 bre2ze4k))
 	install -m 644 $(KERNEL_DIR)/vmlinux $(TARGET_DIR)/boot/vmlinux-arm-$(KERNEL_VER)
 	install -m 644 $(KERNEL_DIR)/System.map $(TARGET_DIR)/boot/System.map-arm-$(KERNEL_VER)
 	cp $(KERNEL_DIR)/arch/arm/boot/zImage $(TARGET_DIR)/boot/

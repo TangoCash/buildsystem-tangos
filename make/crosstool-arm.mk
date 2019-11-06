@@ -32,7 +32,7 @@ $(ARCHIVE)/$(CROSSTOOL_NG_SOURCE):
 	$(HELPERS_DIR)/get-git-archive.sh $(CROSSTOOL_NG_URL) $(CROSSTOOL_NG_VER) $(notdir $@) $(ARCHIVE)
 
 CUSTOM_KERNEL = $(ARCHIVE)/$(KERNEL_SRC)
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51 bre2ze4k))
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51 bre2ze4k h7))
 CUSTOM_KERNEL_VER = $(KERNEL_VER)-arm
 endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd60 hd61))
