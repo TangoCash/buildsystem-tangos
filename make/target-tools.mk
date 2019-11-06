@@ -268,7 +268,7 @@ $(D)/portmap: $(D)/bootstrap $(D)/lsb $(ARCHIVE)/$(PORTMAP_SOURCE) $(ARCHIVE)/po
 #
 # e2fsprogs
 #
-E2FSPROGS_VER = 1.45.2
+E2FSPROGS_VER = 1.45.4
 E2FSPROGS_SOURCE = e2fsprogs-$(E2FSPROGS_VER).tar.gz
 E2FSPROGS_PATCH  = e2fsprogs.patch
 E2FSPROGS_PATCH += e2fsprogs-001-exit_0_on_corrected_errors.patch
@@ -810,7 +810,7 @@ $(D)/hddtemp: $(D)/bootstrap $(ARCHIVE)/$(HDDTEMP_SOURCE)
 #
 # hdparm
 #
-HDPARM_VER = 9.54
+HDPARM_VER = 9.58
 HDPARM_SOURCE = hdparm-$(HDPARM_VER).tar.gz
 
 $(ARCHIVE)/$(HDPARM_SOURCE):
@@ -823,7 +823,7 @@ $(D)/hdparm: $(D)/bootstrap $(ARCHIVE)/$(HDPARM_SOURCE)
 	$(CHDIR)/hdparm-$(HDPARM_VER); \
 		$(BUILDENV) \
 		$(MAKE) CROSS=$(TARGET)- all; \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
+		$(MAKE) install DESTDIR=$(TARGET_DIR) mandir=/.remove
 	$(REMOVE)/hdparm-$(HDPARM_VER)
 	$(TOUCH)
 
@@ -1182,7 +1182,7 @@ $(D)/coreutils: $(D)/bootstrap $(D)/openssl $(ARCHIVE)/$(COREUTILS_SOURCE)
 #
 # smartmontools
 #
-SMARTMONTOOLS_VER = 6.6
+SMARTMONTOOLS_VER = 7.0
 SMARTMONTOOLS_SOURCE = smartmontools-$(SMARTMONTOOLS_VER).tar.gz
 
 $(ARCHIVE)/$(SMARTMONTOOLS_SOURCE):
@@ -1197,7 +1197,7 @@ $(D)/smartmontools: $(D)/bootstrap $(ARCHIVE)/$(SMARTMONTOOLS_SOURCE)
 			--prefix=/usr \
 		; \
 		$(MAKE); \
-		$(MAKE) install prefix=$(TARGET_DIR)/usr
+		$(MAKE) install prefix=$(TARGET_DIR)/usr mandir=./remove
 	$(REMOVE)/smartmontools-$(SMARTMONTOOLS_VER)
 	$(TOUCH)
 
@@ -1381,7 +1381,7 @@ $(D)/htop: $(D)/bootstrap $(D)/ncurses $(ARCHIVE)/$(HTOP_SOURCE)
 #
 # ethtool
 #
-ETHTOOL_VER = 4.19
+ETHTOOL_VER = 5.3
 ETHTOOL_SOURCE = ethtool-$(ETHTOOL_VER).tar.xz
 
 $(ARCHIVE)/$(ETHTOOL_SOURCE):

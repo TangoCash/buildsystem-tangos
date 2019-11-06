@@ -446,7 +446,7 @@ $(D)/libpcre: $(D)/bootstrap $(ARCHIVE)/$(LIBPCRE_SOURCE)
 #
 # host_libarchive
 #
-LIBARCHIVE_VER = 3.1.2
+LIBARCHIVE_VER = 3.4.0
 LIBARCHIVE_SOURCE = libarchive-$(LIBARCHIVE_VER).tar.gz
 
 $(ARCHIVE)/$(LIBARCHIVE_SOURCE):
@@ -529,7 +529,7 @@ $(D)/readline: $(D)/bootstrap $(ARCHIVE)/$(READLINE_SOURCE)
 # openssl
 #
 OPENSSL_MAJOR = 1.0.2
-OPENSSL_MINOR = s
+OPENSSL_MINOR = t
 OPENSSL_VER = $(OPENSSL_MAJOR)$(OPENSSL_MINOR)
 OPENSSL_SOURCE = openssl-$(OPENSSL_VER).tar.gz
 OPENSSL_PATCH  = openssl-$(OPENSSL_VER)-optimize-for-size.patch
@@ -1061,7 +1061,7 @@ $(D)/ca-bundle: $(ARCHIVE)/$(CA-BUNDLE_SOURCE)
 ifeq ($(BOXARCH), sh4)
 LIBCURL_VER = 7.61.1
 else
-LIBCURL_VER = 7.65.2
+LIBCURL_VER = 7.66.0
 endif
 LIBCURL_SOURCE = curl-$(LIBCURL_VER).tar.bz2
 LIBCURL_PATCH = libcurl-$(LIBCURL_VER).patch
@@ -1114,7 +1114,7 @@ $(D)/libcurl: $(D)/bootstrap $(D)/zlib $(D)/openssl $(D)/ca-bundle $(ARCHIVE)/$(
 #
 # libfribidi
 #
-LIBFRIBIDI_VER = 1.0.3
+LIBFRIBIDI_VER = 1.0.7
 LIBFRIBIDI_SOURCE = fribidi-$(LIBFRIBIDI_VER).tar.bz2
 LIBFRIBIDI_PATCH = libfribidi-$(LIBFRIBIDI_VER).patch
 
@@ -1410,7 +1410,7 @@ $(D)/libiconv: $(D)/bootstrap $(ARCHIVE)/$(LIBICONV_SOURCE)
 #
 # expat
 #
-EXPAT_VER = 2.2.7
+EXPAT_VER = 2.2.9
 EXPAT_SOURCE = expat-$(EXPAT_VER).tar.bz2
 EXPAT_PATCH  = expat-$(EXPAT_VER)-libtool-tag.patch
 
@@ -2034,12 +2034,12 @@ $(D)/libdpf: $(D)/bootstrap $(D)/libusb_compat $(ARCHIVE)/$(LIBDPF_SOURCE)
 #
 # lcd4linux
 #
-LCD4LINUX_VER = 60925a0
+LCD4LINUX_VER = ca13a1d
 LCD4LINUX_SOURCE = lcd4linux-git-$(LCD4LINUX_VER).tar.bz2
 LCD4LINUX_URL = https://github.com/TangoCash/lcd4linux.git
 LCD4LINUX_PATCH = 
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k vuduo4k))
-LCD4LINUX_DRV = ,VUSOLO4K
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vuduo4k vuuno4kse vuultimo4k vusolo4k))
+LCD4LINUX_DRV = ,VUPLUS4K
 endif
 
 $(ARCHIVE)/$(LCD4LINUX_SOURCE):
@@ -2061,7 +2061,7 @@ $(D)/lcd4linux: $(D)/bootstrap $(D)/libusb_compat $(D)/gd $(D)/libusb $(D)/libdp
 		$(MAKE) vcs_version all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	install -m 755 $(SKEL_ROOT)/etc/init.d/lcd4linux $(TARGET_DIR)/etc/init.d/
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k vuduo4k))
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vuduo4k vuuno4kse vuultimo4k vusolo4k))
 	install -D -m 0600 $(SKEL_ROOT)/etc/lcd4linux_vu.conf $(TARGET_DIR)/etc/lcd4linux.conf
 else
 	install -D -m 0600 $(SKEL_ROOT)/etc/lcd4linux.conf $(TARGET_DIR)/etc/lcd4linux.conf
