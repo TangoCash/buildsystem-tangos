@@ -115,9 +115,15 @@ include make/target-python.mk
 include make/target-root-etc.mk
 include make/target-tools.mk
 include make/target-tools-git.mk
-include make/linux-driver-$(BOXARCH).mk
-include make/linux-kernel-$(BOXARCH).mk
 include make/images.mk
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51 h7 bre2ze4k))
+include make/$(BOXTYPE)/linux-kernel.mk
+include make/$(BOXTYPE)/linux-driver.mk
+include make/$(BOXTYPE)/linux-image.mk
+else
+include make/linux-kernel-$(BOXARCH).mk
+include make/linux-driver-$(BOXARCH).mk
+endif
 include make/helpers.mk
 include make/host-tools.mk
 include make/crosstool-$(BOXARCH).mk
@@ -129,6 +135,8 @@ include make/tvheadend.mk
 
 include make/bootstrap.mk
 
+# -----------------------------------------------------------------------------
+include $(sort $(wildcard develop/*.mk))
 # -----------------------------------------------------------------------------
 
 update-self:

@@ -1,44 +1,6 @@
 #
 # driver
 #
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51 bre2ze4k))
-DRIVER_VER = 4.10.12
-DRIVER_DATE = 20180424
-DRIVER_SRC = $(KERNEL_TYPE)-drivers-$(DRIVER_VER)-$(DRIVER_DATE).zip
-
-EXTRA_LIBGLES_DATE = 20170322
-EXTRA_LIBGLES_SRC = $(KERNEL_TYPE)-v3ddriver-$(EXTRA_LIBGLES_DATE).zip
-
-EXTRA_LIBGLES_HEADERS = hd-v3ddriver-headers.tar.gz
-
-$(ARCHIVE)/$(DRIVER_SRC):
-	$(DOWNLOAD) http://source.mynonpublic.com/gfutures/$(DRIVER_SRC)
-
-$(ARCHIVE)/$(EXTRA_LIBGLES_SRC):
-	$(DOWNLOAD) http://downloads.mutant-digital.net/v3ddriver/$(EXTRA_LIBGLES_SRC)
-
-$(ARCHIVE)/$(EXTRA_LIBGLES_HEADERS):
-	$(DOWNLOAD) http://downloads.mutant-digital.net/v3ddriver/$(EXTRA_LIBGLES_HEADERS)
-endif
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), h7))
-DRIVER_VER = 4.10.12
-DRIVER_DATE = 20190405
-DRIVER_SRC = $(KERNEL_TYPE)-drivers-$(DRIVER_VER)-$(DRIVER_DATE).zip
-
-EXTRA_LIBGLES_DATE = 20170320
-EXTRA_LIBGLES_SRC = $(KERNEL_TYPE)-v3ddriver-$(EXTRA_LIBGLES_DATE).zip
-
-EXTRA_LIBGLES_HEADERS = hd-v3ddriver-headers.tar.gz
-
-$(ARCHIVE)/$(DRIVER_SRC):
-	$(DOWNLOAD) http://source.mynonpublic.com/zgemma/$(DRIVER_SRC)
-
-$(ARCHIVE)/$(EXTRA_LIBGLES_SRC):
-	$(DOWNLOAD) http://source.mynonpublic.com/zgemma/$(EXTRA_LIBGLES_SRC)
-
-$(ARCHIVE)/$(EXTRA_LIBGLES_HEADERS):
-	$(DOWNLOAD) http://downloads.mutant-digital.net/v3ddriver/$(EXTRA_LIBGLES_HEADERS)
-endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd60))
 DRIVER_DATE = 20190319
 endif
@@ -90,31 +52,6 @@ driver-clean:
 
 driver: $(D)/driver
 $(D)/driver: $(ARCHIVE)/$(DRIVER_SRC) $(D)/bootstrap $(D)/kernel
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51 bre2ze4k h7))
-	$(START_BUILD)
-	install -d $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra
-	unzip -o $(ARCHIVE)/$(DRIVER_SRC) -d $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra
-	ls $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra | sed s/.ko//g > $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/modules.default
-	$(MAKE) install-extra-libs
-	$(TOUCH)
-
-$(D)/install-extra-libs: $(ARCHIVE)/$(EXTRA_LIBGLES_HEADERS) $(ARCHIVE)/$(EXTRA_LIBGLES_SRC)
-	install -d $(TARGET_DIR)/usr/lib
-	tar -xf $(ARCHIVE)/$(EXTRA_LIBGLES_HEADERS) -C $(TARGET_DIR)/usr/include
-	unzip -o $(ARCHIVE)/$(EXTRA_LIBGLES_SRC) -d $(TARGET_DIR)/usr/lib
-	#patchelf --set-soname libv3ddriver.so $(TARGET_DIR)/usr/lib/libv3ddriver.so
-	ln -sf libv3ddriver.so $(TARGET_DIR)/usr/lib/libEGL.so.1.4
-	ln -sf libEGL.so.1.4 $(TARGET_DIR)/usr/lib/libEGL.so.1
-	ln -sf libEGL.so.1 $(TARGET_DIR)/usr/lib/libEGL.so
-	ln -sf libv3ddriver.so $(TARGET_DIR)/usr/lib/libGLESv1_CM.so.1.1
-	ln -sf libGLESv1_CM.so.1.1 $(TARGET_DIR)/usr/lib/libGLESv1_CM.so.1
-	ln -sf libGLESv1_CM.so.1 $(TARGET_DIR)/usr/lib/libGLESv1_CM.so
-	ln -sf libv3ddriver.so $(TARGET_DIR)/usr/lib/libGLESv2.so.2.0
-	ln -sf libGLESv2.so.2.0 $(TARGET_DIR)/usr/lib/libGLESv2.so.2
-	ln -sf libGLESv2.so.2 $(TARGET_DIR)/usr/lib/libGLESv2.so
-	ln -sf libv3ddriver.so $(TARGET_DIR)/usr/lib/libgbm.so.1
-	ln -sf libgbm.so.1 $(TARGET_DIR)/usr/lib/libgbm.so
-endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd60 hd61))
 	$(START_BUILD)
 	install -d $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra

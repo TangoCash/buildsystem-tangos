@@ -58,6 +58,8 @@ IMAGE                ?= neutrino
 FLAVOUR              ?= neutrino-tangos
 EXTERNAL_LCD         ?= both
 NEWLAYOUT            ?= 0
+#
+ITYPE                ?= usb
 
 TUFSBOX_DIR           = $(BASE_DIR)/tufsbox
 CROSS_BASE            = $(BASE_DIR)/cross/$(BOXARCH)/$(BOXTYPE)
