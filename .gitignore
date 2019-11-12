@@ -5,8 +5,6 @@ build_tmp/
 /build_source/
 cross/
 custom/*-local*
-driver/
-flash/
 make/develop/
 release_image/
 own_build/
