@@ -30,7 +30,9 @@ KERNEL_PATCHES = \
 		armbox/$(KERNEL_TYPE)/0001-stv090x-optimized-TS-sync-control.patch \
 		armbox/$(KERNEL_TYPE)/reserve_dvb_adapter_0.patch \
 		armbox/$(KERNEL_TYPE)/blacklist_mmc0.patch \
-		armbox/$(KERNEL_TYPE)/export_pmpoweroffprepare.patch
+		armbox/$(KERNEL_TYPE)/export_pmpoweroffprepare.patch \
+		armbox/$(KERNEL_TYPE)/t230c2.patch \
+		armbox/$(KERNEL_TYPE)/add-more-devices-rtl8xxxu.patch
 
 $(ARCHIVE)/$(KERNEL_SRC):
 	$(DOWNLOAD) $(KERNEL_URL)/$(KERNEL_SRC)
