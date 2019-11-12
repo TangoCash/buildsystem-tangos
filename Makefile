@@ -96,7 +96,7 @@ help:
 	@echo ""
 	@echo "later, you might find these useful:"
 	@echo "* make update-self         - update the build system"
-	@echo "* make update              - update the build system, tools, driver and flash"
+	@echo "* make update              - update the build system, and tools"
 	@echo ""
 	@echo "cleantargets:"
 	@echo "make clean                 - Clears everything except kernel."
@@ -157,19 +157,6 @@ update:
 		fi; \
 	fi
 	@echo;
-	@if test -d $(DRIVER_DIR); then \
-		cd $(DRIVER_DIR)/; \
-		$(call draw_line,); \
-		echo '      updating $(GIT_NAME_DRIVER)-driver git repository'; \
-		$(call draw_line,); \
-		echo; \
-		if [ "$(GIT_STASH_PULL)" = "stashpull" ]; then \
-			git stash && git stash show -p > ./pull-stash-driver.patch || true && git pull && git stash pop || true; \
-		else \
-			git pull; \
-		fi; \
-	fi
-	@echo;
 	@if test -d $(TOOLS_DIR); then \
 		cd $(TOOLS_DIR)/; \
 		$(call draw_line,); \
@@ -178,19 +165,6 @@ update:
 		echo; \
 		if [ "$(GIT_STASH_PULL)" = "stashpull" ]; then \
 			git stash && git stash show -p > ./pull-stash-tools.patch || true && git pull && git stash pop || true; \
-		else \
-			git pull; \
-		fi; \
-	fi
-	@echo;
-	@if test -d $(FLASH_DIR); then \
-		cd $(FLASH_DIR)/; \
-		$(call draw_line,); \
-		echo '      updating $(GIT_NAME_FLASH)-flash git repository'; \
-		$(call draw_line,); \
-		echo; \
-		if [ "$(GIT_STASH_PULL)" = "stashpull" ]; then \
-			git stash && git stash show -p > ./pull-stash-flash.patch || true && git pull && git stash pop || true; \
 		else \
 			git pull; \
 		fi; \
