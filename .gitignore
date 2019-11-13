@@ -2,6 +2,9 @@ tools/
 build_logfile/
 build_source/
 build_tmp/
+build_host
+build_sysroot
+build_release
 /build_source/
 cross/
 custom/*-local*

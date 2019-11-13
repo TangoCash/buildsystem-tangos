@@ -14,7 +14,9 @@ clean: depsclean
 	@-$(MAKE) kernel-clean
 	@-$(MAKE) tools-clean
 	@-$(MAKE) driver-clean
-	@-rm -rf $(TUFSBOX_DIR)
+	@-rm -rf $(TARGET_DIR)
+	@-rm -rf $(HOST_DIR)
+	@-rm -rf $(RELEASE_DIR_CLEANUP)
 	@-rm -rf $(D)/kernel
 	@-rm -rf $(D)/*.do_compile
 	@-rm -rf $(D)/*.config.status
@@ -24,7 +26,9 @@ distclean:
 	@echo -e "$(TERM_YELLOW)---> cleaning system build directories and files .. $(TERM_NORMAL)"
 	@-$(MAKE) tools-clean
 	@-$(MAKE) driver-clean
-	@-rm -rf $(TUFSBOX_DIR)
+	@-rm -rf $(TARGET_DIR)
+	@-rm -rf $(HOST_DIR)
+	@-rm -rf $(RELEASE_DIR_CLEANUP)
 	@-rm -rf $(BUILD_TMP)
 	@-rm -rf $(SOURCE_DIR)
 	@-rm -rf $(D)

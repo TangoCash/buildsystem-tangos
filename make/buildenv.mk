@@ -47,7 +47,7 @@ GIT_NAME_TOOLS       ?= Duckbox-Developers
 # default config...
 BOXARCH              ?= arm
 BOXTYPE              ?= hd51
-FFMPEG_EXPERIMENTAL  ?= 1
+FFMPEG_EXPERIMENTAL  ?= 0
 OPTIMIZATIONS        ?= size
 MEDIAFW              ?= buildinplayer
 IMAGE                ?= neutrino
@@ -57,7 +57,6 @@ NEWLAYOUT            ?= 0
 #
 ITYPE                ?= usb
 
-TUFSBOX_DIR           = $(BASE_DIR)/tufsbox
 CROSS_BASE            = $(BASE_DIR)/cross/$(BOXARCH)/$(BOXTYPE)
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k))
 BOXCPU                = bcm7376
@@ -80,14 +79,13 @@ BOXCPU                = bcm7335
 CROSS_BASE            = $(BASE_DIR)/cross/$(BOXARCH)/$(BOXCPU)
 endif
 
-TARGET_DIR            = $(TUFSBOX_DIR)/cdkroot
-CROSS_DIR             = $(TUFSBOX_DIR)/cross
-HOST_DIR              = $(TUFSBOX_DIR)/host
-RELEASE_DIR_CLEANUP   = $(TUFSBOX_DIR)/release
+TARGET_DIR            = $(BASE_DIR)/build_sysroot
+HOST_DIR              = $(BASE_DIR)/build_host
+RELEASE_DIR_CLEANUP   = $(BASE_DIR)/build_release
 ifeq ($(NEWLAYOUT), $(filter $(NEWLAYOUT), 1))
-RELEASE_DIR           = $(TUFSBOX_DIR)/release/linuxrootfs1
+RELEASE_DIR           = $(BASE_DIR)/build_release/linuxrootfs1
 else
-RELEASE_DIR           = $(TUFSBOX_DIR)/release
+RELEASE_DIR           = $(BASE_DIR)/build_release
 endif
 
 CUSTOM_DIR            = $(BASE_DIR)/custom
@@ -168,7 +166,7 @@ PKG_CONFIG_PATH       = $(TARGET_LIB_DIR)/pkgconfig
 
 VPATH                 = $(D)
 
-PATH                 := $(HOST_DIR)/bin:$(CROSS_DIR)/bin:$(CROSS_BASE)/bin:$(PATH):/sbin:/usr/sbin:/usr/local/sbin
+PATH                 := $(HOST_DIR)/bin:$(CROSS_BASE)/bin:$(PATH):/sbin:/usr/sbin:/usr/local/sbin
 
 TERM_RED             := \033[00;31m
 TERM_RED_BOLD        := \033[01;31m
