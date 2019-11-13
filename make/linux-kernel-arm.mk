@@ -1,30 +1,6 @@
 #
 # KERNEL
 #
-ifeq ($(BOXTYPE), hd60)
-KERNEL_VER             = 4.4.35
-KERNEL_DATE            = 20181228
-KERNEL_TYPE            = hd60
-KERNEL_SRC             = linux-$(KERNEL_VER)-$(KERNEL_DATE)-arm.tar.gz
-KERNEL_URL             = http://downloads.mutant-digital.net
-KERNEL_CONFIG          = hd60_defconfig
-KERNEL_DIR             = $(BUILD_TMP)/linux-$(KERNEL_VER)
-KERNEL_PATCHES_ARM     = $(HD60_PATCHES)
-KERNEL_DTB_VER         = hi3798mv200.dtb
-endif
-
-ifeq ($(BOXTYPE), hd61)
-KERNEL_VER             = 4.4.35
-KERNEL_DATE            = 20181228
-KERNEL_TYPE            = hd61
-KERNEL_SRC             = linux-$(KERNEL_VER)-$(KERNEL_DATE)-arm.tar.gz
-KERNEL_URL             = http://downloads.mutant-digital.net
-KERNEL_CONFIG          = hd60_defconfig
-KERNEL_DIR             = $(BUILD_TMP)/linux-$(KERNEL_VER)
-KERNEL_PATCHES_ARM     = $(HD60_PATCHES)
-KERNEL_DTB_VER         = hi3798mv200.dtb
-endif
-
 ifeq ($(BOXTYPE), vusolo4k)
 KERNEL_VER             = 3.14.28-1.8
 KERNEL_TYPE            = vusolo4k
@@ -64,12 +40,6 @@ DEPMOD = $(HOST_DIR)/bin/depmod
 # Patches Kernel
 #
 COMMON_PATCHES_ARM = \
-
-HD60_PATCHES = \
-		armbox/hd60_ieee80211-increase-scan-result-expire-time.patch \
-		armbox/hd60_0001-remote.patch \
-		armbox/hd60_0002-log2-give-up-on-gcc-constant-optimizations.patch \
-		armbox/hd60_0003-dont-mark-register-as-const.patch
 
 VUSOLO4K_PATCHES = \
 		armbox/vusolo4k_bcm_genet_disable_warn.patch \
@@ -130,13 +100,6 @@ endif
 	@touch $@
 
 $(D)/kernel.do_compile: $(D)/kernel.do_prepare
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd60 hd61))
-	set -e; cd $(KERNEL_DIR); \
-		$(MAKE) -C $(KERNEL_DIR) ARCH=arm oldconfig
-		$(MAKE) -C $(KERNEL_DIR) ARCH=arm CROSS_COMPILE=$(TARGET)- $(KERNEL_DTB_VER) uImage modules
-		$(MAKE) -C $(KERNEL_DIR) ARCH=arm CROSS_COMPILE=$(TARGET)- DEPMOD=$(DEPMOD) INSTALL_MOD_PATH=$(TARGET_DIR) modules_install
-	@touch $@
-endif
 ifeq ($(BOXTYPE), vusolo4k)
 	set -e; cd $(KERNEL_DIR); \
 		$(MAKE) -C $(KERNEL_DIR) ARCH=arm oldconfig
@@ -154,14 +117,6 @@ endif
 
 KERNEL = $(D)/kernel
 $(D)/kernel: $(D)/bootstrap $(D)/kernel.do_compile
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd60 hd61))
-	install -m 644 $(KERNEL_DIR)/vmlinux $(TARGET_DIR)/boot/vmlinux-arm-$(KERNEL_VER)
-	install -m 644 $(KERNEL_DIR)/System.map $(TARGET_DIR)/boot/System.map-arm-$(KERNEL_VER)
-	cp $(KERNEL_DIR)/arch/arm/boot/uImage $(TARGET_DIR)/boot/
-	rm $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/build || true
-	rm $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/source || true
-	$(TOUCH)
-endif
 ifeq ($(BOXTYPE), vusolo4k)
 	install -m 644 $(KERNEL_DIR)/vmlinux $(TARGET_DIR)/boot/vmlinux-arm-$(KERNEL_VER)
 	install -m 644 $(KERNEL_DIR)/System.map $(TARGET_DIR)/boot/System.map-arm-$(KERNEL_VER)
