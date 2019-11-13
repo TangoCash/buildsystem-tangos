@@ -9,9 +9,6 @@ LINKS_VER = 2.20
 LINKS_PATCH  = links-$(LINKS_VER).patch
 LINKS_PATCH += links-$(LINKS_VER)-ac-prog-cxx.patch
 LINKS_PATCH += links-$(LINKS_VER)-accept_https_play.patch
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), spark spark7162))
-LINKS_PATCH += links-$(LINKS_VER)-spark-input.patch
-endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51 hd60 hd61))
 LINKS_PATCH += links-$(LINKS_VER)-hd51-input.patch
 endif

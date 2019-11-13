@@ -6,7 +6,6 @@ NEUTRINO_DEPS  = $(D)/bootstrap
 NEUTRINO_DEPS += $(KERNEL)
 NEUTRINO_DEPS += $(D)/system-tools
 NEUTRINO_DEPS += $(D)/ncurses
-NEUTRINO_DEPS += $(LIRC)
 NEUTRINO_DEPS += $(D)/libcurl
 NEUTRINO_DEPS += $(D)/libpng
 NEUTRINO_DEPS += $(D)/libjpeg
@@ -27,6 +26,11 @@ NEUTRINO_DEPS += $(D)/luasocket
 NEUTRINO_DEPS += $(D)/luafeedparser
 NEUTRINO_DEPS += $(D)/luasoap
 NEUTRINO_DEPS += $(D)/luajson
+NEUTRINO_DEPS += $(D)/ntfs_3g
+NEUTRINO_DEPS += $(D)/gptfdisk
+NEUTRINO_DEPS += $(D)/mc
+NEUTRINO_DEPS += $(D)/samba
+NEUTRINO_DEPS += $(D)/rsync
 NEUTRINO_DEPS += $(D)/neutrino-plugins
 NEUTRINO_DEPS += $(D)/neutrino-plugin-scripts-lua
 NEUTRINO_DEPS += $(D)/neutrino-plugin-mediathek
@@ -34,7 +38,7 @@ NEUTRINO_DEPS += $(D)/neutrino-plugin-xupnpd
 NEUTRINO_DEPS += $(D)/neutrino-plugin-channellogos
 NEUTRINO_DEPS += $(D)/neutrino-plugin-iptvplayer
 NEUTRINO_DEPS += $(D)/neutrino-plugin-settings-update
-ifeq ($(BOXTYPE), hd51)
+ifneq ($(BOXTYPE), hd60)
 NEUTRINO_DEPS += $(D)/links
 endif
 NEUTRINO_DEPS += $(LOCAL_NEUTRINO_DEPS)
@@ -58,21 +62,7 @@ N_CONFIG_OPTS += --enable-flac
 NEUTRINO_DEPS += $(D)/flac
 endif
 
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), atevio7500 spark spark7162 ufs912 ufs913 ufs910 vuduo))
-NEUTRINO_DEPS += $(D)/ntfs_3g
-ifneq ($(BOXTYPE), $(filter $(BOXTYPE), ufs910))
-NEUTRINO_DEPS += $(D)/mtd_utils
-NEUTRINO_DEPS += $(D)/gptfdisk
-endif
 #NEUTRINO_DEPS +=  $(D)/minidlna
-endif
-
-ifeq ($(BOXARCH), arm)
-NEUTRINO_DEPS += $(D)/ntfs_3g
-NEUTRINO_DEPS += $(D)/gptfdisk
-NEUTRINO_DEPS += $(D)/mc
-NEUTRINO_DEPS += $(D)/samba
-endif
 
 ifeq ($(IMAGE), neutrino-wlandriver)
 NEUTRINO_DEPS += $(D)/wpa_supplicant
@@ -97,15 +87,6 @@ N_CPPFLAGS    += -ffunction-sections -fdata-sections
 
 ifeq ($(BOXARCH), arm)
 N_CPPFLAGS    += -I$(CROSS_BASE)/$(TARGET)/sys-root/usr/include
-endif
-
-ifeq ($(BOXARCH), sh4)
-N_CPPFLAGS    += -I$(DRIVER_DIR)/bpamem
-N_CPPFLAGS    += -I$(KERNEL_DIR)/include
-endif
-
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), spark spark7162))
-N_CPPFLAGS += -I$(DRIVER_DIR)/frontcontroller/aotom_spark
 endif
 
 LH_CONFIG_OPTS =
@@ -408,11 +389,7 @@ neutrino-distclean:
 #
 # neutrino-hd2
 #
-ifeq ($(BOXTYPE), spark)
-NHD2_OPTS = --enable-4digits
-else ifeq ($(BOXTYPE), spark7162)
-NHD2_OPTS =
-else
+ifeq ($(BOXTYPE), hd51)
 NHD2_OPTS = --enable-ci
 endif
 

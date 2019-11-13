@@ -11,28 +11,6 @@ tools-clean:
 	-$(MAKE) -C $(TOOLS_DIR)/spf_tool distclean
 	-$(MAKE) -C $(TOOLS_DIR)/tuxcom distclean
 	-$(MAKE) -C $(TOOLS_DIR)/read-edid distclean
-ifeq ($(BOXARCH), sh4)
-	-$(MAKE) -C $(TOOLS_DIR)/devinit distclean
-	-$(MAKE) -C $(TOOLS_DIR)/evremote2 distclean
-	-$(MAKE) -C $(TOOLS_DIR)/fp_control distclean
-	-$(MAKE) -C $(TOOLS_DIR)/flashtool-fup distclean
-	-$(MAKE) -C $(TOOLS_DIR)/flashtool-mup distclean
-	-$(MAKE) -C $(TOOLS_DIR)/flashtool_mup distclean
-	-$(MAKE) -C $(TOOLS_DIR)/flashtool-pad distclean
-	-$(MAKE) -C $(TOOLS_DIR)/hotplug distclean
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), ipbox55 ipbox99 ipbox9900 cuberevo cuberevo_mini cuberevo_mini2 cuberevo_250hd cuberevo_2000hd cuberevo_3000hd))
-	-$(MAKE) -C $(TOOLS_DIR)/ipbox_eeprom distclean
-endif
-	-$(MAKE) -C $(TOOLS_DIR)/stfbcontrol distclean
-	-$(MAKE) -C $(TOOLS_DIR)/streamproxy distclean
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), tf7700))
-	-$(MAKE) -C $(TOOLS_DIR)/tfd2mtd distclean
-	-$(MAKE) -C $(TOOLS_DIR)/tffpctl distclean
-endif
-	-$(MAKE) -C $(TOOLS_DIR)/ustslave distclean
-	-$(MAKE) -C $(TOOLS_DIR)/vfdctl distclean
-	-$(MAKE) -C $(TOOLS_DIR)/wait4button distclean
-endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vuduo4k vuuno4kse vuultimo4k vusolo4k))
 	-$(MAKE) -C $(TOOLS_DIR)/oled_ctrl distclean
 endif
@@ -422,10 +400,6 @@ $(D)/tools-ustslave: $(D)/bootstrap
 #
 # vfdctl
 #
-ifeq ($(BOXTYPE), spark7162)
-EXTRA_CPPFLAGS=-DHAVE_SPARK7162_HARDWARE
-endif
-
 $(D)/tools-vfdctl: $(D)/bootstrap
 	$(START_BUILD)
 	set -e; cd $(TOOLS_DIR)/vfdctl; \
@@ -466,33 +440,7 @@ TOOLS  = $(D)/tools-aio-grab
 TOOLS += $(D)/tools-msgbox
 TOOLS += $(D)/tools-satfind
 TOOLS += $(D)/tools-showiframe
-ifneq ($(BOXTYPE), $(filter $(BOXTYPE), ufs910 ufs922))
 TOOLS += $(D)/tools-tuxcom
-endif
-ifeq ($(BOXARCH), sh4)
-TOOLS += $(D)/tools-devinit
-TOOLS += $(D)/tools-evremote2
-TOOLS += $(D)/tools-fp_control
-TOOLS += $(D)/tools-flashtool-fup
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), ufs912))
-TOOLS += $(D)/tools_flashtool_mup
-endif
-TOOLS += $(D)/tools-flashtool-mup
-TOOLS += $(D)/tools-flashtool-pad
-#TOOLS += $(D)/tools-hotplug
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), ipbox55 ipbox99 ipbox9900 cuberevo cuberevo_mini cuberevo_mini2 cuberevo_250hd cuberevo_2000hd cuberevo_3000hd))
-TOOLS += $(D)/tools-ipbox_eeprom
-endif
-TOOLS += $(D)/tools-stfbcontrol
-TOOLS += $(D)/tools-streamproxy
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), tf7700))
-TOOLS += $(D)/tools-tfd2mtd
-TOOLS += $(D)/tools-tffpctl
-endif
-TOOLS += $(D)/tools-ustslave
-TOOLS += $(D)/tools-vfdctl
-TOOLS += $(D)/tools-wait4button
-endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vuduo4k vuuno4kse vuultimo4k vusolo4k))
 TOOLS += $(D)/tools-oled_ctrl
 endif

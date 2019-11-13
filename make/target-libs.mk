@@ -776,25 +776,12 @@ $(D)/freetype: $(D)/bootstrap $(D)/zlib $(D)/libpng $(ARCHIVE)/$(FREETYPE_SOURCE
 #
 # lirc
 #
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE),adb_box arivalink200 ipbox55 ipbox99 ipbox9900 cuberevo cuberevo_mini cuberevo_mini2 cuberevo_250hd cuberevo_2000hd cuberevo_3000hd hl101 pace7241 sagemcom88 spark spark7162 ufs910 vitamin_hd5000))
-
 LIRC_VER = 0.9.0
 LIRC_SOURCE = lirc-$(LIRC_VER).tar.bz2
 LIRC_PATCH = lirc-$(LIRC_VER).patch
-LIRC = $(D)/lirc
 
 $(ARCHIVE)/$(LIRC_SOURCE):
 	$(DOWNLOAD) https://sourceforge.net/projects/lirc/files/LIRC/$(LIRC_VER)/$(LIRC_SOURCE)
-
-ifeq ($(IMAGE), $(filter $(IMAGE), neutrino neutrino-wlandriver))
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), spark spark7162))
-LIRC_OPTS = -D__KERNEL_STRICT_NAMES -DUINPUT_NEUTRINO_HACK -DSPARK -I$(DRIVER_DIR)/frontcontroller/aotom_spark
-else
-LIRC_OPTS = -D__KERNEL_STRICT_NAMES
-endif
-else
-LIRC_OPTS = -D__KERNEL_STRICT_NAMES
-endif
 
 $(D)/lirc: $(D)/bootstrap $(ARCHIVE)/$(LIRC_SOURCE)
 	$(START_BUILD)
@@ -804,7 +791,7 @@ $(D)/lirc: $(D)/bootstrap $(ARCHIVE)/$(LIRC_SOURCE)
 		$(call apply_patches, $(LIRC_PATCH)); \
 		$(CONFIGURE) \
 		ac_cv_path_LIBUSB_CONFIG= \
-		CFLAGS="$(TARGET_CFLAGS) $(LIRC_OPTS)" \
+		CFLAGS="$(TARGET_CFLAGS) -D__KERNEL_STRICT_NAMES" \
 			--build=$(BUILD) \
 			--host=$(TARGET) \
 			--prefix=/usr \
@@ -826,7 +813,6 @@ $(D)/lirc: $(D)/bootstrap $(ARCHIVE)/$(LIRC_SOURCE)
 	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,lircmd ircat irpty irrecord irsend irw lircrcd mode2 pronto2lirc)
 	$(REMOVE)/lirc-$(LIRC_VER)
 	$(TOUCH)
-endif
 
 #
 # jpeg
@@ -858,13 +844,8 @@ $(D)/jpeg: $(D)/bootstrap $(ARCHIVE)/$(JPEG_SOURCE)
 #
 # libjpg
 #
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), ufs910 ufs922 ipbox55 ipbox99 ipbox9900 cuberevo_250hd cuberevo_2000hd))
-$(D)/libjpeg: $(D)/jpeg
-	@touch $@
-else
 $(D)/libjpeg: $(D)/libjpeg_turbo2
 	@touch $@
-endif
 
 #
 # libjpeg_turbo2

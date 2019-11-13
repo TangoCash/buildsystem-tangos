@@ -30,8 +30,6 @@ endif
 
 ifeq ($(BOXARCH), $(filter $(BOXARCH), arm mips))
 BUSYBOX_CONFIG = busybox-$(BUSYBOX_VER).config_arm
-else ifeq ($(BOXTYPE), $(filter $(BOXTYPE), spark spark7162 ufs912 ufs913))
-BUSYBOX_CONFIG = busybox-$(BUSYBOX_VER).config_nandwrite
 else
 BUSYBOX_CONFIG = busybox-$(BUSYBOX_VER).config
 endif
