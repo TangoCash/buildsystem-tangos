@@ -64,8 +64,8 @@ $(D)/install-v3ddriver: $(ARCHIVE)/$(LIBGLES_SRC)
 	ln -sf libMali.so $(TARGET_LIB_DIR)/libgbm.so
 
 $(D)/install-v3ddriver-header: $(ARCHIVE)/$(LIBGLES_HEADERS)
-	install -d $(TARGET_DIR)/usr/include
-	unzip -o $(PATCHES)/$(LIBGLES_HEADERS) -d $(TARGET_DIR)/usr/include
+	install -d $(TARGET_INCLUDE_DIR)
+	unzip -o $(PATCHES)/$(LIBGLES_HEADERS) -d $(TARGET_INCLUDE_DIR)
 	install -d $(TARGET_LIB_DIR)/pkgconfig
 	cp $(PATCHES)/glesv2.pc $(TARGET_LIB_DIR)/pkgconfig
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/glesv2.pc

@@ -49,5 +49,5 @@ $(D)/install-v3ddriver: $(ARCHIVE)/$(LIBGLES_SRC)
 	ln -sf libgbm.so.1 $(TARGET_LIB_DIR)/libgbm.so
 
 $(D)/install-v3ddriver-header: $(ARCHIVE)/$(LIBGLES_HEADERS)
-	install -d $(TARGET_DIR)/usr/include
-	tar -xf $(ARCHIVE)/$(LIBGLES_HEADERS) -C $(TARGET_DIR)/usr/include
+	install -d $(TARGET_INCLUDE_DIR)
+	tar -xf $(ARCHIVE)/$(LIBGLES_HEADERS) -C $(TARGET_INCLUDE_DIR)

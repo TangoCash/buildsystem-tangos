@@ -80,7 +80,7 @@ $(D)/bash: $(D)/bootstrap $(ARCHIVE)/$(BASH_SOURCE)
 		$(call apply_patches, $(BASH_PATCH), 0); \
 		$(CONFIGURE) \
 			--libdir=$(TARGET_LIB_DIR) \
-			--includedir=$(TARGET_DIR)/usr/include \
+			--includedir=$(TARGET_INCLUDE_DIR) \
 			--docdir=$(TARGET_DIR)/.remove \
 			--infodir=$(TARGET_DIR)/.remove \
 			--mandir=$(TARGET_DIR)/.remove \
@@ -196,7 +196,7 @@ $(D)/opkg: $(D)/bootstrap $(D)/host_opkg $(D)/libarchive $(ARCHIVE)/$(OPKG_SOURC
 	$(CHDIR)/opkg-$(OPKG_VER); \
 		$(call apply_patches, $(OPKG_PATCH)); \
 		LIBARCHIVE_LIBS="-L$(TARGET_LIB_DIR) -larchive" \
-		LIBARCHIVE_CFLAGS="-I$(TARGET_DIR)/usr/include" \
+		LIBARCHIVE_CFLAGS="-I$(TARGET_INCLUDE_DIR)" \
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--disable-curl \
@@ -1640,8 +1640,8 @@ $(D)/wpa_supplicant: $(D)/bootstrap $(D)/openssl $(D)/wireless_tools $(ARCHIVE)/
 		sed -i 's/#CONFIG_TLS=openssl/CONFIG_TLS=openssl/' .config; \
 		sed -i 's/#CONFIG_IEEE80211N=y/CONFIG_IEEE80211N=y/' .config; \
 		sed -i 's/#CONFIG_INTERWORKING=y/CONFIG_INTERWORKING=y/' .config; \
-		export CFLAGS="-pipe -Os -Wall -g0 -I$(TARGET_DIR)/usr/include"; \
-		export CPPFLAGS="-I$(TARGET_DIR)/usr/include"; \
+		export CFLAGS="-pipe -Os -Wall -g0 -I$(TARGET_INCLUDE_DIR)"; \
+		export CPPFLAGS="-I$(TARGET_INCLUDE_DIR)"; \
 		export LIBS="-L$(TARGET_LIB_DIR) -Wl,-rpath-link,$(TARGET_LIB_DIR)"; \
 		export LDFLAGS="-L$(TARGET_LIB_DIR)"; \
 		export DESTDIR=$(TARGET_DIR); \
@@ -1764,7 +1764,7 @@ $(D)/openssh: $(D)/bootstrap $(D)/zlib $(D)/openssl $(ARCHIVE)/$(OPENSSH_SOURCE)
 			--sysconfdir=/etc/ssh \
 			--libexecdir=/sbin \
 			--with-privsep-path=/var/empty \
-			--with-cppflags="-pipe -Os -I$(TARGET_DIR)/usr/include" \
+			--with-cppflags="-pipe -Os -I$(TARGET_INCLUDE_DIR)" \
 			--with-ldflags=-"L$(TARGET_LIB_DIR)" \
 		; \
 		$(MAKE); \
@@ -2019,7 +2019,7 @@ $(D)/mupen64cmd: $(D)/bootstrap $(ARCHIVE)/$(MUPEN64CMD_SOURCE) $(D)/mupen64core
 			USE_GLES=1 \
 			PREFIX=/usr \
 			DESTDIR=$(TARGET_DIR) \
-			APIDIR=$(TARGET_DIR)/usr/include/mupen64plus \
+			APIDIR=$(TARGET_INCLUDE_DIR)/mupen64plus \
 			MANDIR=/.remove \
 			APPSDIR=/.remove \
 			ICONSDIR=/.remove \
@@ -2049,7 +2049,7 @@ $(D)/mupen64vid: $(D)/bootstrap $(ARCHIVE)/$(MUPEN64VID_SOURCE) $(D)/mupen64core
 			USE_GLES=1 \
 			PREFIX=/usr \
 			DESTDIR=$(TARGET_DIR) \
-			APIDIR=$(TARGET_DIR)/usr/include/mupen64plus \
+			APIDIR=$(TARGET_INCLUDE_DIR)/mupen64plus \
 			MANDIR=/.remove \
 			APPSDIR=/.remove \
 			ICONSDIR=/.remove \
@@ -2080,7 +2080,7 @@ $(D)/mupen64aud: $(D)/bootstrap $(ARCHIVE)/$(MUPEN64AUD_SOURCE) $(D)/mupen64core
 			NO_SRC=1 \
 			PREFIX=/usr \
 			DESTDIR=$(TARGET_DIR) \
-			APIDIR=$(TARGET_DIR)/usr/include/mupen64plus \
+			APIDIR=$(TARGET_INCLUDE_DIR)/mupen64plus \
 			MANDIR=/.remove \
 			APPSDIR=/.remove \
 			ICONSDIR=/.remove \
@@ -2110,7 +2110,7 @@ $(D)/mupen64inp: $(D)/bootstrap $(ARCHIVE)/$(MUPEN64INP_SOURCE) $(D)/mupen64core
 			USE_GLES=1 \
 			PREFIX=/usr \
 			DESTDIR=$(TARGET_DIR) \
-			APIDIR=$(TARGET_DIR)/usr/include/mupen64plus \
+			APIDIR=$(TARGET_INCLUDE_DIR)/mupen64plus \
 			MANDIR=/.remove \
 			APPSDIR=/.remove \
 			ICONSDIR=/.remove \
