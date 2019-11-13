@@ -27,8 +27,6 @@ ARCHIVE              ?= $(HOME)/Archive
 TOOLS_DIR             = $(BASE_DIR)/tools
 BUILD_TMP             = $(BASE_DIR)/build_tmp
 SOURCE_DIR            = $(BASE_DIR)/build_source
-DRIVER_DIR            = $(BASE_DIR)/driver
-FLASH_DIR             = $(BASE_DIR)/flash
 RELEASE_IMAGE_DIR     = $(BASE_DIR)/release_image
 
 -include $(BASE_DIR)/config
@@ -44,9 +42,7 @@ else
 GITHUB               ?= https://github.com
 endif
 GIT_NAME             ?= TangoCash
-GIT_NAME_DRIVER      ?= Duckbox-Developers
 GIT_NAME_TOOLS       ?= Duckbox-Developers
-GIT_NAME_FLASH       ?= Duckbox-Developers
 
 # default config...
 BOXARCH              ?= arm
@@ -265,7 +261,6 @@ TUXBOX_CUSTOMIZE = [ -x $(CUSTOM_DIR)/$(notdir $@)-local.sh ] && \
 	$(TARGET_DIR) \
 	$(BASE_DIR) \
 	$(SOURCE_DIR) \
-	$(FLASH_DIR) \
 	$(BOXTYPE) \
 	$(FLAVOUR) \
 	$(RELEASE_IMAGE_DIR) \
