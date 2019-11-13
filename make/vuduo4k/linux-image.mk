@@ -1,7 +1,9 @@
 #
 # flashimage
 #
+
 ### armbox vuduo4k
+
 # general
 FLASH_BUILD_TMP = $(BUILD_TMP)/image-build
 FLASH_PREFIX = vuplus/duo4k
