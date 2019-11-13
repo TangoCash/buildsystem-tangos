@@ -1,22 +1,19 @@
 #
 # driver
 #
-ifeq ($(BOXTYPE), vusolo4k)
-DRIVER_VER = 3.14.28
-DRIVER_DATE = 20181204
+DRIVER_VER = 4.1.45
+DRIVER_DATE = 20190212
 DRIVER_REV = r0
 DRIVER_SRC = vuplus-dvb-proxy-$(KERNEL_TYPE)-$(DRIVER_VER)-$(DRIVER_DATE).$(DRIVER_REV).tar.gz
 
 $(ARCHIVE)/$(DRIVER_SRC):
 	$(DOWNLOAD) http://archive.vuplus.com/download/build_support/vuplus/$(DRIVER_SRC)
-endif
 
 driver-clean:
 	rm -f $(D)/driver $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/$(KERNEL_TYPE)*
 
 driver: $(D)/driver
 $(D)/driver: $(ARCHIVE)/$(DRIVER_SRC) $(D)/bootstrap $(D)/kernel
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k vuduo4k))
 	$(START_BUILD)
 	install -d $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra
 	tar -xf $(ARCHIVE)/$(DRIVER_SRC) -C $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra
@@ -28,16 +25,9 @@ ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k vuduo4k))
 #
 # platform util
 #
-ifeq ($(BOXTYPE), vusolo4k)
-UTIL_VER = 17.1
-UTIL_DATE = 20190424
-UTIL_REV = r0
-endif
-ifeq ($(BOXTYPE), vuduo4k)
 UTIL_VER = 18.1
 UTIL_DATE = 20190424
 UTIL_REV = r0
-endif
 UTIL_SRC = platform-util-$(KERNEL_TYPE)-$(UTIL_VER)-$(UTIL_DATE).$(UTIL_REV).tar.gz
 
 $(ARCHIVE)/$(UTIL_SRC):
@@ -53,16 +43,9 @@ $(D)/platform_util: $(D)/bootstrap $(ARCHIVE)/$(UTIL_SRC)
 #
 # libgles
 #
-ifeq ($(BOXTYPE), vusolo4k)
-GLES_VER = 17.1
-GLES_DATE = 20190424
-GLES_REV = r0
-endif
-ifeq ($(BOXTYPE), vuduo4k)
 GLES_VER = 18.1
 GLES_DATE = 20190424
 GLES_REV = r0
-endif
 GLES_SRC = libgles-$(KERNEL_TYPE)-$(GLES_VER)-$(GLES_DATE).$(GLES_REV).tar.gz
 
 $(ARCHIVE)/$(GLES_SRC):
@@ -81,12 +64,7 @@ $(D)/libgles: $(D)/bootstrap $(ARCHIVE)/$(GLES_SRC)
 #
 # vmlinuz initrd
 #
-ifeq ($(BOXTYPE), vusolo4k)
-INITRD_DATE = 20170209
-endif
-ifeq ($(BOXTYPE), vuduo4k)
 INITRD_DATE = 20181030
-endif
 INITRD_SRC = vmlinuz-initrd_$(KERNEL_TYPE)_$(INITRD_DATE).tar.gz
 
 $(ARCHIVE)/$(INITRD_SRC):

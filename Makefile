@@ -116,7 +116,7 @@ include make/target-root-etc.mk
 include make/target-tools.mk
 include make/target-tools-git.mk
 include make/images.mk
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51 h7 bre2ze4k hd60 hd61))
+ifeq ($(BOXARCH), $(filter $(BOXARCH), arm))
 include make/$(BOXTYPE)/linux-kernel.mk
 include make/$(BOXTYPE)/linux-driver.mk
 include make/$(BOXTYPE)/linux-image.mk
