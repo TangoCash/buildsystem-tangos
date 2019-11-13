@@ -1,8 +1,0 @@
-# /etc/fstab: static file system information.
-#
-# <file system> <mount point>   <type>  <options>               				<dump>	<pass>
-proc	          /proc           proc    defaults                        			0 0
-tmpfs             /tmp            tmpfs   defaults                        			0 0
-/dev/mtdblock7    /swap           jffs2   defaults,errors=remount-ro,noatime,nodiratime      	0 0
-LABEL=RECORD      /hdd            auto    defaults,errors=remount-ro,noatime,nodiratime      	0 0
-
