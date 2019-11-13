@@ -10,7 +10,10 @@ LINKS_PATCH  = links-$(LINKS_VER).patch
 LINKS_PATCH += links-$(LINKS_VER)-ac-prog-cxx.patch
 LINKS_PATCH += links-$(LINKS_VER)-accept_https_play.patch
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51 hd60 hd61))
-LINKS_PATCH += links-$(LINKS_VER)-hd51-input.patch
+LINKS_PATCH += links-$(LINKS_VER)-event1-input.patch
+endif
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), h7))
+LINKS_PATCH += links-$(LINKS_VER)-event2-input.patch
 endif
 
 $(ARCHIVE)/links-$(LINKS_VER).tar.bz2:

@@ -5,7 +5,7 @@
  	char buf[32];
  	//KbInitialize();
 -	fd = open("/dev/input/event0", O_RDONLY);
-+	fd = open("/dev/input/nevis_ir", O_RDONLY);
++	fd = open("/dev/input/event2", O_RDONLY);
  
  	if (fd == -1)
  	{
