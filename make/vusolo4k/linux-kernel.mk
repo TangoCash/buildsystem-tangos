@@ -6,7 +6,7 @@ KERNEL_TYPE            = vusolo4k
 KERNEL_SRC_VER         = 3.14-1.8
 KERNEL_SRC             = stblinux-${KERNEL_SRC_VER}.tar.bz2
 KERNEL_URL             = http://archive.vuplus.com/download/kernel
-ifeq ($(VUSOLO4K_MULTIBOOT), 1)
+ifeq ($(VUPLUS4K_MULTIBOOT), 1)
 KERNEL_CONFIG          = $(KERNEL_TYPE)/defconfig_multi
 else
 KERNEL_CONFIG          = $(KERNEL_TYPE)/defconfig

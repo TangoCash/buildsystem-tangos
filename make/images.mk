@@ -19,14 +19,14 @@ ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd61))
 	$(MAKE) flash-image-hd61-multi-disk flash-image-hd61-multi-rootfs
 endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k))
-ifeq ($(VUSOLO4K_MULTIBOOT), 1)
+ifeq ($(VUPLUS4K_MULTIBOOT), 1)
 	$(MAKE) flash-image-vusolo4k-multi-rootfs
 else
 	$(MAKE) flash-image-vusolo4k-rootfs
 endif
 endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vuduo4k))
-ifeq ($(VUDUO4K_MULTIBOOT), 1)
+ifeq ($(VUPLUS4K_MULTIBOOT), 1)
 	$(MAKE) flash-image-vuduo4k-multi-rootfs
 else
 	$(MAKE) flash-image-vuduo4k-rootfs

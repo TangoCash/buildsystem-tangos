@@ -47,7 +47,7 @@ neutrino-release-vusolo4k:
 	install -m 0755 $(SKEL_ROOT)/release/halt_vusolo4k $(RELEASE_DIR)/etc/init.d/halt
 	cp -f $(SKEL_ROOT)/release/fstab_vusolo4k $(RELEASE_DIR)/etc/fstab
 	cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/*.ko $(RELEASE_DIR)/lib/modules/
-ifeq ($(VUSOLO4K_MULTIBOOT), 1)
+ifeq ($(VUPLUS4K_MULTIBOOT), 1)
 	cp $(SKEL_ROOT)/release/vmlinuz-initrd-7366c0 $(RELEASE_DIR)/boot/
 else
 	cp $(TARGET_DIR)/boot/vmlinuz-initrd-7366c0 $(RELEASE_DIR)/boot/
@@ -61,7 +61,7 @@ neutrino-release-vuduo4k:
 	install -m 0755 $(SKEL_ROOT)/release/halt_vuduo4k $(RELEASE_DIR)/etc/init.d/halt
 	cp -f $(SKEL_ROOT)/release/fstab_vuduo4k $(RELEASE_DIR)/etc/fstab
 	cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/*.ko $(RELEASE_DIR)/lib/modules/
-ifeq ($(VUDUO4K_MULTIBOOT), 1)
+ifeq ($(VUPLUS4K_MULTIBOOT), 1)
 	cp $(SKEL_ROOT)/release/vmlinuz-initrd-7278b1 $(RELEASE_DIR)/boot/
 else
 	cp $(TARGET_DIR)/boot/vmlinuz-initrd-7278b1 $(RELEASE_DIR)/boot/

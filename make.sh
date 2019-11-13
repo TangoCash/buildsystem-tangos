@@ -210,11 +210,11 @@ echo "NEWLAYOUT=$NEWLAYOUT" >> config
 
 fi
 
-if [ $BOXTYPE == 'hd60' -o $BOXTYPE == 'hd61']; then
+if [ $BOXTYPE == 'hd60' -o $BOXTYPE == 'hd61' ]; then
 echo "NEWLAYOUT=1" >> config
 fi
 
-if [ $BOXTYPE == 'vusolo4k' ]; then
+if [ $BOXTYPE == 'vusolo4k' -o $BOXTYPE == 'vuduo4k' ]; then
 case $8 in
 	[1-2]) REPLY=$8;;
 	*)	echo -e "\nNormal or MultiBoot:"
@@ -224,28 +224,11 @@ case $8 in
 esac
 
 case "$REPLY" in
-	1)  VUSOLO4K_MULTIBOOT="0";;
-	2)  VUSOLO4K_MULTIBOOT="1";;
-	*)  VUSOLO4K_MULTIBOOT="0";;
+	1)  VUPLUS4K_MULTIBOOT="0";;
+	2)  VUPLUS4K_MULTIBOOT="1";;
+	*)  VUPLUS4K_MULTIBOOT="0";;
 esac
-echo "VUSOLO4K_MULTIBOOT=$VUSOLO4K_MULTIBOOT" >> config
-fi
-
-if [ $BOXTYPE == 'vuduo4k' ]; then
-case $8 in
-	[1-2]) REPLY=$8;;
-	*)	echo -e "\nNormal or MultiBoot:"
-		echo "   1)  Normal    (default)"
-		echo "   2)  Multiboot"
-		read -p "Select mode (1-2)? ";;
-esac
-
-case "$REPLY" in
-	1)  VUDUO4K_MULTIBOOT="0";;
-	2)  VUDUO4K_MULTIBOOT="1";;
-	*)  VUDUO4K_MULTIBOOT="0";;
-esac
-echo "VUDUO4K_MULTIBOOT=$VUDUO4K_MULTIBOOT" >> config
+echo "VUPLUS4K_MULTIBOOT=$VUPLUS4K_MULTIBOOT" >> config
 fi
 
 ##############################################
