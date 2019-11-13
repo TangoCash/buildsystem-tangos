@@ -336,9 +336,6 @@ $(D)/gst_plugins_dvbmediasink: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_ba
 GST_LIBAV_VER = $(GSTREAMER_VER)
 GST_LIBAV_SOURCE = gst-libav-$(GST_LIBAV_VER).tar.xz
 GST_LIBAV_PATCH  = gst-libav-$(GST_LIBAV_VER)-disable-yasm-for-libav-when-disable-yasm.patch
-ifeq ($(BOXARCH), sh4)
-GST_LIBAV_PATCH += gst-libav-$(GST_LIBAV_VER)-fix-sh4-compile-gcc48.patch
-endif
 
 $(ARCHIVE)/$(GST_LIBAV_SOURCE):
 	$(DOWNLOAD) https://gstreamer.freedesktop.org/src/gst-libav/$(GST_LIBAV_SOURCE)

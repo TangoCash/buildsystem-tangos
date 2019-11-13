@@ -60,10 +60,6 @@ $(D)/links: $(D)/bootstrap $(D)/freetype $(D)/libpng $(D)/libjpeg $(D)/openssl $
 
 NP_OBJDIR = $(BUILD_TMP)/neutrino-plugins
 
-ifeq ($(BOXARCH), sh4)
-EXTRA_CPPFLAGS_MP_PLUGINS = -DMARTII
-endif
-
 $(D)/neutrino-plugins.do_prepare: $(D)/bootstrap $(D)/ffmpeg $(D)/libcurl $(D)/libpng $(D)/libjpeg $(D)/giflib $(D)/freetype
 	$(START_BUILD)
 	rm -rf $(SOURCE_DIR)/neutrino-plugins

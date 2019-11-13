@@ -71,13 +71,6 @@ INITSCRIPTS_ADAPTED_ETC_FILES = \
 	init.d/udhcpc \
 	init.d/umountfs
 
-ifeq ($(BOXARCH), sh4)
-INITSCRIPTS_ADAPTED_ETC_FILES += \
-	init.d/getfb.awk \
-	init.d/makedev \
-	init.d/mountvirtfs
-endif
-
 #
 # Functions for copying customized etc files from cdk/root/etc into yaud targets and
 # for updating init scripts in runlevel for yaud targets

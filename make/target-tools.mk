@@ -1660,10 +1660,6 @@ DVBSNOOP_URL = https://github.com/Duckbox-Developers/dvbsnoop.git
 $(ARCHIVE)/$(DVBSNOOP_SOURCE):
 	$(HELPERS_DIR)/get-git-archive.sh $(DVBSNOOP_URL) $(DVBSNOOP_VER) $(notdir $@) $(ARCHIVE)
 
-ifeq ($(BOXARCH), sh4)
-DVBSNOOP_CONF_OPTS = --with-dvbincludes=$(KERNEL_DIR)/include
-endif
-
 $(D)/dvbsnoop: $(D)/bootstrap $(D)/kernel $(ARCHIVE)/$(DVBSNOOP_SOURCE)
 	$(START_BUILD)
 	$(REMOVE)/dvbsnoop-git-$(DVBSNOOP_VER)

@@ -1035,11 +1035,7 @@ $(D)/ca-bundle: $(ARCHIVE)/$(CA-BUNDLE_SOURCE)
 #
 # libcurl
 #
-ifeq ($(BOXARCH), sh4)
-LIBCURL_VER = 7.61.1
-else
 LIBCURL_VER = 7.66.0
-endif
 LIBCURL_SOURCE = curl-$(LIBCURL_VER).tar.bz2
 LIBCURL_PATCH = libcurl-$(LIBCURL_VER).patch
 
@@ -1666,7 +1662,7 @@ $(D)/libdvdread: $(D)/bootstrap $(ARCHIVE)/$(LIBDVDREAD_SOURCE)
 #
 # libdreamdvd
 #
-LIBDREAMDVD_PATCH = libdreamdvd-1.0-sh4-support.patch
+LIBDREAMDVD_PATCH =
 
 $(D)/libdreamdvd: $(D)/bootstrap $(D)/libdvdnav
 	$(START_BUILD)
@@ -1792,11 +1788,6 @@ LIBXML2_PATCH = libxml2-$(LIBXML2_VER).patch
 $(ARCHIVE)/$(LIBXML2_SOURCE):
 	$(DOWNLOAD) ftp://xmlsoft.org/libxml2/$(LIBXML2_SOURCE)
 
-ifeq ($(BOXARCH), sh4)
-LIBXML2_CONF_OPTS += --without-iconv
-LIBXML2_CONF_OPTS += --with-minimum
-endif
-
 $(D)/libxml2: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/$(LIBXML2_SOURCE)
 	$(START_BUILD)
 	$(REMOVE)/libxml2-$(LIBXML2_VER).tar.gz
@@ -1869,9 +1860,6 @@ $(D)/libxslt: $(D)/bootstrap $(D)/libxml2 $(ARCHIVE)/$(LIBXSLT_SOURCE)
 	$(REWRITE_LIBTOOL)/libexslt.la
 	$(REWRITE_LIBTOOL)/libxslt.la
 	$(REWRITE_LIBTOOLDEP)/libexslt.la
-ifeq ($(BOXARCH), sh4)
-	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,xsltproc xslt-config)
-endif
 	rm -rf $(TARGETLIB)/xsltConf.sh
 	rm -rf $(TARGETLIB)/libxslt-plugins/
 	$(REMOVE)/libxslt-$(LIBXSLT_VER)
@@ -2081,9 +2069,6 @@ LIBUSB_VER = 1.0.22
 LIBUSB_VER_MAJOR = 1.0
 LIBUSB_SOURCE = libusb-$(LIBUSB_VER).tar.bz2
 LIBUSB_PATCH = libusb-$(LIBUSB_VER).patch
-ifeq ($(BOXARCH), sh4)
-LIBUSB_PATCH += libusb-1.0.22-sh4-clock_gettime.patch
-endif
 
 $(ARCHIVE)/$(LIBUSB_SOURCE):
 	$(DOWNLOAD) https://sourceforge.net/projects/libusb/files/libusb-$(LIBUSB_VER_MAJOR)/libusb-$(LIBUSB_VER)/$(LIBUSB_SOURCE)
