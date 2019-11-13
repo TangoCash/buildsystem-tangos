@@ -470,8 +470,8 @@ neutrino-hd2-distclean: neutrino-cdkroot-clean
 neutrino-cdkroot-clean:
 	[ -e $(TARGET_DIR)/usr/local/bin ] && cd $(TARGET_DIR)/usr/local/bin && find -name '*' -delete || true
 	[ -e $(TARGET_DIR)/usr/local/share/iso-codes ] && cd $(TARGET_DIR)/usr/local/share/iso-codes && find -name '*' -delete || true
-	[ -e $(TARGET_DIR)/usr/share/tuxbox/neutrino ] && cd $(TARGET_DIR)/usr/share/tuxbox/neutrino && find -name '*' -delete || true
-	[ -e $(TARGET_DIR)/usr/share/fonts ] && cd $(TARGET_DIR)/usr/share/fonts && find -name '*' -delete || true
+	[ -e $(TARGET_SHARE_DIR)/tuxbox/neutrino ] && cd $(TARGET_SHARE_DIR)/tuxbox/neutrino && find -name '*' -delete || true
+	[ -e $(TARGET_SHARE_DIR)/fonts ] && cd $(TARGET_SHARE_DIR)/fonts && find -name '*' -delete || true
 	[ -e $(TARGET_DIR)/var/tuxbox ] && cd $(TARGET_DIR)/var/tuxbox && find -name '*' -delete || true
 
 dual:

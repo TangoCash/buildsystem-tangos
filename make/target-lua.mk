@@ -19,13 +19,13 @@ $(ARCHIVE)/$(LUAPOSIX_SOURCE):
 $(D)/lua: $(D)/bootstrap $(D)/ncurses $(ARCHIVE)/$(LUAPOSIX_SOURCE) $(ARCHIVE)/$(LUA_SOURCE)
 	$(START_BUILD)
 	$(REMOVE)/lua-$(LUA_VER)
-	mkdir -p $(TARGET_DIR)/usr/share/lua/$(LUA_VER_SHORT)
+	mkdir -p $(TARGET_SHARE_DIR)/lua/$(LUA_VER_SHORT)
 	$(UNTAR)/$(LUA_SOURCE)
 	$(CHDIR)/lua-$(LUA_VER); \
 		$(call apply_patches, $(LUAPOSIX_PATCH)); \
 		tar xf $(ARCHIVE)/$(LUAPOSIX_SOURCE); \
 		cd luaposix-git-$(LUAPOSIX_VER)/ext; cp posix/posix.c include/lua52compat.h ../../src/; cd ../..; \
-		cd luaposix-git-$(LUAPOSIX_VER)/lib; cp *.lua $(TARGET_DIR)/usr/share/lua/$(LUA_VER_SHORT); cd ../..; \
+		cd luaposix-git-$(LUAPOSIX_VER)/lib; cp *.lua $(TARGET_SHARE_DIR)/lua/$(LUA_VER_SHORT); cd ../..; \
 		sed -i 's/<config.h>/"config.h"/' src/posix.c; \
 		sed -i '/^#define/d' src/lua52compat.h; \
 		sed -i 's|man/man1|/.remove|' Makefile; \
@@ -72,7 +72,7 @@ $(D)/luafeedparser: $(D)/bootstrap $(D)/lua $(D)/luasocket $(D)/luaexpat $(ARCHI
 	$(UNTAR)/$(LUAFEEDPARSER_SOURCE)
 	$(CHDIR)/luafeedparser-git-$(LUAFEEDPARSER_VER); \
 		sed -i -e "s/^PREFIX.*//" -e "s/^LUA_DIR.*//" Makefile ; \
-		$(BUILDENV) $(MAKE) install  LUA_DIR=$(TARGET_DIR)/usr/share/lua/$(LUA_VER_SHORT)
+		$(BUILDENV) $(MAKE) install  LUA_DIR=$(TARGET_SHARE_DIR)/lua/$(LUA_VER_SHORT)
 	$(REMOVE)/luafeedparser-git-$(LUAFEEDPARSER_VER)
 	$(TOUCH)
 
@@ -84,7 +84,7 @@ $(ARCHIVE)/json.lua:
 
 $(D)/luajson: $(D)/bootstrap $(D)/lua $(ARCHIVE)/json.lua
 	$(START_BUILD)
-	cp $(ARCHIVE)/json.lua $(TARGET_DIR)/usr/share/lua/$(LUA_VER_SHORT)/json.lua
+	cp $(ARCHIVE)/json.lua $(TARGET_SHARE_DIR)/lua/$(LUA_VER_SHORT)/json.lua
 	$(TOUCH)
 
 #
@@ -146,7 +146,7 @@ $(D)/luasoap: $(D)/bootstrap $(D)/lua $(D)/luasocket $(D)/luaexpat $(ARCHIVE)/$(
 	$(UNTAR)/$(LUASOAP_SOURCE)
 	$(CHDIR)/luasoap-$(LUASOAP_VER); \
 		$(call apply_patches, $(LUASOAP_PATCH)); \
-		$(MAKE) install LUA_DIR=$(TARGET_DIR)/usr/share/lua/$(LUA_VER_SHORT)
+		$(MAKE) install LUA_DIR=$(TARGET_SHARE_DIR)/lua/$(LUA_VER_SHORT)
 	$(REMOVE)/luasoap-$(LUASOAP_VER)
 	$(TOUCH)
 

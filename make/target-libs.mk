@@ -404,7 +404,7 @@ $(D)/libglib2: $(D)/bootstrap $(D)/host_libglib2_genmarshal $(D)/zlib $(D)/libff
 	$(REWRITE_LIBTOOLDEP)/libgio-2.0.la
 	$(REWRITE_LIBTOOLDEP)/libgobject-2.0.la
 	$(REWRITE_LIBTOOLDEP)/libgthread-2.0.la
-	rm -rf $(addprefix $(TARGET_DIR)/usr/share/,bash-completion gettext glib-2.0)
+	rm -rf $(addprefix $(TARGET_SHARE_DIR)/,bash-completion gettext glib-2.0)
 	$(REMOVE)/glib-$(LIBGLIB2_VER)
 	$(TOUCH)
 
@@ -716,11 +716,11 @@ $(D)/timezone: $(D)/bootstrap find-zic $(ARCHIVE)/$(TZDATA_SOURCE)
 			: zic -d zoneinfo/posix -L /dev/null -y yearistype.sh $$zone ; \
 			: zic -d zoneinfo/right -L leapseconds -y yearistype.sh $$zone ; \
 		done; \
-		install -d -m 0755 $(TARGET_DIR)/usr/share $(TARGET_DIR)/etc; \
-		cp -a zoneinfo $(TARGET_DIR)/usr/share/; \
-		cp -v zone.tab iso3166.tab $(TARGET_DIR)/usr/share/zoneinfo/; \
+		install -d -m 0755 $(TARGET_SHARE_DIR) $(TARGET_DIR)/etc; \
+		cp -a zoneinfo $(TARGET_SHARE_DIR)/; \
+		cp -v zone.tab iso3166.tab $(TARGET_SHARE_DIR)/zoneinfo/; \
 		# Install default timezone
-		if [ -e $(TARGET_DIR)/usr/share/zoneinfo/$(DEFAULT_TIMEZONE) ]; then \
+		if [ -e $(TARGET_SHARE_DIR)/zoneinfo/$(DEFAULT_TIMEZONE) ]; then \
 			echo ${DEFAULT_TIMEZONE} > $(TARGET_DIR)/etc/timezone; \
 		fi; \
 	install -m 0644 $(SKEL_ROOT)/etc/timezone.xml $(TARGET_DIR)/etc/
@@ -1343,7 +1343,7 @@ $(D)/libvorbisidec: $(D)/bootstrap $(D)/libogg $(ARCHIVE)/$(LIBVORBISIDEC_SOURCE
 	$(UNTAR)/$(LIBVORBISIDEC_SOURCE)
 	$(CHDIR)/libvorbisidec-$(LIBVORBISIDEC_VER); \
 		$(call apply_patches, $(LIBVORBISIDEC_PATCH)); \
-		ACLOCAL_FLAGS="-I . -I $(TARGET_DIR)/usr/share/aclocal" \
+		ACLOCAL_FLAGS="-I . -I $(TARGET_SHARE_DIR)/aclocal" \
 		$(BUILDENV) \
 		./autogen.sh $(SILENT_OPT) \
 			--host=$(TARGET) \
@@ -2200,7 +2200,7 @@ $(D)/alsa_utils: $(D)/bootstrap $(D)/alsa_lib $(ARCHIVE)/$(ALSA_UTILS_SOURCE)
 	$(CHDIR)/alsa-utils-$(ALSA_UTILS_VER); \
 		$(call apply_patches, $(ALSA_UTILS_PATCH)); \
 		sed -ir -r "s/(alsamixer|amidi|aplay|iecset|speaker-test|seq|alsactl|alsaucm|topology)//g" Makefile.am ;\
-		autoreconf -fi -I $(TARGET_DIR)/usr/share/aclocal $(SILENT_OPT); \
+		autoreconf -fi -I $(TARGET_SHARE_DIR)/aclocal $(SILENT_OPT); \
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--mandir=/.remove \

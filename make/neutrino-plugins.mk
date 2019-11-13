@@ -113,7 +113,7 @@ $(D)/neutrino-plugins.do_compile: $(D)/neutrino-plugins.config.status
 	@touch $@
 
 $(D)/neutrino-plugins: $(D)/neutrino-plugins.do_prepare $(D)/neutrino-plugins.do_compile
-	mkdir -p $(TARGET_DIR)/usr/share/tuxbox/neutrino/icons
+	mkdir -p $(TARGET_SHARE_DIR)/tuxbox/neutrino/icons
 	$(MAKE) -C $(NP_OBJDIR) install DESTDIR=$(TARGET_DIR)
 	$(TOUCH)
 
@@ -149,8 +149,8 @@ $(D)/neutrino-plugin-xupnpd: $(D)/bootstrap $(D)/lua $(D)/openssl $(D)/neutrino-
 		$(MAKE) embedded TARGET=$(TARGET) PKG_CONFIG=$(PKG_CONFIG) LUAFLAGS="$(TARGET_LDFLAGS) -I$(TARGET_INCLUDE_DIR)"; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	install -m 755 $(SKEL_ROOT)/etc/init.d/xupnpd $(TARGET_DIR)/etc/init.d/
-	mkdir -p $(TARGET_DIR)/usr/share/xupnpd/config
-	rm $(TARGET_DIR)/usr/share/xupnpd/plugins/staff/xupnpd_18plus.lua
+	mkdir -p $(TARGET_SHARE_DIR)/xupnpd/config
+	rm $(TARGET_SHARE_DIR)/xupnpd/plugins/staff/xupnpd_18plus.lua
 	install -m 644 $(ARCHIVE)/plugin-scripts-lua.git/xupnpd/xupnpd_18plus.lua ${TARGET_DIR}/usr/share/xupnpd/plugins/
 	install -m 644 $(ARCHIVE)/plugin-scripts-lua.git/xupnpd/xupnpd_cczwei.lua ${TARGET_DIR}/usr/share/xupnpd/plugins/
 	: install -m 644 $(ARCHIVE)/plugin-scripts-lua.git/xupnpd/xupnpd_coolstream.lua ${TARGET_DIR}/usr/share/xupnpd/plugins/
@@ -174,11 +174,11 @@ $(D)/neutrino-plugin-scripts-lua: $(D)/bootstrap
 	$(CHDIR)/neutrino-plugin-scripts-lua; \
 		$(call apply_patches, $(NEUTRINO_SCRIPTLUA_PATCH))
 	$(CHDIR)/neutrino-plugin-scripts-lua; \
-		install -d $(TARGET_DIR)/usr/share/tuxbox/neutrino/plugins
-#		cp -R $(BUILD_TMP)/neutrino-plugin-scripts-lua/ard_mediathek/* $(TARGET_DIR)/usr/share/tuxbox/neutrino/plugins/
-#		cp -R $(BUILD_TMP)/neutrino-plugin-scripts-lua/favorites2bin/* $(TARGET_DIR)/usr/share/tuxbox/neutrino/plugins/
-		cp -R $(BUILD_TMP)/neutrino-plugin-scripts-lua/mtv/* $(TARGET_DIR)/usr/share/tuxbox/neutrino/plugins/
-		cp -R $(BUILD_TMP)/neutrino-plugin-scripts-lua/netzkino/* $(TARGET_DIR)/usr/share/tuxbox/neutrino/plugins/
+		install -d $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins
+#		cp -R $(BUILD_TMP)/neutrino-plugin-scripts-lua/ard_mediathek/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
+#		cp -R $(BUILD_TMP)/neutrino-plugin-scripts-lua/favorites2bin/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
+		cp -R $(BUILD_TMP)/neutrino-plugin-scripts-lua/mtv/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
+		cp -R $(BUILD_TMP)/neutrino-plugin-scripts-lua/netzkino/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
 	$(REMOVE)/neutrino-plugin-scripts-lua
 	$(TOUCH)
 
@@ -195,11 +195,11 @@ $(D)/neutrino-plugin-mediathek:
 		else cd $(ARCHIVE); git clone https://github.com/neutrino-mediathek/mediathek.git plugins-mediathek.git; \
 		fi
 	cp -ra $(ARCHIVE)/plugins-mediathek.git $(BUILD_TMP)/plugins-mediathek
-	install -d $(TARGET_DIR)/usr/share/tuxbox/neutrino/plugins
+	install -d $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins
 	$(CHDIR)/plugins-mediathek; \
 		$(call apply_patches, $(NEUTRINO_MEDIATHEK_PATCH))
 	$(CHDIR)/plugins-mediathek; \
-		cp -a plugins/* $(TARGET_DIR)/usr/share/tuxbox/neutrino/plugins/; \
+		cp -a plugins/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/; \
 		cp -a share $(TARGET_DIR)/usr/
 	$(REMOVE)/plugins-mediathek
 	$(TOUCH)
@@ -219,18 +219,18 @@ $(D)/neutrino-plugin-iptvplayer: $(D)/librtmp $(D)/python_twisted_small
 	@if [ "$@" = "$(D)/neutrino-plugin-iptvplayer-nightly" ]; then \
 		$(BUILD_TMP)/iptvplayer/SyncWithGitLab.sh $(BUILD_TMP)/iptvplayer; \
 	fi
-	install -d $(TARGET_DIR)/usr/share/tuxbox/neutrino/plugins
-	install -d $(TARGET_DIR)/usr/share/E2emulator
-	cp -R $(BUILD_TMP)/iptvplayer/E2emulator/* $(TARGET_DIR)/usr/share/E2emulator/
-	install -d $(TARGET_DIR)/usr/share/E2emulator/Plugins/Extensions/IPTVPlayer
-	cp -R $(BUILD_TMP)/iptvplayer/IPTVplayer/* $(TARGET_DIR)/usr/share/E2emulator//Plugins/Extensions/IPTVPlayer/
-	cp -R $(BUILD_TMP)/iptvplayer/IPTVdaemon/* $(TARGET_DIR)/usr/share/E2emulator//Plugins/Extensions/IPTVPlayer/
-	chmod 755 $(TARGET_DIR)/usr/share/E2emulator/Plugins/Extensions/IPTVPlayer/cmdlineIPTV.*
-	chmod 755 $(TARGET_DIR)/usr/share/E2emulator/Plugins/Extensions/IPTVPlayer/IPTVdaemon.*
+	install -d $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins
+	install -d $(TARGET_SHARE_DIR)/E2emulator
+	cp -R $(BUILD_TMP)/iptvplayer/E2emulator/* $(TARGET_SHARE_DIR)/E2emulator/
+	install -d $(TARGET_SHARE_DIR)/E2emulator/Plugins/Extensions/IPTVPlayer
+	cp -R $(BUILD_TMP)/iptvplayer/IPTVplayer/* $(TARGET_SHARE_DIR)/E2emulator//Plugins/Extensions/IPTVPlayer/
+	cp -R $(BUILD_TMP)/iptvplayer/IPTVdaemon/* $(TARGET_SHARE_DIR)/E2emulator//Plugins/Extensions/IPTVPlayer/
+	chmod 755 $(TARGET_SHARE_DIR)/E2emulator/Plugins/Extensions/IPTVPlayer/cmdlineIPTV.*
+	chmod 755 $(TARGET_SHARE_DIR)/E2emulator/Plugins/Extensions/IPTVPlayer/IPTVdaemon.*
 	PYTHONPATH=$(TARGET_DIR)/$(PYTHON_DIR) \
 	$(HOST_DIR)/bin/python$(PYTHON_VER_MAJOR) -Wi -t -O $(TARGET_DIR)/$(PYTHON_DIR)/compileall.py \
-		-d /usr/share/E2emulator -f -x badsyntax $(TARGET_DIR)/usr/share/E2emulator
-	cp -R $(BUILD_TMP)/iptvplayer/addon4neutrino/neutrinoIPTV/* $(TARGET_DIR)/usr/share/tuxbox/neutrino/plugins/
+		-d /usr/share/E2emulator -f -x badsyntax $(TARGET_SHARE_DIR)/E2emulator
+	cp -R $(BUILD_TMP)/iptvplayer/addon4neutrino/neutrinoIPTV/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
 	$(REMOVE)/iptvplayer
 	$(TOUCH)
 
@@ -245,15 +245,15 @@ $(D)/neutrino-plugin-channellogos:
 		else cd $(ARCHIVE); git clone https://github.com/neutrino-images/ni-logo-stuff.git channellogos.git; \
 		fi
 	cp -ra $(ARCHIVE)/channellogos.git $(BUILD_TMP)/channellogos
-	rm -rf $(TARGET_DIR)/usr/share/tuxbox/neutrino/icons/logo
-	install -d $(TARGET_DIR)/usr/share/tuxbox/neutrino/icons/logo
-	install -m 0644 $(BUILD_TMP)/channellogos/logos/* $(TARGET_DIR)/usr/share/tuxbox/neutrino/icons/logo
-	install -d $(TARGET_DIR)/usr/share/tuxbox/neutrino/icons/logo/events
-	install -m 0644 $(BUILD_TMP)/channellogos/logos-events/* $(TARGET_DIR)/usr/share/tuxbox/neutrino/icons/logo/events
+	rm -rf $(TARGET_SHARE_DIR)/tuxbox/neutrino/icons/logo
+	install -d $(TARGET_SHARE_DIR)/tuxbox/neutrino/icons/logo
+	install -m 0644 $(BUILD_TMP)/channellogos/logos/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/icons/logo
+	install -d $(TARGET_SHARE_DIR)/tuxbox/neutrino/icons/logo/events
+	install -m 0644 $(BUILD_TMP)/channellogos/logos-events/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/icons/logo/events
 	cd $(BUILD_TMP)/channellogos/logo-links && \
-		./logo-linker.sh logo-links.db $(TARGET_DIR)/usr/share/tuxbox/neutrino/icons/logo
-	install -d $(TARGET_DIR)/usr/share/tuxbox/neutrino/plugins
-	cp -a $(BUILD_TMP)/channellogos/logo-addon/* $(TARGET_DIR)/usr/share/tuxbox/neutrino/plugins/
+		./logo-linker.sh logo-links.db $(TARGET_SHARE_DIR)/tuxbox/neutrino/icons/logo
+	install -d $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins
+	cp -a $(BUILD_TMP)/channellogos/logo-addon/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
 	$(REMOVE)/channellogos
 	$(TOUCH)
 
@@ -269,8 +269,8 @@ $(D)/neutrino-plugin-l4l-skins:
 		fi
 	cp -ra $(ARCHIVE)/l4l-skins.git $(BUILD_TMP)/l4l-skins
 	install -m 0600 $(BUILD_TMP)/l4l-skins/tango/etc/lcd4linux.conf $(TARGET_DIR)/etc
-	install -d $(TARGET_DIR)/usr/share/lcd/icons
-	cp -aR $(BUILD_TMP)/l4l-skins/tango/share/* $(TARGET_DIR)/usr/share
+	install -d $(TARGET_SHARE_DIR)/lcd/icons
+	cp -aR $(BUILD_TMP)/l4l-skins/tango/share/* $(TARGET_SHARE_DIR)
 	install -d $(TARGET_DIR)/var/lcd
 	cp -aR $(BUILD_TMP)/l4l-skins/tango/var/lcd/* $(TARGET_DIR)/var/lcd
 	$(REMOVE)/l4l-skins
@@ -287,7 +287,7 @@ $(D)/neutrino-plugin-settings-update:
 		else cd $(ARCHIVE); git clone https://github.com/horsti58/lua-data.git settings-update.git; \
 		fi
 	cp -ra $(ARCHIVE)/settings-update.git $(BUILD_TMP)/settings-update
-	cp -R $(BUILD_TMP)/settings-update/lua/* $(TARGET_DIR)/usr/share/tuxbox/neutrino/plugins/
+	cp -R $(BUILD_TMP)/settings-update/lua/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
 	$(REMOVE)/settings-update
 	$(TOUCH)
 

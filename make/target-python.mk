@@ -719,7 +719,7 @@ $(D)/python_livestreamersrv: $(D)/bootstrap $(D)/python $(D)/python_setuptools $
 	cp -ra $(ARCHIVE)/livestreamersrv.git $(BUILD_TMP)/livestreamersrv
 	$(CHDIR)/livestreamersrv; \
 		cp -rd livestreamersrv $(TARGET_DIR)/usr/sbin; \
-		cp -rd offline.mp4 $(TARGET_DIR)/usr/share
+		cp -rd offline.mp4 $(TARGET_SHARE_DIR)
 	$(REMOVE)/livestreamersrv
 	$(TOUCH)
 

@@ -635,8 +635,8 @@ $(D)/mc: $(D)/bootstrap $(D)/ncurses $(D)/libglib2 $(ARCHIVE)/$(MC_SOURCE)
 		; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	rm -rf $(TARGET_DIR)/usr/share/mc/examples
-	find $(TARGET_DIR)/usr/share/mc/skins -type f ! -name default.ini | xargs --no-run-if-empty rm
+	rm -rf $(TARGET_SHARE_DIR)/mc/examples
+	find $(TARGET_SHARE_DIR)/mc/skins -type f ! -name default.ini | xargs --no-run-if-empty rm
 	$(REMOVE)/mc-$(MC_VER)
 	$(TOUCH)
 
@@ -1003,8 +1003,8 @@ $(D)/shairplay: libao $(D)/howl $(ARCHIVE)/$(SHAIRPLAY_SOURCE)
 			--prefix=/usr \
 		; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR); \
-		install -d $(TARGET_DIR)/usr/share/shairplay ; \
-		install -m 644 airport.key $(TARGET_DIR)/usr/share/shairplay && \
+		install -d $(TARGET_SHARE_DIR)/shairplay ; \
+		install -m 644 airport.key $(TARGET_SHARE_DIR)/shairplay && \
 	$(REWRITE_LIBTOOL)/libshairplay.la
 	$(REMOVE)/shairplay-git-$(SHAIRPLAY_VER)
 	$(TOUCH)
@@ -1372,7 +1372,7 @@ $(D)/htop: $(D)/bootstrap $(D)/ncurses $(ARCHIVE)/$(HTOP_SOURCE)
 		; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	rm -rf $(addprefix $(TARGET_DIR)/usr/share/,pixmaps applications)
+	rm -rf $(addprefix $(TARGET_SHARE_DIR)/,pixmaps applications)
 	$(REMOVE)/htop-$(HTOP_VER)
 	$(TOUCH)
 

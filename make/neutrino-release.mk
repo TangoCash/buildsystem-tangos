@@ -88,7 +88,7 @@ python-iptv-install:
 	cp -P $(TARGET_LIB_DIR)/libpython* $(RELEASE_DIR)/usr/lib; \
 	cp -P $(TARGET_DIR)/usr/bin/python* $(RELEASE_DIR)/usr/bin; \
 	cp -a $(TARGET_DIR)/$(PYTHON_DIR)/* $(RELEASE_DIR)/$(PYTHON_DIR)/; \
-	cp -af $(TARGET_DIR)/usr/share/E2emulator $(RELEASE_DIR)/usr/share/; \
+	cp -af $(TARGET_SHARE_DIR)/E2emulator $(RELEASE_DIR)/usr/share/; \
 	ln -sf /usr/share/E2emulator/Plugins/Extensions/IPTVPlayer/cmdlineIPTV.sh $(RELEASE_DIR)/usr/bin/cmdlineIPTV; \
 	rm -f $(RELEASE_DIR)/usr/bin/{cftp,ckeygen,easy_install*,mailmail,pyhtmlizer,tkconch,trial,twist,twistd}
 	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/{bsddb,compiler,curses,distutils,email,ensurepip,hotshot,idlelib,lib2to3}
@@ -251,18 +251,18 @@ endif
 #
 # fonts
 #
-	if [ -e $(TARGET_DIR)/usr/share/fonts/ubuntu-l-webfont.ttf ]; then \
-		cp -aR $(TARGET_DIR)/usr/share/fonts $(RELEASE_DIR)/usr/share/; \
+	if [ -e $(TARGET_SHARE_DIR)/fonts/ubuntu-l-webfont.ttf ]; then \
+		cp -aR $(TARGET_SHARE_DIR)/fonts $(RELEASE_DIR)/usr/share/; \
 	else \
-		if [ -e $(TARGET_DIR)/usr/share/fonts/neutrino.ttf ]; then \
-			cp -aR $(TARGET_DIR)/usr/share/fonts/neutrino.ttf $(RELEASE_DIR)/usr/share/fonts; \
+		if [ -e $(TARGET_SHARE_DIR)/fonts/neutrino.ttf ]; then \
+			cp -aR $(TARGET_SHARE_DIR)/fonts/neutrino.ttf $(RELEASE_DIR)/usr/share/fonts; \
 			ln -s /usr/share/fonts/neutrino.ttf $(RELEASE_DIR)/usr/share/fonts/pakenham.ttf; \
 		fi; \
-		if [ -e $(TARGET_DIR)/usr/share/fonts/micron.ttf ]; then \
-			cp -aR $(TARGET_DIR)/usr/share/fonts/micron.ttf $(RELEASE_DIR)/usr/share/fonts; \
+		if [ -e $(TARGET_SHARE_DIR)/fonts/micron.ttf ]; then \
+			cp -aR $(TARGET_SHARE_DIR)/fonts/micron.ttf $(RELEASE_DIR)/usr/share/fonts; \
 		fi; \
-		if [ -e $(TARGET_DIR)/usr/share/fonts/tuxtxt.ttf ]; then \
-			cp -aR $(TARGET_DIR)/usr/share/fonts/tuxtxt.ttf $(RELEASE_DIR)/usr/share/fonts; \
+		if [ -e $(TARGET_SHARE_DIR)/fonts/tuxtxt.ttf ]; then \
+			cp -aR $(TARGET_SHARE_DIR)/fonts/tuxtxt.ttf $(RELEASE_DIR)/usr/share/fonts; \
 			ln -s /usr/share/fonts/tuxtxt.ttf $(RELEASE_DIR)/usr/share/fonts/shell.ttf; \
 		fi; \
 	fi
@@ -293,65 +293,65 @@ endif
 #
 # iso-codes
 #
-	[ -e $(TARGET_DIR)/usr/share/iso-codes ] && cp -aR $(TARGET_DIR)/usr/share/iso-codes $(RELEASE_DIR)/usr/share/ || true
-	[ -e $(TARGET_DIR)/usr/share/tuxbox/iso-codes ] && cp -aR $(TARGET_DIR)/usr/share/tuxbox/iso-codes $(RELEASE_DIR)/usr/share/tuxbox/ || true
+	[ -e $(TARGET_SHARE_DIR)/iso-codes ] && cp -aR $(TARGET_SHARE_DIR)/iso-codes $(RELEASE_DIR)/usr/share/ || true
+	[ -e $(TARGET_SHARE_DIR)/tuxbox/iso-codes ] && cp -aR $(TARGET_SHARE_DIR)/tuxbox/iso-codes $(RELEASE_DIR)/usr/share/tuxbox/ || true
 #
 # httpd/icons/locale/themes
 #
-	cp -aR $(TARGET_DIR)/usr/share/tuxbox/neutrino/* $(RELEASE_DIR)/usr/share/tuxbox/neutrino
+	cp -aR $(TARGET_SHARE_DIR)/tuxbox/neutrino/* $(RELEASE_DIR)/usr/share/tuxbox/neutrino
 ifeq ($(EXTERNAL_LCD), $(filter $(EXTERNAL_LCD), lcd4linux both))
-	cp -aR $(TARGET_DIR)/usr/share/lcd $(RELEASE_DIR)/usr/share
+	cp -aR $(TARGET_SHARE_DIR)/lcd $(RELEASE_DIR)/usr/share
 	cp -aR $(TARGET_DIR)/var/lcd $(RELEASE_DIR)/var
 endif
 #
 # alsa
 #
-	if [ -e $(TARGET_DIR)/usr/share/alsa ]; then \
+	if [ -e $(TARGET_SHARE_DIR)/alsa ]; then \
 		mkdir -p $(RELEASE_DIR)/usr/share/alsa/; \
 		mkdir $(RELEASE_DIR)/usr/share/alsa/cards/; \
 		mkdir $(RELEASE_DIR)/usr/share/alsa/pcm/; \
-		cp -dp $(TARGET_DIR)/usr/share/alsa/alsa.conf $(RELEASE_DIR)/usr/share/alsa/alsa.conf; \
-		cp $(TARGET_DIR)/usr/share/alsa/cards/aliases.conf $(RELEASE_DIR)/usr/share/alsa/cards/; \
-		cp $(TARGET_DIR)/usr/share/alsa/pcm/default.conf $(RELEASE_DIR)/usr/share/alsa/pcm/; \
-		cp $(TARGET_DIR)/usr/share/alsa/pcm/dmix.conf $(RELEASE_DIR)/usr/share/alsa/pcm/; \
+		cp -dp $(TARGET_SHARE_DIR)/alsa/alsa.conf $(RELEASE_DIR)/usr/share/alsa/alsa.conf; \
+		cp $(TARGET_SHARE_DIR)/alsa/cards/aliases.conf $(RELEASE_DIR)/usr/share/alsa/cards/; \
+		cp $(TARGET_SHARE_DIR)/alsa/pcm/default.conf $(RELEASE_DIR)/usr/share/alsa/pcm/; \
+		cp $(TARGET_SHARE_DIR)/alsa/pcm/dmix.conf $(RELEASE_DIR)/usr/share/alsa/pcm/; \
 	fi
 #
 # gdb
 #
 	if [ -e $(TARGET_DIR)/usr/bin/gdb ]; then \
-		cp -aR $(TARGET_DIR)/usr/share/gdb $(RELEASE_DIR)/usr/share; \
+		cp -aR $(TARGET_SHARE_DIR)/gdb $(RELEASE_DIR)/usr/share; \
 	fi
 #
 # tvheadend
 #
 	if [ -e $(TARGET_DIR)/usr/bin/tvheadend ]; then \
-		cp -aR $(TARGET_DIR)/usr/share/tvheadend $(RELEASE_DIR)/usr/share; \
+		cp -aR $(TARGET_SHARE_DIR)/tvheadend $(RELEASE_DIR)/usr/share; \
 	fi
 #
 # xupnpd
 #
 	if [ -e $(TARGET_DIR)/usr/bin/xupnpd ]; then \
-		cp -aR $(TARGET_DIR)/usr/share/xupnpd $(RELEASE_DIR)/usr/share; \
+		cp -aR $(TARGET_SHARE_DIR)/xupnpd $(RELEASE_DIR)/usr/share; \
 		mkdir -p $(RELEASE_DIR)/usr/share/xupnpd/playlists; \
 	fi
 #
 # mc
 #
 	if [ -e $(TARGET_DIR)/usr/bin/mc ]; then \
-		cp -aR $(TARGET_DIR)/usr/share/mc $(RELEASE_DIR)/usr/share/; \
+		cp -aR $(TARGET_SHARE_DIR)/mc $(RELEASE_DIR)/usr/share/; \
 		cp -af $(TARGET_DIR)/usr/libexec $(RELEASE_DIR)/usr/; \
 	fi
 #
 # lua
 #
-	if [ -d $(TARGET_DIR)/usr/share/lua ]; then \
-		cp -aR $(TARGET_DIR)/usr/share/lua $(RELEASE_DIR)/usr/share; \
+	if [ -d $(TARGET_SHARE_DIR)/lua ]; then \
+		cp -aR $(TARGET_SHARE_DIR)/lua $(RELEASE_DIR)/usr/share; \
 	fi
 #
 # astra-sm
 #
 	if [ -d $(TARGET_DIR)/usr/bin/astra ]; then \
-		cp -aR $(TARGET_DIR)/usr/share/astra $(RELEASE_DIR)/usr/share; \
+		cp -aR $(TARGET_SHARE_DIR)/astra $(RELEASE_DIR)/usr/share; \
 	fi
 #
 # plugins
@@ -359,17 +359,17 @@ endif
 	if [ -d $(TARGET_DIR)/var/tuxbox/plugins ]; then \
 		cp -af $(TARGET_DIR)/var/tuxbox/plugins $(RELEASE_DIR)/var/tuxbox/; \
 	fi
-	if [ -d $(TARGET_DIR)/usr/share/tuxbox/neutrino/plugins ]; then \
-		cp -af $(TARGET_DIR)/usr/share/tuxbox/neutrino/plugins $(RELEASE_DIR)/usr/share/tuxbox/neutrino/; \
+	if [ -d $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins ]; then \
+		cp -af $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins $(RELEASE_DIR)/usr/share/tuxbox/neutrino/; \
 	fi
 	if [ -e $(RELEASE_DIR)/var/tuxbox/plugins/tuxwetter.so ]; then \
 		cp -rf $(TARGET_DIR)/var/tuxbox/config/tuxwetter $(RELEASE_DIR)/var/tuxbox/config; \
 	fi
 	if [ -e $(RELEASE_DIR)/var/tuxbox/plugins/sokoban.so ]; then \
-		cp -rf $(TARGET_DIR)/usr/share/tuxbox/sokoban $(RELEASE_DIR)/var/tuxbox/plugins; \
+		cp -rf $(TARGET_SHARE_DIR)/tuxbox/sokoban $(RELEASE_DIR)/var/tuxbox/plugins; \
 		ln -s /var/tuxbox/plugins/sokoban $(RELEASE_DIR)/usr/share/tuxbox/sokoban; \
 	fi
-	if [ -d $(TARGET_DIR)/usr/share/E2emulator ]; then \
+	if [ -d $(TARGET_SHARE_DIR)/E2emulator ]; then \
 		make python-iptv-install; \
 	fi
 
@@ -390,7 +390,7 @@ endif
 #
 	if [ -e $(TARGET_DIR)/usr/bin/mupen64plus ]; then \
 		cp -f $(TARGET_DIR)/usr/bin/mupen64plus $(RELEASE_DIR)/usr/bin; \
-		cp -rf $(TARGET_DIR)/usr/share/mupen64plus $(RELEASE_DIR)/usr/share; \
+		cp -rf $(TARGET_SHARE_DIR)/mupen64plus $(RELEASE_DIR)/usr/share; \
 		cp -f $(TARGET_LIB_DIR)/libmupen64plus.so* $(RELEASE_DIR)/usr/lib; \
 		cp -f $(TARGET_LIB_DIR)/libSDL2* $(RELEASE_DIR)/usr/lib; \
 	fi
