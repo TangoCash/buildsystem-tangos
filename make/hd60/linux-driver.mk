@@ -49,39 +49,39 @@ $(D)/driver: $(ARCHIVE)/$(DRIVER_SRC) $(D)/bootstrap $(D)/kernel
 	$(TOUCH)
 
 $(D)/install-v3ddriver: $(ARCHIVE)/$(LIBGLES_SRC)
-	install -d $(TARGET_DIR)/usr/lib
-	unzip -o $(ARCHIVE)/$(LIBGLES_SRC) -d $(TARGET_DIR)/usr/lib
-	ln -sf libMali.so $(TARGET_DIR)/usr/lib/libmali.so
-	ln -sf libMali.so $(TARGET_DIR)/usr/lib/libEGL.so.1.4
-	ln -sf libEGL.so.1.4 $(TARGET_DIR)/usr/lib/libEGL.so.1
-	ln -sf libEGL.so.1 $(TARGET_DIR)/usr/lib/libEGL.so
-	ln -sf libMali.so $(TARGET_DIR)/usr/lib/libGLESv1_CM.so.1.1
-	ln -sf libGLESv1_CM.so.1.1 $(TARGET_DIR)/usr/lib/libGLESv1_CM.so.1
-	ln -sf libGLESv1_CM.so.1 $(TARGET_DIR)/usr/lib/libGLESv1_CM.so
-	ln -sf libMali.so $(TARGET_DIR)/usr/lib/libGLESv2.so.2.0
-	ln -sf libGLESv2.so.2.0 $(TARGET_DIR)/usr/lib/libGLESv2.so.2
-	ln -sf libGLESv2.so.2 $(TARGET_DIR)/usr/lib/libGLESv2.so
-	ln -sf libMali.so $(TARGET_DIR)/usr/lib/libgbm.so
+	install -d $(TARGET_LIB_DIR)
+	unzip -o $(ARCHIVE)/$(LIBGLES_SRC) -d $(TARGET_LIB_DIR)
+	ln -sf libMali.so $(TARGET_LIB_DIR)/libmali.so
+	ln -sf libMali.so $(TARGET_LIB_DIR)/libEGL.so.1.4
+	ln -sf libEGL.so.1.4 $(TARGET_LIB_DIR)/libEGL.so.1
+	ln -sf libEGL.so.1 $(TARGET_LIB_DIR)/libEGL.so
+	ln -sf libMali.so $(TARGET_LIB_DIR)/libGLESv1_CM.so.1.1
+	ln -sf libGLESv1_CM.so.1.1 $(TARGET_LIB_DIR)/libGLESv1_CM.so.1
+	ln -sf libGLESv1_CM.so.1 $(TARGET_LIB_DIR)/libGLESv1_CM.so
+	ln -sf libMali.so $(TARGET_LIB_DIR)/libGLESv2.so.2.0
+	ln -sf libGLESv2.so.2.0 $(TARGET_LIB_DIR)/libGLESv2.so.2
+	ln -sf libGLESv2.so.2 $(TARGET_LIB_DIR)/libGLESv2.so
+	ln -sf libMali.so $(TARGET_LIB_DIR)/libgbm.so
 
 $(D)/install-v3ddriver-header: $(ARCHIVE)/$(LIBGLES_HEADERS)
 	install -d $(TARGET_DIR)/usr/include
 	unzip -o $(PATCHES)/$(LIBGLES_HEADERS) -d $(TARGET_DIR)/usr/include
-	install -d $(TARGET_DIR)/usr/lib/pkgconfig
-	cp $(PATCHES)/glesv2.pc $(TARGET_DIR)/usr/lib/pkgconfig
+	install -d $(TARGET_LIB_DIR)/pkgconfig
+	cp $(PATCHES)/glesv2.pc $(TARGET_LIB_DIR)/pkgconfig
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/glesv2.pc
-	cp $(PATCHES)/glesv1_cm.pc $(TARGET_DIR)/usr/lib/pkgconfig
+	cp $(PATCHES)/glesv1_cm.pc $(TARGET_LIB_DIR)/pkgconfig
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/glesv1_cm.pc
-	cp $(PATCHES)/egl.pc $(TARGET_DIR)/usr/lib/pkgconfig
+	cp $(PATCHES)/egl.pc $(TARGET_LIB_DIR)/pkgconfig
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/egl.pc
 
 $(D)/install-hisiplayer-libs: $(ARCHIVE)/$(PLAYERLIB_SRC)
 	install -d $(BUILD_TMP)/hiplay
 	unzip -o $(ARCHIVE)/$(PLAYERLIB_SRC) -d $(BUILD_TMP)/hiplay
-	install -d $(TARGET_DIR)/usr/lib/hisilicon
-	install -m 0755 $(BUILD_TMP)/hiplay/hisilicon/* $(TARGET_DIR)/usr/lib/hisilicon
-	install -m 0755 $(BUILD_TMP)/hiplay/ffmpeg/* $(TARGET_DIR)/usr/lib/hisilicon
-	#install -m 0755 $(BUILD_TMP)/hiplay/glibc/* $(TARGET_DIR)/usr/lib/hisilicon
-	ln -sf /lib/ld-linux-armhf.so.3 $(TARGET_DIR)/usr/lib/hisilicon/ld-linux.so
+	install -d $(TARGET_LIB_DIR)/hisilicon
+	install -m 0755 $(BUILD_TMP)/hiplay/hisilicon/* $(TARGET_LIB_DIR)/hisilicon
+	install -m 0755 $(BUILD_TMP)/hiplay/ffmpeg/* $(TARGET_LIB_DIR)/hisilicon
+	#install -m 0755 $(BUILD_TMP)/hiplay/glibc/* $(TARGET_LIB_DIR)/hisilicon
+	ln -sf /lib/ld-linux-armhf.so.3 $(TARGET_LIB_DIR)/hisilicon/ld-linux.so
 	$(REMOVE)/hiplay
 
 $(D)/install-hisiplayer-preq: $(D)/zlib $(D)/libpng $(D)/freetype $(D)/libcurl $(D)/libxml2 $(D)/libjpeg_turbo2 $(D)/harfbuzz

@@ -79,7 +79,7 @@ $(D)/bash: $(D)/bootstrap $(ARCHIVE)/$(BASH_SOURCE)
 	$(CHDIR)/bash-$(BASH_VER); \
 		$(call apply_patches, $(BASH_PATCH), 0); \
 		$(CONFIGURE) \
-			--libdir=$(TARGET_DIR)/usr/lib \
+			--libdir=$(TARGET_LIB_DIR) \
 			--includedir=$(TARGET_DIR)/usr/include \
 			--docdir=$(TARGET_DIR)/.remove \
 			--infodir=$(TARGET_DIR)/.remove \
@@ -195,7 +195,7 @@ $(D)/opkg: $(D)/bootstrap $(D)/host_opkg $(D)/libarchive $(ARCHIVE)/$(OPKG_SOURC
 	$(UNTAR)/$(OPKG_SOURCE)
 	$(CHDIR)/opkg-$(OPKG_VER); \
 		$(call apply_patches, $(OPKG_PATCH)); \
-		LIBARCHIVE_LIBS="-L$(TARGET_DIR)/usr/lib -larchive" \
+		LIBARCHIVE_LIBS="-L$(TARGET_LIB_DIR) -larchive" \
 		LIBARCHIVE_CFLAGS="-I$(TARGET_DIR)/usr/include" \
 		$(CONFIGURE) \
 			--prefix=/usr \
@@ -205,7 +205,7 @@ $(D)/opkg: $(D)/bootstrap $(D)/host_opkg $(D)/libarchive $(ARCHIVE)/$(OPKG_SOURC
 		; \
 		$(MAKE) all ; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	install -d -m 0755 $(TARGET_DIR)/usr/lib/opkg
+	install -d -m 0755 $(TARGET_LIB_DIR)/opkg
 	install -d -m 0755 $(TARGET_DIR)/etc/opkg
 	ln -sf opkg $(TARGET_DIR)/usr/bin/opkg-cl
 	$(REWRITE_LIBTOOL)/libopkg.la
@@ -1523,10 +1523,10 @@ $(D)/samba: $(D)/bootstrap $(ARCHIVE)/$(SAMBA_SOURCE)
 			ln -sf samba_multicall $(TARGET_DIR)/usr/sbin/smbpasswd
 	install -m 755 $(SKEL_ROOT)/etc/init.d/samba $(TARGET_DIR)/etc/init.d/
 	install -m 644 $(SKEL_ROOT)/etc/samba/smb.conf $(TARGET_DIR)/etc/samba/
-	rm -rf $(TARGET_DIR)/usr/lib/pdb
-	rm -rf $(TARGET_DIR)/usr/lib/perfcount
-	rm -rf $(TARGET_DIR)/usr/lib/nss_info
-	rm -rf $(TARGET_DIR)/usr/lib/gpext
+	rm -rf $(TARGET_LIB_DIR)/pdb
+	rm -rf $(TARGET_LIB_DIR)/perfcount
+	rm -rf $(TARGET_LIB_DIR)/nss_info
+	rm -rf $(TARGET_LIB_DIR)/gpext
 	$(REMOVE)/samba-$(SAMBA_VER)
 	$(TOUCH)
 
@@ -1642,8 +1642,8 @@ $(D)/wpa_supplicant: $(D)/bootstrap $(D)/openssl $(D)/wireless_tools $(ARCHIVE)/
 		sed -i 's/#CONFIG_INTERWORKING=y/CONFIG_INTERWORKING=y/' .config; \
 		export CFLAGS="-pipe -Os -Wall -g0 -I$(TARGET_DIR)/usr/include"; \
 		export CPPFLAGS="-I$(TARGET_DIR)/usr/include"; \
-		export LIBS="-L$(TARGET_DIR)/usr/lib -Wl,-rpath-link,$(TARGET_DIR)/usr/lib"; \
-		export LDFLAGS="-L$(TARGET_DIR)/usr/lib"; \
+		export LIBS="-L$(TARGET_LIB_DIR) -Wl,-rpath-link,$(TARGET_LIB_DIR)"; \
+		export LDFLAGS="-L$(TARGET_LIB_DIR)"; \
 		export DESTDIR=$(TARGET_DIR); \
 		$(MAKE) CC=$(TARGET)-gcc; \
 		$(MAKE) install BINDIR=/usr/sbin DESTDIR=$(TARGET_DIR)
@@ -1765,7 +1765,7 @@ $(D)/openssh: $(D)/bootstrap $(D)/zlib $(D)/openssl $(ARCHIVE)/$(OPENSSH_SOURCE)
 			--libexecdir=/sbin \
 			--with-privsep-path=/var/empty \
 			--with-cppflags="-pipe -Os -I$(TARGET_DIR)/usr/include" \
-			--with-ldflags=-"L$(TARGET_DIR)/usr/lib" \
+			--with-ldflags=-"L$(TARGET_LIB_DIR)" \
 		; \
 		$(MAKE); \
 		$(MAKE) install-nokeys DESTDIR=$(TARGET_DIR)

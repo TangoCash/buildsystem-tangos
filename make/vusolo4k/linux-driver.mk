@@ -54,9 +54,9 @@ $(ARCHIVE)/$(GLES_SRC):
 $(D)/libgles: $(D)/bootstrap $(ARCHIVE)/$(GLES_SRC)
 	$(START_BUILD)
 	$(UNTAR)/$(GLES_SRC)
-	install -m 0755 $(BUILD_TMP)/libgles-$(KERNEL_TYPE)/lib/* $(TARGET_DIR)/usr/lib
-	ln -sf libv3ddriver.so $(TARGET_DIR)/usr/lib/libEGL.so
-	ln -sf libv3ddriver.so $(TARGET_DIR)/usr/lib/libGLESv2.so
+	install -m 0755 $(BUILD_TMP)/libgles-$(KERNEL_TYPE)/lib/* $(TARGET_LIB_DIR)
+	ln -sf libv3ddriver.so $(TARGET_LIB_DIR)/libEGL.so
+	ln -sf libv3ddriver.so $(TARGET_LIB_DIR)/libGLESv2.so
 	cp -a $(BUILD_TMP)/libgles-$(KERNEL_TYPE)/include/* $(TARGET_DIR)/usr/include
 	$(REMOVE)/libgles-$(KERNEL_TYPE)
 	$(TOUCH)

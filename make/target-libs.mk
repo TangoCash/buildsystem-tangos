@@ -48,7 +48,7 @@ $(D)/directfb: $(D)/bootstrap $(ARCHIVE)/$(DIRECTFB_SOURCE)
 		$(BUILDENV) \
 		autoreconf -fi $(SILENT_OPT); \
 		EGL_CFLAGS=-I$(TARGET_DIR)/usr/include/EGL -I$(TARGET_DIR)/usr/include/GLES2 \
-		EGL_LIBS=-lEGL -lGLESv2 -L$(TARGET_DIR)/usr/lib \
+		EGL_LIBS=-lEGL -lGLESv2 -L$(TARGET_LIB_DIR) \
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--sysconfdir=/etc \
@@ -566,13 +566,13 @@ $(D)/openssl: $(D)/bootstrap $(ARCHIVE)/$(OPENSSL_SOURCE)
 		$(MAKE) depend; \
 		$(MAKE) all; \
 		$(MAKE) install_sw INSTALL_PREFIX=$(TARGET_DIR)
-	chmod 0755 $(TARGET_DIR)/usr/lib/lib{crypto,ssl}.so.*
+	chmod 0755 $(TARGET_LIB_DIR)/lib{crypto,ssl}.so.*
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/openssl.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libcrypto.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libssl.pc
 	cd $(TARGET_DIR) && rm -rf etc/ssl/man usr/bin/openssl usr/lib/engines
-	ln -sf libcrypto.so.1.0.0 $(TARGET_DIR)/usr/lib/libcrypto.so.0.9.8
-	ln -sf libssl.so.1.0.0 $(TARGET_DIR)/usr/lib/libssl.so.0.9.8
+	ln -sf libcrypto.so.1.0.0 $(TARGET_LIB_DIR)/libcrypto.so.0.9.8
+	ln -sf libssl.so.1.0.0 $(TARGET_LIB_DIR)/libssl.so.0.9.8
 	$(REMOVE)/openssl-$(OPENSSL_VER)
 	$(TOUCH)
 
@@ -911,7 +911,7 @@ $(D)/libjpeg_turbo: $(D)/bootstrap $(ARCHIVE)/$(LIBJPEG_TURBO_SOURCE)
 	$(REWRITE_LIBTOOL)/libjpeg.la
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libjpeg.pc
 	$(SILENT)rm -f $(addprefix $(TARGET_DIR)/usr/bin/,cjpeg djpeg jpegtran rdjpgcom wrjpgcom tjbench)
-	$(SILENT)rm -f $(TARGET_DIR)/usr/lib/libturbojpeg* $(TARGET_DIR)/usr/include/turbojpeg.h $(PKG_CONFIG_PATH)/libturbojpeg.pc
+	$(SILENT)rm -f $(TARGET_LIB_DIR)/libturbojpeg* $(TARGET_DIR)/usr/include/turbojpeg.h $(PKG_CONFIG_PATH)/libturbojpeg.pc
 	$(REMOVE)/libjpeg-turbo-$(LIBJPEG_TURBO_VER)
 	$(TOUCH)
 
@@ -1153,8 +1153,8 @@ $(D)/libsigc: $(D)/bootstrap $(ARCHIVE)/$(LIBSIGC_SOURCE)
 		if [ -d $(TARGET_DIR)/usr/include/sigc++-2.0/sigc++ ] ; then \
 			ln -sf ./sigc++-2.0/sigc++ $(TARGET_DIR)/usr/include/sigc++; \
 		fi;
-		mv $(TARGET_DIR)/usr/lib/sigc++-2.0/include/sigc++config.h $(TARGET_DIR)/usr/include; \
-		rm -fr $(TARGET_DIR)/usr/lib/sigc++-2.0
+		mv $(TARGET_LIB_DIR)/sigc++-2.0/include/sigc++config.h $(TARGET_DIR)/usr/include; \
+		rm -fr $(TARGET_LIB_DIR)/sigc++-2.0
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/sigc++-2.0.pc
 	$(REWRITE_LIBTOOL)/libsigc-2.0.la
 	$(REMOVE)/libsigc++-$(LIBSIGC_VER)
@@ -1384,7 +1384,7 @@ $(D)/libiconv: $(D)/bootstrap $(ARCHIVE)/$(LIBICONV_SOURCE)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_LIBTOOL)/libcharset.la
 	$(REWRITE_LIBTOOL)/libiconv.la
-	rm -f $(addprefix $(TARGET_DIR)/usr/lib/,preloadable_libiconv.so)
+	rm -f $(addprefix $(TARGET_LIB_DIR)/,preloadable_libiconv.so)
 	$(REMOVE)/libiconv-$(LIBICONV_VER)
 	$(TOUCH)
 
@@ -1440,7 +1440,7 @@ $(D)/fontconfig: $(D)/bootstrap $(D)/freetype $(D)/expat $(ARCHIVE)/$(FONTCONFIG
 			--prefix=/usr \
 			--with-freetype-config=$(HOST_DIR)/bin/freetype-config \
 			--with-expat-includes=$(TARGET_DIR)/usr/include \
-			--with-expat-lib=$(TARGET_DIR)/usr/lib \
+			--with-expat-lib=$(TARGET_LIB_DIR) \
 			--sysconfdir=/etc \
 			--disable-docs \
 		; \
@@ -2708,6 +2708,6 @@ $(D)/glib_networking: $(D)/bootstrap $(D)/gnutls $(D)/libglib2 $(ARCHIVE)/$(GLIB
 			--localedir=/.remove \
 		; \
 		$(MAKE); \
-		$(MAKE) install prefix=$(TARGET_DIR) giomoduledir=$(TARGET_DIR)/usr/lib/gio/modules itlocaledir=$(TARGET_DIR)/.remove
+		$(MAKE) install prefix=$(TARGET_DIR) giomoduledir=$(TARGET_LIB_DIR)/gio/modules itlocaledir=$(TARGET_DIR)/.remove
 	$(REMOVE)/glib-networking-$(GLIB_NETWORKING_VER)
 	$(TOUCH)

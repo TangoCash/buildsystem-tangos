@@ -112,7 +112,7 @@ $(D)/python: $(D)/bootstrap $(D)/host_python $(D)/ncurses $(D)/zlib $(D)/openssl
 		; \
 		$(MAKE) $(MAKE_OPTS) \
 			PYTHON_MODULES_INCLUDE="$(TARGET_DIR)/usr/include" \
-			PYTHON_MODULES_LIB="$(TARGET_DIR)/usr/lib" \
+			PYTHON_MODULES_LIB="$(TARGET_LIB_DIR)" \
 			PYTHON_XCOMPILE_DEPENDENCIES_PREFIX="$(TARGET_DIR)" \
 			CROSS_COMPILE_TARGET=yes \
 			CROSS_COMPILE=$(TARGET) \
@@ -769,7 +769,7 @@ $(D)/python_small: $(D)/bootstrap $(D)/host_python $(D)/ncurses $(D)/zlib $(D)/o
 		; \
 		$(MAKE) $(MAKE_OPTS) \
 			PYTHON_MODULES_INCLUDE="$(TARGET_DIR)/usr/include" \
-			PYTHON_MODULES_LIB="$(TARGET_DIR)/usr/lib" \
+			PYTHON_MODULES_LIB="$(TARGET_LIB_DIR)" \
 			PYTHON_XCOMPILE_DEPENDENCIES_PREFIX="$(TARGET_DIR)" \
 			CROSS_COMPILE_TARGET=yes \
 			CROSS_COMPILE=$(TARGET) \
