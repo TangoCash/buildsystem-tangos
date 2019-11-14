@@ -3,43 +3,14 @@
 #
 
 flashimage:
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k))
-ifeq ($(VUPLUS4K_MULTIBOOT), 1)
-	$(MAKE) flash-image-vusolo4k-multi-rootfs
-else
-	$(MAKE) flash-image-vusolo4k-rootfs
-endif
-endif
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vuduo4k))
-ifeq ($(VUPLUS4K_MULTIBOOT), 1)
-	$(MAKE) flash-image-vuduo4k-multi-rootfs
-else
-	$(MAKE) flash-image-vuduo4k-rootfs
-endif
-endif
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vuduo))
 	$(MAKE) flash-image-vuduo
-endif
 	$(TUXBOX_CUSTOMIZE)
 
 ofgimage:
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k))
-	$(MAKE) ITYPE=ofg flash-image-vusolo4k-rootfs
-endif
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vuduo4k))
-	$(MAKE) ITYPE=ofg flash-image-vuduo4k-rootfs
-endif
-	$(TUXBOX_CUSTOMIZE)
+	echo "nothing to do"
 
-oi \
 online-image:
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k))
-	$(MAKE) ITYPE=online flash-image-vusolo4k-online
-endif
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vuduo4k))
-	$(MAKE) ITYPE=online flash-image-vuduo4k-online
-endif
-	$(TUXBOX_CUSTOMIZE)
+	echo "nothing to do"
 
 flash-clean:
 	echo ""
