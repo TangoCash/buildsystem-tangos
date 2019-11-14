@@ -31,6 +31,7 @@ NEUTRINO_DEPS += $(D)/gptfdisk
 NEUTRINO_DEPS += $(D)/mc
 NEUTRINO_DEPS += $(D)/samba
 NEUTRINO_DEPS += $(D)/rsync
+NEUTRINO_DEPS += $(D)/links
 NEUTRINO_DEPS += $(D)/neutrino-plugins
 NEUTRINO_DEPS += $(D)/neutrino-plugin-scripts-lua
 NEUTRINO_DEPS += $(D)/neutrino-plugin-mediathek
@@ -38,9 +39,6 @@ NEUTRINO_DEPS += $(D)/neutrino-plugin-xupnpd
 NEUTRINO_DEPS += $(D)/neutrino-plugin-channellogos
 NEUTRINO_DEPS += $(D)/neutrino-plugin-iptvplayer
 NEUTRINO_DEPS += $(D)/neutrino-plugin-settings-update
-ifneq ($(BOXTYPE), hd60)
-NEUTRINO_DEPS += $(D)/links
-endif
 NEUTRINO_DEPS += $(LOCAL_NEUTRINO_DEPS)
 NEUTRINO_DEPS += $(LOCAL_NEUTRINO_PLUGINS)
 
@@ -86,7 +84,7 @@ N_CPPFLAGS     = -I$(TARGET_INCLUDE_DIR)
 N_CPPFLAGS    += -ffunction-sections -fdata-sections
 
 ifeq ($(BOXARCH), arm)
-N_CPPFLAGS    += -I$(CROSS_BASE)/$(TARGET)/sys-root/usr/include
+N_CPPFLAGS    += -I$(CROSS_DIR)/$(TARGET)/sys-root/usr/include
 endif
 
 LH_CONFIG_OPTS =
@@ -389,10 +387,6 @@ neutrino-distclean:
 #
 # neutrino-hd2
 #
-ifeq ($(BOXTYPE), hd51)
-NHD2_OPTS = --enable-ci
-endif
-
 NEUTRINO_HD2_PATCHES =
 
 $(D)/neutrino-hd2.do_prepare: | $(NEUTRINO_DEPS) $(D)/libid3tag $(D)/libmad $(D)/flac

@@ -3,44 +3,6 @@
 #
 
 #
-# Bre2ze 4k
-#
-neutrino-release-bre2ze4k:
-	install -m 0755 $(SKEL_ROOT)/release/halt_bre2ze4k $(RELEASE_DIR)/etc/init.d/halt
-	cp -f $(SKEL_ROOT)/release/fstab_bre2ze4k $(RELEASE_DIR)/etc/fstab
-	cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/*.ko $(RELEASE_DIR)/lib/modules/
-	cp $(TARGET_DIR)/boot/zImage.dtb $(RELEASE_DIR)/boot/
-
-#
-# Mutant HD51
-#
-neutrino-release-hd51:
-	install -m 0755 $(SKEL_ROOT)/release/halt_hd51 $(RELEASE_DIR)/etc/init.d/halt
-	cp -f $(SKEL_ROOT)/release/fstab_hd51 $(RELEASE_DIR)/etc/fstab
-	cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/*.ko $(RELEASE_DIR)/lib/modules/
-	cp $(TARGET_DIR)/boot/zImage.dtb $(RELEASE_DIR)/boot/
-	install -m 0644 $(SKEL_ROOT)/release/tangos_hd51.m2v $(RELEASE_DIR)/usr/share/tuxbox/neutrino/icons/bootlogo.m2v
-
-#
-# Mutant HD60
-#
-neutrino-release-hd60:
-	install -m 0755 $(SKEL_ROOT)/release/halt_hd51 $(RELEASE_DIR)/etc/init.d/halt
-	cp -f $(SKEL_ROOT)/release/fstab_hd60 $(RELEASE_DIR)/etc/fstab
-	cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/*.ko $(RELEASE_DIR)/lib/modules/
-	cp $(TARGET_DIR)/boot/uImage $(RELEASE_DIR)/boot/
-	install -m 0644 $(SKEL_ROOT)/release/tangos_hd51.m2v $(RELEASE_DIR)/usr/share/tuxbox/neutrino/icons/bootlogo.m2v
-
-#
-# ZGEMMA H7
-#
-neutrino-release-h7:
-	install -m 0755 $(SKEL_ROOT)/release/halt_h7 $(RELEASE_DIR)/etc/init.d/halt
-	cp -f $(SKEL_ROOT)/release/fstab_h7 $(RELEASE_DIR)/etc/fstab
-	cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/*.ko $(RELEASE_DIR)/lib/modules/
-	cp $(TARGET_DIR)/boot/zImage.dtb $(RELEASE_DIR)/boot/
-
-#
 # vusolo4k
 #
 neutrino-release-vusolo4k:
@@ -163,7 +125,6 @@ neutrino-release-base:
 	cp -a $(TARGET_DIR)/usr/sbin/* $(RELEASE_DIR)/usr/sbin/
 	cp -dp $(TARGET_DIR)/.version $(RELEASE_DIR)/
 	ln -sf /.version $(RELEASE_DIR)/var/etc/.version
-	cp $(TARGET_DIR)/boot/$(KERNELNAME) $(RELEASE_DIR)/boot/
 	ln -sf /proc/mounts $(RELEASE_DIR)/etc/mtab
 	cp -dp $(SKEL_ROOT)/sbin/MAKEDEV $(RELEASE_DIR)/sbin/
 	ln -sf ../sbin/MAKEDEV $(RELEASE_DIR)/dev/MAKEDEV
@@ -185,9 +146,7 @@ neutrino-release-base:
 	ln -sf ../../bin/busybox $(RELEASE_DIR)/usr/bin/ether-wake
 	ln -sf ../../bin/showiframe $(RELEASE_DIR)/usr/bin/showiframe
 	install -m 0755 $(SKEL_ROOT)/release/rcS_neutrino_$(BOXTYPE) $(RELEASE_DIR)/etc/init.d/rcS
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51 h7 hd60 hd61 bre2ze4k))
-	install -m 0755 $(SKEL_ROOT)/release/rcS_neutrino_$(BOXARCH) $(RELEASE_DIR)/etc/init.d/rcS
-endif
+	[ ! -z "$(CUSTOM_RCS)" ] && install -m 0755 $(CUSTOM_RCS) $(RELEASE_DIR)/etc/init.d/rcS || true
 #
 #
 ################################################################################
@@ -283,13 +242,6 @@ endif
 # channellist / tuxtxt
 #
 	cp -aR $(TARGET_DIR)/var/tuxbox/config/* $(RELEASE_DIR)/var/tuxbox/config
-#
-# remove unneeded
-#
-ifneq ($(BOXTYPE), $(filter $(BOXTYPE), h7 hd51 vusolo4k))
-	rm -f $(RELEASE_DIR)/var/tuxbox/config/cables.xml
-	rm -f $(RELEASE_DIR)/var/tuxbox/config/terrestrial.xml
-endif
 #
 # iso-codes
 #

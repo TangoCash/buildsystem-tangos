@@ -3,21 +3,6 @@
 #
 
 flashimage:
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51))
-	$(MAKE) flash-image-hd51-multi-disk flash-image-hd51-multi-rootfs
-endif
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), h7))
-	$(MAKE) flash-image-h7-multi-disk flash-image-h7-multi-rootfs
-endif
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), bre2ze4k))
-	$(MAKE) flash-image-bre2ze4k-multi-disk flash-image-bre2ze4k-multi-rootfs
-endif
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd60))
-	$(MAKE) flash-image-hd60-multi-disk flash-image-hd60-multi-rootfs
-endif
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd61))
-	$(MAKE) flash-image-hd61-multi-disk flash-image-hd61-multi-rootfs
-endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k))
 ifeq ($(VUPLUS4K_MULTIBOOT), 1)
 	$(MAKE) flash-image-vusolo4k-multi-rootfs
@@ -38,21 +23,6 @@ endif
 	$(TUXBOX_CUSTOMIZE)
 
 ofgimage:
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51))
-	$(MAKE) ITYPE=ofg flash-image-hd51-multi-rootfs
-endif
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), h7))
-	$(MAKE) ITYPE=ofg flash-image-h7-multi-rootfs
-endif
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), bre2ze4k))
-	$(MAKE) ITYPE=ofg flash-image-bre2ze4k-multi-rootfs
-endif
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd60))
-	$(MAKE) ITYPE=ofg flash-image-hd60-multi-rootfs
-endif
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd61))
-	$(MAKE) ITYPE=ofg flash-image-hd61-multi-rootfs
-endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k))
 	$(MAKE) ITYPE=ofg flash-image-vusolo4k-rootfs
 endif
@@ -63,21 +33,6 @@ endif
 
 oi \
 online-image:
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51))
-	$(MAKE) ITYPE=online flash-image-hd51-online
-endif
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), h7))
-	$(MAKE) ITYPE=online flash-image-h7-online
-endif
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), bre2ze4k))
-	$(MAKE) ITYPE=online flash-image-bre2ze4k-online
-endif
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd60))
-	$(MAKE) ITYPE=online flash-image-hd60-online
-endif
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd61))
-	$(MAKE) ITYPE=online flash-image-hd61-online
-endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k))
 	$(MAKE) ITYPE=online flash-image-vusolo4k-online
 endif

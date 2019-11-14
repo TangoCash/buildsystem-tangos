@@ -174,11 +174,8 @@ $(D)/sysvinit: $(D)/bootstrap $(ARCHIVE)/$(SYSVINIT_SOURCE)
 		$(MAKE) install ROOT=$(TARGET_DIR) MANDIR=/.remove
 	rm -f $(addprefix $(TARGET_DIR)/sbin/,fstab-decode runlevel telinit)
 	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,lastb)
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51 vusolo4k vuduo4k vuduo))
-	install -m 644 $(SKEL_ROOT)/etc/inittab_ttyS0 $(TARGET_DIR)/etc/inittab
-else
 	install -m 644 $(SKEL_ROOT)/etc/inittab $(TARGET_DIR)/etc/inittab
-endif
+	[ ! -z "$(CUSTOM_INITTAB)" ] && install -m 0755 $(CUSTOM_INITTAB) $(TARGET_DIR)/etc/inittab || true
 	$(REMOVE)/sysvinit-$(SYSVINIT_VER)
 	$(TOUCH)
 

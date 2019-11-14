@@ -4,6 +4,21 @@
 
 ### armbox h7
 
+flashimage:
+	$(MAKE) flash-image-h7-multi-disk flash-image-h7-multi-rootfs
+	$(TUXBOX_CUSTOMIZE)
+
+ofgimage:
+	$(MAKE) ITYPE=ofg flash-image-h7-multi-rootfs
+	$(TUXBOX_CUSTOMIZE)
+
+online-image:
+	$(MAKE) ITYPE=online flash-image-h7-online
+	$(TUXBOX_CUSTOMIZE)
+
+flash-clean:
+	echo ""
+
 # general
 FLASH_IMAGE_NAME = disk
 FLASH_BOOT_IMAGE = boot.img

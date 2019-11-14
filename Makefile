@@ -30,10 +30,8 @@ printenv:
 	@echo "BASE_DIR          : $(BASE_DIR)"
 	@echo "CUSTOM_DIR        : $(CUSTOM_DIR)"
 	@echo "TOOLS_DIR         : $(TOOLS_DIR)"
-	@echo "DRIVER_DIR        : $(DRIVER_DIR)"
-	@echo "FLASH_DIR         : $(FLASH_DIR)"
-	@echo "CROSS_DIR         : $(CROSS_DIR)"
 	@echo "CROSS_BASE        : $(CROSS_BASE)"
+	@echo "CROSS_DIR         : $(CROSS_DIR)"
 	@echo "RELEASE_DIR       : $(RELEASE_DIR)"
 	@echo "RELEASE_IMAGE_DIR : $(RELEASE_IMAGE_DIR)"
 	@echo "HOST_DIR          : $(HOST_DIR)"
@@ -115,12 +113,12 @@ include make/target-python.mk
 include make/target-root-etc.mk
 include make/target-tools.mk
 include make/target-tools-git.mk
-include make/images.mk
 ifeq ($(BOXARCH), $(filter $(BOXARCH), arm))
 include make/$(BOXTYPE)/linux-kernel.mk
 include make/$(BOXTYPE)/linux-driver.mk
 include make/$(BOXTYPE)/linux-image.mk
 else
+include make/images.mk
 include make/linux-kernel-$(BOXARCH).mk
 include make/linux-driver-$(BOXARCH).mk
 endif

@@ -13,46 +13,57 @@ fi
 ##############################################
 
 if [ "$1" == -h ] || [ "$1" == --help ]; then
-	echo "Parameter 1: target system (40-70)"
+	echo "Parameter 1: Target receiver (40-70)"
 	echo "Parameter 2: FFmpeg version (1-2)"
-	echo "Parameter 3: optimization (1-4)"
-	echo "Parameter 4: Media Framework (1-2)"
+	echo "Parameter 3: Optimization (1-4)"
+	echo "Parameter 4: Toolchain gcc version (1-3)"
 	echo "Parameter 5: Image Neutrino (1-2)"
-	echo "Parameter 6: Neutrino variant (1-5)"
+	echo "Parameter 6: Neutrino flavour (1-5)"
 	echo "Parameter 7: External LCD support (1-4)"
 	echo "optional:"
-	echo "Parameter 8: Image layout for hd51 / h7 / bre2ze4k / vuboxes (1-2)"
+	echo "Parameter 8: Multiboot layout (1-2)"
 	exit
 fi
 
 ##############################################
 
 case $1 in
-	[1-9] | 1[0-9] | 2[0-9] | 3[0-9] | 4[0-9] | 5[0-9] | 6[0-9] | 7[0-9]) REPLY=$1;;
+	4[0-5] | 5[1-3] | 6[0-1] | 70) REPLY=$1;;
 	*)
 		echo "Target receivers:"
 		echo
 		echo "  arm-based receivers"
-		echo "   40)  VU+ Solo 4K"
-		echo "   41)  VU+ Duo 4K"
+		echo "   VU+"
+		echo "   40) VU+ Solo 4K     43) VU+ Ultimo 4K"
+		echo "   41) VU+ Duo  4K     44) VU+ Uno 4K SE"
+		echo "   42) VU+ Zero 4K     45) VU+ Uno 4K"
 		echo
+		echo "  AX/Mut@nt"
 		echo "   51)  AX/Mut@nt HD51"
-		echo "   52)  WWIO BRE2ZE 4K"
-		echo "   53)  ZGEMMA H7"
-		echo
 		echo "   60)  AX/Mut@nt HD60"
 		echo "   61)  AX/Mut@nt HD61"
+		echo
+		echo "  WWIO"
+		echo "   52)  WWIO BRE2ZE 4K"
+		echo
+		echo "  Air Digital"
+		echo "   53)  ZGEMMA H7"
+		echo
 		echo
 		echo "  mips-based receivers"
 		echo "   70)  VU+ Duo"
 		echo
-		read -p "Select target (1-70)? [51]"
+		read -p "Select target (40-70)? [51]"
 		REPLY="${REPLY:-51}";;
 esac
 
 case "$REPLY" in
 	40) BOXARCH="arm";BOXTYPE="vusolo4k";;
 	41) BOXARCH="arm";BOXTYPE="vuduo4k";;
+	42) BOXARCH="arm";BOXTYPE="vuzero4k";;
+	43) BOXARCH="arm";BOXTYPE="vuultimo4k";;
+	44) BOXARCH="arm";BOXTYPE="vuuno4kse";;
+	45) BOXARCH="arm";BOXTYPE="vuuno4k";;
 	51) BOXARCH="arm";BOXTYPE="hd51";;
 	52) BOXARCH="arm";BOXTYPE="bre2ze4k";;
 	53) BOXARCH="arm";BOXTYPE="h7";;
@@ -107,20 +118,22 @@ echo "OPTIMIZATIONS=$OPTIMIZATIONS" >> config
 ##############################################
 
 case $4 in
-	[1-2]) REPLY=$4;;
-	*)	echo -e "\nMedia Framework:"
-		echo "   1) libeplayer3"
-		echo "   2) gstreamer (not fully supported)"
-		read -p "Select media framework (1-2)? [1]"
+	[1-3]) REPLY=$4;;
+	*)	echo -e "\nToolchain gcc version:"
+		echo "   1) GCC version 6.5.0"
+		echo "   2) GCC version 7.4.1"
+		echo "   3) GCC version 8.2.0"
+		read -p "Select toolchain gcc version (1-3)? [1] "
 		REPLY="${REPLY:-1}";;
 esac
 
 case "$REPLY" in
-	1) MEDIAFW="buildinplayer";;
-	2) MEDIAFW="gstreamer";;
-	*) MEDIAFW="buildinplayer";;
+	1) BS_GCC_VER="6.5.0";;
+	2) BS_GCC_VER="7.4.1";;
+	3) BS_GCC_VER="8.2.0";;
+	*) BS_GCC_VER="6.5.0";;
 esac
-echo "MEDIAFW=$MEDIAFW" >> config
+echo "BS_GCC_VER=$BS_GCC_VER" >> config
 
 ##############################################
 
@@ -214,7 +227,7 @@ if [ $BOXTYPE == 'hd60' -o $BOXTYPE == 'hd61' ]; then
 echo "NEWLAYOUT=1" >> config
 fi
 
-if [ $BOXTYPE == 'vusolo4k' -o $BOXTYPE == 'vuduo4k' ]; then
+if [ $BOXTYPE == 'vusolo4k' -o $BOXTYPE == 'vuduo4k' -o $BOXTYPE == 'vuultimo4k' -o $BOXTYPE == 'vuuno4k' -o $BOXTYPE == 'vuuno4kse' -o $BOXTYPE == 'vuzero4k' ]; then
 case $8 in
 	[1-2]) REPLY=$8;;
 	*)	echo -e "\nNormal or MultiBoot:"

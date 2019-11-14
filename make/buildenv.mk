@@ -49,35 +49,13 @@ BOXARCH              ?= arm
 BOXTYPE              ?= hd51
 FFMPEG_EXPERIMENTAL  ?= 0
 OPTIMIZATIONS        ?= size
-MEDIAFW              ?= buildinplayer
+BS_GCC_VER           ?= 6.5.0
 IMAGE                ?= neutrino
 FLAVOUR              ?= neutrino-tangos
 EXTERNAL_LCD         ?= both
 NEWLAYOUT            ?= 0
 #
 ITYPE                ?= usb
-
-CROSS_BASE            = $(BASE_DIR)/cross/$(BOXARCH)/$(BOXTYPE)
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k))
-BOXCPU                = bcm7376
-CROSS_BASE            = $(BASE_DIR)/cross/$(BOXARCH)/$(BOXCPU)
-endif
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vuduo4k))
-BOXCPU                = bcm7278
-CROSS_BASE            = $(BASE_DIR)/cross/$(BOXARCH)/$(BOXCPU)
-endif
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd60 hd61))
-BOXCPU                = Hi3798Mv200
-CROSS_BASE            = $(BASE_DIR)/cross/$(BOXARCH)/$(BOXCPU)
-endif
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51 bre2ze4k h7))
-BOXCPU                = bcm7251s
-CROSS_BASE            = $(BASE_DIR)/cross/$(BOXARCH)/$(BOXCPU)
-endif
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vuduo))
-BOXCPU                = bcm7335
-CROSS_BASE            = $(BASE_DIR)/cross/$(BOXARCH)/$(BOXCPU)
-endif
 
 TARGET_DIR            = $(BASE_DIR)/build_sysroot
 HOST_DIR              = $(BASE_DIR)/build_host
@@ -111,11 +89,6 @@ ifeq ($(BOXARCH), arm)
 CCACHE_DIR            = $(HOME)/.ccache-bs-arm
 export CCACHE_DIR
 TARGET               ?= arm-cortex-linux-gnueabihf
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd60 hd61))
-KERNELNAME            = uImage
-else
-KERNELNAME            = zImage
-endif
 TARGET_MARCH_CFLAGS   = -march=armv7ve -mtune=cortex-a15 -mfpu=neon-vfpv4 -mfloat-abi=hard
 CORTEX_STRINGS        = -lcortex-strings
 endif
@@ -150,6 +123,22 @@ TARGET_EXTRA_CFLAGS   =
 TARGET_EXTRA_LDFLAGS  =
 endif
 
+ifeq ($(BS_GCC_VER), 6.5.0)
+CROSSTOOL_GCC_VER = gcc-6.5.0
+endif
+
+ifeq ($(BS_GCC_VER), 7.4.1)
+CROSSTOOL_GCC_VER = gcc-7.4.1
+endif
+
+ifeq ($(BS_GCC_VER), 8.2.0)
+CROSSTOOL_GCC_VER = gcc-8.2.0
+endif
+
+CROSS_BASE            = $(BASE_DIR)/cross
+include               $(BASE_DIR)/make/$(BOXTYPE)/linux-environment.mk
+CROSS_DIR             = $(CROSS_BASE)/$(CROSSTOOL_GCC_VER)-$(BOXARCH)-kernel-$(KERNEL_VER)
+
 # -----------------------------------------------------------------------------
 
 TARGET_LIB_DIR        = $(TARGET_DIR)/usr/lib
@@ -166,7 +155,7 @@ PKG_CONFIG_PATH       = $(TARGET_LIB_DIR)/pkgconfig
 
 VPATH                 = $(D)
 
-PATH                 := $(HOST_DIR)/bin:$(CROSS_BASE)/bin:$(PATH):/sbin:/usr/sbin:/usr/local/sbin
+PATH                 := $(HOST_DIR)/bin:$(CROSS_DIR)/bin:$(PATH)
 
 TERM_RED             := \033[00;31m
 TERM_RED_BOLD        := \033[01;31m

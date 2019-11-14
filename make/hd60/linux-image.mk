@@ -4,6 +4,21 @@
 
 ### armbox hd60
 
+flashimage: $(D)/host_atools
+	$(MAKE) flash-image-hd60-multi-disk flash-image-hd60-multi-rootfs
+	$(TUXBOX_CUSTOMIZE)
+
+ofgimage: $(D)/host_atools
+	$(MAKE) ITYPE=ofg flash-image-hd60-multi-rootfs
+	$(TUXBOX_CUSTOMIZE)
+
+online-image: $(D)/host_atools
+	$(MAKE) ITYPE=online flash-image-hd60-online
+	$(TUXBOX_CUSTOMIZE)
+
+flash-clean:
+	echo ""
+
 # general
 FLASH_IMAGE_NAME = disk
 FLASH_BOOT_IMAGE = bootoptions.img

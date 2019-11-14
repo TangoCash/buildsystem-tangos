@@ -538,7 +538,7 @@ OPENSSL_PATCH += openssl-$(OPENSSL_VER)-disable_doc_tests.patch
 OPENSSL_PATCH += openssl-$(OPENSSL_VER)-fix-parallel-building.patch
 OPENSSL_PATCH += openssl-$(OPENSSL_VER)-compat_versioned_symbols-1.patch
 
-OPENSSL_SED_PATCH = sed -i 's|MAKEDEPPROG=makedepend|MAKEDEPPROG=$(CROSS_BASE)/bin/$$(CC) -M|' Makefile
+OPENSSL_SED_PATCH = sed -i 's|MAKEDEPPROG=makedepend|MAKEDEPPROG=$(CROSS_DIR)/bin/$$(CC) -M|' Makefile
 
 $(ARCHIVE)/$(OPENSSL_SOURCE):
 	$(DOWNLOAD) https://www.openssl.org/source/$(OPENSSL_SOURCE)
@@ -1482,15 +1482,9 @@ CAIRO_VER = 1.16.0
 CAIRO_SOURCE = cairo-$(CAIRO_VER).tar.xz
 CAIRO_PATCH  = cairo-$(CAIRO_VER)-get_bitmap_surface.diff
 
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51 hd60))
-CAIRO_OPTS = \
-		--enable-egl \
-		--enable-glesv2
-else
-CAIRO_OPTS = \
+CAIRO_OPTS ?= \
 		--disable-egl \
 		--disable-glesv2
-endif
 
 $(ARCHIVE)/$(CAIRO_SOURCE):
 	$(DOWNLOAD) https://www.cairographics.org/releases/$(CAIRO_SOURCE)

@@ -9,12 +9,7 @@ LINKS_VER = 2.20
 LINKS_PATCH  = links-$(LINKS_VER).patch
 LINKS_PATCH += links-$(LINKS_VER)-ac-prog-cxx.patch
 LINKS_PATCH += links-$(LINKS_VER)-accept_https_play.patch
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51 hd60 hd61))
-LINKS_PATCH += links-$(LINKS_VER)-event1-input.patch
-endif
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), h7))
-LINKS_PATCH += links-$(LINKS_VER)-event2-input.patch
-endif
+LINKS_PATCH += $(LINKS_PATCH_BOXTYPE)
 
 $(ARCHIVE)/links-$(LINKS_VER).tar.bz2:
 	$(DOWNLOAD) http://links.twibright.com/download/links-$(LINKS_VER).tar.bz2

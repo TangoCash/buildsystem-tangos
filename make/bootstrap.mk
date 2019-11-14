@@ -55,9 +55,6 @@ ifeq ($(BOXARCH), arm)
 BOOTSTRAP += $(D)/host_resize2fs
 BOOTSTRAP += $(D)/cortex_strings
 endif
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd60 hd61))
-BOOTSTRAP += $(D)/host_atools
-endif
 
 $(D)/bootstrap: $(BOOTSTRAP)
 	@touch $@
@@ -82,10 +79,8 @@ SYSTEM_TOOLS += $(D)/vsftpd
 #SYSTEM_TOOLS += $(D)/autofs
 SYSTEM_TOOLS += $(D)/udpxy
 SYSTEM_TOOLS += $(D)/dvbsnoop
-ifeq ($(BOXARCH), $(filter $(BOXARCH), arm mips))
 SYSTEM_TOOLS += $(D)/ofgwrite
 SYSTEM_TOOLS += $(D)/ethtool
-endif
 SYSTEM_TOOLS += $(D)/driver
 
 $(D)/system-tools: $(SYSTEM_TOOLS) $(TOOLS)

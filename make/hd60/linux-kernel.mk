@@ -1,16 +1,4 @@
 #
-# KERNEL
-#
-KERNEL_VER             = 4.4.35
-KERNEL_DATE            = 20181228
-KERNEL_TYPE            = hd60
-KERNEL_SRC             = linux-$(KERNEL_VER)-$(KERNEL_DATE)-arm.tar.gz
-KERNEL_URL             = http://downloads.mutant-digital.net
-KERNEL_CONFIG          = $(KERNEL_TYPE)/defconfig
-KERNEL_DIR             = $(BUILD_TMP)/linux-$(KERNEL_VER)
-KERNEL_DTB_VER         = hi3798mv200.dtb
-
-#
 # Todo: findkerneldevice.py
 
 DEPMOD = $(HOST_DIR)/bin/depmod
@@ -19,12 +7,6 @@ DEPMOD = $(HOST_DIR)/bin/depmod
 # Patches Kernel
 #
 COMMON_PATCHES_ARM = \
-
-KERNEL_PATCHES = \
-		armbox/$(KERNEL_TYPE)/ieee80211-increase-scan-result-expire-time.patch \
-		armbox/$(KERNEL_TYPE)/0001-remote.patch \
-		armbox/$(KERNEL_TYPE)/0002-log2-give-up-on-gcc-constant-optimizations.patch \
-		armbox/$(KERNEL_TYPE)/0003-dont-mark-register-as-const.patch
 
 $(ARCHIVE)/$(KERNEL_SRC):
 	$(DOWNLOAD) $(KERNEL_URL)/$(KERNEL_SRC)
