@@ -232,7 +232,7 @@ e2-multiboot:
 	#
 	echo -e "$(FLAVOUR) `sed -n 's/\#define PACKAGE_VERSION "//p' $(N_OBJDIR)/config.h | sed 's/"//'` \\\n \\\l\n" > $(TARGET_DIR)/etc/issue
 	#
-	touch $(TARGET_DIR)/var/lib/opkg/status 
+	touch $(TARGET_DIR)/var/lib/opkg/status
 	#
 	cp -a $(TARGET_DIR)/.version $(TARGET_DIR)/etc/image-version
 
