@@ -1,8 +1,8 @@
-### armbox vuduo4kse
+### armbox vuuno4kse
 
 KERNEL_VER             = 4.1.20-1.9
 KERNEL_DATE            =
-KERNEL_TYPE            = vuduo4kse
+KERNEL_TYPE            = vuuno4kse
 KERNEL_SRC_VER         = 4.1-1.9
 KERNEL_SRC             = stblinux-${KERNEL_SRC_VER}.tar.bz2
 KERNEL_URL             = http://archive.vuplus.com/download/kernel
@@ -53,8 +53,8 @@ KERNEL_PATCHES = \
 		armbox/vuplus_common/4_1_0003-uaccess-dont-mark-register-as-const.patch
 
 KERNEL_PATCHES += \
-		armbox/vuuno4kse_bcmgenet-recovery-fix.patch \
-		armbox/vuuno4kse_linux_rpmb_not_alloc.patch
+		armbox/vuuno4kse/bcmgenet-recovery-fix.patch \
+		armbox/vuuno4kse/linux_rpmb_not_alloc.patch
 
 # crosstool
 CUSTOM_KERNEL_VER = $(KERNEL_SRC_VER)
@@ -69,7 +69,7 @@ CUSTOM_RCS     =
 CUSTOM_INITTAB =
 
 # release target
-neutrino-release-vuduo4kse:
+neutrino-release-vuuno4kse:
 	install -m 0755 $(SKEL_ROOT)/release/halt_$(KERNEL_TYPE) $(RELEASE_DIR)/etc/init.d/halt
 	cp -f $(SKEL_ROOT)/release/fstab_$(KERNEL_TYPE) $(RELEASE_DIR)/etc/fstab
 	cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/*.ko $(RELEASE_DIR)/lib/modules/

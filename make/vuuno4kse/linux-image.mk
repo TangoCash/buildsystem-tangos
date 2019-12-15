@@ -2,7 +2,7 @@
 # flashimage
 #
 
-### armbox vuduo4kse
+### armbox vuuno4kse
 
 flashimage:
 	$(MAKE) flash-image-vu-multi-rootfs
@@ -21,7 +21,7 @@ flash-clean:
 
 #
 FLASH_BUILD_TMP = $(BUILD_TMP)/image-build
-VU_PREFIX       = vuplus/duo4kse
+VU_PREFIX       = vuplus/uno4kse
 VU_INITRD       = $(KERNEL_INITRD)
 VU_FR           = echo This file forces a reboot after the update. > $(FLASH_BUILD_TMP)/$(VU_PREFIX)/reboot.update
 
