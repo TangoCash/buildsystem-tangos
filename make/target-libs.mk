@@ -444,6 +444,43 @@ $(D)/libpcre: $(D)/bootstrap $(ARCHIVE)/$(LIBPCRE_SOURCE)
 	$(TOUCH)
 
 #
+# libpcre2
+#
+LIBPCRE2_VER = 10.33
+LIBPCRE2_SOURCE = pcre2-$(LIBPCRE2_VER).tar.bz2
+
+$(ARCHIVE)/$(LIBPCRE2_SOURCE):
+	$(DOWNLOAD) https://sourceforge.net/projects/pcre/files/pcre2/$(LIBPCRE2_VER)/$(LIBPCRE2_SOURCE)
+
+$(D)/libpcre2: $(D)/bootstrap $(ARCHIVE)/$(LIBPCRE2_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/pcre2-$(LIBPCRE2_VER)
+	$(UNTAR)/$(LIBPCRE2_SOURCE)
+	$(CHDIR)/pcre2-$(LIBPCRE2_VER); \
+		$(CONFIGURE) \
+			--prefix=/usr \
+			--mandir=/.remove \
+			--enable-utf8 \
+			--enable-unicode-properties \
+			--enable-pcre2-16 \
+		; \
+		$(MAKE) all; \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	mv $(TARGET_DIR)/usr/bin/pcre2-config $(HOST_DIR)/bin/pcre2-config
+	$(REWRITE_PKGCONF) $(HOST_DIR)/bin/pcre2-config
+	$(REWRITE_LIBTOOL)/libpcre2-8.la
+	$(REWRITE_LIBTOOL)/libpcre2-16.la
+	$(REWRITE_LIBTOOL)/libpcre2-posix.la
+	$(REWRITE_LIBTOOLDEP)/libpcre2-8.la
+	$(REWRITE_LIBTOOLDEP)/libpcre2-16.la
+	$(REWRITE_LIBTOOLDEP)/libpcre2-posix.la
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libpcre2-8.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libpcre2-16.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libpcre2-posix.pc
+	$(REMOVE)/pcre2-$(LIBPCRE2_VER)
+	$(TOUCH)
+
+#
 # host_libarchive
 #
 LIBARCHIVE_VER = 3.4.0
@@ -570,6 +607,55 @@ $(D)/openssl: $(D)/bootstrap $(ARCHIVE)/$(OPENSSL_SOURCE)
 	ln -sf libcrypto.so.1.0.0 $(TARGET_LIB_DIR)/libcrypto.so.0.9.8
 	ln -sf libssl.so.1.0.0 $(TARGET_LIB_DIR)/libssl.so.0.9.8
 	$(REMOVE)/openssl-$(OPENSSL_VER)
+	$(TOUCH)
+
+#
+# openssl2
+#
+OPENSSL2_MAJOR = 1.1.1
+OPENSSL2_MINOR = d
+OPENSSL2_VER = $(OPENSSL2_MAJOR)$(OPENSSL2_MINOR)
+OPENSSL2_SOURCE = openssl-$(OPENSSL2_VER).tar.gz
+#OPENSSL2_PATCH  = openssl-$(OPENSSL2_VER)-optimize-for-size.patch
+#OPENSSL2_PATCH += openssl-$(OPENSSL2_VER)-makefile-dirs.patch
+#OPENSSL2_PATCH += openssl-$(OPENSSL2_VER)-disable_doc_tests.patch
+#OPENSSL2_PATCH += openssl-$(OPENSSL2_VER)-fix-parallel-building.patch
+#OPENSSL2_PATCH += openssl-$(OPENSSL2_VER)-compat_versioned_symbols-1.patch
+
+OPENSSL2_SED_PATCH = sed -i 's|MAKEDEPPROG=makedepend|MAKEDEPPROG=$(CROSS_DIR)/bin/$$(CC) -M|' Makefile
+
+$(ARCHIVE)/$(OPENSSL2_SOURCE):
+	$(DOWNLOAD) https://www.openssl.org/source/$(OPENSSL2_SOURCE)
+
+$(D)/openssl2: $(D)/bootstrap $(ARCHIVE)/$(OPENSSL2_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/openssl-$(OPENSSL2_VER)
+	$(UNTAR)/$(OPENSSL2_SOURCE)
+	$(CHDIR)/openssl-$(OPENSSL2_VER); \
+		$(call apply_patches, $(OPENSSL2_PATCH)); \
+		$(BUILDENV) \
+		./Configure $(SILENT_OPT) \
+			-DL_ENDIAN \
+			shared \
+			no-hw \
+			linux-generic32 \
+			--prefix=/usr \
+			--openssldir=/etc/ssl \
+		; \
+		$(OPENSSL2_SED_PATCH); \
+		$(MAKE) depend; \
+		$(MAKE) all; \
+		$(MAKE) install_sw DESTDIR=$(TARGET_DIR)
+	chmod 0755 $(TARGET_LIB_DIR)/lib{crypto,ssl}.so.*
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/openssl.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libcrypto.pc
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libssl.pc
+	cd $(TARGET_DIR) && rm -rf etc/ssl/man usr/bin/openssl usr/lib/engines
+	ln -sf libcrypto.so.1.1 $(TARGET_LIB_DIR)/libcrypto.so.0.9.8
+	ln -sf libssl.so.1.1 $(TARGET_LIB_DIR)/libssl.so.0.9.8
+	ln -sf libcrypto.so.1.1 $(TARGET_LIB_DIR)/libcrypto.so.1.0.0
+	ln -sf libssl.so.1.1 $(TARGET_LIB_DIR)/libssl.so.1.0.0
+	$(REMOVE)/openssl-$(OPENSSL2_VER)
 	$(TOUCH)
 
 #

@@ -44,7 +44,6 @@ printenv:
 	@echo "BOXTYPE           : $(BOXTYPE)"
 	@echo "KERNEL_VERSION    : $(KERNEL_VER)"
 	@echo "EXTERNAL_LCD      : $(EXTERNAL_LCD)"
-	@echo "MEDIAFW           : $(MEDIAFW)"
 ifeq ($(FFMPEG_EXPERIMENTAL), 1)
 	@echo "FFMPEG_EXP        : yes"
 else
