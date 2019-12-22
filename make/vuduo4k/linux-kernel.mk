@@ -1,19 +1,4 @@
 #
-# KERNEL
-#
-KERNEL_VER             = 4.1.45-1.17
-KERNEL_TYPE            = vuduo4k
-KERNEL_SRC_VER         = 4.1-1.17
-KERNEL_SRC             = stblinux-${KERNEL_SRC_VER}.tar.bz2
-KERNEL_URL             = http://archive.vuplus.com/download/kernel
-ifeq ($(VUPLUS4K_MULTIBOOT), 1)
-KERNEL_CONFIG          = $(KERNEL_TYPE)/defconfig_multi
-else
-KERNEL_CONFIG          = $(KERNEL_TYPE)/defconfig
-endif
-KERNEL_DIR             = $(BUILD_TMP)/linux
-
-#
 # Todo: findkerneldevice.py
 
 DEPMOD = $(HOST_DIR)/bin/depmod
@@ -22,12 +7,6 @@ DEPMOD = $(HOST_DIR)/bin/depmod
 # Patches Kernel
 #
 COMMON_PATCHES_ARM = \
-
-KERNEL_PATCHES = \
-		armbox/$(KERNEL_TYPE)/bcmsysport_4_1_45.patch \
-		armbox/$(KERNEL_TYPE)/linux_dvb-core.patch \
-		armbox/$(KERNEL_TYPE)/linux_dvb_adapter.patch \
-		armbox/$(KERNEL_TYPE)/linux_usb_hub.patch
 
 $(ARCHIVE)/$(KERNEL_SRC):
 	$(DOWNLOAD) $(KERNEL_URL)/$(KERNEL_SRC)
@@ -60,6 +39,7 @@ $(D)/kernel.do_compile: $(D)/kernel.do_prepare
 
 KERNEL = $(D)/kernel
 $(D)/kernel: $(D)/bootstrap $(D)/kernel.do_compile
+	install -m 644 $(KERNEL_DIR)/arch/arm/boot/zImage $(TARGET_DIR)/boot/vmlinux
 	install -m 644 $(KERNEL_DIR)/vmlinux $(TARGET_DIR)/boot/vmlinux-arm-$(KERNEL_VER)
 	install -m 644 $(KERNEL_DIR)/System.map $(TARGET_DIR)/boot/System.map-arm-$(KERNEL_VER)
 	cp $(KERNEL_DIR)/arch/arm/boot/zImage $(TARGET_DIR)/boot/
