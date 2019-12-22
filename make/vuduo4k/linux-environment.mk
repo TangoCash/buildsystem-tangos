@@ -66,8 +66,8 @@ CUSTOM_INITTAB =
 
 # release target
 neutrino-release-vuduo4k:
-	install -m 0755 $(SKEL_ROOT)/release/halt_vuultimo4k $(RELEASE_DIR)/etc/init.d/halt
-	cp -f $(SKEL_ROOT)/release/fstab_vuultimo4k $(RELEASE_DIR)/etc/fstab
+	install -m 0755 $(SKEL_ROOT)/release/halt_$(KERNEL_TYPE) $(RELEASE_DIR)/etc/init.d/halt
+	cp -f $(SKEL_ROOT)/release/fstab_$(KERNEL_TYPE) $(RELEASE_DIR)/etc/fstab
 	cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/*.ko $(RELEASE_DIR)/lib/modules/
 	rm -f $(RELEASE_DIR)/lib/modules/fpga_directc.ko
 ifeq ($(VU_MULTIBOOT), 1)

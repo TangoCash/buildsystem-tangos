@@ -13,6 +13,8 @@ KERNEL_CONFIG          = $(KERNEL_TYPE)/defconfig
 endif
 KERNEL_DIR             = $(BUILD_TMP)/linux
 
+KERNEL_INITRD          = vmlinuz-initrd-7445d0
+
 KERNEL_PATCHES = \
 		armbox/vuplus_common/3_14_bcm_genet_disable_warn.patch \
 		armbox/vuplus_common/3_14_linux_dvb-core.patch \
@@ -60,13 +62,13 @@ CUSTOM_INITTAB =
 
 # release target
 neutrino-release-vuultimo4k:
-	install -m 0755 $(SKEL_ROOT)/release/halt_vuultimo4k $(RELEASE_DIR)/etc/init.d/halt
-	cp -f $(SKEL_ROOT)/release/fstab_vuultimo4k $(RELEASE_DIR)/etc/fstab
+	install -m 0755 $(SKEL_ROOT)/release/halt_$(KERNEL_TYPE) $(RELEASE_DIR)/etc/init.d/halt
+	cp -f $(SKEL_ROOT)/release/fstab_$(KERNEL_TYPE) $(RELEASE_DIR)/etc/fstab
 	cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/*.ko $(RELEASE_DIR)/lib/modules/
 	rm -f $(RELEASE_DIR)/lib/modules/fpga_directc.ko
 ifeq ($(VU_MULTIBOOT), 1)
-	cp $(SKEL_ROOT)/release/vmlinuz-initrd-7445d0 $(RELEASE_DIR)/boot/
+	cp $(SKEL_ROOT)/release/$(KERNEL_INITRD) $(RELEASE_DIR)/boot/
 else
-	cp $(TARGET_DIR)/boot/vmlinuz-initrd-7445d0 $(RELEASE_DIR)/boot/
+	cp $(TARGET_DIR)/boot/$(KERNEL_INITRD) $(RELEASE_DIR)/boot/
 endif
 	cp $(TARGET_DIR)/boot/zImage $(RELEASE_DIR)/boot/
