@@ -1,9 +1,9 @@
-### armbox vuuno4k
+### armbox vusolo4k
 
-KERNEL_VER             = 3.14.28-1.12
+KERNEL_VER             = 3.14.28-1.8
 KERNEL_DATE            =
-KERNEL_TYPE            = vuuno4k
-KERNEL_SRC_VER         = 3.14-1.12
+KERNEL_TYPE            = vusolo4k
+KERNEL_SRC_VER         = 3.14-1.8
 KERNEL_SRC             = stblinux-${KERNEL_SRC_VER}.tar.bz2
 KERNEL_URL             = http://archive.vuplus.com/download/kernel
 ifeq ($(VU_MULTIBOOT), 1)
@@ -13,7 +13,7 @@ KERNEL_CONFIG          = $(KERNEL_TYPE)/defconfig
 endif
 KERNEL_DIR             = $(BUILD_TMP)/linux
 
-KERNEL_INITRD          = vmlinuz-initrd-7439b0
+KERNEL_INITRD          = vmlinuz-initrd-7366c0
 
 KERNEL_PATCHES = \
 		armbox/vuplus_common/3_14_bcm_genet_disable_warn.patch \
@@ -45,8 +45,8 @@ KERNEL_PATCHES = \
 		armbox/vuplus_common/3_14_linux_dvb_adapter.patch
 
 KERNEL_PATCHES += \
-		armbox/$(KERNEL_TYPE)/bcmsysport_3.14.28-1.12.patch \
-		armbox/$(KERNEL_TYPE)/linux_prevent_usb_dma_from_bmem.patch
+		armbox/$(KERNEL_TYPE)/linux_rpmb_not_alloc.patch \
+		armbox/$(KERNEL_TYPE)/fix_mmc_3.14.28-1.10.patch
 
 # crosstool
 CUSTOM_KERNEL_VER = $(KERNEL_SRC_VER)
