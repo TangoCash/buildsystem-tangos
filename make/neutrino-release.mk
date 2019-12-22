@@ -2,35 +2,6 @@
 # auxiliary targets for model-specific builds
 #
 
-#
-# vusolo4k
-#
-neutrino-release-vusolo4k:
-	install -m 0755 $(SKEL_ROOT)/release/halt_vusolo4k $(RELEASE_DIR)/etc/init.d/halt
-	cp -f $(SKEL_ROOT)/release/fstab_vusolo4k $(RELEASE_DIR)/etc/fstab
-	cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/*.ko $(RELEASE_DIR)/lib/modules/
-ifeq ($(VUPLUS4K_MULTIBOOT), 1)
-	cp $(SKEL_ROOT)/release/vmlinuz-initrd-7366c0 $(RELEASE_DIR)/boot/
-else
-	cp $(TARGET_DIR)/boot/vmlinuz-initrd-7366c0 $(RELEASE_DIR)/boot/
-endif
-	cp $(TARGET_DIR)/boot/zImage $(RELEASE_DIR)/boot/
-
-#
-# vuduo4k
-#
-neutrino-release-vuduo4k:
-	install -m 0755 $(SKEL_ROOT)/release/halt_vuduo4k $(RELEASE_DIR)/etc/init.d/halt
-	cp -f $(SKEL_ROOT)/release/fstab_vuduo4k $(RELEASE_DIR)/etc/fstab
-	cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/*.ko $(RELEASE_DIR)/lib/modules/
-ifeq ($(VUPLUS4K_MULTIBOOT), 1)
-	cp $(SKEL_ROOT)/release/vmlinuz-initrd-7278b1 $(RELEASE_DIR)/boot/
-else
-	cp $(TARGET_DIR)/boot/vmlinuz-initrd-7278b1 $(RELEASE_DIR)/boot/
-endif
-	cp $(TARGET_DIR)/boot/zImage $(RELEASE_DIR)/boot/
-	cp -f $(SKEL_ROOT)/release/bp3flash.sh $(RELEASE_DIR)/usr/bin/
-
 python-iptv-install:
 	install -d $(RELEASE_DIR)/usr/bin; \
 	install -d $(RELEASE_DIR)/usr/include; \
@@ -140,11 +111,6 @@ neutrino-release-base:
 	[ ! -z "$(CUSTOM_RCS)" ] && install -m 0755 $(CUSTOM_RCS) $(RELEASE_DIR)/etc/init.d/rcS || true
 #
 #
-################################################################################
-ifeq ($(BOXARCH), $(filter $(BOXARCH), arm mips))
-################################################################################
-#
-#
 #
 	[ -e $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/kernel/drivers/usb/serial/usbserial.ko ] && cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/kernel/drivers/usb/serial/usbserial.ko $(RELEASE_DIR)/lib/modules/ || true
 	[ -e $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/kernel/drivers/usb/serial/ftdi_sio.ko ] && cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/kernel/drivers/usb/serial/ftdi_sio.ko $(RELEASE_DIR)/lib/modules/ftdi_sio.ko || true
@@ -166,7 +132,6 @@ ifeq ($(IMAGE), neutrino-wlandriver)
 	[ -e $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/kernel/drivers/staging/rtl8712/r8712u.ko ] && cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/kernel/drivers/staging/rtl8712/r8712u.ko $(RELEASE_DIR)/lib/modules/ || true
 	[ -e $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/kernel/drivers/staging/rtl8192u/r8192u_usb.ko ] && cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/kernel/drivers/staging/rtl8192u/r8192u_usb.ko $(RELEASE_DIR)/lib/modules/ || true
 	[ -e $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/kernel/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.ko ] && cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/kernel/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.ko $(RELEASE_DIR)/lib/modules/ || true
-endif
 endif
 #
 #
