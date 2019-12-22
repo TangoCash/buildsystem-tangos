@@ -208,7 +208,7 @@ if [ $BOXTYPE == 'hd51' -o $BOXTYPE == 'bre2ze4k' -o $BOXTYPE == 'h7' ]; then
 case $8 in
 	[1-2]) REPLY=$8;;
 	*)	echo -e "\nImage-Layout:"
-		echo "   1)  4 single (default)"
+		echo "   1)  4 single"
 		echo "   2)  1 single + multiroot"
 		read -p "Select layout (1-2)? [1]"
 		REPLY="${REPLY:-1}";;
@@ -231,17 +231,18 @@ if [ $BOXTYPE == 'vusolo4k' -o $BOXTYPE == 'vuduo4k' -o $BOXTYPE == 'vuultimo4k'
 case $8 in
 	[1-2]) REPLY=$8;;
 	*)	echo -e "\nNormal or MultiBoot:"
-		echo "   1)  Normal    (default)"
+		echo "   1)  Normal"
 		echo "   2)  Multiboot"
-		read -p "Select mode (1-2)? ";;
+		read -p "Select mode (1-2)? [2]"
+		REPLY="${REPLY:-2}";;
 esac
 
 case "$REPLY" in
-	1)  VUPLUS4K_MULTIBOOT="0";;
-	2)  VUPLUS4K_MULTIBOOT="1";;
-	*)  VUPLUS4K_MULTIBOOT="0";;
+	1)  VU_MULTIBOOT="0";;
+	2)  VU_MULTIBOOT="1";;
+	*)  VU_MULTIBOOT="1";;
 esac
-echo "VUPLUS4K_MULTIBOOT=$VUPLUS4K_MULTIBOOT" >> config
+echo "VU_MULTIBOOT=$VU_MULTIBOOT" >> config
 fi
 
 ##############################################
