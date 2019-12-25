@@ -57,8 +57,8 @@ CAIRO_OPTS =
 
 LINKS_PATCH_BOXTYPE =
 
-CUSTOM_RCS     =
-CUSTOM_INITTAB =
+CUSTOM_RCS     = $(SKEL_ROOT)/release/rcS_neutrino_vu
+CUSTOM_INITTAB = $(SKEL_ROOT)/etc/inittab_ttyS0
 
 # release target
 neutrino-release-vuultimo4k:
