@@ -2029,7 +2029,7 @@ GRAPHLCD_VER = 55d4bd8
 GRAPHLCD_SOURCE = graphlcd-git-$(GRAPHLCD_VER).tar.bz2
 GRAPHLCD_URL = git://projects.vdr-developer.org/graphlcd-base.git
 GRAPHLCD_PATCH = graphlcd-git-$(GRAPHLCD_VER).patch
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k vuduo4k vuultimo4k))
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vuduo4k vuuno4kse vuultimo4k vusolo4k))
 GRAPHLCD_PATCH += graphlcd-vuplus4k.patch
 endif
 

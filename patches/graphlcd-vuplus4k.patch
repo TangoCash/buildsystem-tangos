@@ -80,7 +80,7 @@ new file mode 100644
 index 0000000..826843c
 --- /dev/null
 +++ b/glcddrivers/vuplus4k.c
-@@ -0,0 +1,249 @@
+@@ -0,0 +1,268 @@
 +/*
 + * GraphLCD driver library
 + *
@@ -149,6 +149,25 @@ index 0000000..826843c
 +
 +	bpp = lcd_read_value(BPP);
 +
++	switch (bpp)
++	{
++		case 8:
++			stride_bpp_value = 1;
++			break;
++		case 15:
++		case 16:
++			stride_bpp_value = 2;
++			break;
++		case 24:
++		case 32:
++			stride_bpp_value = 4;
++			break;
++		default:
++			stride_bpp_value = (bpp + 7) / 8;
++	}
++
++	stride = width * stride_bpp_value;
++
 +	for (unsigned int i = 0; i < config->options.size(); i++)
 +	{
 +		if (config->options[i].name == "")
@@ -181,12 +200,12 @@ index 0000000..826843c
 +		printf("failed to set lcd bin mode\n");
 +	}
 +
-+	newLCD = new uint16_t[width * height * 4];
++	newLCD = new uint16_t[height * stride];
 +	if (newLCD)
-+		memset(newLCD, 0, width * height * 4);
-+	oldLCD = new uint16_t[width * height * 4];
++		memset(newLCD, 0, height * stride);
++	oldLCD = new uint16_t[height * stride];
 +	if (oldLCD)
-+		memset(oldLCD, 0, width * height * 4);
++		memset(oldLCD, 0, height * stride);
 +
 +	syslog(LOG_INFO, "%s: current lcd is %dx%d, %dbpp, vuplus4k lcd device was opened successfully\n", config->name.c_str(), width, height, bpp);
 +
@@ -224,7 +243,7 @@ index 0000000..826843c
 +{
 +	if (config->width != oldConfig->width ||
 +		config->height != oldConfig->height)
-+		{
++	{
 +		DeInit();
 +		Init();
 +		return 0;
@@ -262,7 +281,7 @@ index 0000000..826843c
 +	red = (data & 0x00FF0000) >> 16;
 +
 +	unsigned char* row_pointers_bit_shift = (unsigned char*) &newLCD[0];
-+	int row_pointers_2_ptr = (y * width + x) * 4;
++	int row_pointers_2_ptr = (y * width + x) * stride_bpp_value;
 +
 + 	if (config->invert) {
 +		blue = 255 - blue;
@@ -287,7 +306,7 @@ index 0000000..826843c
 +	if (CheckSetup() > 0)
 +		refreshAll = true;
 +
-+	for (i = 0; i < width * height * 4; i++)
++	for (i = 0; i < height * stride; i++)
 +	{
 +		if (newLCD[i] != oldLCD[i])
 +		{
@@ -298,14 +317,14 @@ index 0000000..826843c
 +
 +	if (refreshAll)
 +	{
-+		for (i = 0; i < width * height * 4; i++)
++		for (i = 0; i < height * stride; i++)
 +		{
 +			oldLCD[i] = newLCD[i];
 +		}
 +		unsigned char* row_pointers_bit_shift = (unsigned char*) &newLCD[0];
 +		{
 +			int w=-1;
-+			w = write(fd, row_pointers_bit_shift, height * width * 4);
++			w = write(fd, row_pointers_bit_shift, height * stride);
 +//			printf("write ret : %d\n",w);
 +			//ret = ioctl(lcdfd, 0);
 +//			printf("write to /dev/dbox/oled0 : %d\n",w);
@@ -335,7 +354,7 @@ new file mode 100644
 index 0000000..fac8272
 --- /dev/null
 +++ b/glcddrivers/vuplus4k.h
-@@ -0,0 +1,62 @@
+@@ -0,0 +1,64 @@
 +/*
 + * GraphLCD driver library
 + *
@@ -378,6 +397,8 @@ index 0000000..fac8272
 +	uint16_t * newLCD;
 +	uint16_t * oldLCD;
 +	int bpp;
++	int stride;
++	int stride_bpp_value;
 +
 +	int CheckSetup();
 +
@@ -402,13 +423,16 @@ diff --git a/graphlcd.conf b/graphlcd.conf
 index 270cae8..d256e4b 100644
 --- a/graphlcd.conf
 +++ b/graphlcd.conf
-@@ -253,3 +253,9 @@
- Device=/dev/ttyS0
- Brightness=100
- Contrast=80
-+
+@@ -117,6 +117,12 @@
+ 
+ ########################################################################
+ 
 +[vuplus4k]
-+# Driver setting for the OLED VUPLUS4K (autodetect resolution)
++# Driver setting for the OLED VUPLUS4K
 +Driver=vuplus4k
 +#Width=480
 +#Height=320
++
+ [ax206dpf]
+ #  THIS IS AN EXPERIMENTAL DRIVER!
+ #  You have to uncomment the variable HAVE_DRIVER_AX206DPF
