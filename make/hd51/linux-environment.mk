@@ -22,7 +22,8 @@ KERNEL_PATCHES = \
 		armbox/$(KERNEL_TYPE)/blacklist_mmc0.patch \
 		armbox/$(KERNEL_TYPE)/export_pmpoweroffprepare.patch \
 		armbox/$(KERNEL_TYPE)/t230c2.patch \
-		armbox/$(KERNEL_TYPE)/add-more-devices-rtl8xxxu.patch
+		armbox/$(KERNEL_TYPE)/add-more-devices-rtl8xxxu.patch \
+		armbox/$(KERNEL_TYPE)/dvbs2x.patch
 
 # crosstool
 CUSTOM_KERNEL_VER       = $(KERNEL_VER)-arm
