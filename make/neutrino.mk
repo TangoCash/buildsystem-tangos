@@ -94,8 +94,11 @@ LH_CONFIG_OPTS =
 ifeq ($(FLAVOUR), $(filter $(FLAVOUR), neutrino-ni neutrino-tuxbox))
 N_CONFIG_OPTS += --with-boxtype=armbox
 N_CONFIG_OPTS += --with-boxmodel=$(BOXTYPE)
+LH_CONFIG_OPTS += --with-boxtype=armbox
+LH_CONFIG_OPTS += --with-boxmodel=$(BOXTYPE)
 else
 N_CONFIG_OPTS += --with-boxtype=$(BOXTYPE)
+LH_CONFIG_OPTS += --with-boxtype=$(BOXTYPE)
 endif
 N_CONFIG_OPTS += --enable-freesatepg
 #N_CONFIG_OPTS += --enable-pip
@@ -281,7 +284,6 @@ $(D)/libstb-hal.config.status: | $(NEUTRINO_DEPS)
 			\
 			--with-target=cdk \
 			--with-targetprefix=/usr \
-			--with-boxtype=$(BOXTYPE) \
 			$(LH_CONFIG_OPTS) \
 			PKG_CONFIG=$(PKG_CONFIG) \
 			PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
