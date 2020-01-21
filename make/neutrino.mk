@@ -91,7 +91,7 @@ ifeq ($(BOXARCH), arm)
 N_CPPFLAGS    += -I$(CROSS_DIR)/$(TARGET)/sys-root/usr/include
 endif
 
-LH_CONFIG_OPTS =
+LH_CONFIG_OPTS = $(LOCAL_LIBHAL_BUILD_OPTIONS)
 #LH_CONFIG_OPTS += --enable-flv2mpeg4
 
 
