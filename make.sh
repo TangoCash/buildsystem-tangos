@@ -156,24 +156,24 @@ echo "IMAGE=$IMAGE" >> config
 ##############################################
 
 case $6 in
-	[1-6]) REPLY=$6;;
+	[1-4]) REPLY=$6;;
 	*)	echo -e "\nWhich Neutrino variant do you want to build?:"
 		echo "   1)  neutrino-ddt    [ arm/sh4 ]"
-		echo "   2)  neutrino-max    [ arm     ]"
+		echo "   2)  neutrino-tuxbox [ arm/sh4 ]"
 		echo "   3)  neutrino-ni     [ arm     ]"
 		echo "   4)  neutrino-tangos [ arm/sh4 ]"
-		echo "   5)  neutrino-tuxbox [ arm/sh4 ]"
-		echo "   6)  neutrino-hd2    [ arm/sh4 ]"
-		read -p "Select Image to build (1-6)? [4]"
+#		echo "   5)  neutrino-max    [ arm     ]"
+#		echo "   6)  neutrino-hd2    [ arm/sh4 ]"
+		read -p "Select Image to build (1-4)? [4]"
 		REPLY="${REPLY:-4}";;
 esac
 
 case "$REPLY" in
 	1) FLAVOUR="neutrino-ddt";;
-	2) FLAVOUR="neutrino-max";;
+	2) FLAVOUR="neutrino-tuxbox";;
 	3) FLAVOUR="neutrino-ni";;
 	4) FLAVOUR="neutrino-tangos";;
-	5) FLAVOUR="neutrino-tuxbox";;
+	5) FLAVOUR="neutrino-max";;
 	6) FLAVOUR="neutrino-hd2";;
 	*) FLAVOUR="neutrino-tangos";;
 esac
