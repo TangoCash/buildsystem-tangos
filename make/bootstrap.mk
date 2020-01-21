@@ -105,5 +105,7 @@ $(TOOLS_DIR):
 PREQS  = $(TOOLS_DIR)
 
 preqs: $(PREQS)
+	@mkdir -p $(OWN_BUILD)/neutrino-hd
+	@mkdir -p $(OWN_BUILD)/neutrino-hd.$(BOXTYPE)
 
 
