@@ -119,6 +119,7 @@ neutrino-plugins-distclean:
 #
 # xupnpd
 #
+XUPNPD_BRANCH = 25d6d44c045
 XUPNPD_PATCH = xupnpd.patch
 
 $(D)/xupnpd \
@@ -130,6 +131,7 @@ $(D)/neutrino-plugin-xupnpd: $(D)/bootstrap $(D)/lua $(D)/openssl $(D)/neutrino-
 		else cd $(ARCHIVE); git clone https://github.com/clark15b/xupnpd.git xupnpd.git; \
 		fi
 	cp -ra $(ARCHIVE)/xupnpd.git $(BUILD_TMP)/xupnpd
+	($(CHDIR)/xupnpd; git checkout -q $(XUPNPD_BRANCH);)
 	$(CHDIR)/xupnpd; \
 		$(call apply_patches, $(XUPNPD_PATCH))
 	$(CHDIR)/xupnpd/src; \
