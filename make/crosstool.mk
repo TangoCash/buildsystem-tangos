@@ -20,6 +20,7 @@ CROSSTOOL_NG_SOURCE = crosstool-ng-git-$(CROSSTOOL_NG_VER).tar.bz2
 CROSSTOOL_NG_URL = https://github.com/TangoCash/crosstool-ng.git
 CROSSTOOL_NG_CONFIG  = crosstool-ng-$(CROSSTOOL_NG_VER)-$(CROSSTOOL_GCC_VER)-$(BOXARCH)
 CROSSTOOL_NG_BACKUP = $(ARCHIVE)/$(CROSSTOOL_GCC_VER)-$(BOXARCH)-kernel-$(KERNEL_VER)-backup.tar.gz
+CROSSTOOL_NG_VER_PATCH = $(PATCHES)/ct-ng/crosstool-ng-$(CROSSTOOL_NG_VER)-version.patch
 
 $(ARCHIVE)/$(CROSSTOOL_NG_SOURCE):
 	$(HELPERS_DIR)/get-git-archive.sh $(CROSSTOOL_NG_URL) $(CROSSTOOL_NG_VER) $(notdir $@) $(ARCHIVE)
@@ -56,6 +57,7 @@ crosstool-ng: $(D)/directories $(ARCHIVE)/$(KERNEL_SRC) $(ARCHIVE)/$(CROSSTOOL_N
 		test $$NUM_CPUS = 0 && NUM_CPUS=1; \
 		sed -i "s@^CT_PARALLEL_JOBS=.*@CT_PARALLEL_JOBS=$$NUM_CPUS@" .config; \
 		\
+		$(call apply_patches, $(CROSSTOOL_NG_VER_PATCH)); \
 		$(call apply_patches, $(CROSSTOOL_BOXTYPE_PATCH)); \
 		\
 		export CT_NG_ARCHIVE=$(ARCHIVE); \
