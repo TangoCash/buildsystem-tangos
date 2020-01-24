@@ -81,22 +81,37 @@ if [ -e /sys/class/net/sys0 ]; then
 	/sbin/ifconfig sys0 up
 fi
 
+if [ ! -e /lib/modules/dvb-bcm.ko ]; then
+	(cd /lib/modules; ln -s dvb-bcm*.ko dvb-bcm.ko)
+fi
+
 if [ ! -e /dev/brcm0 ]; then
+	if [ -e /usr/bin/bp3flash.sh ]; then
+		/usr/bin/bp3flash.sh 2>/dev/null
+	fi
 	im procmk.ko
 	im bcm_event.ko
 	im dvb_base.ko
-	start-stop-daemon --start --quiet --exec /usr/bin/dvb_server -- &
+	/usr/bin/dvb_server &
 	mknod -m a=rw /dev/brcm0 c 30 0
-	start-stop-daemon --start --quiet --exec /usr/bin/init_client /lib/modules/dvb-bcm7444.ko /lib/modules/brcmfb.ko /lib/modules/wakeup_drv.ko -- &
+	/usr/bin/init_client &
+	im dvb-bcm.ko
+	im brcmfb.ko
+	im wakeup_drv.ko
+fi
+
+if [ -e /var/tuxbox/config/.bootlogo ]; then
+    (
+      while [ ! -c /dev/dvb/adapter0/video0 ]; do
+        usleep 100000
+      done
+      showiframe /usr/share/tuxbox/neutrino/icons/bootlogo.m2v
+    ) &
 fi
 
 while [ ! -c /dev/fb0 ]; do
 	usleep 100000
 done
-
-if [ -e /var/tuxbox/config/.bootlogo ]; then
-  showiframe /usr/share/tuxbox/neutrino/icons/bootlogo.m2v &
-fi
 
 echo 100 > /proc/stb/fp/oled_brightness
 oled -tc "Booting...TC-NMP"
