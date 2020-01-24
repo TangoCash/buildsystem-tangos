@@ -5,6 +5,7 @@ build_tmp/
 build_host
 build_sysroot
 build_release
+/build_oscam/
 /build_source/
 cross/
 custom/*-local*

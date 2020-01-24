@@ -2,65 +2,136 @@ $(D)/oscam-modern.do_prepare:
 	rm -rf $(SOURCE_DIR)/oscam-svn
 	rm -rf $(SOURCE_DIR)/oscam-svn.org
 	[ -d "$(ARCHIVE)/oscam-svn-modern" ] && \
-	(cd $(ARCHIVE)/oscam-svn-modern; svn up; cd "$(CDK_DIR)";); \
+	(cd $(ARCHIVE)/oscam-svn-modern; svn up;); \
 	[ -d "$(ARCHIVE)/oscam-svn-modern" ] || \
 	svn checkout http://www.streamboard.tv/svn/oscam-addons/modern $(ARCHIVE)/oscam-svn-modern; \
 	cp -ra $(ARCHIVE)/oscam-svn-modern $(SOURCE_DIR)/oscam-svn;\
 	cp -ra $(SOURCE_DIR)/oscam-svn $(SOURCE_DIR)/oscam-svn.org;\
 	cd $(SOURCE_DIR)/oscam-svn; \
-	[ -e "$(PATCHES)/oscam.config" ] && \
-	cp -ra "$(PATCHES)/oscam.config" config.h; \
-	[ -e "$(PATCHES)/oscam.config" ] || \
-	$(MAKE) config
+		./config.sh \
+			--disable all \
+			--enable \
+				WEBIF \
+				CS_CACHEEX \
+				HAVE_DVBAPI \
+				MODULE_MONITOR \
+				READ_SDT_CHARSETS \
+				WEBIF_JQUERY \
+				WEBIF_LIVELOG \
+				WITH_DEBUG \
+				WITH_EMU \
+				WITH_LB \
+				WITH_NEUTRINO \
+				\
+				MODULE_CAMD35 \
+				MODULE_CAMD35_TCP \
+				MODULE_CCCAM \
+				MODULE_CCCSHARE \
+				MODULE_CONSTCW \
+				MODULE_GBOX \
+				MODULE_NEWCAMD \
+				\
+				CARDREADER_INTERNAL \
+				CARDREADER_PHOENIX \
+				CARDREADER_SC8IN1 \
+			--enable readers
 	touch $@
 
 $(D)/oscam-emu.do_prepare:
 	rm -rf $(SOURCE_DIR)/oscam-svn
 	rm -rf $(SOURCE_DIR)/oscam-svn.org
 	[ -d "$(ARCHIVE)/oscam-svn" ] && \
-	(cd $(ARCHIVE)/oscam-svn; svn up; cd "$(CDK_DIR)";); \
+	(cd $(ARCHIVE)/oscam-svn; svn up;); \
 	[ -d "$(ARCHIVE)/oscam-svn" ] || \
 	svn checkout http://www.streamboard.tv/svn/oscam/trunk $(ARCHIVE)/oscam-svn; \
 	cp -ra $(ARCHIVE)/oscam-svn $(SOURCE_DIR)/oscam-svn;\
 	cp -ra $(SOURCE_DIR)/oscam-svn $(SOURCE_DIR)/oscam-svn.org;\
 	cd $(SOURCE_DIR)/oscam-svn; \
-	wget https://github.com/oscam-emu/oscam-emu/raw/master/oscam-emu.patch; \
-	sed -i 's/SoftCam\.Key/oscam.keys/ig' oscam-emu.patch; \
-	sed -i 's/SoftCam_Key/oscam_keys/ig' oscam-emu.patch; \
-	patch -p0 < ./oscam-emu.patch; \
-	wget -O oscam.keys http://enigma.satupdate.net/SoftCam.txt ;\
-	[ -e "$(PATCHES)/oscam.config" ] && \
-	cp -ra "$(PATCHES)/oscam.config" config.h; \
-	[ -e "$(PATCHES)/oscam.config" ] || \
-	$(MAKE) config
+		wget https://github.com/oscam-emu/oscam-emu/raw/master/oscam-emu.patch; \
+		sed -i 's/SoftCam\.Key/oscam.keys/ig' oscam-emu.patch; \
+		sed -i 's/SoftCam_Key/oscam_keys/ig' oscam-emu.patch; \
+		patch -p0 < ./oscam-emu.patch; \
+		wget -O oscam.keys http://enigma.satupdate.net/SoftCam.txt ;\
+		./config.sh \
+			--disable all \
+			--enable \
+				WEBIF \
+				CS_CACHEEX \
+				HAVE_DVBAPI \
+				MODULE_MONITOR \
+				READ_SDT_CHARSETS \
+				WEBIF_JQUERY \
+				WEBIF_LIVELOG \
+				WITH_DEBUG \
+				WITH_EMU \
+				WITH_LB \
+				WITH_NEUTRINO \
+				WITH_EMU \
+				WITH_SOFTCAM \
+				\
+				MODULE_CAMD35 \
+				MODULE_CAMD35_TCP \
+				MODULE_CCCAM \
+				MODULE_CCCSHARE \
+				MODULE_CONSTCW \
+				MODULE_GBOX \
+				MODULE_NEWCAMD \
+				\
+				CARDREADER_INTERNAL \
+				CARDREADER_PHOENIX \
+				CARDREADER_SC8IN1 \
+			--enable readers
 	touch $@
 
 $(D)/oscam.do_prepare:
 	rm -rf $(SOURCE_DIR)/oscam-svn
 	rm -rf $(SOURCE_DIR)/oscam-svn.org
 	[ -d "$(ARCHIVE)/oscam-svn" ] && \
-	(cd $(ARCHIVE)/oscam-svn; svn up; cd "$(CDK_DIR)";); \
+	(cd $(ARCHIVE)/oscam-svn; svn up;); \
 	[ -d "$(ARCHIVE)/oscam-svn" ] || \
 	svn checkout http://www.streamboard.tv/svn/oscam/trunk $(ARCHIVE)/oscam-svn; \
 	cp -ra $(ARCHIVE)/oscam-svn $(SOURCE_DIR)/oscam-svn;\
 	cp -ra $(SOURCE_DIR)/oscam-svn $(SOURCE_DIR)/oscam-svn.org;\
 	cd $(SOURCE_DIR)/oscam-svn; \
-	[ -e "$(PATCHES)/oscam.config" ] && \
-	cp -ra "$(PATCHES)/oscam.config" config.h; \
-	[ -e "$(PATCHES)/oscam.config" ] || \
-	$(MAKE) config
+		./config.sh \
+			--disable all \
+			--enable \
+				WEBIF \
+				CS_CACHEEX \
+				HAVE_DVBAPI \
+				MODULE_MONITOR \
+				READ_SDT_CHARSETS \
+				WEBIF_JQUERY \
+				WEBIF_LIVELOG \
+				WITH_DEBUG \
+				WITH_EMU \
+				WITH_LB \
+				WITH_NEUTRINO \
+				\
+				MODULE_CAMD35 \
+				MODULE_CAMD35_TCP \
+				MODULE_CCCAM \
+				MODULE_CCCSHARE \
+				MODULE_CONSTCW \
+				MODULE_GBOX \
+				MODULE_NEWCAMD \
+				\
+				CARDREADER_INTERNAL \
+				CARDREADER_PHOENIX \
+				CARDREADER_SC8IN1 \
+			--enable readers
 	touch $@
 
 $(D)/oscam.do_compile:
 	cd $(SOURCE_DIR)/oscam-svn && \
 		$(BUILDENV) \
-		$(MAKE) EXTRA_LDFLAGS="$(TARGET_LDFLAGS)" CROSS=$(TARGET)- CONF_DIR=/var/keys
+		$(MAKE) EXTRA_LDFLAGS="$(TARGET_LDFLAGS)" CROSS=$(TARGET)- CONF_DIR=/var/keys CC_OPTS=-Os
 	touch $@
 
 $(D)/oscam-emu.do_compile:
 	cd $(SOURCE_DIR)/oscam-svn && \
 		$(BUILDENV) \
-		$(MAKE) EXTRA_LDFLAGS="$(TARGET_LDFLAGS)" CROSS=$(TARGET)- CONF_DIR=/var/keys VER=emu_svn
+		$(MAKE) EXTRA_LDFLAGS="$(TARGET_LDFLAGS)" USE_LIBCRYPTO=1 CROSS=$(TARGET)- CONF_DIR=/var/keys VER=emu_svn
 	touch $@
 
 $(D)/oscam-ssl.do_compile: openssl
@@ -76,34 +147,34 @@ $(D)/oscam-libusb.do_compile: libusb
 	touch $@
 
 $(D)/oscam: bootstrap oscam.do_prepare oscam.do_compile
-	rm -rf $(TARGET_DIR)/../OScam
-	mkdir $(TARGET_DIR)/../OScam
-	cp -pR $(SOURCE_DIR)/oscam-svn/Distribution/* $(TARGET_DIR)/../OScam/ 
+	rm -rf $(TARGET_DIR)/../build_oscam
+	mkdir $(TARGET_DIR)/../build_oscam
+	cp -pR $(SOURCE_DIR)/oscam-svn/Distribution/* $(TARGET_DIR)/../build_oscam/
 	touch $@
 
-$(D)/oscam-ssl: bootstrap oscam.do_prepare oscam-ssl.do_compile
-	rm -rf $(TARGET_DIR)/../OScam
-	mkdir $(TARGET_DIR)/../OScam
-	cp -pR $(SOURCE_DIR)/oscam-svn/Distribution/* $(TARGET_DIR)/../OScam/ 
+$(D)/oscam-ssl: bootstrap openssl oscam.do_prepare oscam-ssl.do_compile
+	rm -rf $(TARGET_DIR)/../build_oscam
+	mkdir $(TARGET_DIR)/../build_oscam
+	cp -pR $(SOURCE_DIR)/oscam-svn/Distribution/* $(TARGET_DIR)/../build_oscam/
 	touch $@
 
-$(D)/oscam-libusb: bootstrap oscam.do_prepare oscam-libusb.do_compile
-	rm -rf $(TARGET_DIR)/../OScam
-	mkdir $(TARGET_DIR)/../OScam
-	cp -pR $(SOURCE_DIR)/oscam-svn/Distribution/* $(TARGET_DIR)/../OScam/ 
+$(D)/oscam-libusb: bootstrap libusb oscam.do_prepare oscam-libusb.do_compile
+	rm -rf $(TARGET_DIR)/../build_oscam
+	mkdir $(TARGET_DIR)/../build_oscam
+	cp -pR $(SOURCE_DIR)/oscam-svn/Distribution/* $(TARGET_DIR)/../build_oscam/
 	touch $@
 
 $(D)/oscam-modern: bootstrap oscam-modern.do_prepare oscam.do_compile
-	rm -rf $(TARGET_DIR)/../OScam
-	mkdir $(TARGET_DIR)/../OScam
-	cp -pR $(SOURCE_DIR)/oscam-svn/Distribution/* $(TARGET_DIR)/../OScam/ 
+	rm -rf $(TARGET_DIR)/../build_oscam
+	mkdir $(TARGET_DIR)/../build_oscam
+	cp -pR $(SOURCE_DIR)/oscam-svn/Distribution/* $(TARGET_DIR)/../build_oscam/
 	touch $@
 
-$(D)/oscam-emu: bootstrap oscam-emu.do_prepare oscam-emu.do_compile
-	rm -rf $(TARGET_DIR)/../OScam
-	mkdir $(TARGET_DIR)/../OScam
-	cp -pR $(SOURCE_DIR)/oscam-svn/oscam.keys $(TARGET_DIR)/../OScam/
-	cp -pR $(SOURCE_DIR)/oscam-svn/Distribution/* $(TARGET_DIR)/../OScam/ 
+$(D)/oscam-emu: bootstrap openssl oscam-emu.do_prepare oscam-emu.do_compile
+	rm -rf $(TARGET_DIR)/../build_oscam
+	mkdir $(TARGET_DIR)/../build_oscam
+	cp -pR $(SOURCE_DIR)/oscam-svn/oscam.keys $(TARGET_DIR)/../build_oscam/
+	cp -pR $(SOURCE_DIR)/oscam-svn/Distribution/* $(TARGET_DIR)/../build_oscam/
 	touch $@
 
 oscam-clean:
