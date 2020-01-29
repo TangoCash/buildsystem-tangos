@@ -135,6 +135,10 @@ ifeq ($(BS_GCC_VER), 8.2.0)
 CROSSTOOL_GCC_VER = gcc-8.2.0
 endif
 
+ifeq ($(BS_GCC_VER), 9.2.0)
+CROSSTOOL_GCC_VER = gcc-9.2.0
+endif
+
 CROSS_BASE            = $(BASE_DIR)/cross
 include               $(BASE_DIR)/make/$(BOXTYPE)/linux-environment.mk
 CROSS_DIR             = $(CROSS_BASE)/$(CROSSTOOL_GCC_VER)-$(BOXARCH)-kernel-$(KERNEL_VER)

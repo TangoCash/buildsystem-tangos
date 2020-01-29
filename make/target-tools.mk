@@ -548,6 +548,7 @@ $(D)/jfsutils: $(D)/bootstrap $(D)/e2fsprogs $(ARCHIVE)/$(JFSUTILS_SOURCE)
 	$(CHDIR)/jfsutils-$(JFSUTILS_VER); \
 		$(call apply_patches, $(JFSUTILS_PATCH)); \
 		sed "s@<unistd.h>@&\n#include <sys/types.h>@g" -i fscklog/extract.c; \
+		sed "s@<unistd.h>@&\n#include <sys/sysmacros.h>@g" -i libfs/devices.c; \
 		autoreconf -fi $(SILENT_OPT); \
 		$(CONFIGURE) \
 			--prefix= \

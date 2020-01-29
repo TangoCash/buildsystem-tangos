@@ -67,6 +67,7 @@ GDB_VER    = 8.1.1
 GDB        = gdb-$(GDB_VER)
 GDB_SOURCE = gdb-$(GDB_VER).tar.xz
 GDB_URL    = https://sourceware.org/pub/gdb/releases
+GDB_PATCH  = gdb-$(GDB_VER)-fix-includes.patch
 
 $(ARCHIVE)/$(GDB_SOURCE):
 	$(DOWNLOAD) $(GDB_URL)/$(GDB_SOURCE)
@@ -76,6 +77,7 @@ $(D)/gdb: $(D)/bootstrap $(D)/zlib $(D)/ncurses $(ARCHIVE)/$(GDB_SOURCE)
 	$(REMOVE)/$(GDB)
 	$(UNTAR)/$(GDB_SOURCE)
 	$(CHDIR)/$(GDB); \
+		$(call apply_patches, $(GDB_PATCH)); \
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--mandir=/.remove \
