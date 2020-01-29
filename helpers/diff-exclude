@@ -16,6 +16,7 @@
 *.rej
 *.swp
 *.so
+*.ttf
 *~
 .deps
 .libs
