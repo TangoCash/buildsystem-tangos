@@ -2474,6 +2474,7 @@ DJMOUNT_PATCH += djmount-$(DJMOUNT_VER)-fixed-crash-when-using-UTF-8-charset.pat
 DJMOUNT_PATCH += djmount-$(DJMOUNT_VER)-fixed-crash.patch
 DJMOUNT_PATCH += djmount-$(DJMOUNT_VER)-support-fstab-mounting.patch
 DJMOUNT_PATCH += djmount-$(DJMOUNT_VER)-support-seeking-in-large-2gb-files.patch
+DJMOUNT_PATCH += djmount-$(DJMOUNT_VER)-fix-newer-gcc.patch
 
 $(ARCHIVE)/$(DJMOUNT_SOURCE):
 	$(DOWNLOAD) https://sourceforge.net/projects/djmount/files/djmount/$(DJMOUNT_VER)/$(DJMOUNT_SOURCE)

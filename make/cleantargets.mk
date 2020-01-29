@@ -31,6 +31,7 @@ distclean:
 	@-rm -rf $(RELEASE_DIR_CLEANUP)
 	@-rm -rf $(BUILD_TMP)
 	@-rm -rf $(SOURCE_DIR)
+	@-rm -rf $(BASE_DIR)/build_*
 	@-rm -rf $(D)
 	@test -d $(D) || mkdir $(D)
 	@echo -e "$(TERM_YELLOW)done\n$(TERM_NORMAL)"
