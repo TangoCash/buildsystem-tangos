@@ -68,6 +68,7 @@ CUSTOM_INITTAB =
 neutrino-release-vuduo4k:
 	install -m 0755 $(SKEL_ROOT)/release/halt_$(KERNEL_TYPE) $(RELEASE_DIR)/etc/init.d/halt
 	cp -f $(SKEL_ROOT)/release/bp3flash.sh $(RELEASE_DIR)/usr/bin
+	cp -f $(SKEL_ROOT)/release/nvram $(RELEASE_DIR)/usr/bin
 	cp -f $(SKEL_ROOT)/release/fstab_$(KERNEL_TYPE) $(RELEASE_DIR)/etc/fstab
 	cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/*.ko $(RELEASE_DIR)/lib/modules/
 	rm -f $(RELEASE_DIR)/lib/modules/fpga_directc.ko
