@@ -23,6 +23,6 @@ flash-clean:
 FLASH_BUILD_TMP = $(BUILD_TMP)/image-build
 VU_PREFIX       = vuplus/ultimo4k
 VU_INITRD       = $(KERNEL_INITRD)
-VU_FR           = echo This file forces the update. > $(FLASH_BUILD_TMP)/$(VU_PREFIX)/force.update
+VU_FR           = echo This file forces a reboot after the update. > $(FLASH_BUILD_TMP)/$(VU_PREFIX)/reboot.update
 
 include make/common/vu-linux-image.mk

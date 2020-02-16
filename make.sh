@@ -233,15 +233,15 @@ if [ $BOXTYPE == 'vusolo4k' -o $BOXTYPE == 'vuduo4k' -o $BOXTYPE == 'vuultimo4k'
 case $8 in
 	[1-2]) REPLY=$8;;
 	*)	echo -e "\nNormal or MultiBoot:"
-		echo "   1)  Normal"
-		echo "   2)  Multiboot"
-		read -p "Select mode (1-2)? [2]"
-		REPLY="${REPLY:-2}";;
+		echo "   1)  Multiboot"
+		echo "   2)  Normal"
+		read -p "Select mode (1-2)? [1]"
+		REPLY="${REPLY:-1}";;
 esac
 
 case "$REPLY" in
-	1)  VU_MULTIBOOT="0";;
-	2)  VU_MULTIBOOT="1";;
+	1)  VU_MULTIBOOT="1";;
+	2)  VU_MULTIBOOT="0";;
 	*)  VU_MULTIBOOT="1";;
 esac
 echo "VU_MULTIBOOT=$VU_MULTIBOOT" >> config

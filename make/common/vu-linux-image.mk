@@ -12,6 +12,9 @@ flash-image-vu-multi-rootfs:
 	tar -cvf $(FLASH_BUILD_TMP)/$(VU_PREFIX)/rootfs.tar --exclude=zImage* --exclude=vmlinuz-initrd* . > /dev/null 2>&1; \
 	bzip2 $(FLASH_BUILD_TMP)/$(VU_PREFIX)/rootfs.tar
 	mv $(FLASH_BUILD_TMP)/$(VU_PREFIX)/rootfs.tar.bz2 $(FLASH_BUILD_TMP)/$(VU_PREFIX)/rootfs1.tar.bz2
+	cp $(FLASH_BUILD_TMP)/$(VU_PREFIX)/rootfs1.tar.bz2 $(FLASH_BUILD_TMP)/$(VU_PREFIX)/rootfs2.tar.bz2
+	cp $(FLASH_BUILD_TMP)/$(VU_PREFIX)/rootfs1.tar.bz2 $(FLASH_BUILD_TMP)/$(VU_PREFIX)/rootfs3.tar.bz2
+	cp $(FLASH_BUILD_TMP)/$(VU_PREFIX)/rootfs1.tar.bz2 $(FLASH_BUILD_TMP)/$(VU_PREFIX)/rootfs4.tar.bz2
 	$(VU_FR)
 	echo This file forces creating partitions. > $(FLASH_BUILD_TMP)/$(VU_PREFIX)/mkpart.update
 	echo Dummy for update. > $(FLASH_BUILD_TMP)/$(VU_PREFIX)/kernel_auto.bin
