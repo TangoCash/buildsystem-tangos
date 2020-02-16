@@ -94,10 +94,7 @@ if [ ! -e /dev/brcm0 ]; then
 	im dvb_base.ko
 	/usr/bin/dvb_server &
 	mknod -m a=rw /dev/brcm0 c 30 0
-	/usr/bin/init_client &
-	im dvb-bcm.ko
-	im brcmfb.ko
-	im wakeup_drv.ko
+	/usr/bin/init_client /lib/modules/dvb-bcm.ko /lib/modules/brcmfb.ko /lib/modules/wakeup_drv.ko &
 fi
 
 if [ -e /var/tuxbox/config/.bootlogo ]; then
