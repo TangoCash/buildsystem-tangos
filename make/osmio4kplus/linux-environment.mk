@@ -24,7 +24,7 @@ CUSTOM_RCS     =
 CUSTOM_INITTAB =
 
 # release target
-neutrino-release-osmio4k:
+neutrino-release-osmio4kplus:
 	install -m 0755 $(SKEL_ROOT)/release/halt_osmio4kplus $(RELEASE_DIR)/etc/init.d/halt
 	cp -f $(SKEL_ROOT)/release/fstab_osmio4kplus $(RELEASE_DIR)/etc/fstab
 	cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/*.ko $(RELEASE_DIR)/lib/modules/
