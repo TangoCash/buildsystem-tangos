@@ -1,8 +1,8 @@
 #
 # driver
 #
-DRIVER_DATE = 20191010
-DRIVER_VER  = 5.3.0-$(DRIVER_DATE)
+DRIVER_DATE = 20200217
+DRIVER_VER  = 5.5.0-$(DRIVER_DATE)
 DRIVER_SRC  = osmio4kplus-drivers-$(DRIVER_VER).zip
 
 LIBGLES_VER = 1.0
@@ -43,7 +43,7 @@ $(D)/install-v3ddriver: $(ARCHIVE)/$(LIBGLES_SRC)
 #
 # wlan-qcom osmio4k | osmio4kplus
 #
-WLAN_QCOM_VER    = 4.5.25.32
+WLAN_QCOM_VER    = 4.5.25.38
 WLAN_QCOM_DIR    = qcacld-2.0-$(WLAN_QCOM_VER)
 WLAN_QCOM_SOURCE = qcacld-2.0-$(WLAN_QCOM_VER).tar.gz
 WLAN_QCOM_URL    = https://www.codeaurora.org/cgit/external/wlan/qcacld-2.0/snapshot
