@@ -109,7 +109,7 @@ flash-image-osmio4k-online:
 	# Create final USB-image
 	rm -rf $(IMAGE_BUILD_DIR) || true
 	mkdir -p $(IMAGE_BUILD_DIR)/$(BOXTYPE)
-	cp $(KERNEL_OUTPUT) $(IMAGE_BUILD_DIR)/$(BOXTYPE)/kernel.bin
+	cp $(TARGET_DIR)/boot/Image.gz $(IMAGE_BUILD_DIR)/$(BOXTYPE)/kernel.bin
 	$(CD) $(RELEASE_DIR); \
 		tar -cvf $(IMAGE_BUILD_DIR)/$(BOXTYPE)/rootfs.tar . >/dev/null 2>&1; \
 		bzip2 $(IMAGE_BUILD_DIR)/$(BOXTYPE)/rootfs.tar
