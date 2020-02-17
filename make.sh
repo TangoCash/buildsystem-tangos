@@ -28,11 +28,15 @@ fi
 ##############################################
 
 case $1 in
-	4[0-5] | 5[1-3] | 6[0-1] | 70) REPLY=$1;;
+	3[0-1] | 4[0-5] | 5[1-3] | 6[0-1] | 70) REPLY=$1;;
 	*)
 		echo "Target receivers:"
 		echo
 		echo "  arm-based receivers"
+		echo "  Edison"
+		echo "  30)  Edision OS mio 4K"
+		echo "  31)  Edision OS mio+ 4K"
+		echo
 		echo "   VU+"
 		echo "   40) VU+ Solo 4K     43) VU+ Ultimo 4K"
 		echo "   41) VU+ Duo  4K     44) VU+ Uno 4K SE"
@@ -53,11 +57,13 @@ case $1 in
 		echo "  mips-based receivers"
 		echo "   70)  VU+ Duo"
 		echo
-		read -p "Select target (40-70)? [51]"
+		read -p "Select target (30-70)? [51]"
 		REPLY="${REPLY:-51}";;
 esac
 
 case "$REPLY" in
+	30) BOXARCH="aarch64";BOXTYPE="osmio4k";;
+	31) BOXARCH="aarch64";BOXTYPE="osmio4kplus";;
 	40) BOXARCH="arm";BOXTYPE="vusolo4k";;
 	41) BOXARCH="arm";BOXTYPE="vuduo4k";;
 	42) BOXARCH="arm";BOXTYPE="vuzero4k";;

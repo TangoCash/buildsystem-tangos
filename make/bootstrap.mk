@@ -35,6 +35,10 @@ $(D)/directories:
 	ln -sf ../init.d $(TARGET_DIR)/etc/rc.d/init.d
 	install -d $(TARGET_DIR)/lib/{lsb,firmware}
 	install -d $(TARGET_DIR)/usr/{bin,lib,sbin,share}
+	if [ $(BOXARCH) = "aarch64" ]; then \
+		cd ${TARGET_DIR}; ln -sf lib lib64; \
+		cd ${TARGET_DIR}/usr; ln -sf lib lib64; \
+	fi
 	install -d $(TARGET_LIB_DIR)/pkgconfig
 	install -d $(TARGET_INCLUDE_DIR)/linux
 	install -d $(TARGET_INCLUDE_DIR)/linux/dvb
@@ -51,8 +55,8 @@ BOOTSTRAP += $(D)/host_ccache
 BOOTSTRAP += $(CROSSTOOL)
 BOOTSTRAP += $(TARGET_DIR)/lib/libc.so.6
 BOOTSTRAP += $(D)/host_pkgconfig
-ifeq ($(BOXARCH), arm)
 BOOTSTRAP += $(D)/host_resize2fs
+ifeq ($(BOXARCH), arm)
 BOOTSTRAP += $(D)/cortex_strings
 endif
 

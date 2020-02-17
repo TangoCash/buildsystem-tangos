@@ -56,6 +56,10 @@ neutrino-release-base:
 	install -d $(RELEASE_DIR)/media/{hdd,nfs,usb,mnt}
 	ln -sf /media/hdd $(RELEASE_DIR)/hdd
 	install -d $(RELEASE_DIR)/usr/{bin,lib,sbin,share}
+	if [ $(BOXARCH) = "aarch64" ]; then \
+		cd ${RELEASE_DIR}; ln -sf lib lib64; \
+		cd ${RELEASE_DIR}/usr; ln -sf lib lib64; \
+	fi
 	install -d $(RELEASE_DIR)/usr/share/{fonts,tuxbox,udhcpc,zoneinfo,lua}
 	install -d $(RELEASE_DIR)/usr/share/tuxbox/neutrino/{icons,luaplugins,plugins}
 	install -d $(RELEASE_DIR)/usr/share/tuxbox/neutrino/icons/logo
