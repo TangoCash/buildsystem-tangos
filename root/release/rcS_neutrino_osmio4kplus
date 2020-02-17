@@ -22,11 +22,12 @@ echo "starting interface"
 echo "mounting everything"
 /etc/init.d/mount_everything
 
-insmod /lib/modules/brcmstb-osmio4kplus.ko
-insmod /lib/modules/ci.ko
-insmod /lib/modules/si2183.ko
-insmod /lib/modules/avl6862.ko
 insmod /lib/modules/avl6261.ko
+insmod /lib/modules/avl6862.ko
+insmod /lib/modules/si2183.ko
+insmod /lib/modules/ci.ko
+insmod /lib/modules/brcmstb-osmio4kplus.ko
+
 if [ -e /lib/modules/wlan.ko ]; then
   insmod /lib/modules/wlan.ko
 fi
