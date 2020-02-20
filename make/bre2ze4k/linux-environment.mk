@@ -42,6 +42,7 @@ CUSTOM_INITTAB = $(SKEL_ROOT)/etc/inittab_ttyS0
 # release target
 neutrino-release-bre2ze4k:
 	install -m 0755 $(SKEL_ROOT)/release/halt_bre2ze4k $(RELEASE_DIR)/etc/init.d/halt
+	install -m 0755 $(SKEL_ROOT)/etc/init.d/mmcblk-by-name $(RELEASE_DIR)/etc/init.d/mmcblk-by-name
 	cp -f $(SKEL_ROOT)/release/fstab_bre2ze4k $(RELEASE_DIR)/etc/fstab
 	cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/*.ko $(RELEASE_DIR)/lib/modules/
 	cp $(TARGET_DIR)/boot/zImage $(RELEASE_DIR)/boot/
