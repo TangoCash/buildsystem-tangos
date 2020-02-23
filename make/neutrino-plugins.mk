@@ -165,10 +165,12 @@ $(D)/neutrino-plugin-scripts-lua: $(D)/bootstrap
 		$(call apply_patches, $(NEUTRINO_SCRIPTLUA_PATCH))
 	$(CHDIR)/neutrino-plugin-scripts-lua; \
 		install -d $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins
+		install -d $(TARGET_SHARE_DIR)/tuxbox/neutrino/webtv
 #		cp -R $(BUILD_TMP)/neutrino-plugin-scripts-lua/ard_mediathek/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
 #		cp -R $(BUILD_TMP)/neutrino-plugin-scripts-lua/favorites2bin/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
 		cp -R $(BUILD_TMP)/neutrino-plugin-scripts-lua/mtv/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
 		cp -R $(BUILD_TMP)/neutrino-plugin-scripts-lua/netzkino/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
+		cp -R $(BUILD_TMP)/neutrino-plugin-scripts-lua/webtv/best_bitrate_m3u8.lua $(TARGET_SHARE_DIR)/tuxbox/neutrino/webtv/
 	$(REMOVE)/neutrino-plugin-scripts-lua
 	$(TOUCH)
 
