@@ -179,19 +179,19 @@ NEUTRINO_MEDIATHEK_PATCH = neutrino-mediathek.patch
 
 $(D)/neutrino-plugin-mediathek:
 	$(START_BUILD)
-	$(REMOVE)/plugins-mediathek
-	set -e; if [ -d $(ARCHIVE)/plugins-mediathek.git ]; \
-		then cd $(ARCHIVE)/plugins-mediathek.git; git pull; \
-		else cd $(ARCHIVE); git clone https://github.com/neutrino-mediathek/mediathek.git plugins-mediathek.git; \
+	$(REMOVE)/neutrino-mediathek
+	set -e; if [ -d $(ARCHIVE)/neutrino-mediathek.git ]; \
+		then cd $(ARCHIVE)/neutrino-mediathek.git; git pull; \
+		else cd $(ARCHIVE); git clone https://github.com/neutrino-mediathek/mediathek.git neutrino-mediathek.git; \
 		fi
-	cp -ra $(ARCHIVE)/plugins-mediathek.git $(BUILD_TMP)/plugins-mediathek
+	cp -ra $(ARCHIVE)/neutrino-mediathek.git $(BUILD_TMP)/neutrino-mediathek
 	install -d $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins
-	$(CHDIR)/plugins-mediathek; \
+	$(CHDIR)/neutrino-mediathek; \
 		$(call apply_patches, $(NEUTRINO_MEDIATHEK_PATCH))
-	$(CHDIR)/plugins-mediathek; \
+	$(CHDIR)/neutrino-mediathek; \
 		cp -a plugins/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/; \
 		cp -a share $(TARGET_DIR)/usr/
-	$(REMOVE)/plugins-mediathek
+	$(REMOVE)/neutrino-mediathek
 	$(TOUCH)
 
 #
