@@ -170,6 +170,7 @@ $(D)/neutrino-plugin-scripts-lua: $(D)/bootstrap
 #		cp -R $(BUILD_TMP)/neutrino-plugin-scripts-lua/favorites2bin/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
 		cp -R $(BUILD_TMP)/neutrino-plugin-scripts-lua/mtv/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
 		cp -R $(BUILD_TMP)/neutrino-plugin-scripts-lua/netzkino/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
+		cp -R $(BUILD_TMP)/neutrino-plugin-scripts-lua/2webTVxml/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
 		cp -R $(BUILD_TMP)/neutrino-plugin-scripts-lua/webtv/best_bitrate_m3u8.lua $(TARGET_SHARE_DIR)/tuxbox/neutrino/webtv/
 	$(REMOVE)/neutrino-plugin-scripts-lua
 	$(TOUCH)
