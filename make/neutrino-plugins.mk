@@ -141,10 +141,10 @@ $(D)/neutrino-plugin-xupnpd: $(D)/bootstrap $(D)/lua $(D)/openssl $(D)/neutrino-
 	install -m 755 $(SKEL_ROOT)/etc/init.d/xupnpd $(TARGET_DIR)/etc/init.d/
 	mkdir -p $(TARGET_SHARE_DIR)/xupnpd/config
 	rm $(TARGET_SHARE_DIR)/xupnpd/plugins/staff/xupnpd_18plus.lua
-	install -m 644 $(ARCHIVE)/plugin-scripts-lua.git/xupnpd/xupnpd_18plus.lua ${TARGET_DIR}/usr/share/xupnpd/plugins/
-	install -m 644 $(ARCHIVE)/plugin-scripts-lua.git/xupnpd/xupnpd_cczwei.lua ${TARGET_DIR}/usr/share/xupnpd/plugins/
-	: install -m 644 $(ARCHIVE)/plugin-scripts-lua.git/xupnpd/xupnpd_coolstream.lua ${TARGET_DIR}/usr/share/xupnpd/plugins/
-	install -m 644 $(ARCHIVE)/plugin-scripts-lua.git/xupnpd/xupnpd_youtube.lua ${TARGET_DIR}/usr/share/xupnpd/plugins/
+	install -m 644 $(ARCHIVE)/tuxbox-scripts-lua.git/xupnpd/xupnpd_18plus.lua ${TARGET_DIR}/usr/share/xupnpd/plugins/
+	install -m 644 $(ARCHIVE)/tuxbox-scripts-lua.git/xupnpd/xupnpd_cczwei.lua ${TARGET_DIR}/usr/share/xupnpd/plugins/
+	: install -m 644 $(ARCHIVE)/tuxbox-scripts-lua.git/xupnpd/xupnpd_coolstream.lua ${TARGET_DIR}/usr/share/xupnpd/plugins/
+	install -m 644 $(ARCHIVE)/tuxbox-scripts-lua.git/xupnpd/xupnpd_youtube.lua ${TARGET_DIR}/usr/share/xupnpd/plugins/
 	$(REMOVE)/xupnpd
 	$(TOUCH)
 
@@ -156,11 +156,11 @@ NEUTRINO_SCRIPTLUA_PATCH =
 $(D)/neutrino-plugin-scripts-lua: $(D)/bootstrap
 	$(START_BUILD)
 	$(REMOVE)/neutrino-plugin-scripts-lua
-	set -e; if [ -d $(ARCHIVE)/plugin-scripts-lua.git ]; \
-		then cd $(ARCHIVE)/plugin-scripts-lua.git; git pull; \
-		else cd $(ARCHIVE); git clone https://github.com/tuxbox-neutrino/plugin-scripts-lua.git plugin-scripts-lua.git; \
+	set -e; if [ -d $(ARCHIVE)/tuxbox-scripts-lua.git ]; \
+		then cd $(ARCHIVE)/tuxbox-scripts-lua.git; git pull; \
+		else cd $(ARCHIVE); git clone https://github.com/tuxbox-neutrino/tuxbox-scripts-lua.git tuxbox-scripts-lua.git; \
 		fi
-	cp -ra $(ARCHIVE)/plugin-scripts-lua.git/plugins $(BUILD_TMP)/neutrino-plugin-scripts-lua
+	cp -ra $(ARCHIVE)/tuxbox-scripts-lua.git/plugins $(BUILD_TMP)/neutrino-plugin-scripts-lua
 	$(CHDIR)/neutrino-plugin-scripts-lua; \
 		$(call apply_patches, $(NEUTRINO_SCRIPTLUA_PATCH))
 	$(CHDIR)/neutrino-plugin-scripts-lua; \
