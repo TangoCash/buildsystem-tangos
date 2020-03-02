@@ -158,7 +158,7 @@ $(D)/neutrino-plugin-scripts-lua: $(D)/bootstrap
 	$(REMOVE)/neutrino-plugin-scripts-lua
 	set -e; if [ -d $(ARCHIVE)/tuxbox-scripts-lua.git ]; \
 		then cd $(ARCHIVE)/tuxbox-scripts-lua.git; git pull; \
-		else cd $(ARCHIVE); git clone https://github.com/tuxbox-neutrino/tuxbox-scripts-lua.git tuxbox-scripts-lua.git; \
+		else cd $(ARCHIVE); git clone https://github.com/tuxbox-neutrino/plugin-scripts-lua.git tuxbox-scripts-lua.git; \
 		fi
 	cp -ra $(ARCHIVE)/tuxbox-scripts-lua.git/plugins $(BUILD_TMP)/neutrino-plugin-scripts-lua
 	$(CHDIR)/neutrino-plugin-scripts-lua; \
