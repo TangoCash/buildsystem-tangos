@@ -288,7 +288,7 @@ $(D)/neutrino-plugin-settings-update:
 #
 # spiegel-tv
 #
-$(D)/spiegel-tv:
+$(D)/neutrino-plugin-spiegel-tv:
 	$(START_BUILD)
 	$(REMOVE)/plugins-lua
 	set -e; if [ -d $(ARCHIVE)/plugins-lua.git ]; \
@@ -305,7 +305,7 @@ $(D)/spiegel-tv:
 #
 # tierwelt-tv
 #
-$(D)/tierwelt-tv:
+$(D)/neutrino-plugin-tierwelt-tv:
 	$(START_BUILD)
 	$(REMOVE)/plugins-lua
 	set -e; if [ -d $(ARCHIVE)/plugins-lua.git ]; \

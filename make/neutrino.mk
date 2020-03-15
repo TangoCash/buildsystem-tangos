@@ -39,6 +39,8 @@ NEUTRINO_DEPS += $(D)/neutrino-plugin-xupnpd
 NEUTRINO_DEPS += $(D)/neutrino-plugin-channellogos
 NEUTRINO_DEPS += $(D)/neutrino-plugin-iptvplayer
 NEUTRINO_DEPS += $(D)/neutrino-plugin-settings-update
+NEUTRINO_DEPS += $(D)/neutrino-plugin-spiegel-tv
+NEUTRINO_DEPS += $(D)/neutrino-plugin-tierwelt-tv
 NEUTRINO_DEPS += $(LOCAL_NEUTRINO_DEPS)
 NEUTRINO_DEPS += $(LOCAL_NEUTRINO_PLUGINS)
 
