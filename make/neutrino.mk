@@ -194,7 +194,7 @@ NMP_PATCHES  = $(NEUTRINO_MP_NI_PATCHES)
 HAL_PATCHES  = $(NEUTRINO_MP_LIBSTB_NI_PATCHES)
 else ifeq  ($(FLAVOUR), neutrino-tangos)
 GIT_URL     ?= https://github.com/TangoCash
-NEUTRINO_MP  = neutrino-mp-tangos
+NEUTRINO_MP  = neutrino-tangos
 LIBSTB_HAL   = libstb-hal-tangos
 NMP_BRANCH  ?= master
 HAL_BRANCH  ?= master
@@ -202,7 +202,7 @@ NMP_PATCHES  = $(NEUTRINO_MP_TANGOS_PATCHES)
 HAL_PATCHES  = $(NEUTRINO_MP_LIBSTB_TANGOS_PATCHES)
 else ifeq  ($(FLAVOUR), neutrino-ddt)
 GIT_URL     ?= https://github.com/Duckbox-Developers
-NEUTRINO_MP  = neutrino-mp-ddt
+NEUTRINO_MP  = neutrino-ddt
 LIBSTB_HAL   = libstb-hal-ddt
 NMP_BRANCH  ?= master
 HAL_BRANCH  ?= master

@@ -61,7 +61,7 @@ $(D)/neutrino-plugins.do_prepare: $(D)/bootstrap $(D)/ffmpeg $(D)/libcurl $(D)/l
 	rm -rf $(SOURCE_DIR)/neutrino-plugins.org
 	set -e; if [ -d $(ARCHIVE)/neutrino-plugins-ddt.git ]; \
 		then cd $(ARCHIVE)/neutrino-plugins-ddt.git; git pull; \
-		else cd $(ARCHIVE); git clone https://github.com/Duckbox-Developers/neutrino-mp-plugins.git neutrino-plugins-ddt.git; \
+		else cd $(ARCHIVE); git clone https://github.com/Duckbox-Developers/neutrino-ddt-plugins.git neutrino-plugins-ddt.git; \
 		fi
 	cp -ra $(ARCHIVE)/neutrino-plugins-ddt.git $(SOURCE_DIR)/neutrino-plugins
 ifeq ($(BOXARCH), $(filter $(BOXARCH), arm aarch64 mips))
