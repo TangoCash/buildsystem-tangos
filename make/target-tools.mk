@@ -599,7 +599,7 @@ $(D)/ntfs_3g: $(D)/bootstrap $(ARCHIVE)/$(NTFS_3G_SOURCE)
 #
 # mc
 #
-MC_VER = 4.8.23
+MC_VER = 4.8.24
 MC_SOURCE = mc-$(MC_VER).tar.xz
 MC_PATCH = mc-$(MC_VER).patch
 
@@ -1108,6 +1108,7 @@ $(D)/avahi: $(D)/bootstrap $(D)/expat $(D)/libdaemon $(D)/dbus $(ARCHIVE)/$(AVAH
 #
 WGET_VER = 1.20.3
 WGET_SOURCE = wget-$(WGET_VER).tar.gz
+WGET_PATCH = wget-$(WGET_VER).patch
 
 $(ARCHIVE)/$(WGET_SOURCE):
 	$(DOWNLOAD) https://ftp.gnu.org/gnu/wget/$(WGET_SOURCE)
@@ -1117,6 +1118,7 @@ $(D)/wget: $(D)/bootstrap $(D)/openssl $(ARCHIVE)/$(WGET_SOURCE)
 	$(REMOVE)/wget-$(WGET_VER)
 	$(UNTAR)/$(WGET_SOURCE)
 	$(CHDIR)/wget-$(WGET_VER); \
+		$(call apply_patches, $(WGET_PATCH)); \
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--mandir=/.remove \
@@ -1196,7 +1198,7 @@ $(D)/smartmontools: $(D)/bootstrap $(ARCHIVE)/$(SMARTMONTOOLS_SOURCE)
 #
 # nfs_utils
 #
-NFS_UTILS_VER = 2.4.2
+NFS_UTILS_VER = 2.4.3
 NFS_UTILS_SOURCE = nfs-utils-$(NFS_UTILS_VER).tar.bz2
 NFS_UTILS_PATCH = nfs-utils-$(NFS_UTILS_VER).patch
 
@@ -1373,7 +1375,7 @@ $(D)/htop: $(D)/bootstrap $(D)/ncurses $(ARCHIVE)/$(HTOP_SOURCE)
 #
 # ethtool
 #
-ETHTOOL_VER = 5.3
+ETHTOOL_VER = 5.4
 ETHTOOL_SOURCE = ethtool-$(ETHTOOL_VER).tar.xz
 
 $(ARCHIVE)/$(ETHTOOL_SOURCE):
@@ -1696,7 +1698,7 @@ $(D)/udpxy: $(D)/bootstrap $(ARCHIVE)/$(UDPXY_SOURCE)
 #
 # openvpn
 #
-OPENVPN_VER = 2.4.7
+OPENVPN_VER = 2.4.8
 OPENVPN_SOURCE = openvpn-$(OPENVPN_VER).tar.xz
 
 $(ARCHIVE)/$(OPENVPN_SOURCE):
