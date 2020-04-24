@@ -346,6 +346,7 @@ $(D)/host_libglib2_genmarshal: $(D)/bootstrap $(D)/host_libffi $(ARCHIVE)/$(LIBG
 			--disable-fam \
 			--disable-libmount \
 			--with-pcre=internal \
+			--disable-compile-warnings \
 		; \
 		$(MAKE) install; \
 		cp -a out/bin/glib-* $(HOST_DIR)/bin
