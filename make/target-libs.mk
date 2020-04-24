@@ -363,6 +363,7 @@ $(D)/libglib2: $(D)/bootstrap $(D)/host_libglib2_genmarshal $(D)/zlib $(D)/libff
 	$(REMOVE)/glib-$(LIBGLIB2_VER)
 	$(UNTAR)/$(LIBGLIB2_SOURCE)
 	$(CHDIR)/glib-$(LIBGLIB2_VER); \
+		autoreconf -fi $(SILENT_OPT); \
 		echo "glib_cv_va_copy=no" > config.cache; \
 		echo "glib_cv___va_copy=yes" >> config.cache; \
 		echo "glib_cv_va_val_copy=yes" >> config.cache; \
@@ -2307,7 +2308,7 @@ $(D)/libopenthreads: $(D)/bootstrap $(ARCHIVE)/$(LIBOPENTHREADS_SOURCE)
 	$(UNTAR)/$(LIBOPENTHREADS_SOURCE)
 	$(CHDIR)/OpenThreads-$(LIBOPENTHREADS_VER); \
 		$(call apply_patches, $(LIBOPENTHREADS_PATCH)); \
-		$(CMAKE) -D_OPENTHREADS_ATOMIC_USE_GCC_BUILTINS_EXITCODE=1 -D_OPENTHREADS_ATOMIC_USE_GCC_BUILTINS_EXITCODE__TRYRUN_OUTPOUT=1; \
+		$(CMAKE) -D_OPENTHREADS_ATOMIC_USE_GCC_BUILTINS_EXITCODE=1 -D_OPENTHREADS_ATOMIC_USE_GCC_BUILTINS_EXITCODE__TRYRUN_OUTOUT=1; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/openthreads.pc
