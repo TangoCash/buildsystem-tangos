@@ -359,7 +359,7 @@ $(D)/host_libglib2_genmarshal: $(D)/bootstrap $(D)/host_libffi $(ARCHIVE)/$(LIBG
 LIBGLIB2_PATCH  = libglib2-$(LIBGLIB2_VER)-disable-tests.patch
 LIBGLIB2_PATCH += libglib2-$(LIBGLIB2_VER)-fix-gio-linking.patch
 
-$(D)/libglib2: $(D)/bootstrap $(D)/host_libglib2_genmarshal $(D)/zlib $(D)/libffi  $(D)/util_linux  $(D)/libiconv $(ARCHIVE)/$(LIBGLIB2_SOURCE)
+$(D)/libglib2: $(D)/bootstrap $(D)/host_libglib2_genmarshal $(D)/zlib $(D)/libffi  $(D)/util_linux $(ARCHIVE)/$(LIBGLIB2_SOURCE)
 	$(START_BUILD)
 	$(REMOVE)/glib-$(LIBGLIB2_VER)
 	$(UNTAR)/$(LIBGLIB2_SOURCE)
@@ -387,7 +387,6 @@ $(D)/libglib2: $(D)/bootstrap $(D)/host_libglib2_genmarshal $(D)/zlib $(D)/libff
 			--with-threads="posix" \
 			--with-html-dir=/.remove \
 			--with-pcre=internal \
-			--with-libiconv=gnu \
 		; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR) localedir=/.remove/locale gnulocaledir=/.remove/locale
@@ -2043,7 +2042,7 @@ endif
 $(ARCHIVE)/$(GRAPHLCD_SOURCE):
 	$(HELPERS_DIR)/get-git-archive.sh $(GRAPHLCD_URL) $(GRAPHLCD_VER) $(notdir $@) $(ARCHIVE)
 
-$(D)/graphlcd: $(D)/bootstrap $(D)/freetype $(D)/libusb $(D)/libiconv $(ARCHIVE)/$(GRAPHLCD_SOURCE)
+$(D)/graphlcd: $(D)/bootstrap $(D)/freetype $(D)/libusb $(ARCHIVE)/$(GRAPHLCD_SOURCE)
 	$(START_BUILD)
 	$(REMOVE)/graphlcd-git-$(GRAPHLCD_VER)
 	$(UNTAR)/$(GRAPHLCD_SOURCE)
