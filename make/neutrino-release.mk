@@ -411,9 +411,9 @@ $(D)/neutrino-release: neutrino-release-base neutrino-release-$(BOXTYPE)
 ifneq ($(OPTIMIZATIONS), $(filter $(OPTIMIZATIONS), kerneldebug debug normal))
 	find $(RELEASE_DIR)/ -name '*' -exec $(TARGET)-strip --strip-unneeded {} &>/dev/null \;
 endif
-	$(call draw_line,);
-	$(call draw_line,Build of Neutrino for $(BOXTYPE) successfully completed.,2);
-	$(call draw_line,);
+	@$(call draw_line,);
+	@$(call draw_line,Build of Neutrino for $(BOXTYPE) successfully completed.,2);
+	@$(call draw_line,);
 #
 # neutrino-release-clean
 #

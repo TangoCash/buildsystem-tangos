@@ -95,9 +95,9 @@ $(D)/system-tools: $(SYSTEM_TOOLS) $(TOOLS)
 #
 #
 $(TOOLS_DIR):
-	$(call draw_line,)
+	@$(call draw_line,)
 	@echo '      Cloning $(GIT_NAME_TOOLS)-tools git repository'
-	$(call draw_line,)
+	@$(call draw_line,)
 	if [ ! -e $(TOOLS_DIR)/.git ]; then \
 		git clone $(GITHUB)/$(GIT_NAME_TOOLS)/tools.git tools; \
 	fi
