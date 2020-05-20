@@ -18,12 +18,12 @@ GENTOO=
 # Try to detect the distribution
 if `which lsb_release > /dev/null 2>&1`; then 
 	case `lsb_release -s -i` in
-		Debian*) UBUNTU=1; INSTALL="apt-get -y install";;
 		Fedora*) FEDORA=1; INSTALL="yum install -y";;
 		CentOS*) FEDORA=1; INSTALL="yum install -y";;
 		SUSE*)   SUSE=1;   INSTALL="zypper install -y";;
 		Ubuntu*) UBUNTU=1; INSTALL="apt-get -y install";;
 		LinuxM*) UBUNTU=2; INSTALL="apt-get --force-yes install";;
+		Debian*) UBUNTU=3; INSTALL="apt-get -y install";;
 		Gentoo)  GENTOO=1; INSTALL="emerge -uN";;
 	esac
 fi
@@ -34,7 +34,7 @@ if [ -z "$FEDORA$GENTOO$SUSE$UBUNTU" ]; then
 	elif [ -f /etc/fedora-release ]; then FEDORA=1; INSTALL="yum install -y"; 
 	elif [ -f /etc/centos-release ]; then FEDORA=1; INSTALL="yum install -y"; 
 	elif [ -f /etc/SuSE-release ];   then SUSE=1;   INSTALL="zypper install -n";
-	elif [ -f /etc/debian_version ]; then UBUNTU=1; INSTALL="apt-get --force-yes install";
+	elif [ -f /etc/debian_version ]; then UBUNTU=3; INSTALL="apt-get --force-yes install";
 	elif [ -f /etc/gentoo-release ]; then GENTOO=1; INSTALL="emerge -uN"
 	fi
 fi
@@ -87,7 +87,7 @@ PACKAGES="\
 	\
 	${UBUNTU:+rpm}                                               ${FEDORA:+rpm-build}      ${GENTOO:+rpm}         \
 	${UBUNTU:+lsb-release}          ${SUSE:+lsb-release}         ${FEDORA:+redhat-lsb}     ${GENTOO:+lsb-release} \
-	${UBUNTU:+git-core}             ${SUSE:+git-core}            ${FEDORA:+git}            ${GENTOO:+git}         \
+	${UBUNTU:+git}                  ${SUSE:+git-core}            ${FEDORA:+git}            ${GENTOO:+git}         \
 	${UBUNTU:+libncurses5-dev}      ${SUSE:+ncurses-devel}       ${FEDORA:+ncurses-devel}  ${GENTOO:+ncurses}     \
 	${UBUNTU:+libncursesw5-dev}                                                                                   \
 	${UBUNTU:+gettext}              ${SUSE:+gettext-devel}       ${FEDORA:+gettext-devel}  ${GENTOO:+gettext}     \
@@ -105,14 +105,14 @@ PACKAGES="\
 	${UBUNTU:+libglib2.0-dev}       ${SUSE:+glibc-devel-static}  ${FEDORA:+glibc-static}                          \
 	${UBUNTU:+doc-base}             ${SUSE:+libuuid-devel}       ${FEDORA:+libuuid-devel}                         \
 	${UBUNTU:+texi2html}                                                                                          \
-	${UBUNTU:+help2man}                                                                                           \
+	${UBUNTU:+help2man}                                          ${FEDORA:+help2man}                              \
 	${UBUNTU:+libcurl4-openssl-dev} ${SUSE:+libcurl-devel}       ${FEDORA:+libcurl-devel}                         \
 	${UBUNTU:+liblzo2-dev}          ${SUSE:+lzo-devel}           ${FEDORA:+lzo-devel}      ${GENTOO:+lzo:2}       \
 	${UBUNTU:+ruby}                                                                        ${GENTOO:+ruby}        \
 	${UBUNTU:+libltdl-dev}                                       ${FEDORA:+libtool-ltdl-devel}                    \
 	                                                             ${FEDORA:+byacc}                                 \
 	${UBUNTU:+libssl-dev}           ${SUSE:+libopenssl-devel}    ${FEDORA:+openssl-devel}                         \
-	${UBUNTU:+libmount-dev}                                                                                       \
+	${UBUNTU:+libmount-dev}                                      ${FEDORA:+help2man}                              \
 	${UBUNTU:+mtools}                                                                                             \
 	${UBUNTU:+u-boot-tools}                                                                                       \
 	${UBUNTU:+curl}                                                                                               \
@@ -122,14 +122,19 @@ if [ "$UBUNTU" == 1 ]; then
 	UBUNTU_VERSION=`lsb_release -r | grep "Release" | cut -f2 | cut -d . -f1`
 elif [ "$UBUNTU" == 2 ]; then
 	MINT_VERSION=`lsb_release -r | grep "Release" | cut -f2 | cut -d . -f1`
+elif [ "$UBUNTU" == 3 ]; then
+	DEBIAN_VERSION=`lsb_release -r | grep "Release" | cut -f2 | cut -d . -f1`
 fi
-if ([ "$UBUNTU" == 1  ] &&  [ "$UBUNTU_VERSION" -ge "16" ]) || ([ "$UBUNTU" == 2 ] && [ "$MINT_VERSION" -ge "18" ]); then
+
+if ([ "$UBUNTU" == 1 ] &&  [ "$UBUNTU_VERSION" -ge "16" ]) || \
+   ([ "$UBUNTU" == 2 ] && [ "$MINT_VERSION" -ge "18" ]) || \
+   ([ "$UBUNTU" == 3 ] && [ "$DEBIAN_VERSION" -ge "10" ]); then
 	PACKAGES="$PACKAGES \
 	${UBUNTU:+libtool-bin} \
 	";
 fi
 
-if [ `which arch > /dev/null 2>&1 && arch || uname -m` == x86_64 ]; then
+if [ `which arch > /dev/null 2>&1 && arch || uname -m` == "x86_64" ]; then
 	# ST changed to the -m32 option for their gcc compiler build
 	# we might need to install more 32bit versions of some packages
 	PACKAGES="$PACKAGES \
@@ -154,7 +159,3 @@ if [ ! "$?" -eq "0" ]; then
 		ln -s /bin/bash /bin/sh
 	fi
 fi
-
-# for user mknod
-#chmod +s /bin/mknod
-
