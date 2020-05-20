@@ -58,8 +58,8 @@ mdev -s
 echo "starting interface"
 /etc/init.d/mountall start
 
-#echo "mounting everything"
-#/etc/init.d/mount_everything
+echo "check swap"
+/etc/init.d/check_swap &
 
 [ -f /var/etc/modules.default ] && eval $(sed -e 's/#.*//' -e '/^\s*$/d' -e 's/^\(.*\)/im \0;/' < /var/etc/modules.default)
 

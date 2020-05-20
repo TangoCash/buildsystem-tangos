@@ -105,7 +105,7 @@ neutrino-release-base:
 	install -m 0755 $(SKEL_ROOT)/bin/autologin $(RELEASE_DIR)/bin/
 	install -m 0755 $(SKEL_ROOT)/bin/vdstandby $(RELEASE_DIR)/bin/
 	install -m 0755 $(SKEL_ROOT)/usr/sbin/fw_printenv $(RELEASE_DIR)/usr/sbin/
-	install -m 0755 $(SKEL_ROOT)/etc/init.d/mount_everything $(TARGET_DIR)/etc/init.d/
+	install -m 0755 $(SKEL_ROOT)/etc/init.d/check_swap $(TARGET_DIR)/etc/init.d/
 	install -m 0755 $(SKEL_ROOT)/etc/init.d/mount_before $(TARGET_DIR)/etc/init.d/
 	install -m 0755 $(TARGET_DIR)/etc/init.d/* $(RELEASE_DIR)/etc/init.d/
 	cp -aR $(TARGET_DIR)/etc/* $(RELEASE_DIR)/etc/

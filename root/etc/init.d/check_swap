@@ -1,0 +1,37 @@
+#!/bin/sh
+swapfound=0
+
+devices=$(blkid -w /dev/null -c /dev/null /dev/mmcblk?p* | cut -d ':' -f1 | cut -d '/' -f3)
+for device in $devices; do
+   BLKID=$(blkid -w /dev/null -c /dev/null /dev/$device)
+   eval ${BLKID#*:}
+    case $TYPE in
+        swap|SWAP) #this is a real linux SWAP partition
+           swapon /dev/$device
+           sleep 1
+           for deviceok in `awk '{print $1}' /proc/swaps | grep "/dev/$device"`; do
+              if [ "$deviceok" == "/dev/$device" ]; then
+                 echo -e "\033[01;32mreal linux swap partition mounted\033[00m"
+                 swapfound=1
+              fi
+           done
+           if [ swapfound == "0" ]; then
+                mkswap /dev/$device
+                sleep 1
+                swapon /dev/$device
+                sleep 1
+                for deviceok in `awk '{print $1}' /proc/swaps | grep "/dev/$device"`; do
+                  if [ "$deviceok" == "/dev/$device" ]; then
+                     echo -e "\033[01;32mreal linux swap partition mounted\033[00m"
+                     swapfound=1
+                  fi
+                done
+           fi
+        ;;
+    esac
+
+done
+if [ swapfound == "0" ]; then
+    echo -e "\033[01;31mwarning - no swap used\033[00m"
+fi
+
