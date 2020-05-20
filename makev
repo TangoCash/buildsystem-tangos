@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if [ ! -z $1 ] ; then
+	make V=1 $*
+else
+	echo "Usage: makev some_commands"
+fi
