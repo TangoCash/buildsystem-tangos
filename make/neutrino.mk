@@ -108,6 +108,7 @@ LH_CONFIG_OPTS += --with-boxtype=$(BOXTYPE)
 endif
 N_CONFIG_OPTS += --enable-freesatepg
 #N_CONFIG_OPTS += --enable-pip
+#N_CONFIG_OPTS += --enable-dynamicdemux
 #N_CONFIG_OPTS += --disable-webif
 N_CONFIG_OPTS += --disable-upnp
 #N_CONFIG_OPTS += --disable-tangos
@@ -368,7 +369,6 @@ $(D)/neutrino.do_compile:
 	@touch $@
 
 mp \
-neutrino: $(D)/neutrino
 $(D)/neutrino: $(D)/neutrino.do_prepare $(D)/neutrino.config.status $(D)/neutrino.do_compile
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 	$(MAKE) -C $(N_OBJDIR) install DESTDIR=$(TARGET_DIR)
