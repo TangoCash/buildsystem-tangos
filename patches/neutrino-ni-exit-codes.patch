@@ -1,0 +1,18 @@
+--- a/src/neutrino.h
++++ b/src/neutrino.h
+@@ -60,9 +60,11 @@
+ 	enum // Neutrino's exit codes to be handled in it's start script
+ 	{
+ 		EXIT_ERROR = -1,
+-		EXIT_NORMAL = 0,	// g_info.hw_caps->can_shutdown == 0
+-		EXIT_SHUTDOWN = 1,	// g_info.hw_caps->can_shutdown == 1
+-		EXIT_REBOOT = 2
++		EXIT_NORMAL = 3,	// g_info.hw_caps->can_shutdown == 0
++		EXIT_SHUTDOWN = 0,	// g_info.hw_caps->can_shutdown == 1
++		EXIT_REBOOT = 1,
++		EXIT_NOTUSED = 2,
++		EXIT_CHANGEGUI = 3
+ 	};
+ 
+ 	enum
+

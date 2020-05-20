@@ -191,7 +191,7 @@ NEUTRINO_MP  = ni-neutrino
 LIBSTB_HAL   = ni-libstb-hal
 NMP_BRANCH  ?= master
 HAL_BRANCH  ?= master
-NMP_PATCHES  = $(NEUTRINO_MP_NI_PATCHES)
+NMP_PATCHES  = neutrino-ni-exit-codes.patch $(NEUTRINO_MP_NI_PATCHES)
 HAL_PATCHES  = $(NEUTRINO_MP_LIBSTB_NI_PATCHES)
 else ifeq  ($(FLAVOUR), neutrino-tangos)
 GIT_URL     ?= https://github.com/TangoCash
