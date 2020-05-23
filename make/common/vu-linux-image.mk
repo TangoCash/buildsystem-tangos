@@ -19,9 +19,9 @@ flash-image-vu-multi-rootfs:
 	echo This file forces creating partitions. > $(FLASH_BUILD_TMP)/$(VU_PREFIX)/mkpart.update
 	echo Dummy for update. > $(FLASH_BUILD_TMP)/$(VU_PREFIX)/kernel_auto.bin
 	echo Dummy for update. > $(FLASH_BUILD_TMP)/$(VU_PREFIX)/rootfs.tar.bz2
-	echo $(BOXTYPE)_DDT_multi_usb_$(shell date '+%d%m%Y-%H%M%S') > $(FLASH_BUILD_TMP)/$(VU_PREFIX)/imageversion
+	echo $(BOXTYPE)_$(FLAVOUR)_multi_$(ITYPE)_$(shell date '+%d%m%Y-%H%M%S') > $(FLASH_BUILD_TMP)/$(VU_PREFIX)/imageversion
 	cd $(FLASH_BUILD_TMP) && \
-	zip -r $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_multi_$(ITYPE)_$(shell date '+%d.%m.%Y-%H.%M').zip $(VU_PREFIX)/rootfs*.tar.bz2 $(VU_PREFIX)/initrd_auto.bin $(VU_PREFIX)/kernel*_auto.bin $(VU_PREFIX)/*.update $(VU_PREFIX)/imageversion
+	zip -r $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_$(FLAVOUR)_multi_$(ITYPE)_$(shell date '+%d.%m.%Y-%H.%M').zip $(VU_PREFIX)/rootfs*.tar.bz2 $(VU_PREFIX)/initrd_auto.bin $(VU_PREFIX)/kernel*_auto.bin $(VU_PREFIX)/*.update $(VU_PREFIX)/imageversion
 	# cleanup
 	rm -rf $(FLASH_BUILD_TMP)
 
@@ -36,9 +36,9 @@ flash-image-vu-rootfs:
 	bzip2 $(FLASH_BUILD_TMP)/$(VU_PREFIX)/rootfs.tar
 	$(VU_FR)
 	echo This file forces creating partitions. > $(FLASH_BUILD_TMP)/$(VU_PREFIX)/mkpart.update
-	echo $(BOXTYPE)_DDT_usb_$(shell date '+%d%m%Y-%H%M%S') > $(FLASH_BUILD_TMP)/$(VU_PREFIX)/imageversion
+	echo $(BOXTYPE)_$(FLAVOUR)_$(ITYPE)_$(shell date '+%d%m%Y-%H%M%S') > $(FLASH_BUILD_TMP)/$(VU_PREFIX)/imageversion
 	cd $(FLASH_BUILD_TMP) && \
-	zip -r $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_$(ITYPE)_$(shell date '+%d.%m.%Y-%H.%M').zip $(VU_PREFIX)/rootfs.tar.bz2 $(VU_PREFIX)/initrd_auto.bin $(VU_PREFIX)/kernel_auto.bin $(VU_PREFIX)/*.update $(VU_PREFIX)/imageversion
+	zip -r $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_$(FLAVOUR)_$(ITYPE)_$(shell date '+%d.%m.%Y-%H.%M').zip $(VU_PREFIX)/rootfs.tar.bz2 $(VU_PREFIX)/initrd_auto.bin $(VU_PREFIX)/kernel_auto.bin $(VU_PREFIX)/*.update $(VU_PREFIX)/imageversion
 	# cleanup
 	rm -rf $(FLASH_BUILD_TMP)
 
@@ -53,8 +53,8 @@ flash-image-vu-online:
 	bzip2 $(FLASH_BUILD_TMP)/$(VU_PREFIX)/rootfs.tar
 	$(VU_FR)
 	echo This file forces creating partitions. > $(FLASH_BUILD_TMP)/$(VU_PREFIX)/mkpart.update
-	echo $(BOXTYPE)_DDT_usb_$(shell date '+%d%m%Y-%H%M%S') > $(FLASH_BUILD_TMP)/$(VU_PREFIX)/imageversion
+	echo $(BOXTYPE)_$(FLAVOUR)_$(ITYPE)_$(shell date '+%d%m%Y-%H%M%S') > $(FLASH_BUILD_TMP)/$(VU_PREFIX)/imageversion
 	cd $(FLASH_BUILD_TMP)/$(VU_PREFIX) && \
-	tar -cvzf $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_$(ITYPE)_$(shell date '+%d.%m.%Y-%H.%M').tgz rootfs.tar.bz2 initrd_auto.bin kernel_auto.bin *.update imageversion
+	tar -cvzf $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_$(FLAVOUR)_$(ITYPE)_$(shell date '+%d.%m.%Y-%H.%M').tgz rootfs.tar.bz2 initrd_auto.bin kernel_auto.bin *.update imageversion
 	# cleanup
 	rm -rf $(FLASH_BUILD_TMP)

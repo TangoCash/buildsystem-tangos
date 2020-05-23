@@ -128,9 +128,9 @@ flash-image-$(BOXTYPE)-multi-rootfs:
 	cd $(RELEASE_DIR); \
 	tar -cvf $(FLASH_BUILD_TMP)/$(BOXTYPE)/rootfs.tar --exclude=zImage* . > /dev/null 2>&1; \
 	bzip2 $(FLASH_BUILD_TMP)/$(BOXTYPE)/rootfs.tar
-	echo $(BOXTYPE)_DDT_usb_$(shell date '+%d%m%Y-%H%M%S') > $(FLASH_BUILD_TMP)/$(BOXTYPE)/imageversion
+	echo $(BOXTYPE)_$(FLAVOUR)_$(ITYPE)_$(shell date '+%d%m%Y-%H%M%S') > $(FLASH_BUILD_TMP)/$(BOXTYPE)/imageversion
 	cd $(FLASH_BUILD_TMP) && \
-	zip -r $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_multi_$(ITYPE)_$(shell date '+%d.%m.%Y-%H.%M').zip $(BOXTYPE)/rootfs.tar.bz2 $(BOXTYPE)/kernel.bin $(BOXTYPE)/disk.img $(BOXTYPE)/imageversion
+	zip -r $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_$(FLAVOUR)_multi_$(ITYPE)_$(shell date '+%d.%m.%Y-%H.%M').zip $(BOXTYPE)/rootfs.tar.bz2 $(BOXTYPE)/kernel.bin $(BOXTYPE)/disk.img $(BOXTYPE)/imageversion
 	# cleanup
 	rm -rf $(FLASH_BUILD_TMP)
 
@@ -141,8 +141,8 @@ flash-image-$(BOXTYPE)-online:
 	cd $(RELEASE_DIR); \
 	tar -cvf $(FLASH_BUILD_TMP)/$(BOXTYPE)/rootfs.tar --exclude=zImage* . > /dev/null 2>&1; \
 	bzip2 $(FLASH_BUILD_TMP)/$(BOXTYPE)/rootfs.tar
-	echo $(BOXTYPE)_DDT_usb_$(shell date '+%d%m%Y-%H%M%S') > $(FLASH_BUILD_TMP)/$(BOXTYPE)/imageversion
+	echo $(BOXTYPE)_$(FLAVOUR)_$(ITYPE)_$(shell date '+%d%m%Y-%H%M%S') > $(FLASH_BUILD_TMP)/$(BOXTYPE)/imageversion
 	cd $(FLASH_BUILD_TMP)/$(BOXTYPE) && \
-	tar -cvzf $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_multi_$(ITYPE)_$(shell date '+%d.%m.%Y-%H.%M').tgz rootfs.tar.bz2 kernel.bin imageversion
+	tar -cvzf $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_$(FLAVOUR)_multi_$(ITYPE)_$(shell date '+%d.%m.%Y-%H.%M').tgz rootfs.tar.bz2 kernel.bin imageversion
 	# cleanup
 	rm -rf $(FLASH_BUILD_TMP)
