@@ -177,13 +177,13 @@ case $6 in
 esac
 
 case "$REPLY" in
-	1) FLAVOUR="neutrino-ddt";;
-	2) FLAVOUR="neutrino-tuxbox";;
-	3) FLAVOUR="neutrino-ni";;
-	4) FLAVOUR="neutrino-tangos";;
-	5) FLAVOUR="neutrino-max";;
-	6) FLAVOUR="neutrino-hd2";;
-	*) FLAVOUR="neutrino-tangos";;
+	1) FLAVOUR="DDT";;
+	2) FLAVOUR="TUXBOX";;
+	3) FLAVOUR="NI";;
+	4) FLAVOUR="TANGOS";;
+	5) FLAVOUR="MAX";;
+	6) FLAVOUR="HD2";;
+	*) FLAVOUR="TANGOS";;
 esac
 echo "FLAVOUR=$FLAVOUR" >> config
 

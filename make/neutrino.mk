@@ -177,7 +177,7 @@ endif
 N_OBJDIR = $(BUILD_TMP)/$(NEUTRINO_MP)
 LH_OBJDIR = $(BUILD_TMP)/$(LIBSTB_HAL)
 
-ifeq ($(FLAVOUR), neutrino-max)
+ifeq ($(FLAVOUR), MAX)
 GIT_URL     ?= https://github.com/MaxWiesel
 NEUTRINO_MP  = neutrino-mp-max
 LIBSTB_HAL   = libstb-hal-max
@@ -185,7 +185,7 @@ NMP_BRANCH  ?= master
 HAL_BRANCH  ?= master
 NMP_PATCHES  = $(NEUTRINO_MP_MAX_PATCHES)
 HAL_PATCHES  = $(NEUTRINO_MP_LIBSTB_MAX_PATCHES)
-else ifeq  ($(FLAVOUR), neutrino-ni)
+else ifeq  ($(FLAVOUR), NI)
 GIT_URL     ?= https://github.com/neutrino-images
 NEUTRINO_MP  = ni-neutrino
 LIBSTB_HAL   = ni-libstb-hal
@@ -193,7 +193,7 @@ NMP_BRANCH  ?= master
 HAL_BRANCH  ?= master
 NMP_PATCHES  = neutrino-ni-exit-codes.patch $(NEUTRINO_MP_NI_PATCHES)
 HAL_PATCHES  = $(NEUTRINO_MP_LIBSTB_NI_PATCHES)
-else ifeq  ($(FLAVOUR), neutrino-tangos)
+else ifeq  ($(FLAVOUR), TANGOS)
 GIT_URL     ?= https://github.com/TangoCash
 NEUTRINO_MP  = neutrino-tangos
 LIBSTB_HAL   = libstb-hal-tangos
@@ -201,7 +201,7 @@ NMP_BRANCH  ?= master
 HAL_BRANCH  ?= master
 NMP_PATCHES  = $(NEUTRINO_MP_TANGOS_PATCHES)
 HAL_PATCHES  = $(NEUTRINO_MP_LIBSTB_TANGOS_PATCHES)
-else ifeq  ($(FLAVOUR), neutrino-ddt)
+else ifeq  ($(FLAVOUR), DDT)
 GIT_URL     ?= https://github.com/Duckbox-Developers
 NEUTRINO_MP  = neutrino-ddt
 LIBSTB_HAL   = libstb-hal-ddt
@@ -209,7 +209,7 @@ NMP_BRANCH  ?= master
 HAL_BRANCH  ?= master
 NMP_PATCHES  = $(NEUTRINO_MP_DDT_PATCHES)
 HAL_PATCHES  = $(NEUTRINO_MP_LIBSTB_DDT_PATCHES)
-else ifeq  ($(FLAVOUR), neutrino-tuxbox)
+else ifeq  ($(FLAVOUR), TUXBOX)
 GIT_URL     ?= https://github.com/tuxbox-neutrino
 NEUTRINO_MP  = gui-neutrino
 LIBSTB_HAL   = library-stb-hal
@@ -232,7 +232,7 @@ $(TARGET_DIR)/.version:
 	echo "forum=https://github.com/Duckbox-Developers/neutrino-mp-ddt" >> $@
 	echo "version=0200`date +%Y%m%d%H%M`" >> $@
 	echo "builddate="`date` >> $@
-	echo "git=BS-rev$(BS_REV)_HAL-rev$(HAL_REV)_NMP-rev$(NMP_REV)" >> $@
+	echo "git=BS-rev$(BS_REV)_HAL-rev$(HAL_REV)_$(FLAVOUR)-rev$(NMP_REV)" >> $@
 	echo "imagedir=$(BOXTYPE)" >> $@
 
 # -----------------------------------------------------------------------------
@@ -253,7 +253,7 @@ $(SOURCE_DIR)/$(NEUTRINO_MP)/src/gui/version.h:
 	@rm -f $@
 	echo '#define BUILT_DATE "'`date`'"' > $@
 	@if test -d $(SOURCE_DIR)/$(LIBSTB_HAL); then \
-		echo '#define VCS "BS-rev$(BS_REV)_HAL-rev$(HAL_REV)_NMP-rev$(NMP_REV)"' >> $@; \
+		echo '#define VCS "BS-rev$(BS_REV)_HAL-rev$(HAL_REV)_$(FLAVOUR)-rev$(NMP_REV)"' >> $@; \
 	fi
 
 # -----------------------------------------------------------------------------
