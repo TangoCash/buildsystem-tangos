@@ -49,9 +49,9 @@ BOXARCH              ?= arm
 BOXTYPE              ?= hd51
 FFMPEG_EXPERIMENTAL  ?= 0
 OPTIMIZATIONS        ?= size
-BS_GCC_VER           ?= 6.5.0
+BS_GCC_VER           ?= 9.2.0
 IMAGE                ?= neutrino
-FLAVOUR              ?= neutrino-tangos
+FLAVOUR              ?= TANGOS
 EXTERNAL_LCD         ?= both
 NEWLAYOUT            ?= 0
 #
