@@ -97,7 +97,7 @@ LH_CONFIG_OPTS = $(LOCAL_LIBHAL_BUILD_OPTIONS)
 #LH_CONFIG_OPTS += --enable-flv2mpeg4
 
 
-ifeq ($(FLAVOUR), $(filter $(FLAVOUR), neutrino-ni neutrino-tuxbox))
+ifeq ($(FLAVOUR), $(filter $(FLAVOUR), NI TUXBOX))
 N_CONFIG_OPTS += --with-boxtype=armbox
 N_CONFIG_OPTS += --with-boxmodel=$(BOXTYPE)
 LH_CONFIG_OPTS += --with-boxtype=armbox
