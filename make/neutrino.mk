@@ -395,7 +395,8 @@ neutrino-distclean:
 #
 # neutrino-hd2
 #
-NEUTRINO_HD2_PATCHES =
+NEUTRINO_HD2_PATCHES = \
+	neutrino-hd2-python.patch
 
 $(D)/neutrino-hd2.do_prepare: | $(NEUTRINO_DEPS) $(D)/libid3tag $(D)/libmad $(D)/flac
 	$(START_BUILD)
@@ -428,8 +429,11 @@ $(D)/neutrino-hd2.config.status:
 			--with-gamesdir=/var/tuxbox/games \
 			--with-plugindir=/var/tuxbox/plugins \
 			--with-isocodesdir=/usr/local/share/iso-codes \
+			--enable-python \
+			--enable-lua \
 			$(NHD2_OPTS) \
 			--enable-scart \
+			PY_PATH=$(TARGET_DIR)/usr \
 			PKG_CONFIG=$(PKG_CONFIG) \
 			PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 			CPPFLAGS="$(N_CPPFLAGS)" LDFLAGS="$(TARGET_LDFLAGS)"
