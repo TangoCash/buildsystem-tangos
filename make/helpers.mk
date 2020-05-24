@@ -3,12 +3,12 @@
 #
 # -----------------------------------------------------------------------------
 
-# BS Revision
-BS_REV=$(shell cd $(BASE_DIR); git log | grep "^commit" | wc -l)
-# Neutrino mp Revision
-NMP_REV=$(shell cd $(SOURCE_DIR)/$(NEUTRINO_MP); git log | grep "^commit" | wc -l)
+# Buildsystem Revision
+BUILDSYSTEM_REV=$(shell cd $(BASE_DIR); git log | grep "^commit" | wc -l)
+# Neutrino Revision
+NEUTRINO_REV=$(shell cd $(SOURCE_DIR)/$(NEUTRINO); git log | grep "^commit" | wc -l)
 # libstb-hal Revision
-HAL_REV=$(shell cd $(SOURCE_DIR)/$(LIBSTB_HAL); git log | grep "^commit" | wc -l)
+LIBSTB_HAL_REV=$(shell cd $(SOURCE_DIR)/$(LIBSTB_HAL); git log | grep "^commit" | wc -l)
 
 # -----------------------------------------------------------------------------
 
@@ -86,20 +86,20 @@ libstb-hal%-patch:
 # uncomment if needed
 #
 # Neutrino MP DDT
-NEUTRINO_MP_MAX_PATCHES =
-NEUTRINO_MP_LIBSTB_MAX_PATCHES =
+NEUTRINO_MAX_PATCHES =
+LIBSTB_HAL_MAX_PATCHES =
 
 # Neutrino MP DDT
-NEUTRINO_MP_DDT_PATCHES =
-NEUTRINO_MP_LIBSTB_DDT_PATCHES =
+NEUTRINO_DDT_PATCHES =
+LIBSTB_HAL_DDT_PATCHES =
 
 # Neutrino MP NI
-NEUTRINO_MP_NI_PATCHES =
-NEUTRINO_MP_LIBSTB_NI_PATCHES =
+NEUTRINO_NI_PATCHES =
+LIBSTB_HAL_NI_PATCHES =
 
 # Neutrino MP Tango
-NEUTRINO_MP_TANGOS_PATCHES =
-NEUTRINO_MP_LIBSTB_TANGOS_PATCHES =
+NEUTRINO_TANGOS_PATCHES =
+LIBSTB_HAL_TANGOS_PATCHES =
 
 # Neutrino HD2
 NEUTRINO_HD2_PATCHES +=

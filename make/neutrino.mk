@@ -174,49 +174,50 @@ endif
 
 # -----------------------------------------------------------------------------
 
-N_OBJDIR = $(BUILD_TMP)/$(NEUTRINO_MP)
+N_OBJDIR = $(BUILD_TMP)/$(NEUTRINO)
 LH_OBJDIR = $(BUILD_TMP)/$(LIBSTB_HAL)
 
 ifeq ($(FLAVOUR), MAX)
 GIT_URL     ?= https://github.com/MaxWiesel
-NEUTRINO_MP  = neutrino-mp-max
+NEUTRINO     = neutrino-max
 LIBSTB_HAL   = libstb-hal-max
 NMP_BRANCH  ?= master
 HAL_BRANCH  ?= master
-NMP_PATCHES  = $(NEUTRINO_MP_MAX_PATCHES)
-HAL_PATCHES  = $(NEUTRINO_MP_LIBSTB_MAX_PATCHES)
+NMP_PATCHES  = $(NEUTRINO_MAX_PATCHES)
+HAL_PATCHES  = $(LIBSTB_HAL_MAX_PATCHES)
 else ifeq  ($(FLAVOUR), NI)
 GIT_URL     ?= https://github.com/neutrino-images
-NEUTRINO_MP  = ni-neutrino
+NEUTRINO     = ni-neutrino
 LIBSTB_HAL   = ni-libstb-hal
 NMP_BRANCH  ?= master
 HAL_BRANCH  ?= master
-NMP_PATCHES  = neutrino-ni-exit-codes.patch $(NEUTRINO_MP_NI_PATCHES)
-HAL_PATCHES  = $(NEUTRINO_MP_LIBSTB_NI_PATCHES)
+NMP_PATCHES  = neutrino-ni-exit-codes.patch
+NMP_PATCHES += $(NEUTRINO_NI_PATCHES)
+HAL_PATCHES  = $(LIBSTB_HAL_NI_PATCHES)
 else ifeq  ($(FLAVOUR), TANGOS)
 GIT_URL     ?= https://github.com/TangoCash
-NEUTRINO_MP  = neutrino-tangos
+NEUTRINO     = neutrino-tangos
 LIBSTB_HAL   = libstb-hal-tangos
 NMP_BRANCH  ?= master
 HAL_BRANCH  ?= master
-NMP_PATCHES  = $(NEUTRINO_MP_TANGOS_PATCHES)
-HAL_PATCHES  = $(NEUTRINO_MP_LIBSTB_TANGOS_PATCHES)
+NMP_PATCHES  = $(NEUTRINO_TANGOS_PATCHES)
+HAL_PATCHES  = $(LIBSTB_HAL_TANGOS_PATCHES)
 else ifeq  ($(FLAVOUR), DDT)
 GIT_URL     ?= https://github.com/Duckbox-Developers
-NEUTRINO_MP  = neutrino-ddt
+NEUTRINO     = neutrino-ddt
 LIBSTB_HAL   = libstb-hal-ddt
 NMP_BRANCH  ?= master
 HAL_BRANCH  ?= master
-NMP_PATCHES  = $(NEUTRINO_MP_DDT_PATCHES)
-HAL_PATCHES  = $(NEUTRINO_MP_LIBSTB_DDT_PATCHES)
+NMP_PATCHES  = $(NEUTRINO_DDT_PATCHES)
+HAL_PATCHES  = $(LIBSTB_HAL_DDT_PATCHES)
 else ifeq  ($(FLAVOUR), TUXBOX)
 GIT_URL     ?= https://github.com/tuxbox-neutrino
-NEUTRINO_MP  = gui-neutrino
+NEUTRINO     = gui-neutrino
 LIBSTB_HAL   = library-stb-hal
 NMP_BRANCH  ?= master
 HAL_BRANCH  ?= mpx
-NMP_PATCHES  = $(NEUTRINO_MP_TUX_PATCHES)
-HAL_PATCHES  = $(NEUTRINO_MP_LIBSTB_TUX_PATCHES)
+NMP_PATCHES  = $(NEUTRINO_TUX_PATCHES)
+HAL_PATCHES  = $(LIBSTB_HAL_TUX_PATCHES)
 endif
 
 # -----------------------------------------------------------------------------
@@ -232,7 +233,7 @@ $(TARGET_DIR)/.version:
 	echo "forum=https://github.com/Duckbox-Developers/neutrino-mp-ddt" >> $@
 	echo "version=0200`date +%Y%m%d%H%M`" >> $@
 	echo "builddate="`date` >> $@
-	echo "git=BS-rev$(BS_REV)_HAL-rev$(HAL_REV)_$(FLAVOUR)-rev$(NMP_REV)" >> $@
+	echo "git=BS-rev$(BUILDSYSTEM_REV)_HAL-rev$(LIBSTB_HAL_REV)_$(FLAVOUR)-rev$(NEUTRINO_REV)" >> $@
 	echo "imagedir=$(BOXTYPE)" >> $@
 
 # -----------------------------------------------------------------------------
@@ -248,12 +249,12 @@ e2-multiboot:
 
 # -----------------------------------------------------------------------------
 
-version.h: $(SOURCE_DIR)/$(NEUTRINO_MP)/src/gui/version.h
-$(SOURCE_DIR)/$(NEUTRINO_MP)/src/gui/version.h:
+version.h: $(SOURCE_DIR)/$(NEUTRINO)/src/gui/version.h
+$(SOURCE_DIR)/$(NEUTRINO)/src/gui/version.h:
 	@rm -f $@
 	echo '#define BUILT_DATE "'`date`'"' > $@
 	@if test -d $(SOURCE_DIR)/$(LIBSTB_HAL); then \
-		echo '#define VCS "BS-rev$(BS_REV)_HAL-rev$(HAL_REV)_$(FLAVOUR)-rev$(NMP_REV)"' >> $@; \
+		echo '#define VCS "BS-rev$(BUILDSYSTEM_REV)_HAL-rev$(LIBSTB_HAL_REV)_$(FLAVOUR)-rev$(NEUTRINO_REV)"' >> $@; \
 	fi
 
 # -----------------------------------------------------------------------------
@@ -322,17 +323,17 @@ libstb-hal-distclean:
 
 $(D)/neutrino.do_prepare: | $(NEUTRINO_DEPS) $(D)/libstb-hal
 	$(START_BUILD)
-	rm -rf $(SOURCE_DIR)/$(NEUTRINO_MP)
-	rm -rf $(SOURCE_DIR)/$(NEUTRINO_MP).org
+	rm -rf $(SOURCE_DIR)/$(NEUTRINO)
+	rm -rf $(SOURCE_DIR)/$(NEUTRINO).org
 	rm -rf $(N_OBJDIR)
-	[ -d "$(ARCHIVE)/$(NEUTRINO_MP).git" ] && \
-	(cd $(ARCHIVE)/$(NEUTRINO_MP).git; git pull;); \
-	[ -d "$(ARCHIVE)/$(NEUTRINO_MP).git" ] || \
-	git clone $(GIT_URL)/$(NEUTRINO_MP).git $(ARCHIVE)/$(NEUTRINO_MP).git; \
-	cp -ra $(ARCHIVE)/$(NEUTRINO_MP).git $(SOURCE_DIR)/$(NEUTRINO_MP); \
-	(cd $(SOURCE_DIR)/$(NEUTRINO_MP); git checkout $(NMP_BRANCH);); \
-	cp -ra $(SOURCE_DIR)/$(NEUTRINO_MP) $(SOURCE_DIR)/$(NEUTRINO_MP).org
-	set -e; cd $(SOURCE_DIR)/$(NEUTRINO_MP); \
+	[ -d "$(ARCHIVE)/$(NEUTRINO).git" ] && \
+	(cd $(ARCHIVE)/$(NEUTRINO).git; git pull;); \
+	[ -d "$(ARCHIVE)/$(NEUTRINO).git" ] || \
+	git clone $(GIT_URL)/$(NEUTRINO).git $(ARCHIVE)/$(NEUTRINO).git; \
+	cp -ra $(ARCHIVE)/$(NEUTRINO).git $(SOURCE_DIR)/$(NEUTRINO); \
+	(cd $(SOURCE_DIR)/$(NEUTRINO); git checkout $(NMP_BRANCH);); \
+	cp -ra $(SOURCE_DIR)/$(NEUTRINO) $(SOURCE_DIR)/$(NEUTRINO).org
+	set -e; cd $(SOURCE_DIR)/$(NEUTRINO); \
 		$(call apply_patches, $(NMP_PATCHES))
 	@touch $@
 
@@ -340,9 +341,9 @@ $(D)/neutrino.config.status:
 	rm -rf $(N_OBJDIR)
 	test -d $(N_OBJDIR) || mkdir -p $(N_OBJDIR)
 	cd $(N_OBJDIR); \
-		$(SOURCE_DIR)/$(NEUTRINO_MP)/autogen.sh $(SILENT_OPT); \
+		$(SOURCE_DIR)/$(NEUTRINO)/autogen.sh $(SILENT_OPT); \
 		$(BUILDENV) \
-		$(SOURCE_DIR)/$(NEUTRINO_MP)/configure $(SILENT_OPT) \
+		$(SOURCE_DIR)/$(NEUTRINO)/configure $(SILENT_OPT) \
 			--host=$(TARGET) \
 			--build=$(BUILD) \
 			--prefix=/usr \
@@ -360,7 +361,7 @@ $(D)/neutrino.config.status:
 			PKG_CONFIG=$(PKG_CONFIG) \
 			PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 			CFLAGS="$(N_CFLAGS)" CXXFLAGS="$(N_CFLAGS)" CPPFLAGS="$(N_CPPFLAGS)"
-		+make $(SOURCE_DIR)/$(NEUTRINO_MP)/src/gui/version.h
+		+make $(SOURCE_DIR)/$(NEUTRINO)/src/gui/version.h
 #	@touch $@
 
 $(D)/neutrino.do_compile:
@@ -382,7 +383,7 @@ mp-clean \
 neutrino-clean:
 	rm -f $(D)/neutrino
 	rm -f $(D)/neutrino.config.status
-	rm -f $(SOURCE_DIR)/$(NEUTRINO_MP)/src/gui/version.h
+	rm -f $(SOURCE_DIR)/$(NEUTRINO)/src/gui/version.h
 	cd $(N_OBJDIR); \
 		$(MAKE) -C $(N_OBJDIR) distclean
 
@@ -496,4 +497,4 @@ dual-distclean:
 # -----------------------------------------------------------------------------
 
 PHONY += $(TARGET_DIR)/.version
-PHONY += $(SOURCE_DIR)/$(NEUTRINO_MP)/src/gui/version.h
+PHONY += $(SOURCE_DIR)/$(NEUTRINO)/src/gui/version.h
