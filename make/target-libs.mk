@@ -2085,7 +2085,7 @@ $(D)/libdpf: $(D)/bootstrap $(D)/libusb_compat $(ARCHIVE)/$(LIBDPF_SOURCE)
 #
 # lcd4linux
 #
-LCD4LINUX_VER = ca13a1d
+LCD4LINUX_VER = 91cfbc2
 LCD4LINUX_SOURCE = lcd4linux-git-$(LCD4LINUX_VER).tar.bz2
 LCD4LINUX_URL = https://github.com/TangoCash/lcd4linux.git
 LCD4LINUX_PATCH = 
