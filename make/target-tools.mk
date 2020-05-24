@@ -441,7 +441,7 @@ $(D)/util_linux: $(D)/bootstrap $(D)/ncurses $(D)/zlib $(ARCHIVE)/$(UTIL_LINUX_S
 #
 # gptfdisk
 #
-GPTFDISK_VER = 1.0.4
+GPTFDISK_VER = 1.0.5
 GPTFDISK_SOURCE = gptfdisk-$(GPTFDISK_VER).tar.gz
 
 $(ARCHIVE)/$(GPTFDISK_SOURCE):
@@ -683,7 +683,7 @@ $(D)/rsync: $(D)/bootstrap $(ARCHIVE)/$(RSYNC_SOURCE)
 #
 # fuse
 #
-FUSE_VER = 2.9.7
+FUSE_VER = 2.9.9
 FUSE_SOURCE = fuse-$(FUSE_VER).tar.gz
 
 $(ARCHIVE)/$(FUSE_SOURCE):
@@ -744,7 +744,7 @@ $(D)/curlftpfs: $(D)/bootstrap $(D)/libcurl $(D)/fuse $(D)/libglib2 $(ARCHIVE)/$
 #
 # sdparm
 #
-SDPARM_VER = 1.10
+SDPARM_VER = 1.11
 SDPARM_SOURCE = sdparm-$(SDPARM_VER).tgz
 
 $(ARCHIVE)/$(SDPARM_SOURCE):
@@ -861,7 +861,7 @@ $(D)/fbshot: $(D)/bootstrap $(D)/libpng $(ARCHIVE)/$(FBSHOT_SOURCE)
 #
 # sysstat
 #
-SYSSTAT_VER = 11.5.7
+SYSSTAT_VER = 12.3.3
 SYSSTAT_SOURCE = sysstat-$(SYSSTAT_VER).tar.bz2
 
 $(ARCHIVE)/$(SYSSTAT_SOURCE):
@@ -1136,8 +1136,9 @@ $(D)/wget: $(D)/bootstrap $(D)/openssl $(ARCHIVE)/$(WGET_SOURCE)
 #
 # coreutils
 #
-COREUTILS_VER = 8.30
+COREUTILS_VER = 8.23
 COREUTILS_SOURCE = coreutils-$(COREUTILS_VER).tar.xz
+COREUTILS_PATCH = coreutils-$(COREUTILS_VER).patch
 
 $(ARCHIVE)/$(COREUTILS_SOURCE):
 	$(DOWNLOAD) https://ftp.gnu.org/gnu/coreutils/$(COREUTILS_SOURCE)
@@ -1147,6 +1148,7 @@ $(D)/coreutils: $(D)/bootstrap $(D)/openssl $(ARCHIVE)/$(COREUTILS_SOURCE)
 	$(REMOVE)/coreutils-$(COREUTILS_VER)
 	$(UNTAR)/$(COREUTILS_SOURCE)
 	$(CHDIR)/coreutils-$(COREUTILS_VER); \
+		$(call apply_patches, $(COREUTILS_PATCH)); \
 		export fu_cv_sys_stat_statfs2_bsize=yes; \
 		$(CONFIGURE) \
 			--prefix=/usr \
@@ -1170,7 +1172,7 @@ $(D)/coreutils: $(D)/bootstrap $(D)/openssl $(ARCHIVE)/$(COREUTILS_SOURCE)
 #
 # smartmontools
 #
-SMARTMONTOOLS_VER = 7.0
+SMARTMONTOOLS_VER = 7.1
 SMARTMONTOOLS_SOURCE = smartmontools-$(SMARTMONTOOLS_VER).tar.gz
 
 $(ARCHIVE)/$(SMARTMONTOOLS_SOURCE):
@@ -1309,7 +1311,7 @@ $(D)/vsftpd: $(D)/bootstrap $(D)/openssl $(ARCHIVE)/$(VSFTPD_SOURCE)
 #
 # procps_ng
 #
-PROCPS_NG_VER = 3.3.12
+PROCPS_NG_VER = 3.3.16
 PROCPS_NG_SOURCE = procps-ng-$(PROCPS_NG_VER).tar.xz
 
 $(ARCHIVE)/$(PROCPS_NG_SOURCE):
@@ -1369,8 +1371,9 @@ $(D)/htop: $(D)/bootstrap $(D)/ncurses $(ARCHIVE)/$(HTOP_SOURCE)
 #
 # ethtool
 #
-ETHTOOL_VER = 5.4
+ETHTOOL_VER = 5.6
 ETHTOOL_SOURCE = ethtool-$(ETHTOOL_VER).tar.xz
+ETHTOOL_PATCH = ethtool-$(ETHTOOL_VER).patch
 
 $(ARCHIVE)/$(ETHTOOL_SOURCE):
 	$(DOWNLOAD) https://www.kernel.org/pub/software/network/ethtool/$(ETHTOOL_SOURCE)
@@ -1380,10 +1383,12 @@ $(D)/ethtool: $(D)/bootstrap $(ARCHIVE)/$(ETHTOOL_SOURCE)
 	$(REMOVE)/ethtool-$(ETHTOOL_VER)
 	$(UNTAR)/$(ETHTOOL_SOURCE)
 	$(CHDIR)/ethtool-$(ETHTOOL_VER); \
+		$(call apply_patches, $(ETHTOOL_PATCH)); \
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--mandir=/.remove \
 			--disable-pretty-dump \
+			--disable-netlink \
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -1523,7 +1528,7 @@ $(D)/samba: $(D)/bootstrap $(ARCHIVE)/$(SAMBA_SOURCE)
 #
 # ntp
 #
-NTP_VER = 4.2.8p10
+NTP_VER = 4.2.8p14
 NTP_SOURCE = ntp-$(NTP_VER).tar.gz
 NTP_PATCH = ntp-$(NTP_VER).patch
 
@@ -1540,7 +1545,10 @@ $(D)/ntp: $(D)/bootstrap $(ARCHIVE)/$(NTP_SOURCE)
 			--target=$(TARGET) \
 			--prefix=/usr \
 			--mandir=/.remove \
+			--infodir=/.remove \
 			--docdir=/.remove \
+			--localedir=/.remove \
+			--htmldir=/.remove \
 			--disable-tick \
 			--disable-tickadj \
 			--with-yielding-select=yes \
@@ -1692,7 +1700,7 @@ $(D)/udpxy: $(D)/bootstrap $(ARCHIVE)/$(UDPXY_SOURCE)
 #
 # openvpn
 #
-OPENVPN_VER = 2.4.8
+OPENVPN_VER = 2.4.9
 OPENVPN_SOURCE = openvpn-$(OPENVPN_VER).tar.xz
 
 $(ARCHIVE)/$(OPENVPN_SOURCE):
@@ -1731,7 +1739,7 @@ $(D)/openvpn: $(D)/bootstrap $(D)/openssl $(D)/lzo $(ARCHIVE)/$(OPENVPN_SOURCE)
 #
 # openssh
 #
-OPENSSH_VER = 7.7p1
+OPENSSH_VER = 8.2p1
 OPENSSH_SOURCE = openssh-$(OPENSSH_VER).tar.gz
 
 $(ARCHIVE)/$(OPENSSH_SOURCE):
