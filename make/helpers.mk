@@ -85,21 +85,25 @@ libstb-hal%-patch:
 # keeping all patches together in one file
 # uncomment if needed
 #
-# Neutrino MP DDT
+# Neutrino Max
 NEUTRINO_MAX_PATCHES =
 LIBSTB_HAL_MAX_PATCHES =
 
-# Neutrino MP DDT
+# Neutrino DDT
 NEUTRINO_DDT_PATCHES =
 LIBSTB_HAL_DDT_PATCHES =
 
-# Neutrino MP NI
+# Neutrino NI
 NEUTRINO_NI_PATCHES =
 LIBSTB_HAL_NI_PATCHES =
 
-# Neutrino MP Tango
+# Neutrino Tango
 NEUTRINO_TANGOS_PATCHES =
 LIBSTB_HAL_TANGOS_PATCHES =
+
+# Neutrino Tuxbox
+NEUTRINO_TUX_PATCHES =
+LIBSTB_HAL_TUX_PATCHES =
 
 # Neutrino HD2
 NEUTRINO_HD2_PATCHES +=
