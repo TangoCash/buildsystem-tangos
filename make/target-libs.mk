@@ -937,7 +937,7 @@ $(D)/libjpeg: $(D)/libjpeg_turbo2
 #
 # libjpeg_turbo2
 #
-LIBJPEG_TURBO2_VER = 2.0.3
+LIBJPEG_TURBO2_VER = 2.0.4
 LIBJPEG_TURBO2_SOURCE = libjpeg-turbo-$(LIBJPEG_TURBO2_VER).tar.gz
 LIBJPEG_TURBO2_PATCH = libjpeg-turbo-tiff-ojpeg.patch
 
@@ -2123,7 +2123,7 @@ endif
 #
 # gd
 #
-GD_VER = 2.2.5
+GD_VER = 2.3.0
 GD_SOURCE = libgd-$(GD_VER).tar.xz
 
 $(ARCHIVE)/$(GD_SOURCE):
@@ -2421,7 +2421,7 @@ $(D)/lzo: $(D)/bootstrap $(ARCHIVE)/$(LZO_SOURCE)
 #
 # minidlna
 #
-MINIDLNA_VER = 1.1.5
+MINIDLNA_VER = 1.2.1
 MINIDLNA_SOURCE = minidlna-$(MINIDLNA_VER).tar.gz
 MINIDLNA_PATCH = minidlna-$(MINIDLNA_VER).patch
 
@@ -2504,7 +2504,7 @@ $(D)/djmount: $(D)/bootstrap $(D)/fuse $(ARCHIVE)/$(DJMOUNT_SOURCE)
 #
 # libupnp
 #
-LIBUPNP_VER = 1.6.22
+LIBUPNP_VER = 1.6.25
 LIBUPNP_SOURCE = libupnp-$(LIBUPNP_VER).tar.bz2
 
 $(ARCHIVE)/$(LIBUPNP_SOURCE):
