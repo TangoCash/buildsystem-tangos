@@ -191,6 +191,9 @@ if [ -e /usr/share/tuxbox/neutrino/control/migration.sh ]; then
     /usr/share/tuxbox/neutrino/control/migration.sh
 fi
 
+# fix frontend.conf (uni_qrg->uni_freq)
+	[ -e /var/tuxbox/config/zapit/frontend.conf ] && sed -i "s/_uni_qrg=/_uni_freq=/g" /var/tuxbox/config/zapit/frontend.conf
+
 if [ -e /var/bin/tangos ]; then
     chmod 755 /var/bin/tangos
     /var/bin/tangos
