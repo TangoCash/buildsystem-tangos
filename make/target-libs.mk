@@ -817,7 +817,7 @@ $(D)/timezone: $(D)/bootstrap find-zic $(ARCHIVE)/$(TZDATA_SOURCE)
 #
 # freetype
 #
-FREETYPE_VER = 2.10.1
+FREETYPE_VER = 2.10.2
 FREETYPE_SOURCE = freetype-$(FREETYPE_VER).tar.xz
 FREETYPE_PATCH = freetype-$(FREETYPE_VER).patch
 
@@ -937,7 +937,7 @@ $(D)/libjpeg: $(D)/libjpeg_turbo2
 #
 # libjpeg_turbo2
 #
-LIBJPEG_TURBO2_VER = 2.0.4
+LIBJPEG_TURBO2_VER = 2.0.5
 LIBJPEG_TURBO2_SOURCE = libjpeg-turbo-$(LIBJPEG_TURBO2_VER).tar.gz
 LIBJPEG_TURBO2_PATCH = libjpeg-turbo-tiff-ojpeg.patch
 
@@ -1126,7 +1126,7 @@ $(D)/ca-bundle: $(ARCHIVE)/$(CA-BUNDLE_SOURCE)
 #
 # libcurl
 #
-LIBCURL_VER = 7.69.1
+LIBCURL_VER = 7.71.1
 LIBCURL_SOURCE = curl-$(LIBCURL_VER).tar.bz2
 LIBCURL_PATCH = libcurl-$(LIBCURL_VER).patch
 
@@ -1178,7 +1178,7 @@ $(D)/libcurl: $(D)/bootstrap $(D)/zlib $(D)/openssl $(D)/ca-bundle $(ARCHIVE)/$(
 #
 # libfribidi
 #
-LIBFRIBIDI_VER = 1.0.9
+LIBFRIBIDI_VER = 1.0.10
 LIBFRIBIDI_SOURCE = fribidi-$(LIBFRIBIDI_VER).tar.xz
 LIBFRIBIDI_PATCH = libfribidi-$(LIBFRIBIDI_VER).patch
 
@@ -2165,6 +2165,7 @@ $(D)/libusb: $(D)/bootstrap $(ARCHIVE)/$(LIBUSB_SOURCE)
 	$(UNTAR)/$(LIBUSB_SOURCE)
 	$(CHDIR)/libusb-$(LIBUSB_VER); \
 		$(call apply_patches, $(LIBUSB_PATCH)); \
+		autoreconf -fi $(SILENT_OPT); \
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--enable-static \
@@ -2211,7 +2212,7 @@ $(D)/libusb_compat: $(D)/bootstrap $(D)/libusb $(ARCHIVE)/$(LIBUSB_COMPAT_SOURCE
 #
 # alsa-lib
 #
-ALSA_LIB_VER = 1.2.2
+ALSA_LIB_VER = 1.2.3.1
 ALSA_LIB_SOURCE = alsa-lib-$(ALSA_LIB_VER).tar.bz2
 ALSA_LIB_PATCH  = alsa-lib-$(ALSA_LIB_VER).patch
 ALSA_LIB_PATCH += alsa-lib-$(ALSA_LIB_VER)-link_fix.patch
@@ -2240,6 +2241,7 @@ $(D)/alsa_lib: $(D)/bootstrap $(ARCHIVE)/$(ALSA_LIB_SOURCE)
 			--disable-resmgr \
 			--disable-old-symbols \
 			--disable-alisp \
+			--disable-ucm \
 			--disable-hwdep \
 			--disable-python \
 			--disable-topology \
@@ -2254,7 +2256,7 @@ $(D)/alsa_lib: $(D)/bootstrap $(ARCHIVE)/$(ALSA_LIB_SOURCE)
 #
 # alsa-utils
 #
-ALSA_UTILS_VER = 1.2.2
+ALSA_UTILS_VER = 1.2.3
 ALSA_UTILS_SOURCE = alsa-utils-$(ALSA_UTILS_VER).tar.bz2
 ALSA_UTILS_PATCH = alsa-utils-$(ALSA_UTILS_VER).patch
 
