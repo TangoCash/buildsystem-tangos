@@ -6,7 +6,7 @@ BUSYBOX_VER = snapshot
 BUSYBOX_SOURCE =
 BUSYBOX_DEPS =
 else
-BUSYBOX_VER = 1.31.1
+BUSYBOX_VER = 1.32.0
 BUSYBOX_SOURCE = busybox-$(BUSYBOX_VER).tar.bz2
 BUSYBOX_DEPS = $(ARCHIVE)/$(BUSYBOX_SOURCE)
 
@@ -1194,7 +1194,7 @@ $(D)/smartmontools: $(D)/bootstrap $(ARCHIVE)/$(SMARTMONTOOLS_SOURCE)
 #
 # nfs_utils
 #
-NFS_UTILS_VER = 2.4.3
+NFS_UTILS_VER = 2.5.1
 NFS_UTILS_SOURCE = nfs-utils-$(NFS_UTILS_VER).tar.bz2
 NFS_UTILS_PATCH = nfs-utils-$(NFS_UTILS_VER).patch
 
@@ -1371,9 +1371,9 @@ $(D)/htop: $(D)/bootstrap $(D)/ncurses $(ARCHIVE)/$(HTOP_SOURCE)
 #
 # ethtool
 #
-ETHTOOL_VER = 5.6
-ETHTOOL_SOURCE = ethtool-$(ETHTOOL_VER).tar.xz
+ETHTOOL_VER = 5.7
 ETHTOOL_PATCH = ethtool-$(ETHTOOL_VER).patch
+ETHTOOL_SOURCE = ethtool-$(ETHTOOL_VER).tar.xz
 
 $(ARCHIVE)/$(ETHTOOL_SOURCE):
 	$(DOWNLOAD) https://www.kernel.org/pub/software/network/ethtool/$(ETHTOOL_SOURCE)
@@ -1528,7 +1528,7 @@ $(D)/samba: $(D)/bootstrap $(ARCHIVE)/$(SAMBA_SOURCE)
 #
 # ntp
 #
-NTP_VER = 4.2.8p14
+NTP_VER = 4.2.8p15
 NTP_SOURCE = ntp-$(NTP_VER).tar.gz
 NTP_PATCH = ntp-$(NTP_VER).patch
 
@@ -1739,7 +1739,7 @@ $(D)/openvpn: $(D)/bootstrap $(D)/openssl $(D)/lzo $(ARCHIVE)/$(OPENVPN_SOURCE)
 #
 # openssh
 #
-OPENSSH_VER = 8.2p1
+OPENSSH_VER = 8.3p1
 OPENSSH_SOURCE = openssh-$(OPENSSH_VER).tar.gz
 
 $(ARCHIVE)/$(OPENSSH_SOURCE):
