@@ -1,13 +1,13 @@
 #
 # driver
 #
-DRIVER_DATE = 20200217
-DRIVER_VER  = 5.5.0-$(DRIVER_DATE)
+DRIVER_DATE = 20200409
+DRIVER_VER  = 5.5.16-$(DRIVER_DATE)
 DRIVER_SRC  = osmio4kplus-drivers-$(DRIVER_VER).zip
 
-LIBGLES_VER = 1.0
-LIBGLES_DIR = libv3d-osmio4k-$(LIBGLES_VER)
-LIBGLES_SRC = libv3d-osmio4kplus-$(LIBGLES_VER).tar.xz
+LIBGLES_VER = 2.0
+LIBGLES_DIR = edision-libv3d-$(LIBGLES_VER)
+LIBGLES_SRC = edision-libv3d-$(LIBGLES_VER).tar.xz
 
 
 $(ARCHIVE)/$(DRIVER_SRC):
@@ -35,9 +35,11 @@ $(D)/install-v3ddriver: $(ARCHIVE)/$(LIBGLES_SRC)
 	install -d $(TARGET_LIB_DIR)
 	$(REMOVE)/$(LIBGLES_DIR)
 	$(UNTAR)/$(LIBGLES_SRC)
+	rm -rf $(BUILD_TMP)/$(LIBGLES_DIR)/lib
+	mv $(BUILD_TMP)/$(LIBGLES_DIR)/lib64 $(BUILD_TMP)/$(LIBGLES_DIR)/lib
 	cp -a $(BUILD_TMP)/$(LIBGLES_DIR)/* $(TARGET_DIR)/usr/
-	ln -sf libv3ddriver.so.1.0 $(TARGET_LIB_DIR)/libEGL.so
-	ln -sf libv3ddriver.so.1.0 $(TARGET_LIB_DIR)/libGLESv2.so
+	ln -sf libv3ddriver.so.$(LIBGLES_VER) $(TARGET_LIB_DIR)/libEGL.so
+	ln -sf libv3ddriver.so.$(LIBGLES_VER) $(TARGET_LIB_DIR)/libGLESv2.so
 	$(REMOVE)/$(LIBGLES_DIR)
 
 #

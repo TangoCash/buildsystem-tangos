@@ -1,8 +1,8 @@
 #
 # KERNEL
 #
-KERNEL_VER             = 5.5.0
-KERNEL_SOURCE_VER      = 5.5
+KERNEL_VER             = 5.5.16
+KERNEL_SOURCE_VER      = 5.5.16
 KERNEL_TYPE            = osmio4kplus
 KERNEL_SRC             = linux-edision-$(KERNEL_SOURCE_VER).tar.gz
 KERNEL_URL             = http://source.mynonpublic.com/edision
