@@ -9,7 +9,7 @@ ifeq ($(FFMPEG_EXPERIMENTAL), 1)
 FFMPEG_VER = snapshot
 FFMPEG_SOURCE =
 else
-FFMPEG_VER = 4.2.2
+FFMPEG_VER = 4.3.1
 FFMPEG_SOURCE = ffmpeg-$(FFMPEG_VER).tar.xz
 FFMPEG_DEPS += $(ARCHIVE)/$(FFMPEG_SOURCE)
 
@@ -206,6 +206,7 @@ endif
 			--enable-decoder=mlp \
 			--enable-decoder=movtext \
 			--enable-decoder=mp1 \
+			--enable-decoder=mp2 \
 			--enable-decoder=mp3 \
 			--enable-decoder=mp3adu \
 			--enable-decoder=mp3on4 \
