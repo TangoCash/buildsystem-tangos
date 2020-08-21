@@ -54,7 +54,6 @@ ifeq ($(FFMPEG_EXPERIMENTAL), 1)
 	cp -ra $(ARCHIVE)/ffmpeg.git $(BUILD_TMP)/ffmpeg-$(FFMPEG_VER)
 else
 	$(UNTAR)/$(FFMPEG_SOURCE)
-	FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-mips64_cpu_detection.patch
 endif
 	$(CHDIR)/ffmpeg-$(FFMPEG_VER); \
 		$(call apply_patches, $(FFMPEG_PATCH)); \
