@@ -274,6 +274,7 @@ $(D)/libstb-hal.do_prepare:
 	cp -ra $(SOURCE_DIR)/$(LIBSTB_HAL) $(SOURCE_DIR)/$(LIBSTB_HAL).org
 	set -e; cd $(SOURCE_DIR)/$(LIBSTB_HAL); \
 		$(call apply_patches, $(HAL_PATCHES))
+	cp -ra $(SOURCE_DIR)/$(LIBSTB_HAL) $(SOURCE_DIR)/$(LIBSTB_HAL).dev
 	@touch $@
 
 $(D)/libstb-hal.config.status: | $(NEUTRINO_DEPS)
@@ -335,6 +336,7 @@ $(D)/neutrino.do_prepare: | $(NEUTRINO_DEPS) $(D)/libstb-hal
 	cp -ra $(SOURCE_DIR)/$(NEUTRINO) $(SOURCE_DIR)/$(NEUTRINO).org
 	set -e; cd $(SOURCE_DIR)/$(NEUTRINO); \
 		$(call apply_patches, $(NMP_PATCHES))
+	cp -ra $(SOURCE_DIR)/$(NEUTRINO) $(SOURCE_DIR)/$(NEUTRINO).dev
 	@touch $@
 
 $(D)/neutrino.config.status:
@@ -413,6 +415,7 @@ $(D)/neutrino-hd2.do_prepare: | $(NEUTRINO_DEPS) $(D)/libid3tag $(D)/libmad $(D)
 	cp -ra $(SOURCE_DIR)/neutrino-hd2.git/nhd2-exp $(SOURCE_DIR)/neutrino-hd2.org
 	set -e; cd $(SOURCE_DIR)/neutrino-hd2; \
 		$(call apply_patches, $(NEUTRINO_HD2_PATCHES))
+	cp -ra $(SOURCE_DIR)/neutrino-hd2.git/nhd2-exp $(SOURCE_DIR)/neutrino-hd2.dev
 	@touch $@
 
 $(D)/neutrino-hd2.config.status:
