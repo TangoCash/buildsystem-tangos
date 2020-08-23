@@ -286,6 +286,23 @@ $(D)/neutrino-plugin-settings-update:
 	$(TOUCH)
 
 #
+# lua-custom-plugins
+#
+$(D)/neutrino-plugin-custom:
+	$(START_BUILD)
+	$(REMOVE)/plugins-lua
+	set -e; if [ -d $(ARCHIVE)/plugins-lua-custom.git ]; \
+		then cd $(ARCHIVE)/plugins-lua-custom.git; git pull; \
+		else cd $(ARCHIVE); git clone https://github.com/bazi-98/plugins.git plugins-lua-custom.git; \
+		fi
+	cp -ra $(ARCHIVE)/plugins-lua-custom.git $(BUILD_TMP)/plugins-lua
+	$(CHDIR)/plugins-lua; \
+		install -d $(TARGET_DIR)/var/tuxbox/plugins
+		cp -R $(BUILD_TMP)/plugins-lua/*/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
+	$(REMOVE)/plugins-lua
+	$(TOUCH)
+
+#
 # spiegel-tv
 #
 $(D)/neutrino-plugin-spiegel-tv:
@@ -298,7 +315,7 @@ $(D)/neutrino-plugin-spiegel-tv:
 	cp -ra $(ARCHIVE)/plugins-lua.git $(BUILD_TMP)/plugins-lua
 	$(CHDIR)/plugins-lua; \
 		install -d $(TARGET_DIR)/var/tuxbox/plugins
-		cp -R $(BUILD_TMP)/plugins-lua/spiegel-tv-doc/* $(TARGET_DIR)/var/tuxbox/plugins/
+		cp -R $(BUILD_TMP)/plugins-lua/spiegel-tv-doc/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
 	$(REMOVE)/plugins-lua
 	$(TOUCH)
 
@@ -315,7 +332,24 @@ $(D)/neutrino-plugin-tierwelt-tv:
 	cp -ra $(ARCHIVE)/plugins-lua.git $(BUILD_TMP)/plugins-lua
 	$(CHDIR)/plugins-lua; \
 		install -d $(TARGET_DIR)/var/tuxbox/plugins
-		cp -R $(BUILD_TMP)/plugins-lua/tierwelt-tv/* $(TARGET_DIR)/var/tuxbox/plugins/
+		cp -R $(BUILD_TMP)/plugins-lua/tierwelt-tv/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
+	$(REMOVE)/plugins-lua
+	$(TOUCH)
+
+#
+# mtv
+#
+$(D)/neutrino-plugin-mtv:
+	$(START_BUILD)
+	$(REMOVE)/plugins-lua
+	set -e; if [ -d $(ARCHIVE)/plugins-lua.git ]; \
+		then cd $(ARCHIVE)/plugins-lua.git; git pull; \
+		else cd $(ARCHIVE); git clone https://github.com/fs-basis/plugins-lua.git plugins-lua.git; \
+		fi
+	cp -ra $(ARCHIVE)/plugins-lua.git $(BUILD_TMP)/plugins-lua
+	$(CHDIR)/plugins-lua; \
+		install -d $(TARGET_DIR)/var/tuxbox/plugins
+		cp -R $(BUILD_TMP)/plugins-lua/mtv/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
 	$(REMOVE)/plugins-lua
 	$(TOUCH)
 

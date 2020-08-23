@@ -1,6 +1,44 @@
 # makefile to build NEUTRINO
 
 # -----------------------------------------------------------------------------
+N_CONFIG_KEYS ?=
+
+OMDB_API_KEY ?=
+ifneq ($(strip $(OMDB_API_KEY)),)
+N_CONFIG_KEYS += \
+	--with-omdb-api-key="$(OMDB_API_KEY)" \
+	--disable-omdb-key-manage
+endif
+
+TMDB_DEV_KEY ?=
+ifneq ($(strip $(TMDB_DEV_KEY)),)
+N_CONFIG_KEYS += \
+	--with-tmdb-dev-key="$(TMDB_DEV_KEY)" \
+	--disable-tmdb-key-manage
+endif
+
+YOUTUBE_DEV_KEY ?=
+ifneq ($(strip $(YOUTUBE_DEV_KEY)),)
+N_CONFIG_KEYS += \
+	--with-youtube-dev-key="$(YOUTUBE_DEV_KEY)" \
+	--disable-youtube-key-manage
+endif
+
+SHOUTCAST_DEV_KEY ?=
+ifneq ($(strip $(SHOUTCAST_DEV_KEY)),)
+N_CONFIG_KEYS += \
+	--with-shoutcast-dev-key="$(SHOUTCAST_DEV_KEY)" \
+	--disable-shoutcast-key-manage
+endif
+
+WEATHER_DEV_KEY ?=
+ifneq ($(strip $(WEATHER_DEV_KEY)),)
+N_CONFIG_KEYS += \
+	--with-weather-dev-key="$(WEATHER_DEV_KEY)" \
+	--disable-weather-key-manage
+endif
+
+# -----------------------------------------------------------------------------
 
 NEUTRINO_DEPS  = $(D)/bootstrap
 NEUTRINO_DEPS += $(KERNEL)
@@ -39,8 +77,10 @@ NEUTRINO_DEPS += $(D)/neutrino-plugin-xupnpd
 NEUTRINO_DEPS += $(D)/neutrino-plugin-channellogos
 NEUTRINO_DEPS += $(D)/neutrino-plugin-iptvplayer
 NEUTRINO_DEPS += $(D)/neutrino-plugin-settings-update
-NEUTRINO_DEPS += $(D)/neutrino-plugin-spiegel-tv
-NEUTRINO_DEPS += $(D)/neutrino-plugin-tierwelt-tv
+#NEUTRINO_DEPS += $(D)/neutrino-plugin-spiegel-tv
+#NEUTRINO_DEPS += $(D)/neutrino-plugin-tierwelt-tv
+NEUTRINO_DEPS += $(D)/neutrino-plugin-mtv
+NEUTRINO_DEPS += $(D)/neutrino-plugin-custom
 NEUTRINO_DEPS += $(LOCAL_NEUTRINO_DEPS)
 NEUTRINO_DEPS += $(LOCAL_NEUTRINO_PLUGINS)
 
@@ -227,10 +267,10 @@ $(TARGET_DIR)/.version:
 	echo "distro=$(FLAVOUR)" > $@
 	echo "imagename=`sed -n 's/\#define PACKAGE_NAME "//p' $(N_OBJDIR)/config.h | sed 's/"//'`" >> $@
 	echo "imageversion=`sed -n 's/\#define PACKAGE_VERSION "//p' $(N_OBJDIR)/config.h | sed 's/"//'`" >> $@
-	echo "homepage=https://github.com/Duckbox-Developers" >> $@
+	echo "homepage=$(GIT_URL)" >> $@
 	echo "creator=$(MAINTAINER)" >> $@
-	echo "docs=https://github.com/Duckbox-Developers" >> $@
-	echo "forum=https://github.com/Duckbox-Developers/neutrino-mp-ddt" >> $@
+	echo "docs=$(GIT_URL)" >> $@
+	echo "forum=$(GIT_URL)/$(NEUTRINO)" >> $@
 	echo "version=0200`date +%Y%m%d%H%M`" >> $@
 	echo "builddate="`date` >> $@
 	echo "git=BS-rev$(BUILDSYSTEM_REV)_HAL-rev$(LIBSTB_HAL_REV)_$(FLAVOUR)-rev$(NEUTRINO_REV)" >> $@
@@ -326,6 +366,7 @@ $(D)/neutrino.do_prepare: | $(NEUTRINO_DEPS) $(D)/libstb-hal
 	$(START_BUILD)
 	rm -rf $(SOURCE_DIR)/$(NEUTRINO)
 	rm -rf $(SOURCE_DIR)/$(NEUTRINO).org
+	rm -rf $(SOURCE_DIR)/$(NEUTRINO).dev
 	rm -rf $(N_OBJDIR)
 	[ -d "$(ARCHIVE)/$(NEUTRINO).git" ] && \
 	(cd $(ARCHIVE)/$(NEUTRINO).git; git pull;); \
@@ -355,6 +396,9 @@ $(D)/neutrino.config.status:
 			--enable-giflib \
 			--enable-lua \
 			--enable-pugixml \
+			\
+			$(N_CONFIG_KEYS) \
+			\
 			$(N_CONFIG_OPTS) \
 			\
 			--with-tremor \
