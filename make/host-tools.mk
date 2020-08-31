@@ -165,6 +165,28 @@ $(D)/host_resize2fs: $(D)/directories $(ARCHIVE)/$(HOST_E2FSPROGS_SOURCE)
 	$(TOUCH)
 
 #
+# host_parted
+#
+HOST_PARTED_VER = 3.3
+HOST_PARTED_SOURCE = parted-$(HOST_PARTED_VER).tar.xz
+
+$(ARCHIVE)/$(HOST_PARTED_SOURCE):
+	$(DOWNLOAD) https://ftp.gnu.org/gnu/parted/$(HOST_PARTED_SOURCE)
+
+$(D)/host_parted: $(D)/directories $(ARCHIVE)/$(HOST_PARTED_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/parted-$(HOST_PARTED_VER)
+	$(UNTAR)/$(HOST_PARTED_SOURCE)
+	$(CHDIR)/parted-$(HOST_PARTED_VER); \
+		./configure $(SILENT_OPT) \
+			--prefix=$(HOST_DIR) \
+			--sbindir=$(HOST_DIR)/bin \
+			--disable-device-mapper; \
+		$(MAKE) install
+	$(REMOVE)/parted-$(HOST_PARTED_VER)
+	$(TOUCH)
+
+#
 # host-gdb
 #
 $(D)/host-gdb: $(D)/bootstrap $(D)/zlib $(D)/ncurses $(ARCHIVE)/$(GDB_SOURCE)
