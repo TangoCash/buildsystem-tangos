@@ -13,12 +13,12 @@ fi
 ##############################################
 
 if [ "$1" == -h ] || [ "$1" == --help ]; then
-	echo "Parameter 1: Target receiver (40-70)"
+	echo "Parameter 1: Target receiver (30-70)"
 	echo "Parameter 2: FFmpeg version (1-2)"
 	echo "Parameter 3: Optimization (1-4)"
 	echo "Parameter 4: Toolchain gcc version (1-3)"
 	echo "Parameter 5: Image Neutrino (1-2)"
-	echo "Parameter 6: Neutrino flavour (1-5)"
+	echo "Parameter 6: Neutrino flavour (1-4)"
 	echo "Parameter 7: External LCD support (1-4)"
 	echo "optional:"
 	echo "Parameter 8: Multiboot layout (1-2)"
@@ -50,10 +50,10 @@ case $1 in
 		echo
 		echo "  arm-based receivers"
 		echo "  Edison"
-		echo "  30)  Edision OS mio 4K"
-		echo "  31)  Edision OS mio+ 4K"
+		echo "   30)  Edision OS mio 4K"
+		echo "   31)  Edision OS mio+ 4K"
 		echo
-		echo "   VU+"
+		echo "  VU+"
 		echo "   40) VU+ Solo 4K     43) VU+ Ultimo 4K"
 		echo "   41) VU+ Duo  4K     44) VU+ Uno 4K SE"
 		echo "   42) VU+ Zero 4K     45) VU+ Uno 4K"
@@ -71,6 +71,7 @@ case $1 in
 		echo
 		echo
 		echo "  mips-based receivers"
+		echo "  VU+"
 		echo "   70)  VU+ Duo"
 		echo
 		read -p "Select target (30-70)? [51]"
