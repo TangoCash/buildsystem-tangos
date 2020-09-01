@@ -42,7 +42,7 @@ SWAP_PARTITION_OFFSET = $(shell expr $(SWAP_DATA_PARTITION_OFFSET) \+ $(SWAP_DAT
 
 MULTI_ROOTFS_PARTITION_OFFSET = "$(shell expr ${FOURTH_KERNEL_PARTITION_OFFSET_NL} \+ ${KERNEL_PARTITION_SIZE})"
 
-flash-image-$(BOXTYPE)-multi-disk: $(D)/host_resize2fs
+flash-image-$(BOXTYPE)-multi-disk: $(D)/host_resize2fs $(D)/host_parted
 	rm -rf $(FLASH_BUILD_TMP) || true
 	mkdir -p $(FLASH_BUILD_TMP)/$(BOXTYPE)
 	# move kernel files from $(RELEASE_DIR)/boot to $(FLASH_BUILD_TMP)
