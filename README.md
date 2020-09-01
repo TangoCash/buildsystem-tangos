@@ -11,9 +11,13 @@
  1.3. `sudo ./prepare-for-bs.sh`
 
  2.1. `./make.sh hd51`
- 2.2 `make flashimage`
+ 2.2. `make flashimage`
 
-alternate targets:
+
+----------
+
+
+alternate targets
  1. `make neutrino`
  2. `make ofgimage`
  3. `make online-image`
