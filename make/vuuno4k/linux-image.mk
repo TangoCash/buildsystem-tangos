@@ -4,17 +4,26 @@
 
 ### armbox vuuno4k
 
-flashimage:
+flashimage: $(D)/neutrino
 	$(MAKE) flash-image-vu-multi-rootfs
 	$(TUXBOX_CUSTOMIZE)
+	@$(call draw_line,);
+	@$(call draw_line,Build of $@ for $(BOXTYPE) successfully completed.,2);
+	@$(call draw_line,);
 
-ofgimage:
+ofgimage: $(D)/neutrino
 	$(MAKE) ITYPE=ofg flash-image-vu-rootfs
 	$(TUXBOX_CUSTOMIZE)
+	@$(call draw_line,);
+	@$(call draw_line,Build of $@ for $(BOXTYPE) successfully completed.,2);
+	@$(call draw_line,);
 
-online-image:
+online-image: $(D)/neutrino
 	$(MAKE) ITYPE=online flash-image-vu-online
 	$(TUXBOX_CUSTOMIZE)
+	@$(call draw_line,);
+	@$(call draw_line,Build of $@ for $(BOXTYPE) successfully completed.,2);
+	@$(call draw_line,);
 
 flash-clean:
 	echo ""

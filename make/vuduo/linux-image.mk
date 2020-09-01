@@ -2,15 +2,24 @@
 # flashimage
 #
 
-flashimage:
+flashimage: $(D)/neutrino
 	$(MAKE) flash-image-vuduo
 	$(TUXBOX_CUSTOMIZE)
+	@$(call draw_line,);
+	@$(call draw_line,Build of $@ for $(BOXTYPE) successfully completed.,2);
+	@$(call draw_line,);
 
-ofgimage:
+ofgimage: $(D)/neutrino
 	echo "nothing to do"
+	@$(call draw_line,);
+	@$(call draw_line,Build of $@ for $(BOXTYPE) successfully completed.,2);
+	@$(call draw_line,);
 
-online-image:
+online-image: $(D)/neutrino
 	echo "nothing to do"
+	@$(call draw_line,);
+	@$(call draw_line,Build of $@ for $(BOXTYPE) successfully completed.,2);
+	@$(call draw_line,);
 
 flash-clean:
 	echo ""

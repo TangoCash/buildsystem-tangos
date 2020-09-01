@@ -40,6 +40,12 @@ endif
 
 # -----------------------------------------------------------------------------
 
+LIBSTB_HAL_DEPS  = $(D)/bootstrap
+LIBSTB_HAL_DEPS += $(D)/ffmpeg
+LIBSTB_HAL_DEPS += $(D)/libopenthreads
+
+# -----------------------------------------------------------------------------
+
 NEUTRINO_DEPS  = $(D)/bootstrap
 NEUTRINO_DEPS += $(KERNEL)
 NEUTRINO_DEPS += $(D)/system-tools
@@ -299,7 +305,7 @@ $(SOURCE_DIR)/$(NEUTRINO)/src/gui/version.h:
 
 # -----------------------------------------------------------------------------
 
-$(D)/libstb-hal.do_prepare:
+$(D)/libstb-hal.do_prepare: | $(LIBSTB_HAL_DEPS)
 	$(START_BUILD)
 	rm -rf $(SOURCE_DIR)/$(LIBSTB_HAL)
 	rm -rf $(SOURCE_DIR)/$(LIBSTB_HAL).org
@@ -317,7 +323,7 @@ $(D)/libstb-hal.do_prepare:
 	cp -ra $(SOURCE_DIR)/$(LIBSTB_HAL) $(SOURCE_DIR)/$(LIBSTB_HAL).dev
 	@touch $@
 
-$(D)/libstb-hal.config.status: | $(NEUTRINO_DEPS)
+$(D)/libstb-hal.config.status:
 	rm -rf $(LH_OBJDIR)
 	test -d $(LH_OBJDIR) || mkdir -p $(LH_OBJDIR)
 	cd $(LH_OBJDIR); \
@@ -410,13 +416,13 @@ $(D)/neutrino.config.status:
 		+make $(SOURCE_DIR)/$(NEUTRINO)/src/gui/version.h
 #	@touch $@
 
-$(D)/neutrino.do_compile:
+$(D)/neutrino.do_compile: $(D)/neutrino.config.status
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 	$(MAKE) -C $(N_OBJDIR) all DESTDIR=$(TARGET_DIR)
 	@touch $@
 
 mp \
-$(D)/neutrino: $(D)/neutrino.do_prepare $(D)/neutrino.config.status $(D)/neutrino.do_compile
+$(D)/neutrino: $(D)/neutrino.do_prepare $(D)/neutrino.do_compile
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 	$(MAKE) -C $(N_OBJDIR) install DESTDIR=$(TARGET_DIR)
 	make .version

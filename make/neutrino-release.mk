@@ -365,7 +365,6 @@ endif
 #
 $(D)/neutrino-release: neutrino-release-base neutrino-release-$(BOXTYPE)
 	$(TUXBOX_CUSTOMIZE)
-	@touch $@
 #
 # FOR YOUR OWN CHANGES use these folder in own_build/neutrino-hd
 #
@@ -410,8 +409,9 @@ ifneq ($(OPTIMIZATIONS), $(filter $(OPTIMIZATIONS), kerneldebug debug normal))
 	find $(RELEASE_DIR)/ -name '*' -exec $(TARGET)-strip --strip-unneeded {} &>/dev/null \;
 endif
 	@$(call draw_line,);
-	@$(call draw_line,Build of Neutrino for $(BOXTYPE) successfully completed.,2);
+	@$(call draw_line,Build of neutrino release for $(BOXTYPE) successfully completed.,2);
 	@$(call draw_line,);
+	@touch $@
 #
 # neutrino-release-clean
 #

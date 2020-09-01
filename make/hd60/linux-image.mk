@@ -4,17 +4,26 @@
 
 ### armbox hd60
 
-flashimage: $(D)/host_atools
+flashimage: $(D)/host_atools $(D)/neutrino
 	$(MAKE) flash-image-hd60-multi-disk flash-image-hd60-multi-rootfs
 	$(TUXBOX_CUSTOMIZE)
+	@$(call draw_line,);
+	@$(call draw_line,Build of $@ for $(BOXTYPE) successfully completed.,2);
+	@$(call draw_line,);
 
-ofgimage: $(D)/host_atools
+ofgimage: $(D)/host_atools $(D)/neutrino
 	$(MAKE) ITYPE=ofg flash-image-hd60-multi-rootfs
 	$(TUXBOX_CUSTOMIZE)
+	@$(call draw_line,);
+	@$(call draw_line,Build of $@ for $(BOXTYPE) successfully completed.,2);
+	@$(call draw_line,);
 
-online-image: $(D)/host_atools
+online-image: $(D)/host_atools $(D)/neutrino
 	$(MAKE) ITYPE=online flash-image-hd60-online
 	$(TUXBOX_CUSTOMIZE)
+	@$(call draw_line,);
+	@$(call draw_line,Build of $@ for $(BOXTYPE) successfully completed.,2);
+	@$(call draw_line,);
 
 flash-clean:
 	echo ""

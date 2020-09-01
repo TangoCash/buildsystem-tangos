@@ -4,17 +4,26 @@
 
 ### Edison Osmio 4K (+)
 
-flashimage:
+flashimage: $(D)/neutrino
 	$(MAKE) flash-image-osmio4k-multi-disk flash-image-osmio4k-multi-rootfs
 	$(TUXBOX_CUSTOMIZE)
+	@$(call draw_line,);
+	@$(call draw_line,Build of $@ for $(BOXTYPE) successfully completed.,2);
+	@$(call draw_line,);
 
-ofgimage:
+ofgimage: $(D)/neutrino
 	$(MAKE) ITYPE=ofg flash-image-osmio4k-multi-rootfs
 	$(TUXBOX_CUSTOMIZE)
+	@$(call draw_line,);
+	@$(call draw_line,Build of $@ for $(BOXTYPE) successfully completed.,2);
+	@$(call draw_line,);
 
-online-image:
+online-image: $(D)/neutrino
 	$(MAKE) ITYPE=online flash-image-osmio4k-online
 	$(TUXBOX_CUSTOMIZE)
+	@$(call draw_line,);
+	@$(call draw_line,Build of $@ for $(BOXTYPE) successfully completed.,2);
+	@$(call draw_line,);
 
 flash-clean:
 	echo ""
