@@ -170,8 +170,9 @@ $(D)/host_resize2fs: $(D)/directories $(ARCHIVE)/$(HOST_E2FSPROGS_SOURCE)
 HOST_PARTED_VER = 3.3
 HOST_PARTED_SOURCE = parted-$(HOST_PARTED_VER).tar.xz
 
-$(ARCHIVE)/$(HOST_PARTED_SOURCE):
-	$(DOWNLOAD) https://ftp.gnu.org/gnu/parted/$(HOST_PARTED_SOURCE)
+# see target-tools.mk
+#$(ARCHIVE)/$(HOST_PARTED_SOURCE):
+#	$(DOWNLOAD) https://ftp.gnu.org/gnu/parted/$(HOST_PARTED_SOURCE)
 
 $(D)/host_parted: $(D)/directories $(ARCHIVE)/$(HOST_PARTED_SOURCE)
 	$(START_BUILD)
@@ -181,6 +182,7 @@ $(D)/host_parted: $(D)/directories $(ARCHIVE)/$(HOST_PARTED_SOURCE)
 		./configure $(SILENT_OPT) \
 			--prefix=$(HOST_DIR) \
 			--sbindir=$(HOST_DIR)/bin \
+			--without-readline \
 			--disable-device-mapper; \
 		$(MAKE) install
 	$(REMOVE)/parted-$(HOST_PARTED_VER)
