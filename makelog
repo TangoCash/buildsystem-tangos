@@ -9,6 +9,8 @@ echo "----- GIT  REV -----" >> $LOGFILE
 echo "rev: "$(git log | grep "^commit" | wc -l) >> $LOGFILE
 echo "commit: "$(git log -1 --pretty=format:%H) >> $LOGFILE
 echo "url: "$(git config --get remote.origin.url) >> $LOGFILE
+echo "------ CONFIG ------" >> $LOGFILE
+cat config >> $LOGFILE
 echo "--- MAKE TARGETS ---" >> $LOGFILE
 echo $* >> $LOGFILE
 echo "---- BUILD  LOG ----" >> $LOGFILE
