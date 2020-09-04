@@ -96,6 +96,10 @@ neutrino-release-base:
 	cp -dp $(SKEL_ROOT)/sbin/MAKEDEV $(RELEASE_DIR)/sbin/
 	ln -sf ../sbin/MAKEDEV $(RELEASE_DIR)/dev/MAKEDEV
 	ln -sf ../../sbin/MAKEDEV $(RELEASE_DIR)/lib/udev/MAKEDEV
+ifeq ($(NEWLAYOUT), $(filter $(NEWLAYOUT), 1))
+	mv $(RELEASE_DIR)/sbin/init $(RELEASE_DIR)/sbin/init.sysvinit
+	install -m 0755 $(SKEL_ROOT)/sbin/init $(RELEASE_DIR)/sbin/
+endif
 	cp -aR $(SKEL_ROOT)/etc/mdev/* $(RELEASE_DIR)/etc/mdev/
 	cp -aR $(SKEL_ROOT)/etc/{inetd.conf,irexec.keys} $(RELEASE_DIR)/etc/
 	cp -aR $(SKEL_ROOT)/etc/network/* $(RELEASE_DIR)/etc/network/
