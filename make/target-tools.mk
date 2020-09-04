@@ -143,17 +143,14 @@ $(D)/module_init_tools: $(D)/bootstrap $(D)/lsb $(ARCHIVE)/$(MODULE_INIT_TOOLS_S
 #
 # sysvinit
 #
-SYSVINIT_VER = 2.88dsf
-SYSVINIT_SOURCE = sysvinit_$(SYSVINIT_VER).orig.tar.gz
-SYSVINIT_PATCH  = sysvinit-$(SYSVINIT_VER)_crypt-lib.patch
-SYSVINIT_PATCH += sysvinit-$(SYSVINIT_VER)_pidof-add-m-option.patch
-SYSVINIT_PATCH += sysvinit-$(SYSVINIT_VER)_realpath.patch
-SYSVINIT_PATCH += sysvinit-$(SYSVINIT_VER)_0001-include-sys-sysmacros.h-for-major-minor-defines-in-g.patch
-SYSVINIT_PATCH += sysvinit-$(SYSVINIT_VER)_0001-This-fixes-an-issue-that-clang-reports-about-mutlipl.patch
+SYSVINIT_VER = 2.97
+SYSVINIT_SOURCE = sysvinit-$(SYSVINIT_VER).tar.xz
+SYSVINIT_PATCH  = sysvinit-$(SYSVINIT_VER)-crypt-lib.patch
+SYSVINIT_PATCH += sysvinit-$(SYSVINIT_VER)-change-INIT_FIFO.patch
 
 
 $(ARCHIVE)/$(SYSVINIT_SOURCE):
-	$(DOWNLOAD) http://ftp.debian.org/debian/pool/main/s/sysvinit/$(SYSVINIT_SOURCE)
+	$(DOWNLOAD) https://download.savannah.gnu.org/releases/sysvinit/$(SYSVINIT_SOURCE)
 
 $(D)/sysvinit: $(D)/bootstrap $(ARCHIVE)/$(SYSVINIT_SOURCE)
 	$(START_BUILD)
@@ -164,7 +161,7 @@ $(D)/sysvinit: $(D)/bootstrap $(ARCHIVE)/$(SYSVINIT_SOURCE)
 		sed -i -e 's/\ sulogin[^ ]*//' -e 's/pidof\.8//' -e '/ln .*pidof/d' \
 		-e '/bootlogd/d' -e '/utmpdump/d' -e '/mountpoint/d' -e '/mesg/d' src/Makefile; \
 		$(BUILDENV) \
-		$(MAKE) -C src SULOGINLIBS=-lcrypt; \
+		$(MAKE) SULOGINLIBS=-lcrypt; \
 		$(MAKE) install ROOT=$(TARGET_DIR) MANDIR=/.remove
 	rm -f $(addprefix $(TARGET_DIR)/sbin/,fstab-decode runlevel telinit)
 	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,lastb)
