@@ -224,6 +224,7 @@ CHDIR                 = $(CD) $(BUILD_TMP)
 MKDIR                 = mkdir -p $(BUILD_TMP)
 STRIP                 = $(TARGET)-strip
 
+DATE                  = $(shell date '+%d.%m.%Y-%H.%M')
 # -----------------------------------------------------------------------------
 
 split_deps_dir=$(subst ., ,$(1))
