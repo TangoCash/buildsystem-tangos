@@ -1895,19 +1895,19 @@ $(D)/usb_modeswitch: $(D)/bootstrap $(D)/libusb $(D)/usb_modeswitch_data $(ARCHI
 $(D)/ofgwrite: $(D)/bootstrap $(ARCHIVE)/$(OFGWRITE_SOURCE)
 	$(START_BUILD)
 	$(REMOVE)/ofgwrite-ddt
-	set -e; if [ -d $(ARCHIVE)/ofgwrite-ddt.git ]; \
-		then cd $(ARCHIVE)/ofgwrite-ddt.git; git pull; \
-		else cd $(ARCHIVE); git clone https://github.com/Duckbox-Developers/ofgwrite-ddt.git ofgwrite-ddt.git; \
+	set -e; if [ -d $(ARCHIVE)/ofgwrite-max.git ]; \
+		then cd $(ARCHIVE)/ofgwrite-max.git; git pull; \
+		else cd $(ARCHIVE); git clone https://github.com/MaxWiesel/ofgwrite-max.git ofgwrite-max.git; \
 		fi
-	cp -ra $(ARCHIVE)/ofgwrite-ddt.git $(BUILD_TMP)/ofgwrite-ddt
-	$(CHDIR)/ofgwrite-ddt; \
+	cp -ra $(ARCHIVE)/ofgwrite-max.git $(BUILD_TMP)/ofgwrite-max
+	$(CHDIR)/ofgwrite-max; \
 		$(call apply_patches,$(OFGWRITE_PATCH)); \
 		$(BUILDENV) \
 		$(MAKE); \
-	install -m 755 $(BUILD_TMP)/ofgwrite-ddt/ofgwrite_bin $(TARGET_DIR)/usr/bin
-	install -m 755 $(BUILD_TMP)/ofgwrite-ddt/ofgwrite_caller $(TARGET_DIR)/usr/bin
-	install -m 755 $(BUILD_TMP)/ofgwrite-ddt/ofgwrite $(TARGET_DIR)/usr/bin
-	$(REMOVE)/ofgwrite-ddt
+	install -m 755 $(BUILD_TMP)/ofgwrite-max/ofgwrite_bin $(TARGET_DIR)/usr/bin
+	install -m 755 $(BUILD_TMP)/ofgwrite-max/ofgwrite_caller $(TARGET_DIR)/usr/bin
+	install -m 755 $(BUILD_TMP)/ofgwrite-max/ofgwrite $(TARGET_DIR)/usr/bin
+	$(REMOVE)/ofgwrite-max
 	$(TOUCH)
 
 #
