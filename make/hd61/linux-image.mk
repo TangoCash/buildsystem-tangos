@@ -5,6 +5,7 @@
 ### armbox hd61
 
 flashimage: $(D)/host_atools $(D)/neutrino
+	$(START_BUILD)
 	$(MAKE) flash-image-hd61-multi-disk flash-image-hd61-multi-rootfs
 	$(TUXBOX_CUSTOMIZE)
 	@$(call draw_line,);
@@ -12,6 +13,7 @@ flashimage: $(D)/host_atools $(D)/neutrino
 	@$(call draw_line,);
 
 ofgimage: $(D)/host_atools $(D)/neutrino
+	$(START_BUILD)
 	$(MAKE) ITYPE=ofg flash-image-hd61-multi-rootfs
 	$(TUXBOX_CUSTOMIZE)
 	@$(call draw_line,);
@@ -19,6 +21,7 @@ ofgimage: $(D)/host_atools $(D)/neutrino
 	@$(call draw_line,);
 
 online-image: $(D)/host_atools $(D)/neutrino
+	$(START_BUILD)
 	$(MAKE) ITYPE=online flash-image-hd61-online
 	$(TUXBOX_CUSTOMIZE)
 	@$(call draw_line,);

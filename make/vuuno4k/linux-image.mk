@@ -5,6 +5,7 @@
 ### armbox vuuno4k
 
 flashimage: $(D)/neutrino
+	$(START_BUILD)
 	$(MAKE) flash-image-vu-multi-rootfs
 	$(TUXBOX_CUSTOMIZE)
 	@$(call draw_line,);
@@ -12,6 +13,7 @@ flashimage: $(D)/neutrino
 	@$(call draw_line,);
 
 ofgimage: $(D)/neutrino
+	$(START_BUILD)
 	$(MAKE) ITYPE=ofg flash-image-vu-rootfs
 	$(TUXBOX_CUSTOMIZE)
 	@$(call draw_line,);
@@ -19,6 +21,7 @@ ofgimage: $(D)/neutrino
 	@$(call draw_line,);
 
 online-image: $(D)/neutrino
+	$(START_BUILD)
 	$(MAKE) ITYPE=online flash-image-vu-online
 	$(TUXBOX_CUSTOMIZE)
 	@$(call draw_line,);

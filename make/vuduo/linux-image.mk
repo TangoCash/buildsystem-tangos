@@ -3,6 +3,7 @@
 #
 
 flashimage: $(D)/neutrino
+	$(START_BUILD)
 	$(MAKE) flash-image-vuduo
 	$(TUXBOX_CUSTOMIZE)
 	@$(call draw_line,);
@@ -10,12 +11,14 @@ flashimage: $(D)/neutrino
 	@$(call draw_line,);
 
 ofgimage: $(D)/neutrino
+	$(START_BUILD)
 	echo "nothing to do"
 	@$(call draw_line,);
 	@$(call draw_line,Build of $@ for $(BOXTYPE) successfully completed.,2);
 	@$(call draw_line,);
 
 online-image: $(D)/neutrino
+	$(START_BUILD)
 	echo "nothing to do"
 	@$(call draw_line,);
 	@$(call draw_line,Build of $@ for $(BOXTYPE) successfully completed.,2);
