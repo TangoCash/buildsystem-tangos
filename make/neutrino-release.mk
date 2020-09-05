@@ -93,9 +93,6 @@ neutrino-release-base:
 	ln -sf /.version $(RELEASE_DIR)/var/etc/.version
 	ln -sf /.version $(RELEASE_DIR)/usr/.version
 	ln -sf /proc/mounts $(RELEASE_DIR)/etc/mtab
-	cp -dp $(SKEL_ROOT)/sbin/MAKEDEV $(RELEASE_DIR)/sbin/
-	ln -sf ../sbin/MAKEDEV $(RELEASE_DIR)/dev/MAKEDEV
-	ln -sf ../../sbin/MAKEDEV $(RELEASE_DIR)/lib/udev/MAKEDEV
 ifeq ($(NEWLAYOUT), $(filter $(NEWLAYOUT), 1))
 	mv $(RELEASE_DIR)/sbin/init $(RELEASE_DIR)/sbin/init.sysvinit
 	install -m 0755 $(SKEL_ROOT)/sbin/init $(RELEASE_DIR)/sbin/
@@ -108,8 +105,7 @@ endif
 	cp -aR $(SKEL_ROOT)/usr/share/zoneinfo/* $(RELEASE_DIR)/usr/share/zoneinfo/
 	install -m 0755 $(SKEL_ROOT)/bin/autologin $(RELEASE_DIR)/bin/
 	install -m 0755 $(SKEL_ROOT)/bin/vdstandby $(RELEASE_DIR)/bin/
-	install -m 0755 $(SKEL_ROOT)/usr/sbin/fw_printenv $(RELEASE_DIR)/usr/sbin/
-	install -m 0755 $(SKEL_ROOT)/etc/init.d/check_swap $(TARGET_DIR)/etc/init.d/
+	install -m 0755 $(SKEL_ROOT)/etc/init.d/check_partitions $(TARGET_DIR)/etc/init.d/
 	install -m 0755 $(SKEL_ROOT)/etc/init.d/mount_before $(TARGET_DIR)/etc/init.d/
 	install -m 0755 $(TARGET_DIR)/etc/init.d/* $(RELEASE_DIR)/etc/init.d/
 	cp -aR $(TARGET_DIR)/etc/* $(RELEASE_DIR)/etc/

@@ -1,0 +1,60 @@
+#!/bin/sh
+
+if [ ! -f "/.check-linuxrootfs" ] && [ -e "/dev/block/by-name/linuxrootfs" ]
+  then
+    echo "resizing linuxrootfs partition..."
+    resize2fs /dev/block/by-name/linuxrootfs
+    touch "/.check-linuxrootfs"
+fi
+
+if [ ! -f "/.check-userdata" ] && [ -e "/dev/block/by-name/userdata" ] && [ -e "/sbin/blkid" ]; then
+  if blkid /dev/block/by-name/userdata | grep "ext4"; then
+    echo "resizing userdata partition..."
+    resize2fs /dev/block/by-name/userdata
+    touch "/.check-userdata"
+  else
+    echo "userdata partition is not formated..."
+    echo "setup userdata partition..."
+    mkfs.ext4 -F -i 4096 /dev/block/by-name/userdata
+    touch "/.check-userdata"
+  fi
+fi
+
+if [ ! -f "/.check-storage" ] && [ -e "/dev/block/by-name/storage" ] && [ -e "/sbin/blkid" ]; then
+  if blkid /dev/block/by-name/storage | grep "ext4"; then
+    echo "resizing storage partition..."
+    resize2fs /dev/block/by-name/storage
+    touch "/.check-storage"
+  else
+    echo "storage partition is not formated..."
+    echo "setup storage partition..."
+    mkfs.ext4 -F -i 4096 /dev/block/by-name/storage
+    touch "/.check-storage"
+  fi
+fi
+
+if [ ! -f "/.check-swap" ] && [ -e "/dev/block/by-name/swap" ] && [ -e "/sbin/blkid" ]; then
+  device1=$(blkid -t  PARTLABEL="swap" -o device | head -n1)
+  ### /dev/mmcblk0p6 (2 partition) or /dev/mmcblk0p10 (4 partition) or /dev/mmcblk0p7 (new system)
+  swap1=$(cat /proc/swaps | grep -o "$device1" | head -n1)
+
+  if [ "$device1" == "" ]; then
+    echo "no swap drive found"
+    exit 1
+  fi
+
+  grep -q "$device1" /etc/fstab
+
+  if [ $? -ne 0 ]; then
+    /sbin/mkswap $device1
+    sleep 1
+    swapon $device1
+    echo "$device1 none swap defaults 0 0" >> /etc/fstab
+  elif [ "$swap1" == "" ]; then
+    /sbin/mkswap $device1
+    sleep 1
+    swapon $device1
+  fi
+  touch "/.check-swap"
+fi
+: exit 0

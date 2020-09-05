@@ -55,11 +55,14 @@ mount -t devpts devpts /dev/pts
 echo /sbin/mdev >/proc/sys/kernel/hotplug
 mdev -s
 
+echo -n "add mmcblks in /dev/block"
+/etc/init.d/mmcblk-by-name
+
+echo -n "check partitions"
+/etc/init.d/check_partitions
+
 echo "starting interface"
 /etc/init.d/mountall start
-
-echo "check swap"
-/etc/init.d/check_swap &
 
 [ -f /var/etc/modules.default ] && eval $(sed -e 's/#.*//' -e '/^\s*$/d' -e 's/^\(.*\)/im \0;/' < /var/etc/modules.default)
 
@@ -71,10 +74,16 @@ if [ -e /var/backup_flash.tar.gz ]; then
   rm -f /var/backup_flash.tar.gz
 fi
 
-echo -n "add mmcblks in /dev/block"
-/etc/init.d/mmcblk-by-name
-
 if [ -e /var/tuxbox/config/.bootlogo ]; then
+  START_RES=$(grep "video_Mode=" /var/tuxbox/config/neutrino.conf | awk -F "=" '{print $2}')
+  case "$START_RES" in
+     2) echo "576i" > /proc/stb/video/videomode;; # PAL/576i
+     7) echo "720p50" > /proc/stb/video/videomode;; # 720p50
+     8) echo "1080i50" > /proc/stb/video/videomode;; # 1080i
+    12) echo "1080p50" > /proc/stb/video/videomode;; # 1080p
+    17) echo "2160p25" > /proc/stb/video/videomode;; # 2160p25
+    19) echo "2160p50" > /proc/stb/video/videomode;; # 2160p50
+  esac
   showiframe /usr/share/tuxbox/neutrino/icons/bootlogo.m2v &
 fi
 
