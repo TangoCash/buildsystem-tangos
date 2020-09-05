@@ -103,6 +103,9 @@ $(D)/neutrino-plugins.do_compile: $(D)/neutrino-plugins.config.status
 $(D)/neutrino-plugins: $(D)/neutrino-plugins.do_prepare $(D)/neutrino-plugins.do_compile
 	mkdir -p $(TARGET_SHARE_DIR)/tuxbox/neutrino/icons
 	$(MAKE) -C $(NP_OBJDIR) install DESTDIR=$(TARGET_DIR)
+ifeq ($(NEWLAYOUT), $(filter $(NEWLAYOUT), 1))
+	install -m 0644 $(SOURCE_DIR)/neutrino-plugins/stb-startup-tuxbox/stb-startup.lua $(TARGET_DIR)/var/tuxbox/plugins
+endif
 	$(TOUCH)
 
 neutrino-plugins-clean:
