@@ -83,10 +83,10 @@ ifeq ($(NEWLAYOUT), $(filter $(NEWLAYOUT), 1))
 	echo "boot emmcflash0.linuxkernel2 'root=/dev/mmcblk0p8 rootsubdir=linuxrootfs2 kernel=/dev/mmcblk0p4 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(FLASH_BUILD_TMP)/STARTUP_2
 	echo "boot emmcflash0.linuxkernel3 'root=/dev/mmcblk0p8 rootsubdir=linuxrootfs3 kernel=/dev/mmcblk0p5 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(FLASH_BUILD_TMP)/STARTUP_3
 	echo "boot emmcflash0.linuxkernel4 'root=/dev/mmcblk0p8 rootsubdir=linuxrootfs4 kernel=/dev/mmcblk0p6 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(FLASH_BUILD_TMP)/STARTUP_4
-	echo "boot emmcflash0.linuxkernel 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 kernel=/dev/mmcblk0p2 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(FLASH_BUILD_TMP)/STARTUP_1_12
-	echo "boot emmcflash0.linuxkernel2 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p8 rootsubdir=linuxrootfs2 kernel=/dev/mmcblk0p4 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(FLASH_BUILD_TMP)/STARTUP_2_12
-	echo "boot emmcflash0.linuxkernel3 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p8 rootsubdir=linuxrootfs3 kernel=/dev/mmcblk0p5 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(FLASH_BUILD_TMP)/STARTUP_3_12
-	echo "boot emmcflash0.linuxkernel4 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p8 rootsubdir=linuxrootfs4 kernel=/dev/mmcblk0p6 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(FLASH_BUILD_TMP)/STARTUP_4_12
+#	echo "boot emmcflash0.linuxkernel 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 kernel=/dev/mmcblk0p2 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(FLASH_BUILD_TMP)/STARTUP_1_12
+#	echo "boot emmcflash0.linuxkernel2 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p8 rootsubdir=linuxrootfs2 kernel=/dev/mmcblk0p4 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(FLASH_BUILD_TMP)/STARTUP_2_12
+#	echo "boot emmcflash0.linuxkernel3 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p8 rootsubdir=linuxrootfs3 kernel=/dev/mmcblk0p5 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(FLASH_BUILD_TMP)/STARTUP_3_12
+#	echo "boot emmcflash0.linuxkernel4 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p8 rootsubdir=linuxrootfs4 kernel=/dev/mmcblk0p6 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(FLASH_BUILD_TMP)/STARTUP_4_12
 else
 	parted -s $(EMMC_IMAGE) unit KiB mkpart kernel1 $(KERNEL_PARTITION_OFFSET) $(shell expr $(KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
 	parted -s $(EMMC_IMAGE) unit KiB mkpart rootfs1 ext4 $(ROOTFS_PARTITION_OFFSET) $(shell expr $(ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_SINGLE_SIZE))
@@ -105,20 +105,20 @@ else
 	echo "boot emmcflash0.kernel2 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p5 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(FLASH_BUILD_TMP)/STARTUP_2
 	echo "boot emmcflash0.kernel3 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p7 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(FLASH_BUILD_TMP)/STARTUP_3
 	echo "boot emmcflash0.kernel4 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p9 rw rootwait $(BOXTYPE)_4.boxmode=1'" > $(FLASH_BUILD_TMP)/STARTUP_4
-	echo "boot emmcflash0.kernel1 'brcm_cma=520M@248M brcm_cma=200M@768M root=/dev/mmcblk0p3 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(FLASH_BUILD_TMP)/STARTUP_1_12
-	echo "boot emmcflash0.kernel2 'brcm_cma=520M@248M brcm_cma=200M@768M root=/dev/mmcblk0p5 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(FLASH_BUILD_TMP)/STARTUP_2_12
-	echo "boot emmcflash0.kernel3 'brcm_cma=520M@248M brcm_cma=200M@768M root=/dev/mmcblk0p7 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(FLASH_BUILD_TMP)/STARTUP_3_12
-	echo "boot emmcflash0.kernel4 'brcm_cma=520M@248M brcm_cma=200M@768M root=/dev/mmcblk0p9 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(FLASH_BUILD_TMP)/STARTUP_4_12
+#	echo "boot emmcflash0.kernel1 'brcm_cma=520M@248M brcm_cma=200M@768M root=/dev/mmcblk0p3 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(FLASH_BUILD_TMP)/STARTUP_1_12
+#	echo "boot emmcflash0.kernel2 'brcm_cma=520M@248M brcm_cma=200M@768M root=/dev/mmcblk0p5 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(FLASH_BUILD_TMP)/STARTUP_2_12
+#	echo "boot emmcflash0.kernel3 'brcm_cma=520M@248M brcm_cma=200M@768M root=/dev/mmcblk0p7 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(FLASH_BUILD_TMP)/STARTUP_3_12
+#	echo "boot emmcflash0.kernel4 'brcm_cma=520M@248M brcm_cma=200M@768M root=/dev/mmcblk0p9 rw rootwait $(BOXTYPE)_4.boxmode=12'" > $(FLASH_BUILD_TMP)/STARTUP_4_12
 endif
 	mcopy -i $(FLASH_BUILD_TMP)/$(FLASH_BOOT_IMAGE) -v $(FLASH_BUILD_TMP)/STARTUP ::
 	mcopy -i $(FLASH_BUILD_TMP)/$(FLASH_BOOT_IMAGE) -v $(FLASH_BUILD_TMP)/STARTUP_1 ::
 	mcopy -i $(FLASH_BUILD_TMP)/$(FLASH_BOOT_IMAGE) -v $(FLASH_BUILD_TMP)/STARTUP_2 ::
 	mcopy -i $(FLASH_BUILD_TMP)/$(FLASH_BOOT_IMAGE) -v $(FLASH_BUILD_TMP)/STARTUP_3 ::
 	mcopy -i $(FLASH_BUILD_TMP)/$(FLASH_BOOT_IMAGE) -v $(FLASH_BUILD_TMP)/STARTUP_4 ::
-	mcopy -i $(FLASH_BUILD_TMP)/$(FLASH_BOOT_IMAGE) -v $(FLASH_BUILD_TMP)/STARTUP_1_12 ::
-	mcopy -i $(FLASH_BUILD_TMP)/$(FLASH_BOOT_IMAGE) -v $(FLASH_BUILD_TMP)/STARTUP_2_12 ::
-	mcopy -i $(FLASH_BUILD_TMP)/$(FLASH_BOOT_IMAGE) -v $(FLASH_BUILD_TMP)/STARTUP_3_12 ::
-	mcopy -i $(FLASH_BUILD_TMP)/$(FLASH_BOOT_IMAGE) -v $(FLASH_BUILD_TMP)/STARTUP_4_12 ::
+#	mcopy -i $(FLASH_BUILD_TMP)/$(FLASH_BOOT_IMAGE) -v $(FLASH_BUILD_TMP)/STARTUP_1_12 ::
+#	mcopy -i $(FLASH_BUILD_TMP)/$(FLASH_BOOT_IMAGE) -v $(FLASH_BUILD_TMP)/STARTUP_2_12 ::
+#	mcopy -i $(FLASH_BUILD_TMP)/$(FLASH_BOOT_IMAGE) -v $(FLASH_BUILD_TMP)/STARTUP_3_12 ::
+#	mcopy -i $(FLASH_BUILD_TMP)/$(FLASH_BOOT_IMAGE) -v $(FLASH_BUILD_TMP)/STARTUP_4_12 ::
 	dd conv=notrunc if=$(FLASH_BUILD_TMP)/$(FLASH_BOOT_IMAGE) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(IMAGE_ROOTFS_ALIGNMENT) \* $(BLOCK_SECTOR))
 	dd conv=notrunc if=$(RELEASE_DIR)/boot/zImage.dtb of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(KERNEL_PARTITION_OFFSET) \* $(BLOCK_SECTOR))
 ifeq ($(NEWLAYOUT), $(filter $(NEWLAYOUT), 1))
