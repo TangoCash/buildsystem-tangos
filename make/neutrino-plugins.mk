@@ -168,7 +168,7 @@ $(D)/neutrino-plugin-scripts-lua: $(D)/bootstrap
 #		cp -R $(BUILD_TMP)/neutrino-plugin-scripts-lua/ard_mediathek/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
 #		cp -R $(BUILD_TMP)/neutrino-plugin-scripts-lua/favorites2bin/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
 		cp -R $(BUILD_TMP)/neutrino-plugin-scripts-lua/mtv/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
-		cp -R $(BUILD_TMP)/neutrino-plugin-scripts-lua/netzkino/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
+#		cp -R $(BUILD_TMP)/neutrino-plugin-scripts-lua/netzkino/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
 		cp -R $(BUILD_TMP)/neutrino-plugin-scripts-lua/2webTVxml/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
 		cp -R $(BUILD_TMP)/neutrino-plugin-scripts-lua/webtv/best_bitrate_m3u8.lua $(TARGET_SHARE_DIR)/tuxbox/neutrino/webtv/
 	$(REMOVE)/neutrino-plugin-scripts-lua
@@ -296,8 +296,13 @@ $(D)/neutrino-plugin-custom:
 		fi
 	cp -ra $(ARCHIVE)/plugins-lua-custom.git $(BUILD_TMP)/plugins-lua
 	$(CHDIR)/plugins-lua; \
+		shopt -s extglob
 		install -d $(TARGET_DIR)/var/tuxbox/plugins
-		cp -R $(BUILD_TMP)/plugins-lua/*/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
+		cp -R $(BUILD_TMP)/plugins-lua/*/*.cfg $(TARGET_DIR)/var/tuxbox/plugins/
+		cp -R $(BUILD_TMP)/plugins-lua/*/*.lua $(TARGET_DIR)/var/tuxbox/plugins/
+		cp -R $(BUILD_TMP)/plugins-lua/*/*hint.png $(TARGET_DIR)/var/tuxbox/plugins/
+		cp -R $(BUILD_TMP)/plugins-lua/*/*.sh $(TARGET_DIR)/var/tuxbox/plugins/
+		ls $(BUILD_TMP)/plugins-lua/*/*.png | grep -v "hint" | xargs -I {} cp {} $(TARGET_SHARE_DIR)/tuxbox/neutrino/icons/logo
 	$(REMOVE)/plugins-lua
 	$(TOUCH)
 
