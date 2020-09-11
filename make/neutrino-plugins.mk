@@ -296,7 +296,6 @@ $(D)/neutrino-plugin-custom:
 		fi
 	cp -ra $(ARCHIVE)/plugins-lua-custom.git $(BUILD_TMP)/plugins-lua
 	$(CHDIR)/plugins-lua; \
-		shopt -s extglob
 		install -d $(TARGET_DIR)/var/tuxbox/plugins
 		cp -R $(BUILD_TMP)/plugins-lua/*/*.cfg $(TARGET_DIR)/var/tuxbox/plugins/
 		cp -R $(BUILD_TMP)/plugins-lua/*/*.lua $(TARGET_DIR)/var/tuxbox/plugins/
