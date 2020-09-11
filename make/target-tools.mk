@@ -590,14 +590,14 @@ $(D)/ntfs_3g: $(D)/bootstrap $(ARCHIVE)/$(NTFS_3G_SOURCE)
 #
 # mc
 #
-MC_VER = 4.8.24
+MC_VER = 4.8.25
 MC_SOURCE = mc-$(MC_VER).tar.xz
 MC_PATCH = mc-$(MC_VER).patch
 
 $(ARCHIVE)/$(MC_SOURCE):
 	$(DOWNLOAD) ftp.midnight-commander.org/$(MC_SOURCE)
 
-$(D)/mc: $(D)/bootstrap $(D)/ncurses $(D)/libglib2 $(ARCHIVE)/$(MC_SOURCE)
+$(D)/mc: $(D)/bootstrap $(D)/libglib2 $(D)/ncurses $(ARCHIVE)/$(MC_SOURCE)
 	$(START_BUILD)
 	$(REMOVE)/mc-$(MC_VER)
 	$(UNTAR)/$(MC_SOURCE)
