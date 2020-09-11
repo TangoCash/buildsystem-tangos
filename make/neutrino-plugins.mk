@@ -64,9 +64,8 @@ $(D)/neutrino-plugins.do_prepare: $(D)/bootstrap $(D)/ffmpeg $(D)/libcurl $(D)/l
 		else cd $(ARCHIVE); git clone https://github.com/Duckbox-Developers/neutrino-ddt-plugins.git neutrino-plugins-ddt.git; \
 		fi
 	cp -ra $(ARCHIVE)/neutrino-plugins-ddt.git $(SOURCE_DIR)/neutrino-plugins
-ifeq ($(BOXARCH), $(filter $(BOXARCH), arm aarch64 mips))
 	sed -i -e 's#shellexec fx2#shellexec#g' $(SOURCE_DIR)/neutrino-plugins/Makefile.am
-endif
+	sed -i -e 's#stb-startup \\#stb-startup-tuxbox \\#g' $(SOURCE_DIR)/neutrino-plugins/Makefile.am
 	cp -ra $(SOURCE_DIR)/neutrino-plugins $(SOURCE_DIR)/neutrino-plugins.org
 	@touch $@
 
@@ -103,9 +102,6 @@ $(D)/neutrino-plugins.do_compile: $(D)/neutrino-plugins.config.status
 $(D)/neutrino-plugins: $(D)/neutrino-plugins.do_prepare $(D)/neutrino-plugins.do_compile
 	mkdir -p $(TARGET_SHARE_DIR)/tuxbox/neutrino/icons
 	$(MAKE) -C $(NP_OBJDIR) install DESTDIR=$(TARGET_DIR)
-ifeq ($(NEWLAYOUT), $(filter $(NEWLAYOUT), 1))
-	install -m 0644 $(SOURCE_DIR)/neutrino-plugins/stb-startup-tuxbox/stb-startup.lua $(TARGET_DIR)/var/tuxbox/plugins
-endif
 	$(TOUCH)
 
 neutrino-plugins-clean:
