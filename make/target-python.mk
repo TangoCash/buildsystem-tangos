@@ -26,7 +26,7 @@ PYTHON_INSTALL = \
 # host_python
 #
 PYTHON_VER_MAJOR = 2.7
-PYTHON_VER_MINOR = 13
+PYTHON_VER_MINOR = 18
 PYTHON_VER = $(PYTHON_VER_MAJOR).$(PYTHON_VER_MINOR)
 PYTHON_SOURCE = Python-$(PYTHON_VER).tar.xz
 HOST_PYTHON_PATCH = python-$(PYTHON_VER).patch
@@ -201,8 +201,9 @@ $(D)/python_lxml: $(D)/bootstrap $(D)/python $(D)/libxslt $(D)/python_setuptools
 #
 # python_twisted
 #
-PYTHON_TWISTED_VER = 16.4.0
+PYTHON_TWISTED_VER = 18.4.0
 PYTHON_TWISTED_SOURCE = Twisted-$(PYTHON_TWISTED_VER).tar.bz2
+PYTHON_TWISTED_PATCH = Twisted-$(PYTHON_TWISTED_VER)-fix-writing-after-channel-is-closed.patch
 
 $(ARCHIVE)/$(PYTHON_TWISTED_SOURCE):
 	$(DOWNLOAD) https://pypi.python.org/packages/source/T/Twisted/$(PYTHON_TWISTED_SOURCE)
@@ -212,6 +213,7 @@ $(D)/python_twisted: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(D)/pyth
 	$(REMOVE)/Twisted-$(PYTHON_TWISTED_VER)
 	$(UNTAR)/$(PYTHON_TWISTED_SOURCE)
 	$(CHDIR)/Twisted-$(PYTHON_TWISTED_VER); \
+		$(call apply_patches, $(PYTHON_TWISTED_PATCH)); \
 		$(PYTHON_BUILD); \
 		$(PYTHON_INSTALL)
 	$(REMOVE)/Twisted-$(PYTHON_TWISTED_VER)
@@ -363,7 +365,7 @@ $(D)/python_enum34: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(ARCHIVE)
 #
 # python_pyasn1_modules
 #
-PYTHON_PYASN1_MODULES_VER = 0.0.7
+PYTHON_PYASN1_MODULES_VER = 0.1.4
 PYTHON_PYASN1_MODULES_SOURCE = pyasn1-modules-$(PYTHON_PYASN1_MODULES_VER).tar.gz
 
 $(ARCHIVE)/$(PYTHON_PYASN1_MODULES_SOURCE):
@@ -382,7 +384,7 @@ $(D)/python_pyasn1_modules: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(
 #
 # python_pyasn1
 #
-PYTHON_PYASN1_VER = 0.1.8
+PYTHON_PYASN1_VER = 0.3.6
 PYTHON_PYASN1_SOURCE = pyasn1-$(PYTHON_PYASN1_VER).tar.gz
 
 $(ARCHIVE)/$(PYTHON_PYASN1_SOURCE):
@@ -439,9 +441,9 @@ $(D)/python_cryptography: $(D)/bootstrap $(D)/libffi $(D)/python $(D)/python_set
 #
 # python_pyopenssl
 #
-PYTHON_PYOPENSSL_VER = 0.13.1
+PYTHON_PYOPENSSL_VER = 19.1.0
 PYTHON_PYOPENSSL_SOURCE = pyOpenSSL-$(PYTHON_PYOPENSSL_VER).tar.gz
-PYTHON_PYOPENSSL_PATCH = python-pyopenssl-$(PYTHON_PYOPENSSL_VER).patch
+#PYTHON_PYOPENSSL_PATCH = python-pyopenssl-$(PYTHON_PYOPENSSL_VER).patch
 
 $(ARCHIVE)/$(PYTHON_PYOPENSSL_SOURCE):
 	$(DOWNLOAD) https://pypi.python.org/packages/source/p/pyOpenSSL/$(PYTHON_PYOPENSSL_SOURCE)
@@ -460,7 +462,7 @@ $(D)/python_pyopenssl: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(ARCHI
 #
 # python_service_identity
 #
-PYTHON_SERVICE_IDENTITY_VER = 16.0.0
+PYTHON_SERVICE_IDENTITY_VER = 17.0.0
 PYTHON_SERVICE_IDENTITY_SOURCE = service_identity-$(PYTHON_SERVICE_IDENTITY_VER).tar.gz
 PYTHON_SERVICE_IDENTITY_PATCH =
 
@@ -616,7 +618,7 @@ $(D)/python_gdata: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(ARCHIVE)/
 #
 # python_zope_interface
 #
-PYTHON_ZOPE_INTERFACE_VER = 4.1.1
+PYTHON_ZOPE_INTERFACE_VER = 4.5.0
 PYTHON_ZOPE_INTERFACE_SOURCE = zope.interface-$(PYTHON_ZOPE_INTERFACE_VER).tar.gz
 
 $(ARCHIVE)/$(PYTHON_ZOPE_INTERFACE_SOURCE):
@@ -797,6 +799,7 @@ $(D)/python_twisted_small: $(D)/bootstrap $(D)/python_small $(D)/python_setuptoo
 	$(REMOVE)/Twisted-$(PYTHON_TWISTED_VER)
 	$(UNTAR)/$(PYTHON_TWISTED_SOURCE)
 	$(CHDIR)/Twisted-$(PYTHON_TWISTED_VER); \
+		$(call apply_patches, $(PYTHON_TWISTED_PATCH)); \
 		$(PYTHON_BUILD); \
 		$(PYTHON_INSTALL)
 	$(REMOVE)/Twisted-$(PYTHON_TWISTED_VER)

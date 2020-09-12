@@ -1,6 +1,6 @@
 --- a/Lib/distutils/sysconfig.py
 +++ b/Lib/distutils/sysconfig.py
-@@ -394,12 +394,66 @@
+@@ -404,12 +404,66 @@
  
  def _init_posix():
      """Initialize the module as appropriate for POSIX systems."""
@@ -74,7 +74,7 @@
      """Initialize the module as appropriate for NT"""
 --- a/Lib/sysconfig.py
 +++ b/Lib/sysconfig.py
-@@ -352,9 +352,32 @@
+@@ -357,9 +357,32 @@
  
  def _init_posix(vars):
      """Initialize the module as appropriate for POSIX systems."""

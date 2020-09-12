@@ -1,6 +1,17 @@
+--- a/configure.ac
++++ b/configure.ac
+@@ -5,7 +5,7 @@
+ # Set VERSION so we only need to edit in one place (i.e., here)
+ m4_define(PYTHON_VERSION, 2.7)
+ 
+-AC_PREREQ(2.65)
++AC_PREREQ(2.64)
+ 
+ AC_REVISION($Revision$)
+ AC_INIT(python, PYTHON_VERSION, https://bugs.python.org/)
 --- a/configure
 +++ b/configure
-@@ -14927,7 +14927,7 @@
+@@ -15205,7 +15205,7 @@
  $as_echo "$ac_cv_have_long_long_format" >&6; }
  fi
  
@@ -22,7 +33,7 @@
  #ifdef __cplusplus
 --- a/Lib/httplib.py
 +++ b/Lib/httplib.py
-@@ -1244,7 +1244,7 @@
+@@ -1284,7 +1284,7 @@
              self.key_file = key_file
              self.cert_file = cert_file
              if context is None:
@@ -169,7 +180,7 @@
 +    __enableReadlineSupport()
 --- a/Modules/_ctypes/_ctypes.c
 +++ b/Modules/_ctypes/_ctypes.c
-@@ -651,7 +651,13 @@
+@@ -722,7 +722,13 @@
                       "symbol '%s' not found",
                       name);
  #else
@@ -184,7 +195,7 @@
  #endif
          return NULL;
      }
-@@ -3410,7 +3416,13 @@
+@@ -3533,7 +3539,13 @@
                       "function '%s' not found",
                       name);
  #else
@@ -280,7 +291,7 @@
  
  def add_dir_to_list(dirlist, dir):
      """Add the directory 'dir' to the list 'dirlist' (at the front) if
-@@ -175,6 +190,7 @@
+@@ -221,6 +236,7 @@
      def __init__(self, dist):
          build_ext.__init__(self, dist)
          self.failed = []
@@ -288,7 +299,7 @@
  
      def build_extensions(self):
  
-@@ -310,6 +326,14 @@
+@@ -356,6 +372,14 @@
                            (ext.name, sys.exc_info()[1]))
              self.failed.append(ext.name)
              return
@@ -303,7 +314,7 @@
          # Workaround for Mac OS X: The Carbon-based modules cannot be
          # reliably imported into a command-line Python
          if 'Carbon' in ext.extra_link_args:
-@@ -350,6 +374,7 @@
+@@ -396,6 +420,7 @@
              self.failed.append(ext.name)
              self.announce('*** WARNING: renaming "%s" since importing it'
                            ' failed: %s' % (ext.name, why), level=3)
@@ -311,7 +322,7 @@
              assert not self.inplace
              basename, tail = os.path.splitext(ext_filename)
              newname = basename + "_failed" + tail
-@@ -455,11 +480,18 @@
+@@ -501,11 +526,18 @@
  
      def detect_modules(self):
          # Ensure that /usr/local is always used
@@ -335,7 +346,7 @@
          self.add_multiarch_paths()
  
          # Add paths specified in the environment variables LDFLAGS and
-@@ -496,16 +528,16 @@
+@@ -542,16 +574,16 @@
                      for directory in reversed(options.dirs):
                          add_dir_to_list(dir_list, directory)
  
@@ -358,7 +369,7 @@
  
          try:
              have_unicode = unicode
-@@ -515,18 +547,22 @@
+@@ -561,18 +593,22 @@
          # lib_dirs and inc_dirs are used to search for files;
          # if a file is found in one of those directories, it can
          # be assumed that no additional -I,-L directives are needed.
@@ -391,7 +402,7 @@
          exts = []
          missing = []
  
-@@ -534,6 +570,18 @@
+@@ -580,6 +616,18 @@
          config_h_vars = sysconfig.parse_config_h(open(config_h))
  
          srcdir = sysconfig.get_config_var('srcdir')
@@ -410,7 +421,7 @@
  
          # Check for AtheOS which has libraries in non-standard locations
          if host_platform == 'atheos':
-@@ -716,7 +764,7 @@
+@@ -762,7 +810,7 @@
          exts.append( Extension('audioop', ['audioop.c']) )
  
          # Disabled on 64-bit platforms
@@ -419,7 +430,7 @@
              # Operations on images
              exts.append( Extension('imageop', ['imageop.c']) )
          else:
-@@ -781,12 +829,10 @@
+@@ -827,12 +875,10 @@
                  pass # Issue 7384: Already linked against curses or tinfo.
              elif curses_library:
                  readline_libs.append(curses_library)
@@ -433,7 +444,7 @@
                                     extra_link_args=readline_extra_link_args,
                                     libraries=readline_libs) )
          else:
-@@ -1125,7 +1171,13 @@
+@@ -1171,7 +1217,13 @@
                               '/usr/local/include/sqlite3',
                             ]
          if cross_compiling:
@@ -448,7 +459,7 @@
          MIN_SQLITE_VERSION_NUMBER = (3, 0, 8)
          MIN_SQLITE_VERSION = ".".join([str(x)
                                      for x in MIN_SQLITE_VERSION_NUMBER])
-@@ -1165,12 +1217,21 @@
+@@ -1211,12 +1263,21 @@
                      print "sqlite: %s had no SQLITE_VERSION"%(f,)
  
          if sqlite_incdir:
@@ -476,7 +487,7 @@
              sqlite_libfile = self.compiler.find_library_file(
                                  sqlite_dirs_to_check + lib_dirs, 'sqlite3')
              if sqlite_libfile:
-@@ -1248,8 +1309,10 @@
+@@ -1294,8 +1355,10 @@
                                            libraries=libraries))
                  else:
                      exts.append(Extension('bsddb185', ['bsddbmodule.c']))
@@ -489,7 +500,7 @@
          else:
              missing.append('bsddb185')
  
-@@ -1547,7 +1610,7 @@
+@@ -1588,7 +1651,7 @@
                  missing.append('_codecs_%s' % loc)
  
          # Dynamic loading module
@@ -498,7 +509,7 @@
              # This requires sizeof(int) == sizeof(long) == sizeof(char*)
              dl_inc = find_file('dlfcn.h', [], inc_dirs)
              if (dl_inc is not None) and (host_platform not in ['atheos']):
-@@ -1634,8 +1697,9 @@
+@@ -1675,8 +1738,9 @@
          if host_platform == 'sunos5':
              # SunOS specific modules
              exts.append( Extension('sunaudiodev', ['sunaudiodev.c']) )
@@ -510,7 +521,7 @@
  
          if host_platform == 'darwin':
              # _scproxy
-@@ -1748,8 +1812,10 @@
+@@ -1789,8 +1853,10 @@
          # Call the method for detecting whether _tkinter can be compiled
          self.detect_tkinter(inc_dirs, lib_dirs)
  
@@ -523,7 +534,7 @@
  
  ##         # Uncomment these lines if you want to play with xxmodule.c
  ##         ext = Extension('xx', ['xxmodule.c'])
-@@ -1935,22 +2001,6 @@
+@@ -1976,22 +2042,6 @@
              if dir not in include_dirs:
                  include_dirs.append(dir)
  
@@ -546,7 +557,7 @@
          # If Cygwin, then verify that X is installed before proceeding
          if host_platform == 'cygwin':
              x11_inc = find_file('X11/Xlib.h', [], include_dirs)
-@@ -2048,8 +2098,15 @@
+@@ -2089,8 +2139,15 @@
  
                  # Pass empty CFLAGS because we'll just append the resulting
                  # CFLAGS to Python's; -g or -O2 is to be avoided.
