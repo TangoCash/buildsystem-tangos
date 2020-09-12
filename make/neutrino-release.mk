@@ -53,8 +53,6 @@ neutrino-release-base:
 	install -d $(RELEASE_DIR)/etc/{init.d,network,mdev,ssl}
 	install -d $(RELEASE_DIR)/etc/network/if-{post-{up,down},pre-{up,down},up,down}.d
 	install -d $(RELEASE_DIR)/lib/{modules,udev,firmware}
-	install -d $(RELEASE_DIR)/media/{hdd,nfs,usb,mnt}
-	ln -sf /media/hdd $(RELEASE_DIR)/hdd
 	install -d $(RELEASE_DIR)/usr/{bin,lib,sbin,share}
 	if [ $(BOXARCH) = "aarch64" ]; then \
 		cd ${RELEASE_DIR}; ln -sf lib lib64; \
@@ -66,12 +64,12 @@ neutrino-release-base:
 	install -d $(RELEASE_DIR)/usr/share/tuxbox/neutrino/icons/logo/events
 	install -d $(RELEASE_DIR)/usr/share/lua/5.2
 	install -d $(RELEASE_DIR)/var/{bin,boot,emu,etc,epg,httpd,keys,lib,net,tuxbox,update}
-	ln -sf /tmp $(RELEASE_DIR)/var/mnt
+	ln -sf /mnt $(RELEASE_DIR)/var/mnt
+	ln -sf /var/epg $(RELEASE_DIR)/var/net/epg
 	install -d $(RELEASE_DIR)/var/lib/{opkg,nfs,modules}
-	install -d $(RELEASE_DIR)/var/net/epg
 	install -d $(RELEASE_DIR)/var/tuxbox/{config,fonts,locale,plugins,themes}
-	install -d $(RELEASE_DIR)/var/tuxbox/webtv
-	install -d $(RELEASE_DIR)/var/tuxbox/config/{webtv,zapit}
+	install -d $(RELEASE_DIR)/var/tuxbox/{webtv,webradio}
+	install -d $(RELEASE_DIR)/var/tuxbox/config/zapit
 	mkdir -p $(RELEASE_DIR)/etc/rc.d/rc0.d
 	ln -s ../init.d/sendsigs $(RELEASE_DIR)/etc/rc.d/rc0.d/S20sendsigs
 	ln -s ../init.d/umountfs $(RELEASE_DIR)/etc/rc.d/rc0.d/S40umountfs
