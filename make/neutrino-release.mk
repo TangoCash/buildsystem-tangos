@@ -294,6 +294,16 @@ endif
 	fi
 
 #
+# webtv/webradio
+#
+	if [ -d $(TARGET_DIR)/var/tuxbox/webtv ]; then \
+		cp -af $(TARGET_DIR)/var/tuxbox/webtv $(RELEASE_DIR)/var/tuxbox/; \
+	fi
+	if [ -d $(TARGET_DIR)/var/tuxbox/webradio ]; then \
+		cp -af $(TARGET_DIR)/var/tuxbox/webradio $(RELEASE_DIR)/var/tuxbox/; \
+	fi
+
+#
 # shairport
 #
 	if [ -e $(TARGET_DIR)/usr/bin/shairport ]; then \
