@@ -183,9 +183,9 @@ N_CONFIG_OPTS += \
 	--with-themesdir=/usr/share/tuxbox/neutrino/themes \
 	--with-themesdir_var=/var/tuxbox/themes \
 	--with-webtvdir=/usr/share/tuxbox/neutrino/webtv \
-	--with-webtvdir_var=/var/tuxbox/plugins/webtv \
+	--with-webtvdir_var=/var/tuxbox/webtv \
 	--with-webradiodir=/usr/share/tuxbox/neutrino/webradio \
-	--with-webradiodir_var=/var/tuxbox/plugins/webradio \
+	--with-webradiodir_var=/var/tuxbox/webradio \
 	--with-controldir=/usr/share/tuxbox/neutrino/control \
 	--with-controldir_var=/var/tuxbox/control
 
