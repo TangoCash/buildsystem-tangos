@@ -2111,3 +2111,78 @@ $(D)/mupen64inp: $(D)/bootstrap $(ARCHIVE)/$(MUPEN64INP_SOURCE) $(D)/mupen64core
 
 $(D)/mupen64: $(D)/mupen64core $(D)/mupen64vid $(D)/mupen64aud $(D)/mupen64inp $(D)/mupen64cmd
 	$(TOUCH)
+
+#
+# libzen
+#
+LIBZEN_VER = 0.4.38
+LIBZEN_SOURCE = libzen_$(LIBZEN_VER).tar.bz2
+
+$(ARCHIVE)/$(LIBZEN_SOURCE):
+	$(DOWNLOAD) https://mediaarea.net/download/source/libzen/$(LIBZEN_VER)/$(LIBZEN_SOURCE)
+
+$(D)/libzen: bootstrap $(D)/zlib $(ARCHIVE)/$(LIBZEN_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/ZenLib
+	$(UNTAR)/$(LIBZEN_SOURCE)
+	$(CHDIR)/ZenLib/Project/GNU/Library; \
+		autoreconf -fi $(SILENT_OPT); \
+		$(CONFIGURE) \
+			--prefix=/usr \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libzen.pc
+	$(REWRITE_LIBTOOL)/libzen.la
+	$(REWRITE_LIBTOOLDEP)/libzen.la
+	$(REMOVE)/ZenLib
+	$(TOUCH)
+
+#
+# libmediainfo
+#
+LIBMEDIAINFO_VER = 20.08
+LIBMEDIAINFO_SOURCE = libmediainfo_$(LIBMEDIAINFO_VER).tar.bz2
+
+$(ARCHIVE)/$(LIBMEDIAINFO_SOURCE):
+	$(DOWNLOAD) https://mediaarea.net/download/source/libmediainfo/$(LIBMEDIAINFO_VER)/$(LIBMEDIAINFO_SOURCE)
+
+$(D)/libmediainfo: bootstrap $(D)/zlib $(D)/libzen $(ARCHIVE)/$(LIBMEDIAINFO_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/MediaInfoLib
+	$(UNTAR)/$(LIBMEDIAINFO_SOURCE)
+	$(CHDIR)/MediaInfoLib/Project/GNU/Library; \
+		autoreconf -fi $(SILENT_OPT); \
+		$(CONFIGURE) \
+			--prefix=/usr \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libmediainfo.pc
+	$(REWRITE_LIBTOOL)/libmediainfo.la
+	$(REWRITE_LIBTOOLDEP)/libmediainfo.la
+	$(REMOVE)/MediaInfoLib
+	$(TOUCH)
+
+#
+# mediainfo
+#
+MEDIAINFO_VER = 20.08
+MEDIAINFO_SOURCE = mediainfo_$(MEDIAINFO_VER).tar.bz2
+
+$(ARCHIVE)/$(MEDIAINFO_SOURCE):
+	$(DOWNLOAD) https://mediaarea.net/download/source/mediainfo/$(MEDIAINFO_VER)/$(MEDIAINFO_SOURCE)
+
+$(D)/mediainfo: bootstrap $(D)/zlib $(D)/libzen $(D)/libmediainfo $(ARCHIVE)/$(MEDIAINFO_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/MediaInfo
+	$(UNTAR)/$(MEDIAINFO_SOURCE)
+	$(CHDIR)/MediaInfo/Project/GNU/CLI; \
+		autoreconf -fi $(SILENT_OPT); \
+		$(CONFIGURE) \
+			--prefix=/usr \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REMOVE)/MediaInfo
+	$(TOUCH)
