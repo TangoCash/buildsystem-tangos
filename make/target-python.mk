@@ -208,7 +208,7 @@ PYTHON_TWISTED_PATCH = Twisted-$(PYTHON_TWISTED_VER)-fix-writing-after-channel-i
 $(ARCHIVE)/$(PYTHON_TWISTED_SOURCE):
 	$(DOWNLOAD) https://pypi.python.org/packages/source/T/Twisted/$(PYTHON_TWISTED_SOURCE)
 
-$(D)/python_twisted: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(D)/python_zope_interface $(D)/python_pyopenssl $(D)/python_service_identity $(ARCHIVE)/$(PYTHON_TWISTED_SOURCE)
+$(D)/python_twisted: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(D)/python_zope_interface  $(D)/python_constantly $(D)/python_incremental $(D)/python_pyopenssl $(D)/python_service_identity $(ARCHIVE)/$(PYTHON_TWISTED_SOURCE)
 	$(START_BUILD)
 	$(REMOVE)/Twisted-$(PYTHON_TWISTED_VER)
 	$(UNTAR)/$(PYTHON_TWISTED_SOURCE)
@@ -725,6 +725,44 @@ $(D)/python_livestreamersrv: $(D)/bootstrap $(D)/python $(D)/python_setuptools $
 	$(REMOVE)/livestreamersrv
 	$(TOUCH)
 
+#
+# python_incremental
+#
+PYTHON_INCREMENTAL_VER    = 17.5.0
+PYTHON_INCREMENTAL_SOURCE = incremental-$(PYTHON_INCREMENTAL_VER).tar.gz
+
+$(ARCHIVE)/$(PYTHON_INCREMENTAL_SOURCE):
+	$(DOWNLOAD) https://files.pythonhosted.org/packages/source/i/incremental/$(PYTHON_INCREMENTAL_SOURCE)
+
+$(D)/python_incremental: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(ARCHIVE)/$(PYTHON_INCREMENTAL_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/incremental-$(PYTHON_INCREMENTAL_VER)
+	$(UNTAR)/$(PYTHON_INCREMENTAL_SOURCE)
+	$(CHDIR)/incremental-$(PYTHON_INCREMENTAL_VER); \
+		$(PYTHON_BUILD); \
+		$(PYTHON_INSTALL)
+	$(REMOVE)/incremental-$(PYTHON_INCREMENTAL_VER)
+	$(TOUCH)
+
+#
+# python_constantly
+#
+PYTHON_CONSTANTLY_VER    = 15.1.0
+PYTHON_CONSTANTLY_SOURCE = constantly-$(PYTHON_CONSTANTLY_VER).tar.gz
+
+$(ARCHIVE)/$(PYTHON_CONSTANTLY_SOURCE):
+	$(DOWNLOAD) https://files.pythonhosted.org/packages/source/c/constantly/$(PYTHON_CONSTANTLY_SOURCE)
+
+$(D)/python_constantly: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(ARCHIVE)/$(PYTHON_CONSTANTLY_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/constantly-$(PYTHON_CONSTANTLY_VER)
+	$(UNTAR)/$(PYTHON_CONSTANTLY_SOURCE)
+	$(CHDIR)/constantly-$(PYTHON_CONSTANTLY_VER); \
+		$(PYTHON_BUILD); \
+		$(PYTHON_INSTALL)
+	$(REMOVE)/constantly-$(PYTHON_CONSTANTLY_VER)
+	$(TOUCH)
+
 # -----------------------------------------------------------------------------
 
 #
@@ -794,7 +832,7 @@ $(D)/python_small: $(D)/bootstrap $(D)/host_python $(D)/ncurses $(D)/zlib $(D)/o
 #
 # python_twisted_small
 #
-$(D)/python_twisted_small: $(D)/bootstrap $(D)/python_small $(D)/python_setuptools_small $(D)/python_zope_interface_small $(ARCHIVE)/$(PYTHON_TWISTED_SOURCE)
+$(D)/python_twisted_small: $(D)/bootstrap $(D)/python_small $(D)/python_setuptools_small $(D)/python_zope_interface_small $(D)/python_constantly_small $(D)/python_incremental_small $(ARCHIVE)/$(PYTHON_TWISTED_SOURCE)
 	$(START_BUILD)
 	$(REMOVE)/Twisted-$(PYTHON_TWISTED_VER)
 	$(UNTAR)/$(PYTHON_TWISTED_SOURCE)
@@ -831,6 +869,32 @@ $(D)/python_zope_interface_small: $(D)/bootstrap $(D)/python_small $(D)/python_s
 	$(REMOVE)/zope.interface-$(PYTHON_ZOPE_INTERFACE_VER)
 	$(TOUCH)
 
+#
+# python_constantly_small
+#
+$(D)/python_constantly_small: $(D)/bootstrap $(D)/python_small $(D)/python_setuptools_small $(ARCHIVE)/$(PYTHON_CONSTANTLY_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/constantly-$(PYTHON_CONSTANTLY_VER)
+	$(UNTAR)/$(PYTHON_CONSTANTLY_SOURCE)
+	$(CHDIR)/constantly-$(PYTHON_CONSTANTLY_VER); \
+		$(PYTHON_BUILD); \
+		$(PYTHON_INSTALL)
+	$(REMOVE)/constantly-$(PYTHON_CONSTANTLY_VER)
+	$(TOUCH)
+
+#
+# python_incremental_small
+#
+$(D)/python_incremental_small: $(D)/bootstrap $(D)/python_small $(D)/python_setuptools_small $(ARCHIVE)/$(PYTHON_INCREMENTAL_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/incremental-$(PYTHON_INCREMENTAL_VER)
+	$(UNTAR)/$(PYTHON_INCREMENTAL_SOURCE)
+	$(CHDIR)/incremental-$(PYTHON_INCREMENTAL_VER); \
+		$(PYTHON_BUILD); \
+		$(PYTHON_INSTALL)
+	$(REMOVE)/incremental-$(PYTHON_INCREMENTAL_VER)
+	$(TOUCH)
+
 # -----------------------------------------------------------------------------
 
 PYTHON_DEPS  = $(D)/host_python
@@ -839,6 +903,8 @@ PYTHON_DEPS += $(D)/python_elementtree
 PYTHON_DEPS += $(D)/python_lxml
 PYTHON_DEPS += $(D)/python_zope_interface
 PYTHON_DEPS += $(D)/python_pyopenssl
+PYTHON_DEPS += $(D)/python_constantly
+PYTHON_DEPS += $(D)/python_incremental
 PYTHON_DEPS += $(D)/python_twisted
 PYTHON_DEPS += $(D)/python_wifi
 PYTHON_DEPS += $(D)/python_imaging
