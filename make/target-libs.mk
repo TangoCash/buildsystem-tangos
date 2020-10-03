@@ -1580,7 +1580,7 @@ CAIRO_OPTS ?= \
 $(ARCHIVE)/$(CAIRO_SOURCE):
 	$(DOWNLOAD) https://www.cairographics.org/releases/$(CAIRO_SOURCE)
 
-$(D)/cairo: $(ARCHIVE)/$(CAIRO_SOURCE) $(D)/bootstrap $(D)/fontconfig $(D)/libglib2 $(D)/libpng $(D)/pixman $(D)/zlib
+$(D)/cairo: $(ARCHIVE)/$(CAIRO_SOURCE) $(D)/bootstrap $(D)/libglib2 $(D)/libpng $(D)/pixman $(D)/zlib
 	$(START_BUILD)
 	$(REMOVE)/cairo-$(CAIRO_VER)
 	$(UNTAR)/$(CAIRO_SOURCE)
@@ -1609,7 +1609,6 @@ $(D)/cairo: $(ARCHIVE)/$(CAIRO_SOURCE) $(D)/bootstrap $(D)/fontconfig $(D)/libgl
 	$(REWRITE_LIBTOOL)/libcairo-gobject.la
 	$(REWRITE_LIBTOOL)/cairo/libcairo-trace.la
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/cairo.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/cairo-fc.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/cairo-ft.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/cairo-gobject.pc
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/cairo-pdf.pc
@@ -1631,7 +1630,7 @@ HARFBUZZ_PATCH  = harfbuzz-$(HARFBUZZ_VER)-disable-docs.patch
 $(ARCHIVE)/$(HARFBUZZ_SOURCE):
 	$(DOWNLOAD) https://www.freedesktop.org/software/harfbuzz/release/$(HARFBUZZ_SOURCE)
 
-$(D)/harfbuzz: $(ARCHIVE)/$(HARFBUZZ_SOURCE) $(D)/bootstrap $(D)/fontconfig $(D)/libglib2 $(D)/cairo $(D)/freetype
+$(D)/harfbuzz: $(ARCHIVE)/$(HARFBUZZ_SOURCE) $(D)/bootstrap $(D)/libglib2 $(D)/cairo $(D)/freetype
 	$(START_BUILD)
 	$(REMOVE)/harfbuzz-$(HARFBUZZ_VER)
 	$(UNTAR)/$(HARFBUZZ_SOURCE)
@@ -1641,8 +1640,8 @@ $(D)/harfbuzz: $(ARCHIVE)/$(HARFBUZZ_SOURCE) $(D)/bootstrap $(D)/fontconfig $(D)
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--with-cairo \
-			--with-fontconfig \
 			--with-freetype \
+			--without-fontconfig \
 			--with-glib \
 			--without-graphite2 \
 			--without-icu \
