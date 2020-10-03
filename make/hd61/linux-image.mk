@@ -67,7 +67,7 @@ flash-image-hd61-multi-disk: $(ARCHIVE)/$(FLASH_BOOTARGS_SRC) $(ARCHIVE)/$(FLASH
 	if [ -e $(RELEASE_DIR)/boot/logo.img ]; then \
 		cp -rf $(RELEASE_DIR)/boot/logo.img $(FLASH_BUILD_TMP)/$(BOXTYPE); \
 	fi
-	echo "$(BOXTYPE)_multi_usb_$(shell date '+%d.%m.%Y-%H.%M')_recovery_emmc" > $(FLASH_BUILD_TMP)/$(BOXTYPE)/imageversion
+	echo "$(BOXTYPE)_$(FLAVOUR)_multiroot_$(ITYPE)_$(DATE)" > $(FLASH_BUILD_TMP)/$(BOXTYPE)/imageversion
 	$(HOST_DIR)/bin/make_ext4fs -l $(FLASH_IMAGE_ROOTFS_SIZE) $(FLASH_BUILD_TMP)/$(FLASH_IMAGE_LINK) $(RELEASE_DIR)/..
 	$(HOST_DIR)/bin/ext2simg -zv $(FLASH_BUILD_TMP)/$(FLASH_IMAGE_LINK) $(FLASH_BUILD_TMP)/$(BOXTYPE)/rootfs.fastboot.gz
 	dd if=/dev/zero of=$(FLASH_BUILD_TMP)/$(BOXTYPE)/$(FLASH_BOOT_IMAGE) bs=1024 count=$(FLASH_BOOTOPTIONS_PARTITION_SIZE)
@@ -118,7 +118,7 @@ flash-image-hd61-multi-disk: $(ARCHIVE)/$(FLASH_BOOTARGS_SRC) $(ARCHIVE)/$(FLASH
 	rm -rf $(FLASH_BUILD_TMP)/$(FLASH_IMAGE_LINK)
 	echo "To access the recovery image press immediately by power-up the frontpanel button or hold down a remote button key untill the display says boot" > $(FLASH_BUILD_TMP)/$(BOXTYPE)/recovery.txt
 	cd $(FLASH_BUILD_TMP) && \
-	zip -r $(RELEASE_IMAGE_DIR)/$$(cat $(FLASH_BUILD_TMP)/$(BOXTYPE)/imageversion).zip *
+	zip -r $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_$(FLAVOUR)_multiroot_$(ITYPE)_$(DATE)_recovery_emmc.zip *
 	# cleanup
 	rm -rf $(FLASH_BUILD_TMP)
 
@@ -129,12 +129,12 @@ flash-image-hd61-multi-rootfs:
 	cd $(RELEASE_DIR); \
 	tar -cvf $(FLASH_BUILD_TMP)/$(BOXTYPE)/rootfs.tar --exclude=uImage* . > /dev/null 2>&1; \
 	bzip2 $(FLASH_BUILD_TMP)/$(BOXTYPE)/rootfs.tar
-	echo "$(BOXTYPE)_multi_$(ITYPE)_$(shell date '+%d.%m.%Y-%H.%M')_emmc" > $(FLASH_BUILD_TMP)/$(BOXTYPE)/imageversion
-	echo "$$(cat $(FLASH_BUILD_TMP)/$(BOXTYPE)/imageversion).zip" > $(FLASH_BUILD_TMP)/unforce_$(BOXTYPE).txt; \
+	echo "$(BOXTYPE)_$(FLAVOUR)_multiroot_$(ITYPE)_$(DATE)" > $(FLASH_BUILD_TMP)/$(BOXTYPE)/imageversion
+	echo "$(BOXTYPE)_$(FLAVOUR)_multiroot_$(ITYPE)_$(DATE)_emmc.zip" > $(FLASH_BUILD_TMP)/unforce_$(BOXTYPE).txt; \
 	echo "Rename the unforce_$(BOXTYPE).txt to force_$(BOXTYPE).txt and move it to the root of your usb-stick" > $(FLASH_BUILD_TMP)/force_$(BOXTYPE)_READ.ME; \
 	echo "When you enter the recovery menu then it will force to install the image $$(cat $(FLASH_BUILD_TMP)/$(BOXTYPE)/imageversion).zip in the image-slot1" >> $(FLASH_BUILD_TMP)/force_$(BOXTYPE)_READ.ME; \
 	cd $(FLASH_BUILD_TMP) && \
-	zip -r $(RELEASE_IMAGE_DIR)/$$(cat $(FLASH_BUILD_TMP)/$(BOXTYPE)/imageversion).zip unforce_$(BOXTYPE).txt force_$(BOXTYPE)_READ.ME $(BOXTYPE)/rootfs.tar.bz2 $(BOXTYPE)/uImage $(BOXTYPE)/imageversion
+	zip -r $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_$(FLAVOUR)_multiroot_$(ITYPE)_$(DATE)_emmc.zip unforce_$(BOXTYPE).txt force_$(BOXTYPE)_READ.ME $(BOXTYPE)/rootfs.tar.bz2 $(BOXTYPE)/uImage $(BOXTYPE)/imageversion
 	# cleanup
 	rm -rf $(FLASH_BUILD_TMP)
 
@@ -145,8 +145,8 @@ flash-image-hd61-online:
 	cd $(RELEASE_DIR); \
 	tar -cvf $(FLASH_BUILD_TMP)/$(BOXTYPE)/rootfs.tar --exclude=uImage* . > /dev/null 2>&1; \
 	bzip2 $(FLASH_BUILD_TMP)/$(BOXTYPE)/rootfs.tar
-	echo $(BOXTYPE)_DDT_usb_$(shell date '+%d%m%Y-%H%M%S') > $(FLASH_BUILD_TMP)/$(BOXTYPE)/imageversion
+	echo $(BOXTYPE)_$(FLAVOUR)_$(ITYPE)_$(DATE) > $(FLASH_BUILD_TMP)/$(BOXTYPE)/imageversion
 	cd $(FLASH_BUILD_TMP)/$(BOXTYPE) && \
-	tar -cvzf $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_multi_$(ITYPE)_$(shell date '+%d.%m.%Y-%H.%M').tgz rootfs.tar.bz2 uImage imageversion
+	tar -cvzf $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_$(FLAVOUR)_multiroot_$(ITYPE)_$(DATE).tgz rootfs.tar.bz2 uImage imageversion
 	# cleanup
 	rm -rf $(FLASH_BUILD_TMP)
