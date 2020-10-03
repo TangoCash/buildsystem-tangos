@@ -54,7 +54,7 @@ $(ARCHIVE)/$(FLASH_PARTITONS_SRC):
 	$(DOWNLOAD) http://source.mynonpublic.com/gfutures/$(FLASH_PARTITONS_SRC)
 
 $(ARCHIVE)/$(FLASH_RECOVERY_SRC):
-	$(DOWNLOAD) http://downloads.mutant-digital.net/hd60/$(FLASH_RECOVERY_SRC)
+	$(DOWNLOAD) http://downloads.mutant-digital.net/hd61/$(FLASH_RECOVERY_SRC)
 
 flash-image-hd61-multi-disk: $(ARCHIVE)/$(FLASH_BOOTARGS_SRC) $(ARCHIVE)/$(FLASH_PARTITONS_SRC) $(ARCHIVE)/$(FLASH_RECOVERY_SRC)
 	rm -rf $(FLASH_BUILD_TMP) || true
