@@ -48,15 +48,12 @@ FLASH_RECOVERY_DATE = 20200424
 FLASH_RECOVERY_SRC = hd60-recovery-$(FLASH_RECOVERY_DATE).zip
 
 $(ARCHIVE)/$(FLASH_BOOTARGS_SRC):
-	#$(DOWNLOAD) http://downloads.mutant-digital.net/hd60/$(FLASH_BOOTARGS_SRC)
 	$(DOWNLOAD) http://source.mynonpublic.com/gfutures/$(FLASH_BOOTARGS_SRC)
 
 $(ARCHIVE)/$(FLASH_PARTITONS_SRC):
-	#$(DOWNLOAD) http://downloads.mutant-digital.net/hd60/$(FLASH_PARTITONS_SRC)
 	$(DOWNLOAD) http://source.mynonpublic.com/gfutures/$(FLASH_PARTITONS_SRC)
 
 $(ARCHIVE)/$(FLASH_RECOVERY_SRC):
-	#$(DOWNLOAD) http://downloads.mutant-digital.net/hd60/$(FLASH_RECOVERY_SRC)
 	$(DOWNLOAD) http://downloads.mutant-digital.net/hd60/$(FLASH_RECOVERY_SRC)
 
 flash-image-hd60-multi-disk: $(ARCHIVE)/$(FLASH_BOOTARGS_SRC) $(ARCHIVE)/$(FLASH_PARTITONS_SRC) $(ARCHIVE)/$(FLASH_RECOVERY_SRC)

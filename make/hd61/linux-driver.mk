@@ -1,12 +1,12 @@
 #
 # driver
 #
-DRIVER_DATE = 20190711
+DRIVER_DATE = 20200731
 DRIVER_VER = 4.4.35
 DRIVER_SRC = hd61-drivers-$(DRIVER_VER)-$(DRIVER_DATE).zip
 
-PLAYERLIB_DATE = 20190120
-PLAYERLIB_SRC = hd61-libs-$(PLAYERLIB_DATE).zip
+PLAYERLIB_DATE = 20200622
+PLAYERLIB_SRC = gfutures-libs-3798mv200-$(PLAYERLIB_DATE).zip
 
 LIBGLES_DATE = 20181201
 LIBGLES_SRC = hd61-mali-$(LIBGLES_DATE).zip
@@ -18,10 +18,10 @@ MALI_MODULE_SRC = $(MALI_MODULE_VER).tgz
 MALI_MODULE_PATCH = 0001-hi3798mv200-support.patch
 
 $(ARCHIVE)/$(DRIVER_SRC):
-	$(DOWNLOAD) http://downloads.mutant-digital.net/$(KERNEL_TYPE)/$(DRIVER_SRC)
+	$(DOWNLOAD) http://source.mynonpublic.com/gfutures/$(DRIVER_SRC)
 
 $(ARCHIVE)/$(PLAYERLIB_SRC):
-	$(DOWNLOAD) http://downloads.mutant-digital.net/$(KERNEL_TYPE)/$(PLAYERLIB_SRC)
+	$(DOWNLOAD) http://source.mynonpublic.com/gfutures/$(PLAYERLIB_SRC)
 
 $(ARCHIVE)/$(LIBGLES_SRC):
 	$(DOWNLOAD) http://downloads.mutant-digital.net/$(KERNEL_TYPE)/$(LIBGLES_SRC)
@@ -41,11 +41,11 @@ $(D)/driver: $(ARCHIVE)/$(DRIVER_SRC) $(D)/bootstrap $(D)/kernel
 	install -d $(TARGET_DIR)/bin
 	mv $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/turnoff_power $(TARGET_DIR)/bin
 	ls $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra | sed s/.ko//g > $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/modules.default
-	$(MAKE) install-v3ddriver
-	$(MAKE) install-v3ddriver-header
+	#$(MAKE) install-v3ddriver
+	#$(MAKE) install-v3ddriver-header
 	$(MAKE) install-hisiplayer-preq
 	$(MAKE) install-hisiplayer-libs
-	$(MAKE) mali-gpu-modul
+	#$(MAKE) mali-gpu-modul
 	$(TOUCH)
 
 $(D)/install-v3ddriver: $(ARCHIVE)/$(LIBGLES_SRC)

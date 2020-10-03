@@ -40,21 +40,21 @@ FLASH_BUILD_TMP = $(BUILD_TMP)/image-build
 FLASH_BOOTOPTIONS_PARTITION_SIZE = 32768
 FLASH_IMAGE_ROOTFS_SIZE = 1024M
 
-FLASH_BOOTARGS_DATE = 20190605
+FLASH_BOOTARGS_DATE = 20200504
 FLASH_BOOTARGS_SRC = hd61-bootargs-$(FLASH_BOOTARGS_DATE).zip
-FLASH_PARTITONS_DATE = 20190719
+FLASH_PARTITONS_DATE = 20200319
 FLASH_PARTITONS_SRC = hd61-partitions-$(FLASH_PARTITONS_DATE).zip
-FLASH_RECOVERY_DATE = 20190719
+FLASH_RECOVERY_DATE = 20200424
 FLASH_RECOVERY_SRC = hd61-recovery-$(FLASH_RECOVERY_DATE).zip
 
 $(ARCHIVE)/$(FLASH_BOOTARGS_SRC):
-	$(DOWNLOAD) http://downloads.mutant-digital.net/hd61/$(FLASH_BOOTARGS_SRC)
+	$(DOWNLOAD) http://source.mynonpublic.com/gfutures/$(FLASH_BOOTARGS_SRC)
 
 $(ARCHIVE)/$(FLASH_PARTITONS_SRC):
-	$(DOWNLOAD) http://downloads.mutant-digital.net/hd61/$(FLASH_PARTITONS_SRC)
+	$(DOWNLOAD) http://source.mynonpublic.com/gfutures/$(FLASH_PARTITONS_SRC)
 
 $(ARCHIVE)/$(FLASH_RECOVERY_SRC):
-	$(DOWNLOAD) http://downloads.mutant-digital.net/hd61/$(FLASH_RECOVERY_SRC)
+	$(DOWNLOAD) http://downloads.mutant-digital.net/hd60/$(FLASH_RECOVERY_SRC)
 
 flash-image-hd61-multi-disk: $(ARCHIVE)/$(FLASH_BOOTARGS_SRC) $(ARCHIVE)/$(FLASH_PARTITONS_SRC) $(ARCHIVE)/$(FLASH_RECOVERY_SRC)
 	rm -rf $(FLASH_BUILD_TMP) || true
@@ -110,6 +110,7 @@ flash-image-hd61-multi-disk: $(ARCHIVE)/$(FLASH_BOOTARGS_SRC) $(ARCHIVE)/$(FLASH
 	mcopy -i $(FLASH_BUILD_TMP)/$(BOXTYPE)/$(FLASH_BOOT_IMAGE) -v $(FLASH_BUILD_TMP)/bootmenu.conf ::
 	mv $(FLASH_BUILD_TMP)/bootargs-8gb.bin $(FLASH_BUILD_TMP)/bootargs.bin
 	mv $(FLASH_BUILD_TMP)/$(BOXTYPE)/bootargs-8gb.bin $(FLASH_BUILD_TMP)/$(BOXTYPE)/bootargs.bin
+	echo boot-recovery > $(FLASH_BUILD_TMP)/$(BOXTYPE)/misc-boot.img
 	cp $(RELEASE_DIR)/boot/uImage $(FLASH_BUILD_TMP)/$(BOXTYPE)/uImage
 	rm -rf $(FLASH_BUILD_TMP)/STARTUP*
 	rm -rf $(FLASH_BUILD_TMP)/*.txt

@@ -6,7 +6,6 @@ DRIVER_VER = 4.4.35
 DRIVER_SRC = hd60-drivers-$(DRIVER_VER)-$(DRIVER_DATE).zip
 
 PLAYERLIB_DATE = 20200622
-#PLAYERLIB_SRC = hd60-libs-$(PLAYERLIB_DATE).zip
 PLAYERLIB_SRC = gfutures-libs-3798mv200-$(PLAYERLIB_DATE).zip
 
 LIBGLES_DATE = 20181201
@@ -19,11 +18,9 @@ MALI_MODULE_SRC = $(MALI_MODULE_VER).tgz
 MALI_MODULE_PATCH = 0001-hi3798mv200-support.patch
 
 $(ARCHIVE)/$(DRIVER_SRC):
-	#$(DOWNLOAD) http://downloads.mutant-digital.net/$(KERNEL_TYPE)/$(DRIVER_SRC)
 	$(DOWNLOAD) http://source.mynonpublic.com/gfutures/$(DRIVER_SRC)
 
 $(ARCHIVE)/$(PLAYERLIB_SRC):
-	#$(DOWNLOAD) http://downloads.mutant-digital.net/$(KERNEL_TYPE)/$(PLAYERLIB_SRC)
 	$(DOWNLOAD) http://source.mynonpublic.com/gfutures/$(PLAYERLIB_SRC)
 
 $(ARCHIVE)/$(LIBGLES_SRC):
