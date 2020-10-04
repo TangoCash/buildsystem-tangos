@@ -314,6 +314,7 @@ $(D)/libstb-hal.do_prepare: | $(LIBSTB_HAL_DEPS)
 	$(START_BUILD)
 	rm -rf $(SOURCE_DIR)/$(LIBSTB_HAL)
 	rm -rf $(SOURCE_DIR)/$(LIBSTB_HAL).org
+	rm -rf $(SOURCE_DIR)/$(LIBSTB_HAL).dev
 	rm -rf $(LH_OBJDIR)
 	test -d $(SOURCE_DIR) || mkdir -p $(SOURCE_DIR)
 	[ -d "$(ARCHIVE)/$(LIBSTB_HAL).git" ] && \
