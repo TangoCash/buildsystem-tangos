@@ -42,8 +42,9 @@ LINKS_PATCH_BOXTYPE = links-$(LINKS_VER)-event1-input.patch
 CUSTOM_RCS = $(SKEL_ROOT)/release/rcS_neutrino_$(BOXARCH)
 
 # release target
-neutrino-release-hd61:
+neutrino-release-hd60:
 	install -m 0755 $(SKEL_ROOT)/release/halt_hd61 $(RELEASE_DIR)/etc/init.d/halt
+	install -m 0755 $(SKEL_ROOT)/etc/init.d/mmcblk-by-name $(RELEASE_DIR)/etc/init.d/mmcblk-by-name
 	cp -f $(SKEL_ROOT)/release/fstab_hd60 $(RELEASE_DIR)/etc/fstab
 	cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/*.ko $(RELEASE_DIR)/lib/modules/
 	cp $(TARGET_DIR)/boot/uImage $(RELEASE_DIR)/boot/
