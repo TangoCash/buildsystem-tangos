@@ -63,7 +63,7 @@ neutrino-release-base:
 	install -d $(RELEASE_DIR)/usr/share/tuxbox/neutrino/icons/logo
 	install -d $(RELEASE_DIR)/usr/share/tuxbox/neutrino/icons/logo/events
 	install -d $(RELEASE_DIR)/usr/share/lua/5.2
-	install -d $(RELEASE_DIR)/var/{bin,boot,emu,etc,epg,httpd,keys,lib,net,tuxbox,update}
+	install -d $(RELEASE_DIR)/var/{bin,emu,etc,epg,httpd,keys,lib,net,tuxbox,update}
 	ln -sf /mnt $(RELEASE_DIR)/var/mnt
 	ln -sf /var/epg $(RELEASE_DIR)/var/net/epg
 	install -d $(RELEASE_DIR)/var/lib/{opkg,nfs,modules}
