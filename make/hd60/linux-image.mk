@@ -56,7 +56,7 @@ $(ARCHIVE)/$(FLASH_PARTITONS_SRC):
 $(ARCHIVE)/$(FLASH_RECOVERY_SRC):
 	$(DOWNLOAD) http://downloads.mutant-digital.net/hd60/$(FLASH_RECOVERY_SRC)
 
-flash-image-hd60-multi-disk: $(D)/host_atools $(ARCHIVE)/$(FLASH_BOOTARGS_SRC) $(ARCHIVE)/$(FLASH_PARTITONS_SRC) $(ARCHIVE)/$(FLASH_RECOVERY_SRC)
+flash-image-hd60-multi-disk: $(ARCHIVE)/$(FLASH_BOOTARGS_SRC) $(ARCHIVE)/$(FLASH_PARTITONS_SRC) $(ARCHIVE)/$(FLASH_RECOVERY_SRC)
 	rm -rf $(FLASH_BUILD_TMP) || true
 	mkdir -p $(FLASH_BUILD_TMP)/$(BOXTYPE)
 	unzip -o $(ARCHIVE)/$(FLASH_BOOTARGS_SRC) -d $(FLASH_BUILD_TMP)
@@ -67,9 +67,7 @@ flash-image-hd60-multi-disk: $(D)/host_atools $(ARCHIVE)/$(FLASH_BOOTARGS_SRC) $
 	if [ -e $(RELEASE_DIR)/boot/logo.img ]; then \
 		cp -rf $(RELEASE_DIR)/boot/logo.img $(FLASH_BUILD_TMP)/$(BOXTYPE); \
 	fi
-	echo "$(BOXTYPE)_$(FLAVOUR)_multiroot_$(ITYPE)_$(DATE)" > $(FLASH_BUILD_TMP)/$(BOXTYPE)/imageversion
-	$(HOST_DIR)/bin/make_ext4fs -l $(FLASH_IMAGE_ROOTFS_SIZE) $(FLASH_BUILD_TMP)/$(FLASH_IMAGE_LINK) $(RELEASE_DIR)/..
-	$(HOST_DIR)/bin/ext2simg -zv $(FLASH_BUILD_TMP)/$(FLASH_IMAGE_LINK) $(FLASH_BUILD_TMP)/$(BOXTYPE)/rootfs.fastboot.gz
+	echo "$(BOXTYPE)_$(DATE)_RECOVERY" > $(FLASH_BUILD_TMP)/$(BOXTYPE)/recoveryversion
 	dd if=/dev/zero of=$(FLASH_BUILD_TMP)/$(BOXTYPE)/$(FLASH_BOOT_IMAGE) bs=1024 count=$(FLASH_BOOTOPTIONS_PARTITION_SIZE)
 	mkfs.msdos -S 512 $(FLASH_BUILD_TMP)/$(BOXTYPE)/$(FLASH_BOOT_IMAGE)
 	echo "bootcmd=setenv bootargs \$$(bootargs) \$$(bootargs_common); mmc read 0 0x1000000 0x3BD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > $(FLASH_BUILD_TMP)/STARTUP
@@ -134,7 +132,7 @@ flash-image-hd60-multi-rootfs:
 	echo "Rename the unforce_$(BOXTYPE).txt to force_$(BOXTYPE).txt and move it to the root of your usb-stick" > $(FLASH_BUILD_TMP)/force_$(BOXTYPE)_READ.ME; \
 	echo "When you enter the recovery menu then it will force to install the image $$(cat $(FLASH_BUILD_TMP)/$(BOXTYPE)/imageversion).zip in the image-slot1" >> $(FLASH_BUILD_TMP)/force_$(BOXTYPE)_READ.ME; \
 	cd $(FLASH_BUILD_TMP) && \
-	zip -r $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_$(FLAVOUR)_multiroot_$(ITYPE)_$(DATE)_emmc.zip unforce_$(BOXTYPE).txt force_$(BOXTYPE)_READ.ME $(BOXTYPE)/rootfs.tar.bz2 $(BOXTYPE)/uImage $(BOXTYPE)/imageversion
+	zip -r $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_$(FLAVOUR)_multiroot_$(ITYPE)_$(DATE)_mmc.zip unforce_$(BOXTYPE).txt force_$(BOXTYPE)_READ.ME $(BOXTYPE)/rootfs.tar.bz2 $(BOXTYPE)/uImage $(BOXTYPE)/imageversion
 	# cleanup
 	rm -rf $(FLASH_BUILD_TMP)
 
