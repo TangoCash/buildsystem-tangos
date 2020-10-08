@@ -24,6 +24,9 @@ then
 	hddown=""
 fi
 
+mount -t sysfs sys /sys
+/bin/turnoff_power
+
 halt -d -f -p $hddown
 
 : exit 0
