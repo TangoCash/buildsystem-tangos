@@ -74,6 +74,14 @@ if [ -e /var/backup_flash.tar.gz ]; then
   rm -f /var/backup_flash.tar.gz
 fi
 
+if [ -e /proc/stb/power/powerled ]; then
+  echo off > /proc/stb/power/powerled
+fi
+
+if [ -e /proc/stb/power/powerled2 ]; then
+  echo off > /proc/stb/power/powerled2
+fi
+
 if [ -e /var/tuxbox/config/.bootlogo ]; then
   START_RES=$(grep "video_Mode=" /var/tuxbox/config/neutrino.conf | awk -F "=" '{print $2}')
   case "$START_RES" in
