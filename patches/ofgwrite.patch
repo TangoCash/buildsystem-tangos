@@ -1,0 +1,14 @@
+--- ofgwrite-max.git/ofgwrite.c
++++ ofgwrite-max.git/ofgwrite.c
+@@ -942,9 +942,9 @@
+ 	ret += mount("/oldroot/sys/", "sys/", NULL, MS_MOVE, NULL);
+ 	ret += mount("/oldroot/mnt/", "mnt/", NULL, MS_MOVE, NULL);
+ 	ret += mount("/oldroot/tmp/", "tmp/", NULL, MS_MOVE, NULL);
+-	ret += mount("/oldroot/var/volatile", "var/volatile/", NULL, MS_MOVE, NULL);
++	//ret += mount("/oldroot/var/volatile", "var/volatile/", NULL, MS_MOVE, NULL);
+ 	// create link for tmp
+-	ret += symlink("/var/volatile/tmp", "/tmp");
++	//ret += symlink("/var/volatile/tmp", "/tmp");
+ 	if (ret != 0)
+ 	{
+ 		my_printf("Error move mounts to newroot\n");

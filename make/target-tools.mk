@@ -1890,7 +1890,7 @@ $(D)/usb_modeswitch: $(D)/bootstrap $(D)/libusb $(D)/usb_modeswitch_data $(ARCHI
 #
 # ofgwrite
 #
-#OFGWRITE_PATCH = ofgwrite.patch
+OFGWRITE_PATCH = ofgwrite.patch
 
 $(D)/ofgwrite: $(D)/bootstrap $(ARCHIVE)/$(OFGWRITE_SOURCE)
 	$(START_BUILD)
