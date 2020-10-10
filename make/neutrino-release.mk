@@ -105,6 +105,7 @@ endif
 	install -m 0755 $(SKEL_ROOT)/bin/vdstandby $(RELEASE_DIR)/bin/
 	install -m 0755 $(SKEL_ROOT)/etc/init.d/check_partitions $(TARGET_DIR)/etc/init.d/
 	install -m 0755 $(SKEL_ROOT)/etc/init.d/mount_before $(TARGET_DIR)/etc/init.d/
+	install -m 0755 $(SKEL_ROOT)/etc/init.d/mmcblk-by-name $(RELEASE_DIR)/etc/init.d/
 	install -m 0755 $(TARGET_DIR)/etc/init.d/* $(RELEASE_DIR)/etc/init.d/
 	cp -aR $(TARGET_DIR)/etc/* $(RELEASE_DIR)/etc/
 	echo "$(BOXTYPE)" > $(RELEASE_DIR)/etc/hostname
