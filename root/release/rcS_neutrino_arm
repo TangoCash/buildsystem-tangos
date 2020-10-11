@@ -182,9 +182,9 @@ if [ -e /var/bin/tangos ]; then
     /var/bin/tangos
 fi
 
-if [ -e /var/bin/before_gui ]; then
-    chmod 755 /var/bin/before_gui
-    /var/bin/before_gui
+if [ -e /etc/init.d/before_gui ]; then
+    chmod 755 /etc/init.d/before_gui
+    /etc/init.d/before_gui
 fi
 
 if [ -e /var/tuxbox/config/.lcd4l ]; then

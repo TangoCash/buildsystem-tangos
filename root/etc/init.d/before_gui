@@ -1,0 +1,113 @@
+#!/bin/sh
+
+# Variable #####################################################################
+FLAGDIR="/var/tuxbox/config"
+CAMDIR="/var/emu"
+KEYSDIR="/var/keys"
+################################################################################
+
+stop_cam () {
+# Stop all CAMs ################################################################
+if pidof ciplushelper > /dev/null || [ -e $FLAGDIR/.ciplushelper ]; then
+	killall -9 ciplushelper && /bin/sleep 2
+fi
+
+if pidof mgcamd > /dev/null || [ -e $FLAGDIR/.mgcamd ]; then
+	killall mgcamd && /bin/sleep 1 && killall -9 mgwcamd
+	rm -rf /tmp/mgstat.info
+	rm -rf /tmp/mgshare.info
+	rm -rf /tmp/ecm.info
+	rm -rf /tmp/pid.info
+	rm -rf /tmp/ca_cache.list
+	rm -rf /tmp/cccam.info
+	rm -rf /tmp/ecm.info
+	rm -rf /tmp/mg.info
+fi
+if pidof cccam > /dev/null || [ -e $FLAGDIR/.cccam ]; then
+	killall cccam && /bin/sleep 1 && killall -9 cccam
+fi
+if pidof gbox > /dev/null || [ -e $FLAGDIR/.gbox ]; then
+	touch /tmp/gbox.kill && /bin/sleep 5
+	rm /tmp/gbox.kill
+	rm /tmp/ecm.info
+	rm /tmp/gbox.ver
+	rm /tmp/online.log
+	rm /tmp/pid.info
+	rm /tmp/sc.info
+	rm /tmp/atack.txt
+	rm /tmp/share.*
+fi
+if pidof oscam > /dev/null || [ -e $FLAGDIR/.oscam ]; then
+	killall -9 oscam && rm /tmp/oscam.* && /bin/sleep 2
+fi
+if pidof doscam > /dev/null || [ -e $FLAGDIR/.doscam ]; then
+	killall -9 doscam && rm /tmp/doscam.* && /bin/sleep 2
+fi
+if pidof osmod > /dev/null || [ -e $FLAGDIR/.osmod ]; then
+	killall -9 osmod && rm /tmp/osmod.* && /bin/sleep 2
+fi
+if pidof ncam > /dev/null || [ -e $FLAGDIR/.ncam ]; then
+	killall -9 ncam && rm /tmp/ncam.* && /bin/sleep 2
+fi
+
+rm -rf /tmp/camd.socket
+rm -rf /tmp/ecm.info
+
+}
+################################################################################
+
+# Start all CAMs ###############################################################
+start_cam () {
+if [ -e $FLAGDIR/.ciplushelper ]; then
+	mkdir -p /home
+	if ! pidof ciplushelper > /dev/null ; then
+		chmod 755 $CAMDIR/ciplushelper
+		$CAMDIR/ciplushelper &
+	fi
+fi
+
+if [ -e $FLAGDIR/.mgcamd ]; then
+	chmod 755 $CAMDIR/mgcamd
+	$CAMDIR/mgcamd && pzapit -rz
+fi
+
+if [ -e $FLAGDIR/.oscam ]; then
+	chmod 755 $CAMDIR/oscam
+	$CAMDIR/oscam -b -c $KEYSDIR && /bin/sleep 2
+fi
+
+if [ -e $FLAGDIR/.doscam ]; then
+	chmod 755 $CAMDIR/doscam
+	$CAMDIR/doscam -b -c $KEYSDIR && /bin/sleep 2
+fi
+
+if [ -e $FLAGDIR/.osmod ]; then
+	chmod 755 $CAMDIR/osmod
+	$CAMDIR/osmod -b -c $KEYSDIR && /bin/sleep 2
+fi
+
+if [ -e $FLAGDIR/.ncam ]; then
+	chmod 755 $CAMDIR/ncam
+	$CAMDIR/ncam -b -c $KEYSDIR && /bin/sleep 2
+fi
+
+if [ -e $FLAGDIR/.cccam ]; then
+	chmod 755 $CAMDIR/cccam
+	$CAMDIR/cccam
+fi
+if [ -e $FLAGDIR/.gbox ]; then
+	/bin/sleep 3
+	chmod 755 $CAMDIR/gbox
+	$CAMDIR/gbox $KEYSDIR/gbox.cfg &
+fi
+}
+################################################################################
+
+if [ "$1" == "" ]; then
+  stop_cam
+  start_cam
+else
+  $1
+fi
+
+exit
