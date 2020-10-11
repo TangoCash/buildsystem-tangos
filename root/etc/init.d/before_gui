@@ -102,7 +102,53 @@ if [ -e $FLAGDIR/.gbox ]; then
 fi
 }
 ################################################################################
+start_service()
+{
+  if [ -e $FLAGDIR/.fritzcall ]; then
+    /var/tuxbox/plugins/fb.sh start >/dev/null 2>&1
+  fi
+  if [ -e $FLAGDIR/.xupnpd ]; then
+    /usr/bin/xupnpd &
+  fi
 
+  if [ -e $FLAGDIR/.samba ]; then
+    /etc/init.d/samba start &
+  fi
+  if [ -e $FLAGDIR/.nfsd ]; then
+    if [ ! -e /etc/exports ]; then
+      echo "/media/hdd *(ro,wdelay,nohide,insecure,no_root_squash,no_all_squash,no_subtree_check,sync)" >/etc/exports
+    fi
+    if [ ! -e /etc/hosts.allow ]; then
+      echo 'ALL: ALL' > /etc/hosts.allow
+    fi
+    touch /var/lib/nfs/etab
+    touch /var/lib/nfs/rmtab
+    touch /var/lib/nfs/xtab
+    touch /var/lib/nfs/state
+    /usr/sbin/rpc.nfsd 1
+    /usr/sbin/rpc.mountd -V 3
+    /usr/sbin/exportfs -ra
+  fi
+}
+stop_service()
+{
+  if [ -e $FLAGDIR/.fritzcall ]; then
+    /var/tuxbox/plugins/fb.sh stop >/dev/null 2>&1
+  fi
+  if [ -e $FLAGDIR/.xupnpd ]; then
+    killall -9 xupnpd
+  fi
+
+  if [ -e $FLAGDIR/.samba ]; then
+    /etc/init.d/samba stop &
+  fi
+  if [ -e $FLAGDIR/.nfsd ]; then
+    killall -9 exportfs
+    killall -9 rpc.mountd
+    killall -9 rpc.nfsd
+  fi
+}
+################################################################################
 if [ "$1" == "" ]; then
   stop_cam
   start_cam
