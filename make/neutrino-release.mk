@@ -96,7 +96,7 @@ ifeq ($(NEWLAYOUT), $(filter $(NEWLAYOUT), 1))
 	install -m 0755 $(SKEL_ROOT)/sbin/init $(RELEASE_DIR)/sbin/
 endif
 	cp -aR $(SKEL_ROOT)/etc/mdev/* $(RELEASE_DIR)/etc/mdev/
-	cp -aR $(SKEL_ROOT)/etc/{inetd.conf,irexec.keys} $(RELEASE_DIR)/etc/
+	cp -aR $(SKEL_ROOT)/etc/{inetd.conf,irexec.keys,issue.net,passwd} $(RELEASE_DIR)/etc/
 	cp -aR $(SKEL_ROOT)/etc/network/* $(RELEASE_DIR)/etc/network/
 	cp -aR $(SKEL_ROOT)/etc/mdev_$(BOXARCH).conf $(RELEASE_DIR)/etc/mdev.conf
 	cp -aR $(SKEL_ROOT)/usr/share/udhcpc/* $(RELEASE_DIR)/usr/share/udhcpc/
