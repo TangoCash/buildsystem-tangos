@@ -29,5 +29,4 @@ neutrino-release-osmio4k:
 	cp -f $(SKEL_ROOT)/release/fstab_osmio4k $(RELEASE_DIR)/etc/fstab
 	cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/*.ko $(RELEASE_DIR)/lib/modules/
 	cp $(TARGET_DIR)/boot/Image.gz $(RELEASE_DIR)/boot/
-	install -m 0644 $(SKEL_ROOT)/release/tangos_hd51.m2v $(RELEASE_DIR)/usr/share/tuxbox/neutrino/icons/bootlogo.m2v
 
