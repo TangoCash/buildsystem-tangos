@@ -1,5 +1,5 @@
---- ofgwrite-max.git/ofgwrite.c
-+++ ofgwrite-max.git/ofgwrite.c
+--- a/ofgwrite-max.git/ofgwrite.c
++++ b/ofgwrite-max.git/ofgwrite.c
 @@ -942,9 +942,9 @@
  	ret += mount("/oldroot/sys/", "sys/", NULL, MS_MOVE, NULL);
  	ret += mount("/oldroot/mnt/", "mnt/", NULL, MS_MOVE, NULL);
