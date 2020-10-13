@@ -87,7 +87,7 @@ if [ "$1" == vusolo4k -o "$1" == vuduo4k -o "$1" == vuultimo4k -o "$1" == vuuno4
 fi
 
 if [ "$1" == osmio4k ] || [ "$1" == osmio4kplus ]; then
-	echo "BOXARCH=arm" > config
+	echo "BOXARCH=aarch64" > config
 	echo "BOXTYPE=$1" >> config
 	echo "FFMPEG_EXPERIMENTAL=0" >> config
 	echo "OPTIMIZATIONS=size" >> config
