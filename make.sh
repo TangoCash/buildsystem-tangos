@@ -26,7 +26,7 @@ if [ "$1" == -h ] || [ "$1" == --help ]; then
 fi
 ##############################################
 
-if [ "$1" == hd51 ] || [ "$1" == defaultconfig ]; then
+if [ "$1" == defaultconfig ]; then
 	echo "BOXARCH=arm" > config
 	echo "BOXTYPE=hd51" >> config
 	echo "FFMPEG_EXPERIMENTAL=0" >> config
@@ -36,6 +36,65 @@ if [ "$1" == hd51 ] || [ "$1" == defaultconfig ]; then
 	echo "FLAVOUR=TANGOS" >> config
 	echo "EXTERNAL_LCD=both" >> config
 	echo "NEWLAYOUT=0" >> config
+	echo " "
+	make printenv
+	exit
+fi
+
+if [ "$1" == hd51 ] || [ "$1" == h7 ] || [ "$1" == bre2ze4k ]; then
+	echo "BOXARCH=arm" > config
+	echo "BOXTYPE=$1" >> config
+	echo "FFMPEG_EXPERIMENTAL=0" >> config
+	echo "OPTIMIZATIONS=size" >> config
+	echo "BS_GCC_VER=9.2.0" >> config
+	echo "IMAGE=neutrino" >> config
+	echo "FLAVOUR=TANGOS" >> config
+	echo "EXTERNAL_LCD=both" >> config
+	echo "NEWLAYOUT=1" >> config
+	echo " "
+	make printenv
+	exit
+fi
+
+if [ "$1" == hd60 ] || [ "$1" == hd61 ]; then
+	echo "BOXARCH=arm" > config
+	echo "BOXTYPE=$1" >> config
+	echo "FFMPEG_EXPERIMENTAL=0" >> config
+	echo "OPTIMIZATIONS=size" >> config
+	echo "BS_GCC_VER=9.2.0" >> config
+	echo "IMAGE=neutrino" >> config
+	echo "FLAVOUR=TANGOS" >> config
+	echo "EXTERNAL_LCD=both" >> config
+	echo "NEWLAYOUT=1" >> config
+	echo " "
+	make printenv
+	exit
+fi
+
+if [ "$1" == vusolo4k -o "$1" == vuduo4k -o "$1" == vuultimo4k -o "$1" == vuuno4k -o "$1" == vuuno4kse -o "$1" == vuzero4k ]; then
+	echo "BOXARCH=arm" > config
+	echo "BOXTYPE=$1" >> config
+	echo "FFMPEG_EXPERIMENTAL=0" >> config
+	echo "OPTIMIZATIONS=size" >> config
+	echo "BS_GCC_VER=9.2.0" >> config
+	echo "IMAGE=neutrino" >> config
+	echo "FLAVOUR=TANGOS" >> config
+	echo "EXTERNAL_LCD=both" >> config
+	echo "VU_MULTIBOOT=1" >> config
+	echo " "
+	make printenv
+	exit
+fi
+
+if [ "$1" == osmio4k ] || [ "$1" == osmio4kplus ]; then
+	echo "BOXARCH=arm" > config
+	echo "BOXTYPE=$1" >> config
+	echo "FFMPEG_EXPERIMENTAL=0" >> config
+	echo "OPTIMIZATIONS=size" >> config
+	echo "BS_GCC_VER=9.2.0" >> config
+	echo "IMAGE=neutrino" >> config
+	echo "FLAVOUR=TANGOS" >> config
+	echo "EXTERNAL_LCD=both" >> config
 	echo " "
 	make printenv
 	exit
