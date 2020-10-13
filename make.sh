@@ -202,19 +202,19 @@ echo "OPTIMIZATIONS=$OPTIMIZATIONS" >> config
 case $4 in
 	[1-4]) REPLY=$4;;
 	*)	echo -e "\nToolchain gcc version:"
-		echo "   1) GCC version 6.5.0"
-		echo "   2) GCC version 7.4.1"
-		echo "   3) GCC version 8.2.0"
-		echo "   4) GCC version 9.2.0"
-		read -p "Select toolchain gcc version (1-4)? [4] "
-		REPLY="${REPLY:-4}";;
+		echo "   1) GCC version 9.2.0"
+		echo "   2) GCC version 8.2.0"
+		echo "   3) GCC version 7.4.1"
+		echo "   4) GCC version 6.5.0"
+		read -p "Select toolchain gcc version (1-4)? [1] "
+		REPLY="${REPLY:-1}";;
 esac
 
 case "$REPLY" in
-	1) BS_GCC_VER="6.5.0";;
-	2) BS_GCC_VER="7.4.1";;
-	3) BS_GCC_VER="8.2.0";;
-	4) BS_GCC_VER="9.2.0";;
+	1) BS_GCC_VER="9.2.0";;
+	2) BS_GCC_VER="8.2.0";;
+	3) BS_GCC_VER="7.4.1";;
+	4) BS_GCC_VER="6.5.0";;
 	*) BS_GCC_VER="9.2.0";;
 esac
 echo "BS_GCC_VER=$BS_GCC_VER" >> config
@@ -242,21 +242,21 @@ echo "IMAGE=$IMAGE" >> config
 case $6 in
 	[1-4]) REPLY=$6;;
 	*)	echo -e "\nWhich Neutrino variant do you want to build?:"
-		echo "   1)  neutrino-ddt"
-		echo "   2)  neutrino-tuxbox"
-		echo "   3)  neutrino-ni"
-		echo "   4)  neutrino-tangos"
+		echo "   1)  neutrino-tangos"
+		echo "   2)  neutrino-ddt"
+		echo "   3)  neutrino-tuxbox"
+		echo "   4)  neutrino-ni"
 #		echo "   5)  neutrino-max"
 #		echo "   6)  neutrino-hd2"
-		read -p "Select Image to build (1-4)? [4]"
-		REPLY="${REPLY:-4}";;
+		read -p "Select Image to build (1-4)? [1]"
+		REPLY="${REPLY:-1}";;
 esac
 
 case "$REPLY" in
-	1) FLAVOUR="DDT";;
-	2) FLAVOUR="TUXBOX";;
-	3) FLAVOUR="NI";;
-	4) FLAVOUR="TANGOS";;
+	1) FLAVOUR="TANGOS";;
+	2) FLAVOUR="DDT";;
+	3) FLAVOUR="TUXBOX";;
+	4) FLAVOUR="NI";;
 	5) FLAVOUR="MAX";;
 	6) FLAVOUR="HD2";;
 	*) FLAVOUR="TANGOS";;
@@ -268,19 +268,19 @@ echo "FLAVOUR=$FLAVOUR" >> config
 case $7 in
 	[1-4]) REPLY=$7;;
 	*)	echo -e "\nExternal LCD support:"
-		echo "   1)  No external LCD"
+		echo "   1)  graphlcd and lcd4linux for external LCD"
 		echo "   2)  graphlcd for external LCD"
 		echo "   3)  lcd4linux for external LCD"
-		echo "   4)  graphlcd and lcd4linux for external LCD"
-		read -p "Select external LCD support (1-4)? [4]"
-		REPLY="${REPLY:-4}";;
+		echo "   4)  No external LCD"
+		read -p "Select external LCD support (1-4)? [1]"
+		REPLY="${REPLY:-1}";;
 esac
 
 case "$REPLY" in
-	1) EXTERNAL_LCD="none";;
+	1) EXTERNAL_LCD="both";;
 	2) EXTERNAL_LCD="externallcd";;
 	3) EXTERNAL_LCD="lcd4linux";;
-	4) EXTERNAL_LCD="both";;
+	4) EXTERNAL_LCD="none";;
 	*) EXTERNAL_LCD="none";;
 esac
 echo "EXTERNAL_LCD=$EXTERNAL_LCD" >> config
