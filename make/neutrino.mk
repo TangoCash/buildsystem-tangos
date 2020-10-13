@@ -124,13 +124,10 @@ N_CFLAGS      += -fno-strict-aliasing
 N_CFLAGS      += -funsigned-char
 N_CFLAGS      += -ffunction-sections
 N_CFLAGS      += -fdata-sections
+N_CFLAGS      += -Wno-psabi
 #N_CFLAGS      += -Wno-deprecated-declarations
 #N_CFLAGS      += -DCPU_FREQ
 N_CFLAGS      += $(LOCAL_NEUTRINO_CFLAGS)
-
-ifeq ($(BS_GCC_VER), 6.5.0)
-N_CFLAGS      += -Wno-psabi
-endif
 
 N_CPPFLAGS     = -I$(TARGET_INCLUDE_DIR)
 N_CPPFLAGS    += -ffunction-sections -fdata-sections
