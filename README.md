@@ -17,6 +17,33 @@
 ----------
 
 
+## Quick Building for e.g. Mut@nt/AX HD60:
+
+
+----------
+
+
+ 1. `git clone https://github.com/TangoCash/buildsystem-tangos.git ~/BTC`
+ 2. `cd ~/BTC`
+ 3. `sudo ./prepare-for-bs.sh`
+
+ 4. `./make.sh hd60`
+ 5. `make flashimage`
+
+
+----------
+
+
+alternate boxtypes to use with `./make.sh`
+ - `osmio4k osmio4kplus`
+ - `hd51 bre2ze4k h7`
+ - `hd60 hd61`
+ - `vusolo4k vuduo4k vuzero4k vuultimo4k vuuno4kse vuuno4k`
+
+
+----------
+
+
 alternate targets
  - `make neutrino`
  - `make ofgimage`
