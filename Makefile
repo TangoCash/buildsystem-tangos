@@ -179,6 +179,12 @@ print-targets:
 		grep -v make/neutrino-plugins.mk` | \
 		sort -u | fold -s -w 65
 
+print-downloads:
+	make -qpRr | egrep :$ | egrep ^/ | cut -d: -f1 | grep $(ARCHIVE) | sort -u
+
+download-all:
+	make -qpRr | egrep :$ | egrep ^/ | cut -d: -f1 | grep $(ARCHIVE) | sort -u | xargs make
+
 # for local extensions, e.g. special plugins or similar...
 # put them into $(BASE_DIR)/local since that is ignored in .gitignore
 -include ./Makefile.local
