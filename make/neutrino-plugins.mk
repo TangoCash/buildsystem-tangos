@@ -106,14 +106,16 @@ $(D)/neutrino-plugins: $(D)/neutrino-plugins.do_prepare $(D)/neutrino-plugins.do
 
 neutrino-plugins-clean:
 	rm -f $(D)/neutrino-plugins
-	rm -f $(D)/neutrino-plugins
+	rm -f $(D)/neutrino-plugins.do_*
 	rm -f $(D)/neutrino-plugins.config.status
 	cd $(NP_OBJDIR); \
 		$(MAKE) -C $(NP_OBJDIR) clean
 
 neutrino-plugins-distclean:
 	rm -rf $(NP_OBJDIR)
-	rm -f $(D)/neutrino-plugin*
+	rm -f $(D)/neutrino-plugins
+	rm -f $(D)/neutrino-plugins.do_*
+	rm -f $(D)/neutrino-plugins.config.status
 
 #
 # xupnpd

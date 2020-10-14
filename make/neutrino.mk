@@ -367,7 +367,9 @@ libstb-hal-clean:
 
 libstb-hal-distclean:
 	rm -rf $(LH_OBJDIR)
-	rm -f $(D)/libstb-hal*
+	rm -f $(D)/libstb-hal
+	rm -f $(D)/libstb-hal.do_*
+	rm -f $(D)/libstb-hal.config.status
 
 # -----------------------------------------------------------------------------
 
@@ -445,7 +447,9 @@ neutrino-clean:
 mp-distclean \
 neutrino-distclean:
 	rm -rf $(N_OBJDIR)
-	rm -f $(D)/neutrino*
+	rm -f $(D)/neutrino
+	rm -f $(D)/neutrino.do_*
+	rm -f $(D)/neutrino.config.status
 
 # -----------------------------------------------------------------------------
 #
