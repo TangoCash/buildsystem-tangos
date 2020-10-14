@@ -195,6 +195,8 @@ download-all:
 	@echo $(PHONY)
 
 PHONY += print-targets
+PHONY += print-downloads
+PHONY += download-all
 PHONY += printenv help all everything
 PHONY += update update-self
 PHONY += .print-phony
