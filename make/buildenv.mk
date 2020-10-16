@@ -130,20 +130,12 @@ TARGET_EXTRA_CFLAGS   =
 TARGET_EXTRA_LDFLAGS  =
 endif
 
-ifeq ($(BS_GCC_VER), 6.5.0)
-CROSSTOOL_GCC_VER = gcc-6.5.0
-endif
-
-ifeq ($(BS_GCC_VER), 7.4.1)
-CROSSTOOL_GCC_VER = gcc-7.4.1
-endif
-
-ifeq ($(BS_GCC_VER), 8.2.0)
-CROSSTOOL_GCC_VER = gcc-8.2.0
-endif
-
 ifeq ($(BS_GCC_VER), 9.2.0)
 CROSSTOOL_GCC_VER = gcc-9.2.0
+endif
+
+ifeq ($(BS_GCC_VER), 10.2.0)
+CROSSTOOL_GCC_VER = gcc-10.2.0
 endif
 
 CROSS_BASE            = $(BASE_DIR)/cross
