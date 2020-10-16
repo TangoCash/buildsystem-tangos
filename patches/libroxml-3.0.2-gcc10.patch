@@ -1,0 +1,11 @@
+--- a/src/roxml_mem.h_org	2019-06-22 11:51:25.000000000 +0200
++++ b/src/roxml_mem.h	2020-09-06 01:09:33.415256796 +0200
+@@ -14,7 +14,7 @@
+ 
+ #include "roxml_internal.h"
+ 
+-memory_cell_t head_cell;
++extern memory_cell_t head_cell;
+ 
+ /** \brief alloc memory function
+  *

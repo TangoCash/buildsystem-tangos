@@ -27,6 +27,7 @@ KERNEL_PATCHES = \
 		armbox/vuplus_common/3_14_kernel-add-support-for-gcc7.patch \
 		armbox/vuplus_common/3_14_kernel-add-support-for-gcc8.patch \
 		armbox/vuplus_common/3_14_kernel-add-support-for-gcc9.patch \
+		armbox/vuplus_common/3_14_kernel-add-support-for-gcc10.patch \
 		armbox/vuplus_common/3_14_0001-Support-TBS-USB-drivers.patch \
 		armbox/vuplus_common/3_14_0001-STV-Add-PLS-support.patch \
 		armbox/vuplus_common/3_14_0001-STV-Add-SNR-Signal-report-parameters.patch \
