@@ -87,11 +87,11 @@ if [ "$1" == vusolo4k -o "$1" == vuduo4k -o "$1" == vuultimo4k -o "$1" == vuuno4
 fi
 
 if [ "$1" == osmio4k ] || [ "$1" == osmio4kplus ]; then
-	echo "BOXARCH=aarch64" > config
+	echo "BOXARCH=arm" > config
 	echo "BOXTYPE=$1" >> config
 	echo "FFMPEG_EXPERIMENTAL=0" >> config
 	echo "OPTIMIZATIONS=size" >> config
-	echo "BS_GCC_VER=9.2.0" >> config
+	echo "BS_GCC_VER=10.2.0" >> config
 	echo "IMAGE=neutrino" >> config
 	echo "FLAVOUR=TANGOS" >> config
 	echo "EXTERNAL_LCD=both" >> config
@@ -138,8 +138,8 @@ case $1 in
 esac
 
 case "$REPLY" in
-	30) BOXARCH="aarch64";BOXTYPE="osmio4k";;
-	31) BOXARCH="aarch64";BOXTYPE="osmio4kplus";;
+	30) BOXARCH="arm";BOXTYPE="osmio4k";;
+	31) BOXARCH="arm";BOXTYPE="osmio4kplus";;
 	40) BOXARCH="arm";BOXTYPE="vusolo4k";;
 	41) BOXARCH="arm";BOXTYPE="vuduo4k";;
 	42) BOXARCH="arm";BOXTYPE="vuzero4k";;

@@ -1,13 +1,13 @@
 #
 # driver
 #
-DRIVER_DATE = 20200217
-DRIVER_VER  = 5.5.0-$(DRIVER_DATE)
-DRIVER_SRC  = osmio4k-drivers-$(DRIVER_VER).zip
+DRIVER_DATE = 20201013
+DRIVER_VER  = 5.9.0-$(DRIVER_DATE)
+DRIVER_SRC  = osmio4kplus-drivers-$(DRIVER_VER).zip
 
-LIBGLES_VER = 1.0
-LIBGLES_DIR = libv3d-osmio4k-$(LIBGLES_VER)
-LIBGLES_SRC = libv3d-osmio4k-$(LIBGLES_VER).tar.xz
+LIBGLES_VER = 2.0
+LIBGLES_DIR = edision-libv3d-$(LIBGLES_VER)
+LIBGLES_SRC = edision-libv3d-$(LIBGLES_VER).tar.xz
 
 
 $(ARCHIVE)/$(DRIVER_SRC):
@@ -24,7 +24,7 @@ $(D)/driver: $(ARCHIVE)/$(DRIVER_SRC) $(D)/bootstrap $(D)/kernel
 	$(START_BUILD)
 	install -d $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra
 	unzip -o $(ARCHIVE)/$(DRIVER_SRC) -d $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra
-	for i in brcmstb-osmio4k ci si2183 avl6862 avl6261; do \
+	for i in brcmstb-osmio4k brcmstb-decoder ci si2183 avl6862 avl6261; do \
 		echo $$i >> $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/modules.default; \
 	done
 	$(MAKE) install-v3ddriver
@@ -36,14 +36,14 @@ $(D)/install-v3ddriver: $(ARCHIVE)/$(LIBGLES_SRC)
 	$(REMOVE)/$(LIBGLES_DIR)
 	$(UNTAR)/$(LIBGLES_SRC)
 	cp -a $(BUILD_TMP)/$(LIBGLES_DIR)/* $(TARGET_DIR)/usr/
-	ln -sf libv3ddriver.so.1.0 $(TARGET_LIB_DIR)/libEGL.so
-	ln -sf libv3ddriver.so.1.0 $(TARGET_LIB_DIR)/libGLESv2.so
+	ln -sf libv3ddriver.so.$(LIBGLES_VER) $(TARGET_LIB_DIR)/libEGL.so
+	ln -sf libv3ddriver.so.$(LIBGLES_VER) $(TARGET_LIB_DIR)/libGLESv2.so
 	$(REMOVE)/$(LIBGLES_DIR)
 
 #
 # wlan-qcom osmio4k | osmio4kplus
 #
-WLAN_QCOM_VER    = 4.5.25.38
+WLAN_QCOM_VER    = 4.5.25.46
 WLAN_QCOM_DIR    = qcacld-2.0-$(WLAN_QCOM_VER)
 WLAN_QCOM_SOURCE = qcacld-2.0-$(WLAN_QCOM_VER).tar.gz
 WLAN_QCOM_URL    = https://www.codeaurora.org/cgit/external/wlan/qcacld-2.0/snapshot
@@ -60,7 +60,7 @@ $(D)/wlan-qcom: $(D)/bootstrap $(D)/kernel $(D)/wlan-qcom-firmware $(ARCHIVE)/$(
 	$(UNTAR)/$(WLAN_QCOM_SOURCE)
 	$(CHDIR)/$(WLAN_QCOM_DIR); \
 		$(call apply_patches, $(WLAN_QCOM_PATCH)); \
-		$(MAKE) KERNEL_SRC=$(KERNEL_DIR) ARCH=arm64 CROSS_COMPILE=$(TARGET)- CROSS_COMPILE_COMPAT=$(TARGET)- all; \
+		$(MAKE) KERNEL_SRC=$(KERNEL_DIR) ARCH=arm CROSS_COMPILE=$(TARGET)- CROSS_COMPILE_COMPAT=$(TARGET)- all; \
 	install -m 644 wlan.ko $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra
 	$(REMOVE)/$(WLAN_QCOM_DIR)
 	$(TOUCH)
