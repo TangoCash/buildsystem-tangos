@@ -141,6 +141,20 @@ NFS=$(grep -c nfs /proc/cmdline)
   fi
 /sbin/ifconfig lo 127.0.0.1 up
 
+
+  #date fix
+  ntp="$(sed -n 's/network_ntpserver=//p' /var/tuxbox/config/neutrino.conf)"
+  rdate ${ntp:-time.fu-berlin.de}
+  if [ "$?" != "0" ]; then
+    datefix=$(cat /.version | grep "version=" | grep -v image | awk -F "=" '{print $2}')
+    if [ "$datefix" != "" ]; then
+      date -s ${datefix:4}
+    else
+      date -s "202010011200"
+    fi
+  fi
+  date "+DATE: %m/%d/%y%nTIME: %H:%M:%S"
+
   if [ -e /var/tuxbox/config/.mbefore ]; then
     /etc/init.d/mount_before
   fi
@@ -166,6 +180,8 @@ NFS=$(grep -c nfs /proc/cmdline)
   fi
 
   if [ -e /var/tuxbox/config/.crond ]; then
+    mkdir -p /var/spool/cron/crontabs
+    touch /var/spool/cron/crontabs/root
     /usr/sbin/crond &
   fi
 
@@ -186,19 +202,6 @@ NFS=$(grep -c nfs /proc/cmdline)
   if [ -e /var/tuxbox/config/.samba ]; then
     /etc/init.d/samba start &
   fi
-
-    #date fix
-  ntp="$(sed -n 's/network_ntpserver=//p' /var/tuxbox/config/neutrino.conf)"
-  rdate ${ntp:-time.fu-berlin.de}
-  if [ "$?" != "0" ]; then
-    datefix=$(cat /.version | grep "version=" | grep -v image | awk -F "=" '{print $2}')
-    if [ "$datefix" != "" ]; then
-      date -s ${datefix:4}
-    else
-      date -s "201707011200"
-    fi
-  fi
-  date "+DATE: %m/%d/%y%nTIME: %H:%M:%S"
 
   if [ -e /var/tuxbox/config/.fritzcall ]; then
     /var/tuxbox/plugins/fb.sh start >/dev/null 2>&1
