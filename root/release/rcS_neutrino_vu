@@ -165,6 +165,24 @@ NFS=$(grep -c nfs /proc/cmdline)
     /usr/bin/xupnpd &
   fi
 
+  if [ -e /var/tuxbox/config/.crond ]; then
+    /usr/sbin/crond &
+  fi
+
+  if [ -e /var/tuxbox/config/.tuxcald ]; then
+    echo "starting tuxcald ..."
+    /etc/init.d/tuxcald start &
+  fi
+
+  if [ -e /var/tuxbox/config/.tuxmaild ]; then
+    echo "starting tuxmaild ..."
+    /etc/init.d/tuxmaild start &
+  fi
+
+  if [ -e /var/tuxbox/config/.djmount ]; then
+    /usr/bin/djmount /media/upnp &
+  fi
+
   if [ -e /var/tuxbox/config/.samba ]; then
     /etc/init.d/samba start &
   fi
