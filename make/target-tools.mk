@@ -26,6 +26,7 @@ BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-block-telnet-internet.patch
 
 ifeq ($(BUSYBOX_SNAPSHOT), 1)
 BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-tar-fix.patch
+BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-recursive_action-fix.patch
 endif
 
 ifeq ($(BOXARCH), $(filter $(BOXARCH), arm mips))
