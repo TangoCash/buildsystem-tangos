@@ -185,6 +185,10 @@ NFS=$(grep -c nfs /proc/cmdline)
     /usr/sbin/crond &
   fi
 
+  if [ -e /var/tuxbox/config/.dropbear ]; then
+    /etc/init.d/dropbear start &
+  fi
+
   if [ -e /var/tuxbox/config/.tuxcald ]; then
     echo "starting tuxcald ..."
     /etc/init.d/tuxcald start &
@@ -196,6 +200,7 @@ NFS=$(grep -c nfs /proc/cmdline)
   fi
 
   if [ -e /var/tuxbox/config/.djmount ]; then
+    mkdir -p /media/upnp
     /usr/bin/djmount /media/upnp &
   fi
 

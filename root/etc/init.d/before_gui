@@ -104,56 +104,143 @@ fi
 ################################################################################
 start_service()
 {
-  if [ -e $FLAGDIR/.fritzcall ]; then
-    /var/tuxbox/plugins/fb.sh start >/dev/null 2>&1
-  fi
-  if [ -e $FLAGDIR/.xupnpd ]; then
-    /usr/bin/xupnpd &
-  fi
-
-  if [ -e $FLAGDIR/.samba ]; then
-    /etc/init.d/samba start &
-  fi
-  if [ -e $FLAGDIR/.nfsd ]; then
-    if [ ! -e /etc/exports ]; then
-      echo "/media/hdd *(ro,wdelay,nohide,insecure,no_root_squash,no_all_squash,no_subtree_check,sync)" >/etc/exports
+  case $1 in
+  samba)
+    if [ -e $FLAGDIR/.samba ]; then
+      echo starting $1
+      /etc/init.d/samba start &
     fi
-    if [ ! -e /etc/hosts.allow ]; then
-      echo 'ALL: ALL' > /etc/hosts.allow
+  ;;
+  fritzcall)
+    if [ -e $FLAGDIR/.fritzcall ]; then
+      echo starting $1
+      /var/tuxbox/plugins/fb.sh start >/dev/null 2>&1
     fi
-    touch /var/lib/nfs/etab
-    touch /var/lib/nfs/rmtab
-    touch /var/lib/nfs/xtab
-    touch /var/lib/nfs/state
-    /usr/sbin/rpc.nfsd 1
-    /usr/sbin/rpc.mountd -V 3
-    /usr/sbin/exportfs -ra
-  fi
+  ;;
+  xupnpd)
+    if [ -e $FLAGDIR/.xupnpd ]; then
+      echo starting $1
+      /usr/bin/xupnpd &
+    fi
+  ;;
+  nfsd)
+    if [ -e $FLAGDIR/.nfsd ]; then
+      echo starting $1
+      if [ ! -e /etc/exports ]; then
+        echo "/media/hdd *(ro,wdelay,nohide,insecure,no_root_squash,no_all_squash,no_subtree_check,sync)" >/etc/exports
+      fi
+      if [ ! -e /etc/hosts.allow ]; then
+        echo 'ALL: ALL' > /etc/hosts.allow
+      fi
+      touch /var/lib/nfs/etab
+      touch /var/lib/nfs/rmtab
+      touch /var/lib/nfs/xtab
+      touch /var/lib/nfs/state
+      /usr/sbin/rpc.nfsd 1
+      /usr/sbin/rpc.mountd -V 3
+      /usr/sbin/exportfs -ra
+    fi
+  ;;
+  crond)
+    if [ -e $FLAGDIR/.crond ]; then
+      echo starting $1
+      mkdir -p /var/spool/cron/crontabs
+      touch /var/spool/cron/crontabs/root
+      /usr/sbin/crond &
+    fi
+  ;;
+  tuxcald)
+    if [ -e $FLAGDIR/.tuxcald ]; then
+      echo starting $1
+      /etc/init.d/tuxcald start &
+    fi
+  ;;
+  tuxmaild)
+    if [ -e $FLAGDIR/.tuxmaild ]; then
+      echo starting $1
+      /etc/init.d/tuxmaild start &
+    fi
+  ;;
+  djmount)
+    if [ -e $FLAGDIR/.djmount ]; then
+      echo starting $1
+      mkdir -p /media/upnp
+      /usr/bin/djmount /media/upnp &
+    fi
+  ;;
+  dropbear)
+    if [ -e $FLAGDIR/.dropbear ]; then
+      echo starting $1
+      /etc/init.d/dropbear start &
+    fi
+  ;;
+  esac
 }
 stop_service()
 {
-  if [ -e $FLAGDIR/.fritzcall ]; then
-    /var/tuxbox/plugins/fb.sh stop >/dev/null 2>&1
-  fi
-  if [ -e $FLAGDIR/.xupnpd ]; then
-    killall -9 xupnpd
-  fi
-
-  if [ -e $FLAGDIR/.samba ]; then
-    /etc/init.d/samba stop &
-  fi
-  if [ -e $FLAGDIR/.nfsd ]; then
-    killall -9 exportfs
-    killall -9 rpc.mountd
-    killall -9 rpc.nfsd
-  fi
+case $1 in
+  fritzcall)
+    if [ -e $FLAGDIR/.fritzcall ]; then
+      echo stopping $1
+      /var/tuxbox/plugins/fb.sh stop >/dev/null 2>&1
+    fi
+  ;;
+  xupnpd)
+    if [ -e $FLAGDIR/.xupnpd ]; then
+      echo stopping $1
+      killall -9 xupnpd
+    fi
+  ;;
+  samba)
+    if [ -e $FLAGDIR/.samba ]; then
+      echo stopping $1
+      /etc/init.d/samba stop &
+    fi
+  ;;
+  nfsd)
+    if [ -e $FLAGDIR/.nfsd ]; then
+      echo stopping $1
+      killall -9 exportfs
+      killall -9 rpc.mountd
+      killall -9 rpc.nfsd
+    fi
+  ;;
+  tuxmaild)
+    if [ -e $FLAGDIR/.tuxmaild ]; then
+      echo stopping $1
+      /etc/init.d/tuxmaild stop &
+    fi
+  ;;
+  tuxcald)
+    if [ -e $FLAGDIR/.tuxcald ]; then
+      echo stopping $1
+      /etc/init.d/tuxcald stop &
+    fi
+  ;;
+  crond)
+    if [ -e $FLAGDIR/.crond ]; then
+      echo stopping $1
+      killall -9 crond
+    fi
+  ;;
+  djmount)
+    if [ -e $FLAGDIR/.djmount ]; then
+      echo stopping $1
+      killall -9 djmount
+    fi
+  ;;
+  dropbear)
+    if [ -e $FLAGDIR/.dropbear ]; then
+      echo stopping $1
+      /etc/init.d/dropbear stop &
+  esac
 }
 ################################################################################
 if [ "$1" == "" ]; then
   stop_cam
   start_cam
 else
-  $1
+  $1 $2
 fi
 
 exit
