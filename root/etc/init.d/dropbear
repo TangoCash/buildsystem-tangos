@@ -22,14 +22,14 @@ fixperms() {
 
 case $1 in
 	start)
-		if [ -e /var/etc/.dropbear ]; then
+		if [ -e /var/tuxbox/config/.dropbear ]; then
 			genkeys
 			fixperms
 			dropbear
 		fi
 	;;
 	stop)
-		if [ -e /var/etc/.dropbear ]; then
+		if [ -e /var/tuxbox/config/.dropbear ]; then
 			pid=$(cat /var/run/dropbear.pid 2>/dev/null)
 			test -n "$pid" && kill $pid || true
 		fi
