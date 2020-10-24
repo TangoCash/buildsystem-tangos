@@ -64,7 +64,7 @@ $(D)/neutrino-plugins.do_prepare: $(D)/bootstrap $(D)/ffmpeg $(D)/libcurl $(D)/l
 		else cd $(ARCHIVE); git clone https://github.com/Duckbox-Developers/neutrino-ddt-plugins.git neutrino-plugins-ddt.git; \
 		fi
 	cp -ra $(ARCHIVE)/neutrino-plugins-ddt.git $(SOURCE_DIR)/neutrino-plugins
-	sed -i -e 's#shellexec fx2#shellexec#g' $(SOURCE_DIR)/neutrino-plugins/Makefile.am
+	sed -i -e 's#shellexec fx2#shellexec tuxmail tuxcal#g' $(SOURCE_DIR)/neutrino-plugins/Makefile.am
 	sed -i -e 's#stb-startup \\#stb-startup-tuxbox \\#g' $(SOURCE_DIR)/neutrino-plugins/Makefile.am
 	cp -ra $(SOURCE_DIR)/neutrino-plugins $(SOURCE_DIR)/neutrino-plugins.org
 	@touch $@
