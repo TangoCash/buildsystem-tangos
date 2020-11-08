@@ -643,7 +643,7 @@ $(D)/openssl: $(D)/bootstrap $(ARCHIVE)/$(OPENSSL_SOURCE)
 # openssl2
 #
 OPENSSL2_MAJOR = 1.1.1
-OPENSSL2_MINOR = d
+OPENSSL2_MINOR = h
 OPENSSL2_VER = $(OPENSSL2_MAJOR)$(OPENSSL2_MINOR)
 OPENSSL2_SOURCE = openssl-$(OPENSSL2_VER).tar.gz
 #OPENSSL2_PATCH  = openssl-$(OPENSSL2_VER)-optimize-for-size.patch
@@ -842,7 +842,7 @@ $(D)/timezone: $(D)/bootstrap find-zic $(ARCHIVE)/$(TZDATA_SOURCE)
 #
 # freetype
 #
-FREETYPE_VER = 2.10.2
+FREETYPE_VER = 2.10.4
 FREETYPE_SOURCE = freetype-$(FREETYPE_VER).tar.xz
 FREETYPE_PATCH = freetype-$(FREETYPE_VER).patch
 
@@ -868,6 +868,7 @@ $(D)/freetype: $(D)/bootstrap $(D)/zlib $(D)/libpng $(ARCHIVE)/$(FREETYPE_SOURCE
 			--with-zlib=yes \
 			--with-png=yes \
 			--without-harfbuzz \
+			--without-brotli \
 		; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
@@ -1151,7 +1152,7 @@ $(D)/ca-bundle: $(ARCHIVE)/$(CA-BUNDLE_SOURCE)
 #
 # libcurl
 #
-LIBCURL_VER = 7.72.0
+LIBCURL_VER = 7.73.0
 LIBCURL_SOURCE = curl-$(LIBCURL_VER).tar.bz2
 LIBCURL_PATCH = libcurl-$(LIBCURL_VER).patch
 
@@ -1499,7 +1500,7 @@ $(D)/libiconv: $(D)/bootstrap $(ARCHIVE)/$(LIBICONV_SOURCE)
 #
 # expat
 #
-EXPAT_VER = 2.2.9
+EXPAT_VER = 2.2.10
 EXPAT_SOURCE = expat-$(EXPAT_VER).tar.bz2
 EXPAT_PATCH  = expat-$(EXPAT_VER)-libtool-tag.patch
 
@@ -2238,7 +2239,7 @@ $(D)/libusb_compat: $(D)/bootstrap $(D)/libusb $(ARCHIVE)/$(LIBUSB_COMPAT_SOURCE
 #
 # alsa-lib
 #
-ALSA_LIB_VER = 1.2.3.2
+ALSA_LIB_VER = 1.2.4
 ALSA_LIB_SOURCE = alsa-lib-$(ALSA_LIB_VER).tar.bz2
 ALSA_LIB_PATCH  = alsa-lib-$(ALSA_LIB_VER).patch
 ALSA_LIB_PATCH += alsa-lib-$(ALSA_LIB_VER)-link_fix.patch
@@ -2282,7 +2283,7 @@ $(D)/alsa_lib: $(D)/bootstrap $(ARCHIVE)/$(ALSA_LIB_SOURCE)
 #
 # alsa-utils
 #
-ALSA_UTILS_VER = 1.2.3
+ALSA_UTILS_VER = 1.2.4
 ALSA_UTILS_SOURCE = alsa-utils-$(ALSA_UTILS_VER).tar.bz2
 ALSA_UTILS_PATCH = alsa-utils-$(ALSA_UTILS_VER).patch
 
