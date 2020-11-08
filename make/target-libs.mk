@@ -7,7 +7,7 @@ LIBNSL_SOURCE = libnsl-$(LIBNSL_VER).tar.gz
 $(ARCHIVE)/$(LIBNSL_SOURCE):
 	$(DOWNLOAD) https://github.com/thkukuk/libnsl/archive/v1.2.0/$(LIBNSL_SOURCE)
 
-$(D)/libnsl: $(D)/bootstrap $(ARCHIVE)/$(LIBNSL_SOURCE)
+$(D)/libnsl: $(D)/bootstrap $(D)/libtirpc $(ARCHIVE)/$(LIBNSL_SOURCE)
 	$(START_BUILD)
 	$(REMOVE)/libnsl-$(LIBNSL_VER)
 	$(UNTAR)/$(LIBNSL_SOURCE)
@@ -20,6 +20,31 @@ $(D)/libnsl: $(D)/bootstrap $(ARCHIVE)/$(LIBNSL_SOURCE)
 		$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libnsl.pc
 		$(REWRITE_LIBTOOL)/libnsl.la
 	$(REMOVE)/libnsl-$(LIBNSL_VER)
+	$(TOUCH)
+
+#
+# libtirpc
+#
+LIBTIRPC_VER = 1.2.6
+LIBTIRPC_SOURCE = libtirpc-$(LIBTIRPC_VER).tar.bz2
+
+$(ARCHIVE)/$(LIBTIRPC_SOURCE):
+	$(DOWNLOAD) https://sourceforge.net/projects/libtirpc/files/libtirpc/$(LIBTIRPC_VER)/$(LIBTIRPC_SOURCE)
+
+$(D)/libtirpc: $(D)/bootstrap $(ARCHIVE)/$(LIBTIRPC_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/libtirpc-$(LIBNSL_VER)
+	$(UNTAR)/$(LIBTIRPC_SOURCE)
+	$(CHDIR)/libtirpc-$(LIBTIRPC_VER); \
+		$(CONFIGURE) \
+			--prefix=/usr \
+			--disable-gssapi \
+			; \
+		$(MAKE) all; \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+		$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libtirpc.pc
+		$(REWRITE_LIBTOOL)/libtirpc.la
+	$(REMOVE)/libtirpc-$(LIBNSL_VER)
 	$(TOUCH)
 
 #
