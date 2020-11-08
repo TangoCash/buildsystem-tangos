@@ -885,25 +885,25 @@ $(D)/sysstat: $(D)/bootstrap $(ARCHIVE)/$(SYSSTAT_SOURCE)
 #
 # autofs
 #
-AUTOFS_VER = 4.1.4
+AUTOFS_VER = 5.1.6
 AUTOFS_SOURCE = autofs-$(AUTOFS_VER).tar.gz
-AUTOFS_PATCH = autofs-$(AUTOFS_VER).patch
+#AUTOFS_PATCH = autofs-$(AUTOFS_VER).patch
 
 $(ARCHIVE)/$(AUTOFS_SOURCE):
-	$(DOWNLOAD) https://www.kernel.org/pub/linux/daemons/autofs/v4/$(AUTOFS_SOURCE)
+	$(DOWNLOAD) https://www.kernel.org/pub/linux/daemons/autofs/v5/$(AUTOFS_SOURCE)
 
-$(D)/autofs: $(D)/bootstrap $(D)/e2fsprogs $(ARCHIVE)/$(AUTOFS_SOURCE)
+$(D)/autofs: $(D)/bootstrap $(D)/e2fsprogs $(D)/libnsl $(ARCHIVE)/$(AUTOFS_SOURCE)
 	$(START_BUILD)
 	$(REMOVE)/autofs-$(AUTOFS_VER)
 	$(UNTAR)/$(AUTOFS_SOURCE)
 	$(CHDIR)/autofs-$(AUTOFS_VER); \
 		$(call apply_patches, $(AUTOFS_PATCH)); \
-		cp aclocal.m4 acinclude.m4; \
 		autoconf; \
+		$(BUILDENV) \
 		$(CONFIGURE) \
 			--prefix=/usr \
 		; \
-		$(MAKE) all CC=$(TARGET)-gcc STRIP=$(TARGET)-strip; \
+		$(MAKE) all; \
 		$(MAKE) install INSTALLROOT=$(TARGET_DIR) SUBDIRS="lib daemon modules"
 	install -m 755 $(SKEL_ROOT)/etc/init.d/autofs $(TARGET_DIR)/etc/init.d/
 	install -m 644 $(SKEL_ROOT)/etc/auto.hotplug $(TARGET_DIR)/etc/
