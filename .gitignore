@@ -1,3 +1,4 @@
+Archive
 tools/
 build_logfile/
 build_source/
@@ -17,6 +18,7 @@ Patches/oscam.config
 root/boot/*
 tufsbox/
 .deps/
+.ccache-*
 config*
 config.local
 Makefile.local

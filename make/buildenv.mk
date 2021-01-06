@@ -23,7 +23,7 @@ MAKEFLAGS             += --no-print-directory
 
 # default platform...
 BASE_DIR             := $(shell pwd)
-ARCHIVE              ?= $(HOME)/Archive
+ARCHIVE              ?= $(BASE_DIR)/Archive
 TOOLS_DIR             = $(BASE_DIR)/tools
 BUILD_TMP             = $(BASE_DIR)/build_tmp
 SOURCE_DIR            = $(BASE_DIR)/build_source
@@ -49,7 +49,7 @@ BOXARCH              ?= arm
 BOXTYPE              ?= hd51
 FFMPEG_EXPERIMENTAL  ?= 0
 OPTIMIZATIONS        ?= size
-BS_GCC_VER           ?= 9.2.0
+BS_GCC_VER           ?= 10.2.0
 IMAGE                ?= neutrino
 FLAVOUR              ?= TANGOS
 EXTERNAL_LCD         ?= both
@@ -86,7 +86,7 @@ CCACHE                = /usr/bin/ccache
 BUILD                ?= $(shell /usr/share/libtool/config.guess 2>/dev/null || /usr/share/libtool/config/config.guess 2>/dev/null || /usr/share/misc/config.guess 2>/dev/null)
 
 ifeq ($(BOXARCH), arm)
-CCACHE_DIR            = $(HOME)/.ccache-bs-arm
+CCACHE_DIR            = $(BASE_DIR)/.ccache-bs-arm
 export CCACHE_DIR
 TARGET               ?= arm-cortex-linux-gnueabihf
 TARGET_MARCH_CFLAGS   = -march=armv7ve -mtune=cortex-a15 -mfpu=neon-vfpv4 -mfloat-abi=hard
@@ -94,7 +94,7 @@ CORTEX_STRINGS        = -lcortex-strings
 endif
 
 ifeq ($(BOXARCH), aarch64)
-CCACHE_DIR            = $(HOME)/.ccache-bs-aarch64
+CCACHE_DIR            = $(BASE_DIR)/.ccache-bs-aarch64
 export CCACHE_DIR
 TARGET               ?= aarch64-unknown-linux-gnu
 TARGET_MARCH_CFLAGS   =
@@ -102,7 +102,7 @@ CORTEX_STRINGS        =
 endif
 
 ifeq ($(BOXARCH), mips)
-CCACHE_DIR            = $(HOME)/.ccache-bs-mips
+CCACHE_DIR            = $(BASE_DIR)/.ccache-bs-mips
 export CCACHE_DIR
 TARGET               ?= mipsel-unknown-linux-gnu
 TARGET_MARCH_CFLAGS   = -march=mips32 -mtune=mips32
