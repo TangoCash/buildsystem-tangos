@@ -103,14 +103,15 @@ fi
 ##############################################
 
 case $1 in
-	3[0-1] | 4[0-5] | 5[1-3] | 6[0-1] | 70) REPLY=$1;;
+	3[0-2] | 4[0-5] | 5[1-3] | 6[0-1] | 70 | 8[0-2] | 90) REPLY=$1;;
 	*)
 		echo "Target receivers:"
 		echo
 		echo "  arm-based receivers"
-		echo "  Edison"
+		echo "  Edision"
 		echo "   30)  Edision OS mio 4K"
 		echo "   31)  Edision OS mio+ 4K"
+		echo "   32)  Edision OS mini 4K"
 		echo
 		echo "  VU+"
 		echo "   40) VU+ Solo 4K     43) VU+ Ultimo 4K"
@@ -133,13 +134,22 @@ case $1 in
 		echo "  VU+"
 		echo "   70)  VU+ Duo"
 		echo
-		read -p "Select target (30-70)? [51]"
+		echo "  Edision"
+		echo "   80)  Edision OS nino"
+		echo "   81)  Edision OS nino+"
+		echo "   82)  Edision OS nino pro"
+		echo
+		echo "  Gigablue"
+		echo "   90)  Gigablue 800 SE"
+		echo
+		read -p "Select target (30-90)? [51]"
 		REPLY="${REPLY:-51}";;
 esac
 
 case "$REPLY" in
 	30) BOXARCH="arm";BOXTYPE="osmio4k";;
 	31) BOXARCH="arm";BOXTYPE="osmio4kplus";;
+	32) BOXARCH="arm";BOXTYPE="osmini4k";;
 	40) BOXARCH="arm";BOXTYPE="vusolo4k";;
 	41) BOXARCH="arm";BOXTYPE="vuduo4k";;
 	42) BOXARCH="arm";BOXTYPE="vuzero4k";;
@@ -152,6 +162,10 @@ case "$REPLY" in
 	60) BOXARCH="arm";BOXTYPE="hd60";;
 	61) BOXARCH="arm";BOXTYPE="hd61";;
 	70) BOXARCH="mips";BOXTYPE="vuduo";;
+	80) BOXARCH="mips";BOXTYPE="osnino";;
+	81) BOXARCH="mips";BOXTYPE="osninoplus";;
+	82) BOXARCH="mips";BOXTYPE="osninopro";;
+	90) BOXARCH="mips";BOXTYPE="gb800se";;
 	 *) BOXARCH="arm";BOXTYPE="hd51";;
 esac
 echo "BOXARCH=$BOXARCH" > config
