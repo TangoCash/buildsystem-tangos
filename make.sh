@@ -291,7 +291,7 @@ case "$REPLY" in
 	2) EXTERNAL_LCD="externallcd";;
 	3) EXTERNAL_LCD="lcd4linux";;
 	4) EXTERNAL_LCD="none";;
-	*) EXTERNAL_LCD="none";;
+	*) EXTERNAL_LCD="externallcd";;
 esac
 echo "EXTERNAL_LCD=$EXTERNAL_LCD" >> config
 

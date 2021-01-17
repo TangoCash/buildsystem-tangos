@@ -63,6 +63,8 @@ CAIRO_OPTS =
 
 LINKS_PATCH_BOXTYPE =
 
+GRAPHLCD_EXTRA_PATCH = graphlcd-vuplus4k.patch
+
 CUSTOM_RCS     = $(SKEL_ROOT)/release/rcS_neutrino_vu
 CUSTOM_INITTAB = $(SKEL_ROOT)/etc/inittab_ttyS0
 

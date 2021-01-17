@@ -26,12 +26,6 @@ $(ARCHIVE)/$(CROSSTOOL_NG_SOURCE):
 	$(HELPERS_DIR)/get-git-archive.sh $(CROSSTOOL_NG_URL) $(CROSSTOOL_NG_VER) $(notdir $@) $(ARCHIVE)
 
 CUSTOM_KERNEL = $(ARCHIVE)/$(KERNEL_SRC)
-ifeq ($(BOXTYPE), vusolo4k)
-CUSTOM_KERNEL_VER = 3.14-1.8
-endif
-ifeq ($(BOXTYPE), vuduo4k)
-CUSTOM_KERNEL_VER = 4.1-1.17
-endif
 
 ifeq ($(wildcard $(CROSS_DIR)/build.log.bz2),)
 CROSSTOOL = crosstool

@@ -188,11 +188,6 @@ N_CONFIG_OPTS += \
 	--with-controldir=/usr/share/tuxbox/neutrino/control \
 	--with-controldir_var=/var/tuxbox/control
 
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vusolo4k))
-N_CONFIG_OPTS += --enable-graphlcd
-NEUTRINO_DEPS += $(D)/graphlcd
-endif
-
 ifeq ($(EXTERNAL_LCD), externallcd)
 N_CONFIG_OPTS += --enable-graphlcd
 NEUTRINO_DEPS += $(D)/graphlcd
