@@ -144,7 +144,7 @@ $(D)/module_init_tools: $(D)/bootstrap $(D)/lsb $(ARCHIVE)/$(MODULE_INIT_TOOLS_S
 #
 # sysvinit
 #
-SYSVINIT_VER = 2.97
+SYSVINIT_VER = 2.98
 SYSVINIT_SOURCE = sysvinit-$(SYSVINIT_VER).tar.xz
 SYSVINIT_PATCH  = sysvinit-$(SYSVINIT_VER)-crypt-lib.patch
 SYSVINIT_PATCH += sysvinit-$(SYSVINIT_VER)-change-INIT_FIFO.patch
@@ -318,7 +318,7 @@ $(D)/e2fsprogs: $(D)/bootstrap $(D)/util_linux $(ARCHIVE)/$(E2FSPROGS_SOURCE)
 #
 # util_linux
 #
-UTIL_LINUX_MAJOR = 2.32
+UTIL_LINUX_MAJOR = 2.36
 UTIL_LINUX_MINOR = 1
 UTIL_LINUX_VER = $(UTIL_LINUX_MAJOR).$(UTIL_LINUX_MINOR)
 UTIL_LINUX_SOURCE = util-linux-$(UTIL_LINUX_VER).tar.xz
@@ -552,6 +552,33 @@ $(D)/jfsutils: $(D)/bootstrap $(D)/e2fsprogs $(ARCHIVE)/$(JFSUTILS_SOURCE)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	rm -f $(addprefix $(TARGET_DIR)/sbin/,jfs_debugfs jfs_fscklog jfs_logdump)
 	$(REMOVE)/jfsutils-$(JFSUTILS_VER)
+	$(TOUCH)
+
+#
+# f2fs-tools
+#
+
+F2FS-TOOLS_VER = 1.14.0
+F2FS-TOOLS_SOURCE = f2fs-tools-$(F2FS-TOOLS_VER).tar.gz
+
+$(ARCHIVE)/$(F2FS-TOOLS_SOURCE):
+	$(DOWNLOAD) https://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs-tools.git/snapshot/$(F2FS-TOOLS_SOURCE)
+
+$(D)/f2fs-tools: $(D)/bootstrap $(D)/util_linux $(ARCHIVE)/$(F2FS-TOOLS_SOURCE)
+	$(REMOVE)/f2fs-tools-$(F2FS-TOOLS_VER)
+	$(UNTAR)/$(F2FS-TOOLS_SOURCE)
+	$(CHDIR)/f2fs-tools-$(F2FS-TOOLS_VER); \
+		autoreconf -fi; \
+		ac_cv_file__git=no \
+		$(CONFIGURE) \
+			--prefix= \
+			--mandir=/.remove \
+			--without-selinux \
+			--without-blkid \
+			; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REMOVE)/f2fs-tools-$(F2FS-TOOLS_VER)
 	$(TOUCH)
 
 #
@@ -860,7 +887,7 @@ $(D)/fbshot: $(D)/bootstrap $(D)/libpng $(ARCHIVE)/$(FBSHOT_SOURCE)
 #
 # sysstat
 #
-SYSSTAT_VER = 12.3.3
+SYSSTAT_VER = 12.5.2
 SYSSTAT_SOURCE = sysstat-$(SYSSTAT_VER).tar.bz2
 
 $(ARCHIVE)/$(SYSSTAT_SOURCE):
@@ -1099,7 +1126,7 @@ $(D)/avahi: $(D)/bootstrap $(D)/expat $(D)/libdaemon $(D)/dbus $(ARCHIVE)/$(AVAH
 #
 # wget
 #
-WGET_VER = 1.20.3
+WGET_VER = 1.21.1
 WGET_SOURCE = wget-$(WGET_VER).tar.gz
 WGET_PATCH = wget-$(WGET_VER).patch
 
@@ -1171,7 +1198,7 @@ $(D)/coreutils: $(D)/bootstrap $(D)/openssl $(ARCHIVE)/$(COREUTILS_SOURCE)
 #
 # smartmontools
 #
-SMARTMONTOOLS_VER = 7.1
+SMARTMONTOOLS_VER = 7.2
 SMARTMONTOOLS_SOURCE = smartmontools-$(SMARTMONTOOLS_VER).tar.gz
 
 $(ARCHIVE)/$(SMARTMONTOOLS_SOURCE):
@@ -1193,7 +1220,7 @@ $(D)/smartmontools: $(D)/bootstrap $(ARCHIVE)/$(SMARTMONTOOLS_SOURCE)
 #
 # nfs_utils
 #
-NFS_UTILS_VER = 2.5.1
+NFS_UTILS_VER = 2.5.2
 NFS_UTILS_SOURCE = nfs-utils-$(NFS_UTILS_VER).tar.bz2
 NFS_UTILS_PATCH = nfs-utils-$(NFS_UTILS_VER).patch
 
@@ -1370,7 +1397,7 @@ $(D)/htop: $(D)/bootstrap $(D)/ncurses $(ARCHIVE)/$(HTOP_SOURCE)
 #
 # ethtool
 #
-ETHTOOL_VER = 5.7
+ETHTOOL_VER = 5.10
 ETHTOOL_PATCH = ethtool-$(ETHTOOL_VER).patch
 ETHTOOL_SOURCE = ethtool-$(ETHTOOL_VER).tar.xz
 
@@ -1699,7 +1726,7 @@ $(D)/udpxy: $(D)/bootstrap $(ARCHIVE)/$(UDPXY_SOURCE)
 #
 # openvpn
 #
-OPENVPN_VER = 2.4.9
+OPENVPN_VER = 2.5.0
 OPENVPN_SOURCE = openvpn-$(OPENVPN_VER).tar.xz
 
 $(ARCHIVE)/$(OPENVPN_SOURCE):
@@ -1738,7 +1765,7 @@ $(D)/openvpn: $(D)/bootstrap $(D)/openssl $(D)/lzo $(ARCHIVE)/$(OPENVPN_SOURCE)
 #
 # openssh
 #
-OPENSSH_VER = 8.3p1
+OPENSSH_VER = 8.4p1
 OPENSSH_SOURCE = openssh-$(OPENSSH_VER).tar.gz
 
 $(ARCHIVE)/$(OPENSSH_SOURCE):
@@ -1801,7 +1828,8 @@ $(D)/dropbear: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/$(DROPBEAR_SOURCE)
 #
 # dropbearmulti
 #
-DROPBEARMULTI_VER = 34f24b1
+#DROPBEARMULTI_VER = 34f24b1
+DROPBEARMULTI_VER = 80e9281
 DROPBEARMULTI_SOURCE = dropbearmulti-git-$(DROPBEARMULTI_VER).tar.bz2
 DROPBEARMULTI_URL = https://github.com/mkj/dropbear.git
 
@@ -1887,6 +1915,59 @@ $(D)/usb_modeswitch: $(D)/bootstrap $(D)/libusb $(D)/usb_modeswitch_data $(ARCHI
 		$(BUILDENV) $(MAKE) DESTDIR=$(TARGET_DIR); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REMOVE)/usb-modeswitch-$(USB_MODESWITCH_VER)
+	$(TOUCH)
+
+#
+# dvb-apps
+#
+DVB_APPS_PATCH = dvb-apps.patch
+
+$(D)/dvb-apps: $(D)/bootstrap $(ARCHIVE)/$(DVB_APPS_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/dvb-apps
+	set -e; if [ -d $(ARCHIVE)/dvb-apps.git ]; \
+		then cd $(ARCHIVE)/dvb-apps.git; git pull; \
+		else cd $(ARCHIVE); git clone https://github.com/openpli-arm/dvb-apps.git dvb-apps.git; \
+		fi
+	cp -ra $(ARCHIVE)/dvb-apps.git $(BUILD_TMP)/dvb-apps
+	$(CHDIR)/dvb-apps; \
+		$(call apply_patches,$(DVB_APPS_PATCH)); \
+		$(BUILDENV) \
+		$(BUILDENV) $(MAKE) DESTDIR=$(TARGET_DIR); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REMOVE)/dvb-apps
+	$(TOUCH)
+
+#
+# minisatip
+#
+MINISATIP_PATCH = minisatip.patch
+
+$(D)/minisatip: $(D)/bootstrap $(D)/openssl $(D)/libdvbcsa $(D)/dvb-apps $(ARCHIVE)/$(MINISATIP_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/minisatip
+	set -e; if [ -d $(ARCHIVE)/minisatip.git ]; \
+		then cd $(ARCHIVE)/minisatip.git; git pull; \
+		else cd $(ARCHIVE); git clone https://github.com/catalinii/minisatip.git minisatip.git; \
+		fi
+	cp -ra $(ARCHIVE)/minisatip.git $(BUILD_TMP)/minisatip
+	$(CHDIR)/minisatip; \
+		$(call apply_patches,$(MINISATIP_PATCH)); \
+		$(BUILDENV) \
+		export CFLAGS="-pipe -Os -Wall -g0 -I$(TARGET_DIR)/usr/include"; \
+		export CPPFLAGS="-I$(TARGET_DIR)/usr/include"; \
+		export LDFLAGS="-L$(TARGET_DIR)/usr/lib"; \
+		./configure \
+			--host=$(TARGET) \
+			--build=$(BUILD) \
+			--enable-enigma \
+			--enable-static \
+		; \
+		$(MAKE); \
+	install -m 755 $(BUILD_TMP)/minisatip/minisatip $(TARGET_DIR)/usr/bin
+	install -d $(TARGET_DIR)/usr/share/minisatip
+	cp -a $(BUILD_TMP)/minisatip/html $(TARGET_DIR)/usr/share/minisatip
+	$(REMOVE)/minisatip
 	$(TOUCH)
 
 #

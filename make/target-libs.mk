@@ -2387,6 +2387,28 @@ $(D)/libdvbsi: $(D)/bootstrap $(ARCHIVE)/$(LIBDVBSI_SOURCE)
 	$(TOUCH)
 
 #
+# libdvbcsa
+#
+$(D)/libdvbcsa: $(D)/bootstrap $(ARCHIVE)/$(LIBDVBCSA_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/libdvbcsa
+	set -e; if [ -d $(ARCHIVE)/libdvbcsa.git ]; \
+		then cd $(ARCHIVE)/libdvbcsa.git; git pull; \
+		else cd $(ARCHIVE); git clone https://code.videolan.org/videolan/libdvbcsa.git libdvbcsa.git; \
+		fi
+	cp -ra $(ARCHIVE)/libdvbcsa.git $(BUILD_TMP)/libdvbcsa
+	$(CHDIR)/libdvbcsa; \
+		autoreconf -fi $(SILENT_OPT); \
+		$(CONFIGURE) \
+			--prefix=/usr \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REWRITE_LIBTOOL)/libdvbcsa.la
+	$(REMOVE)/libdvbcsa
+	$(TOUCH)
+
+#
 # libmodplug
 #
 LIBMODPLUG_VER = 0.8.8.4
@@ -2769,6 +2791,63 @@ $(D)/gnutls: $(D)/bootstrap $(D)/nettle $(ARCHIVE)/$(GNUTLS_SOURCE)
 	$(REWRITE_LIBTOOLDEP)/libgnutlsxx.la
 	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,psktool gnutls-cli-debug certtool srptool ocsptool gnutls-serv gnutls-cli)
 	$(REMOVE)/gnutls-$(GNUTLS_VER)
+	$(TOUCH)
+
+#
+# libgpg-error
+#
+LIBGPG_ERROR_VER    = 1.41
+LIBGPG_ERROR_DIR    = libgpg-error-$(LIBGPG_ERROR_VER)
+LIBGPG_ERROR_SOURCE = libgpg-error-$(LIBGPG_ERROR_VER).tar.bz2
+LIBGPG_ERROR_URL    = https://www.gnupg.org/ftp/gcrypt/libgpg-error
+
+$(ARCHIVE)/$(LIBGPG_ERROR_SOURCE):
+	$(DOWNLOAD) $(LIBGPG_ERROR_URL)/$(LIBGPG_ERROR_SOURCE)
+
+$(D)/libgpg-error: $(D)/bootstrap $(ARCHIVE)/$(LIBGPG_ERROR_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/$(LIBGPG_ERROR_DIR)
+	$(UNTAR)/$(LIBGPG_ERROR_SOURCE)
+	$(CHDIR)/$(LIBGPG_ERROR_DIR); \
+		$(CONFIGURE) \
+			--prefix=/usr \
+			--mandir=/.remove \
+			--infodir=/.remove \
+			--datarootdir=/.remove \
+			--disable-tests \
+			; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REWRITE_LIBTOOL)/libgpg-error.la
+	$(REMOVE)/$(LIBGPG_ERROR_DIR)
+	$(TOUCH)
+
+#
+# libgcrypt
+#
+LIBGCRYPT_VER    = 1.8.7
+LIBGCRYPT_DIR    = libgcrypt-$(LIBGCRYPT_VER)
+LIBGCRYPT_SOURCE = libgcrypt-$(LIBGCRYPT_VER).tar.bz2
+LIBGCRYPT_URL    = https://gnupg.org/ftp/gcrypt/libgcrypt
+
+$(ARCHIVE)/$(LIBGCRYPT_SOURCE):
+	$(DOWNLOAD) $(LIBGCRYPT_URL)/$(LIBGCRYPT_SOURCE)
+
+$(D)/libgcrypt: $(D)/bootstrap $(D)/libgpg-error $(ARCHIVE)/$(LIBGCRYPT_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/$(LIBGCRYPT_DIR)
+	$(UNTAR)/$(LIBGCRYPT_SOURCE)
+	$(CHDIR)/$(LIBGCRYPT_DIR); \
+		$(CONFIGURE) \
+			--prefix=/usr \
+			--disable-tests \
+			--with-gpg-error-prefix=$(TARGET_DIR)/usr \
+			--mandir=/.remove \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REWRITE_LIBTOOL)/libgcrypt.la
+	$(REMOVE)/$(LIBGCRYPT_DIR)
 	$(TOUCH)
 
 #
