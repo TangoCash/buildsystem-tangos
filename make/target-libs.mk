@@ -349,8 +349,8 @@ $(D)/libffi: $(D)/bootstrap $(ARCHIVE)/$(LIBFFI_SOURCE)
 # host_libglib2_genmarshal
 #
 LIBGLIB2_VER_MAJOR = 2
-LIBGLIB2_VER_MINOR = 55
-LIBGLIB2_VER_MICRO = 0
+LIBGLIB2_VER_MINOR = 57
+LIBGLIB2_VER_MICRO = 1
 LIBGLIB2_VER = $(LIBGLIB2_VER_MAJOR).$(LIBGLIB2_VER_MINOR).$(LIBGLIB2_VER_MICRO)
 LIBGLIB2_SOURCE = glib-$(LIBGLIB2_VER).tar.xz
 
@@ -798,9 +798,6 @@ $(D)/bzip2: $(D)/bootstrap $(ARCHIVE)/$(BZIP2_SOURCE)
 		mv Makefile-libbz2_so Makefile; \
 		$(MAKE) all CC=$(TARGET)-gcc AR=$(TARGET)-ar RANLIB=$(TARGET)-ranlib; \
 		$(MAKE) install PREFIX=$(TARGET_DIR)/usr
-ifneq ($(BOXARCH), arm)
-	cd $(TARGET_DIR) && rm -f usr/bin/bzip2
-endif
 	$(REMOVE)/bzip2-$(BZIP2_VER)
 	$(TOUCH)
 
@@ -963,7 +960,7 @@ $(D)/libjpeg: $(D)/libjpeg_turbo2
 #
 # libjpeg_turbo2
 #
-LIBJPEG_TURBO2_VER = 2.0.5
+LIBJPEG_TURBO2_VER = 2.0.6
 LIBJPEG_TURBO2_SOURCE = libjpeg-turbo-$(LIBJPEG_TURBO2_VER).tar.gz
 LIBJPEG_TURBO2_PATCH = libjpeg-turbo-tiff-ojpeg.patch
 
@@ -1152,7 +1149,7 @@ $(D)/ca-bundle: $(ARCHIVE)/$(CA-BUNDLE_SOURCE)
 #
 # libcurl
 #
-LIBCURL_VER = 7.73.0
+LIBCURL_VER = 7.74.0
 LIBCURL_SOURCE = curl-$(LIBCURL_VER).tar.bz2
 LIBCURL_PATCH = libcurl-$(LIBCURL_VER).patch
 
@@ -2035,7 +2032,7 @@ $(D)/libroxml: $(D)/bootstrap $(ARCHIVE)/$(LIBROXML_SOURCE)
 #
 # pugixml
 #
-PUGIXML_VER = 1.10
+PUGIXML_VER = 1.11
 PUGIXML_SOURCE = pugixml-$(PUGIXML_VER).tar.gz
 PUGIXML_PATCH = pugixml-$(PUGIXML_VER)-config.patch
 
@@ -2441,7 +2438,7 @@ $(D)/lzo: $(D)/bootstrap $(ARCHIVE)/$(LZO_SOURCE)
 #
 # minidlna
 #
-MINIDLNA_VER = 1.2.1
+MINIDLNA_VER = 1.3.0
 MINIDLNA_SOURCE = minidlna-$(MINIDLNA_VER).tar.gz
 MINIDLNA_PATCH = minidlna-$(MINIDLNA_VER).patch
 

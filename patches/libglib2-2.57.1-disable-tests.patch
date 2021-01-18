@@ -1,6 +1,6 @@
 --- a/gio/Makefile.am
 +++ b/gio/Makefile.am
-@@ -253,7 +253,7 @@
+@@ -246,7 +246,7 @@
  platform_deps += win32/libgiowin32.la
  endif
  
@@ -46,14 +46,4 @@
  AM_MAINTAINER_MODE([enable])
  
  # Support silent build rules. Disable
---- a/gtk-doc.make
-+++ b/gtk-doc.make
-@@ -277,7 +277,7 @@ uninstall-local:
- #
- # Require gtk-doc when making dist
- #
--if HAVE_GTK_DOC
-+if ENABLE_GTK_DOC
- dist-check-gtkdoc: docs
- else
- dist-check-gtkdoc:
+

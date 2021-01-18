@@ -1,6 +1,6 @@
 --- a/gio/Makefile.am
 +++ b/gio/Makefile.am
-@@ -950,6 +950,7 @@
+@@ -952,6 +952,7 @@
  	gio-tool-tree.c					\
  	$(NULL)
  gio_LDADD = libgio-2.0.la 				\
