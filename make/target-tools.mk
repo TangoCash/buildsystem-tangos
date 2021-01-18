@@ -25,7 +25,8 @@ BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-flashcp-small-output.patch
 BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-block-telnet-internet.patch
 
 ifeq ($(BUSYBOX_SNAPSHOT), 1)
-BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-tar-fix.patch
+#BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-tar-fix.patch
+BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-changed_FreeBSD_fix.patch
 BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-recursive_action-fix.patch
 endif
 
