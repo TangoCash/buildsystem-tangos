@@ -35,7 +35,7 @@ if [ "$1" == defaultconfig ]; then
 	echo "IMAGE=neutrino" >> config
 	echo "FLAVOUR=TANGOS" >> config
 	echo "EXTERNAL_LCD=both" >> config
-	echo "NEWLAYOUT=0" >> config
+	echo "NEWLAYOUT=1" >> config
 	echo " "
 	make printenv
 	exit
@@ -302,16 +302,16 @@ if [ $BOXTYPE == 'hd51' -o $BOXTYPE == 'bre2ze4k' -o $BOXTYPE == 'h7' ]; then
 case $8 in
 	[1-2]) REPLY=$8;;
 	*)	echo -e "\nImage-Layout:"
-		echo "   1)  4 single"
-		echo "   2)  1 single + multiroot"
+		echo "   1)  1 single + multiroot"
+		echo "   2)  4 single"
 		read -p "Select layout (1-2)? [1]"
 		REPLY="${REPLY:-1}";;
 esac
 
 case "$REPLY" in
-	1)  NEWLAYOUT="0";;
-	2)  NEWLAYOUT="1";;
-	*)  NEWLAYOUT="0";;
+	1)  NEWLAYOUT="1";;
+	2)  NEWLAYOUT="0";;
+	*)  NEWLAYOUT="1";;
 esac
 echo "NEWLAYOUT=$NEWLAYOUT" >> config
 
