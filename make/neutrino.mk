@@ -271,7 +271,8 @@ endif
 $(TARGET_DIR)/.version:
 	echo "distro=$(FLAVOUR)" > $@
 	echo "imagename=`sed -n 's/\#define PACKAGE_NAME "//p' $(N_OBJDIR)/config.h | sed 's/"//'`" >> $@
-	echo "imageversion=`sed -n 's/\#define PACKAGE_VERSION "//p' $(N_OBJDIR)/config.h | sed 's/"//'`" >> $@
+#	echo "imageversion=`sed -n 's/\#define PACKAGE_VERSION "//p' $(N_OBJDIR)/config.h | sed 's/"//'`" >> $@
+	echo "imageversion=rev$(shell expr $(BUILDSYSTEM_REV) + $(LIBSTB_HAL_REV) + $(NEUTRINO_REV))" >> $@
 	echo "homepage=$(GIT_URL)" >> $@
 	echo "creator=$(MAINTAINER)" >> $@
 	echo "docs=$(GIT_URL)" >> $@
@@ -286,7 +287,8 @@ $(TARGET_DIR)/.version:
 e2-multiboot:
 	touch $(TARGET_DIR)/usr/bin/enigma2
 	#
-	echo -e "$(FLAVOUR) `sed -n 's/\#define PACKAGE_VERSION "//p' $(N_OBJDIR)/config.h | sed 's/"//'` \\\n \\\l\n" > $(TARGET_DIR)/etc/issue
+	#echo -e "$(FLAVOUR) `sed -n 's/\#define PACKAGE_VERSION "//p' $(N_OBJDIR)/config.h | sed 's/"//'` \\\n \\\l\n" > $(TARGET_DIR)/etc/issue
+	echo -e "$(FLAVOUR) rev$(shell expr $(BUILDSYSTEM_REV) + $(LIBSTB_HAL_REV) + $(NEUTRINO_REV))" > $(TARGET_DIR)/etc/issue
 	#
 	touch $(TARGET_DIR)/var/lib/opkg/status
 	#
