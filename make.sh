@@ -103,7 +103,7 @@ fi
 ##############################################
 
 case $1 in
-	3[0-2] | 4[0-5] | 5[1-3] | 6[0-1] | 70 | 8[0-2] | 90) REPLY=$1;;
+	3[0-2] | 4[0-5] | 5[1-3] | 6[0-1] | 7[0-1] | 8[0-2] | 90) REPLY=$1;;
 	*)
 		echo "Target receivers:"
 		echo
@@ -133,6 +133,7 @@ case $1 in
 		echo "  mips-based receivers"
 		echo "  VU+"
 		echo "   70)  VU+ Duo"
+		echo "   71)  VU+ Duo2"
 		echo
 		echo "  Edision"
 		echo "   80)  Edision OS nino"
@@ -162,6 +163,7 @@ case "$REPLY" in
 	60) BOXARCH="arm";BOXTYPE="hd60";;
 	61) BOXARCH="arm";BOXTYPE="hd61";;
 	70) BOXARCH="mips";BOXTYPE="vuduo";;
+	71) BOXARCH="mips";BOXTYPE="vuduo2";;
 	80) BOXARCH="mips";BOXTYPE="osnino";;
 	81) BOXARCH="mips";BOXTYPE="osninoplus";;
 	82) BOXARCH="mips";BOXTYPE="osninopro";;

@@ -1,0 +1,88 @@
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index b4b1feb..75a54ce 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -1816,7 +1816,7 @@ static void __split_huge_page(struct page *page,
+ 	mapcount = 0;
+ 	anon_vma_interval_tree_foreach(avc, &anon_vma->rb_root, pgoff, pgoff) {
+ 		struct vm_area_struct *vma = avc->vma;
+-		unsigned long addr = vma_address(page, vma);
++		unsigned long addr = __vma_address(page, vma);
+ 		BUG_ON(is_vma_temporary_stack(vma));
+ 		mapcount += __split_huge_page_splitting(page, vma, addr);
+ 	}
+@@ -1840,7 +1840,7 @@ static void __split_huge_page(struct page *page,
+ 	mapcount2 = 0;
+ 	anon_vma_interval_tree_foreach(avc, &anon_vma->rb_root, pgoff, pgoff) {
+ 		struct vm_area_struct *vma = avc->vma;
+-		unsigned long addr = vma_address(page, vma);
++		unsigned long addr = __vma_address(page, vma);
+ 		BUG_ON(is_vma_temporary_stack(vma));
+ 		mapcount2 += __split_huge_page_map(page, vma, addr);
+ 	}
+diff --git a/mm/internal.h b/mm/internal.h
+index 07b6736..3c9dbc2 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -13,6 +13,8 @@
+ 
+ #include <linux/fs.h>
+ #include <linux/mm.h>
++#include <linux/hugetlb.h>
++#include <linux/pagemap.h>
+ 
+ void free_pgtables(struct mmu_gather *tlb, struct vm_area_struct *start_vma,
+ 		unsigned long floor, unsigned long ceiling);
+@@ -238,12 +239,22 @@ static inline void mlock_migrate_page(struct page *newpage, struct page *page)
+ 	}
+ }
+ 
++/*
++ * __vma_address - at what user virtual address is page expected in @vma?
++ */
++static inline unsigned long
++__vma_address(struct page *page, struct vm_area_struct *vma)
++{
++	pgoff_t pgoff = page->index << (PAGE_CACHE_SHIFT - PAGE_SHIFT);
++
++	if (unlikely(is_vm_hugetlb_page(vma)))
++		pgoff = page->index << huge_page_order(page_hstate(page));
++
++	return vma->vm_start + ((pgoff - vma->vm_pgoff) << PAGE_SHIFT);
++}
++
+ extern pmd_t maybe_pmd_mkwrite(pmd_t pmd, struct vm_area_struct *vma);
+ 
+-#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+-extern unsigned long vma_address(struct page *page,
+-				 struct vm_area_struct *vma);
+-#endif
+ #else /* !CONFIG_MMU */
+ static inline int mlocked_vma_newpage(struct vm_area_struct *v, struct page *p)
+ {
+diff --git a/mm/rmap.c b/mm/rmap.c
+index 83bfafa..5ab9a74 100644
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -509,21 +509,7 @@ void page_unlock_anon_vma_read(struct anon_vma *anon_vma)
+ 	anon_vma_unlock_read(anon_vma);
+ }
+ 
+-/*
+- * At what user virtual address is page expected in @vma?
+- */
+ static inline unsigned long
+-__vma_address(struct page *page, struct vm_area_struct *vma)
+-{
+-	pgoff_t pgoff = page->index << (PAGE_CACHE_SHIFT - PAGE_SHIFT);
+-
+-	if (unlikely(is_vm_hugetlb_page(vma)))
+-		pgoff = page->index << huge_page_order(page_hstate(page));
+-
+-	return vma->vm_start + ((pgoff - vma->vm_pgoff) << PAGE_SHIFT);
+-}
+-
+-inline unsigned long
+ vma_address(struct page *page, struct vm_area_struct *vma)
+ {
+ 	unsigned long address = __vma_address(page, vma);
