@@ -35,10 +35,13 @@
 
 
 alternate boxtypes to use with `./make.sh`
- - `osmio4k osmio4kplus`
+ - `osmini4k osmio4k osmio4kplus`
  - `hd51 bre2ze4k h7`
  - `hd60 hd61`
- - `vusolo4k vuduo4k vuzero4k vuultimo4k vuuno4kse vuuno4k`
+ - `vuzero4k vusolo4k vuuno4k vuuno4kse vuduo4k vuultimo4k`
+ - `vuduo vuduo2`
+ - `osnio osnioplus osninopro`
+ - `gb800se`
 
 
 ----------

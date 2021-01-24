@@ -86,8 +86,22 @@ if [ "$1" == vusolo4k -o "$1" == vuduo4k -o "$1" == vuultimo4k -o "$1" == vuuno4
 	exit
 fi
 
-if [ "$1" == osmio4k ] || [ "$1" == osmio4kplus ]; then
+if [ "$1" == osmini4k ] || [ "$1" == osmio4k ] || [ "$1" == osmio4kplus ]; then
 	echo "BOXARCH=arm" > config
+	echo "BOXTYPE=$1" >> config
+	echo "FFMPEG_EXPERIMENTAL=0" >> config
+	echo "OPTIMIZATIONS=size" >> config
+	echo "BS_GCC_VER=10.2.0" >> config
+	echo "IMAGE=neutrino" >> config
+	echo "FLAVOUR=TANGOS" >> config
+	echo "EXTERNAL_LCD=both" >> config
+	echo " "
+	make printenv
+	exit
+fi
+
+if [ "$1" == vuduo ] || [ "$1" == vuduo2 ] || [ "$1" == gb800se ] || [ "$1" == osnino ] || [ "$1" == osninoplus ] || [ "$1" == osninopro ]; then
+	echo "BOXARCH=mips" > config
 	echo "BOXTYPE=$1" >> config
 	echo "FFMPEG_EXPERIMENTAL=0" >> config
 	echo "OPTIMIZATIONS=size" >> config
