@@ -103,12 +103,14 @@ fi
 
 until false
 do
-	echo "[rcS] starting neutrino GUI ->"
-	if [ -e /var/bin/neutrino ];then
-		/var/bin/neutrino
-	else
-		/usr/local/bin/neutrino
-	fi
+    echo "starting GUI ->"
+    chmod 755 /usr/bin/neutrino
+    if [ -e /tmp/neutrino ]; then
+      chmod 755 /tmp/neutrino
+      /tmp/neutrino
+    else
+      /usr/bin/neutrino -v 0
+    fi
 	rtv=$?
 	echo "GUI ended <- RTV: " $rtv
 	case "$rtv" in
