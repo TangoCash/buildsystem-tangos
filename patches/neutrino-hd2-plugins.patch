@@ -1,0 +1,318 @@
+diff -Nur '--exclude-from=/home/tango/DDT/helpers/diff-exclude' neutrino-hd2-plugins.dev/test/Makefile.am neutrino-hd2-plugins/test/Makefile.am
+--- neutrino-hd2-plugins.dev/test/Makefile.am	2020-05-21 19:56:26.019026296 +0200
++++ neutrino-hd2-plugins/test/Makefile.am	2021-01-27 21:11:41.869627372 +0100
+@@ -23,8 +23,8 @@
+ install-exec-local:
+ 	install -d $(DESTDIR)$(PLUGINDIR)/test
+ 	install .libs/test.so $(DESTDIR)$(PLUGINDIR)/test
+-	install -m 0644  test.cfg $(DESTDIR)$(PLUGINDIR)/test
+-	install -m 0644 test.png $(DESTDIR)$(PLUGINDIR)/test
++	install -m 0644 $(srcdir)/test.cfg $(DESTDIR)$(PLUGINDIR)/test
++	install -m 0644 $(srcdir)/test.png $(DESTDIR)$(PLUGINDIR)/test
+ 
+ uninstall-local:
+ 	-rm $(DESTDIR)$(PLUGINDIR)/test/test.so
+diff -Nur '--exclude-from=/home/tango/DDT/helpers/diff-exclude' neutrino-hd2-plugins.dev/ard/Makefile.am neutrino-hd2-plugins/ard/Makefile.am
+--- neutrino-hd2-plugins.dev/ard/Makefile.am	2020-05-21 19:56:25.963026565 +0200
++++ neutrino-hd2-plugins/ard/Makefile.am	2021-01-27 21:16:18.425033573 +0100
+@@ -24,9 +24,9 @@
+ install-exec-local:
+ 	install -d $(DESTDIR)$(PLUGINDIR)/ard
+ 	install .libs/ard.so $(DESTDIR)$(PLUGINDIR)/ard
+-	install -m 0644 ard.cfg $(DESTDIR)$(PLUGINDIR)/ard
+-	install -m 0644 ard.png $(DESTDIR)$(PLUGINDIR)/ard
+-	install -m 0644 ard_small.png $(DESTDIR)$(PLUGINDIR)/ard
++	install -m 0644 $(srcdir)/ard.cfg $(DESTDIR)$(PLUGINDIR)/ard
++	install -m 0644 $(srcdir)/ard.png $(DESTDIR)$(PLUGINDIR)/ard
++	install -m 0644 $(srcdir)/ard_small.png $(DESTDIR)$(PLUGINDIR)/ard
+ 
+ uninstall-local:
+ 	-rm $(DESTDIR)$(PLUGINDIR)/ard/ard.so
+diff -Nur '--exclude-from=/home/tango/DDT/helpers/diff-exclude' neutrino-hd2-plugins.dev/audioplayer/Makefile.am neutrino-hd2-plugins/audioplayer/Makefile.am
+--- neutrino-hd2-plugins.dev/audioplayer/Makefile.am	2020-05-21 19:56:25.963026565 +0200
++++ neutrino-hd2-plugins/audioplayer/Makefile.am	2021-01-27 21:16:31.329005778 +0100
+@@ -23,8 +23,8 @@
+ install-exec-local:
+ 	install -d $(DESTDIR)$(PLUGINDIR)/audioplayer
+ 	install .libs/audioplayer.so $(DESTDIR)$(PLUGINDIR)/audioplayer
+-	install -m 0644 audioplayer.cfg $(DESTDIR)$(PLUGINDIR)/audioplayer
+-	install -m 0644 audioplayer.png $(DESTDIR)$(PLUGINDIR)/audioplayer
++	install -m 0644 $(srcdir)/audioplayer.cfg $(DESTDIR)$(PLUGINDIR)/audioplayer
++	install -m 0644 $(srcdir)/audioplayer.png $(DESTDIR)$(PLUGINDIR)/audioplayer
+ 
+ uninstall-local:
+ 	-rm $(DESTDIR)$(PLUGINDIR)/audioplayer/audioplayer.so
+diff -Nur '--exclude-from=/home/tango/DDT/helpers/diff-exclude' neutrino-hd2-plugins.dev/fileexplorer/Makefile.am neutrino-hd2-plugins/fileexplorer/Makefile.am
+--- neutrino-hd2-plugins.dev/fileexplorer/Makefile.am	2020-05-21 19:56:25.975026506 +0200
++++ neutrino-hd2-plugins/fileexplorer/Makefile.am	2021-01-27 21:16:52.588959979 +0100
+@@ -23,8 +23,8 @@
+ install-exec-local:
+ 	install -d $(DESTDIR)$(PLUGINDIR)/fileexplorer
+ 	install .libs/fileexplorer.so $(DESTDIR)$(PLUGINDIR)/fileexplorer
+-	install -m 0644  fileexplorer.cfg $(DESTDIR)$(PLUGINDIR)/fileexplorer
+-	install -m 0644  fileexplorer.png $(DESTDIR)$(PLUGINDIR)/fileexplorer
++	install -m 0644 $(srcdir)/fileexplorer.cfg $(DESTDIR)$(PLUGINDIR)/fileexplorer
++	install -m 0644 $(srcdir)/fileexplorer.png $(DESTDIR)$(PLUGINDIR)/fileexplorer
+ 
+ uninstall-local:
+ 	-rm $(DESTDIR)$(PLUGINDIR)/fileexplorer/fileexplorer.so
+diff -Nur '--exclude-from=/home/tango/DDT/helpers/diff-exclude' neutrino-hd2-plugins.dev/icecast/Makefile.am neutrino-hd2-plugins/icecast/Makefile.am
+--- neutrino-hd2-plugins.dev/icecast/Makefile.am	2020-05-21 19:56:25.975026506 +0200
++++ neutrino-hd2-plugins/icecast/Makefile.am	2021-01-27 21:17:07.792927216 +0100
+@@ -24,9 +24,9 @@
+ install-exec-local:
+ 	install -d $(DESTDIR)$(PLUGINDIR)/icecast
+ 	install .libs/icecast.so $(DESTDIR)$(PLUGINDIR)/icecast
+-	install -m 0644 icecast.cfg $(DESTDIR)$(PLUGINDIR)/icecast
+-	install -m 0644 icecast.png $(DESTDIR)$(PLUGINDIR)/icecast
+-	install -m 0644 icecast_small.png $(DESTDIR)$(PLUGINDIR)/icecast
++	install -m 0644 $(srcdir)/icecast.cfg $(DESTDIR)$(PLUGINDIR)/icecast
++	install -m 0644 $(srcdir)/icecast.png $(DESTDIR)$(PLUGINDIR)/icecast
++	install -m 0644 $(srcdir)/icecast_small.png $(DESTDIR)$(PLUGINDIR)/icecast
+ 
+ uninstall-local:
+ 	-rm $(DESTDIR)$(PLUGINDIR)/icecast/icecast.so
+diff -Nur '--exclude-from=/home/tango/DDT/helpers/diff-exclude' neutrino-hd2-plugins.dev/internetradio/Makefile.am neutrino-hd2-plugins/internetradio/Makefile.am
+--- neutrino-hd2-plugins.dev/internetradio/Makefile.am	2020-05-21 19:56:25.975026506 +0200
++++ neutrino-hd2-plugins/internetradio/Makefile.am	2021-01-27 21:17:23.084894256 +0100
+@@ -24,8 +24,8 @@
+ install-exec-local:
+ 	install -d $(DESTDIR)$(PLUGINDIR)/internetradio
+ 	install .libs/internetradio.so $(DESTDIR)$(PLUGINDIR)/internetradio
+-	install -m 0644 internetradio.cfg $(DESTDIR)$(PLUGINDIR)/internetradio
+-	install -m 0644 internetradio.png $(DESTDIR)$(PLUGINDIR)/internetradio
++	install -m 0644 $(srcdir)/internetradio.cfg $(DESTDIR)$(PLUGINDIR)/internetradio
++	install -m 0644 $(srcdir)/internetradio.png $(DESTDIR)$(PLUGINDIR)/internetradio
+ 
+ uninstall-local:
+ 	-rm $(DESTDIR)$(PLUGINDIR)/internetradio/internetradio.so
+diff -Nur '--exclude-from=/home/tango/DDT/helpers/diff-exclude' neutrino-hd2-plugins.dev/lua/Makefile.am neutrino-hd2-plugins/lua/Makefile.am
+--- neutrino-hd2-plugins.dev/lua/Makefile.am	2020-05-21 19:56:25.975026506 +0200
++++ neutrino-hd2-plugins/lua/Makefile.am	2021-01-27 21:17:41.356854866 +0100
+@@ -1,8 +1,8 @@
+ install-exec-local:
+ 	install -d $(DESTDIR)$(PLUGINDIR)/lua
+-	install -m 0644 lua.cfg $(DESTDIR)$(PLUGINDIR)/lua
+-	install -m 0644 lua.lua $(DESTDIR)$(PLUGINDIR)/lua
+-	install -m 0644 lua.png $(DESTDIR)$(PLUGINDIR)/lua
++	install -m 0644 $(srcdir)/lua.cfg $(DESTDIR)$(PLUGINDIR)/lua
++	install -m 0644 $(srcdir)/lua.lua $(DESTDIR)$(PLUGINDIR)/lua
++	install -m 0644 $(srcdir)/lua.png $(DESTDIR)$(PLUGINDIR)/lua
+ 
+ 
+ uninstall-local:
+diff -Nur '--exclude-from=/home/tango/DDT/helpers/diff-exclude' neutrino-hd2-plugins.dev/mediaplayer/Makefile.am neutrino-hd2-plugins/mediaplayer/Makefile.am
+--- neutrino-hd2-plugins.dev/mediaplayer/Makefile.am	2020-05-21 19:56:25.987026450 +0200
++++ neutrino-hd2-plugins/mediaplayer/Makefile.am	2021-01-27 21:17:53.988827630 +0100
+@@ -24,8 +24,8 @@
+ install-exec-local:
+ 	install -d $(DESTDIR)$(PLUGINDIR)/mediaplayer
+ 	install .libs/mediaplayer.so $(DESTDIR)$(PLUGINDIR)/mediaplayer
+-	install -m 0644 mediaplayer.cfg $(DESTDIR)$(PLUGINDIR)/mediaplayer
+-	install -m 0644 mediaplayer.png $(DESTDIR)$(PLUGINDIR)/mediaplayer
++	install -m 0644 $(srcdir)/mediaplayer.cfg $(DESTDIR)$(PLUGINDIR)/mediaplayer
++	install -m 0644 $(srcdir)/mediaplayer.png $(DESTDIR)$(PLUGINDIR)/mediaplayer
+ 
+ uninstall-local:
+ 	-rm $(DESTDIR)$(PLUGINDIR)/mediaplayer/mediaplayer.so
+diff -Nur '--exclude-from=/home/tango/DDT/helpers/diff-exclude' neutrino-hd2-plugins.dev/mediaportal/Makefile.am neutrino-hd2-plugins/mediaportal/Makefile.am
+--- neutrino-hd2-plugins.dev/mediaportal/Makefile.am	2020-05-21 19:56:25.987026450 +0200
++++ neutrino-hd2-plugins/mediaportal/Makefile.am	2021-01-27 21:18:12.704787267 +0100
+@@ -24,8 +24,8 @@
+ install-exec-local:
+ 	install -d $(DESTDIR)$(PLUGINDIR)/mediaportal
+ 	install .libs/mediaportal.so $(DESTDIR)$(PLUGINDIR)/mediaportal
+-	install -m 0644 mediaportal.cfg $(DESTDIR)$(PLUGINDIR)/mediaportal
+-	install -m 0644 mp.png $(DESTDIR)$(PLUGINDIR)/mediaportal
++	install -m 0644 $(srcdir)/mediaportal.cfg $(DESTDIR)$(PLUGINDIR)/mediaportal
++	install -m 0644 $(srcdir)/mp.png $(DESTDIR)$(PLUGINDIR)/mediaportal
+ 
+ uninstall-local:
+ 	-rm $(DESTDIR)$(PLUGINDIR)/mediaportal/mediaportal.so
+diff -Nur '--exclude-from=/home/tango/DDT/helpers/diff-exclude' neutrino-hd2-plugins.dev/moviebrowser/Makefile.am neutrino-hd2-plugins/moviebrowser/Makefile.am
+--- neutrino-hd2-plugins.dev/moviebrowser/Makefile.am	2020-05-21 19:56:25.987026450 +0200
++++ neutrino-hd2-plugins/moviebrowser/Makefile.am	2021-01-27 21:18:23.840763246 +0100
+@@ -23,8 +23,8 @@
+ install-exec-local:
+ 	install -d $(DESTDIR)$(PLUGINDIR)/moviebrowser
+ 	install .libs/moviebrowser.so $(DESTDIR)$(PLUGINDIR)/moviebrowser
+-	install -m 0644 moviebrowser.cfg $(DESTDIR)$(PLUGINDIR)/moviebrowser
+-	install -m 0664 moviebrowser.png $(DESTDIR)$(PLUGINDIR)/moviebrowser
++	install -m 0644 $(srcdir)/moviebrowser.cfg $(DESTDIR)$(PLUGINDIR)/moviebrowser
++	install -m 0664 $(srcdir)/moviebrowser.png $(DESTDIR)$(PLUGINDIR)/moviebrowser
+ 
+ uninstall-local:
+ 	-rm $(DESTDIR)$(PLUGINDIR)/moviebrowser/moviebrowser.so
+diff -Nur '--exclude-from=/home/tango/DDT/helpers/diff-exclude' neutrino-hd2-plugins.dev/netzkino/Makefile.am neutrino-hd2-plugins/netzkino/Makefile.am
+--- neutrino-hd2-plugins.dev/netzkino/Makefile.am	2021-01-27 16:28:03.784812776 +0100
++++ neutrino-hd2-plugins/netzkino/Makefile.am	2021-01-27 21:18:41.552725036 +0100
+@@ -25,11 +25,11 @@
+ install-exec-local:
+ 	install -d $(DESTDIR)$(PLUGINDIR)/netzkino
+ 	install .libs/netzkino.so $(DESTDIR)$(PLUGINDIR)/netzkino
+-	install -m 0644  netzkino.cfg $(DESTDIR)$(PLUGINDIR)/netzkino
+-	install -m 0644  netzkino.png $(DESTDIR)$(PLUGINDIR)/netzkino
+-	install -m 0644  netzkino_small.png $(DESTDIR)$(PLUGINDIR)/netzkino
+-	install -m 0644  english.locale $(DESTDIR)$(PLUGINDIR)/netzkino
+-	install -m 0644  deutsch.locale $(DESTDIR)$(PLUGINDIR)/netzkino
++	install -m 0644  $(srcdir)/netzkino.cfg $(DESTDIR)$(PLUGINDIR)/netzkino
++	install -m 0644  $(srcdir)/netzkino.png $(DESTDIR)$(PLUGINDIR)/netzkino
++	install -m 0644  $(srcdir)/netzkino_small.png $(DESTDIR)$(PLUGINDIR)/netzkino
++	install -m 0644  $(srcdir)/english.locale $(DESTDIR)$(PLUGINDIR)/netzkino
++	install -m 0644  $(srcdir)/deutsch.locale $(DESTDIR)$(PLUGINDIR)/netzkino
+ 
+ uninstall-local:
+ 	-rm $(DESTDIR)$(PLUGINDIR)/netzkino/netzkino.so
+diff -Nur '--exclude-from=/home/tango/DDT/helpers/diff-exclude' neutrino-hd2-plugins.dev/nfilm/Makefile.am neutrino-hd2-plugins/nfilm/Makefile.am
+--- neutrino-hd2-plugins.dev/nfilm/Makefile.am	2020-05-21 19:56:25.995026411 +0200
++++ neutrino-hd2-plugins/nfilm/Makefile.am	2021-01-27 21:18:55.328695310 +0100
+@@ -23,8 +23,8 @@
+ install-exec-local:
+ 	install -d $(DESTDIR)$(PLUGINDIR)/nfilm
+ 	install .libs/nfilm.so $(DESTDIR)$(PLUGINDIR)/nfilm
+-	install -m 0644  nfilm.cfg $(DESTDIR)$(PLUGINDIR)/nfilm
+-	install -m 0644  nfilm.png $(DESTDIR)$(PLUGINDIR)/nfilm
++	install -m 0644  $(srcdir)/nfilm.cfg $(DESTDIR)$(PLUGINDIR)/nfilm
++	install -m 0644  $(srcdir)/nfilm.png $(DESTDIR)$(PLUGINDIR)/nfilm
+ 
+ uninstall-local:
+ 	-rm $(DESTDIR)$(PLUGINDIR)/nfilm/nfilm.so
+diff -Nur '--exclude-from=/home/tango/DDT/helpers/diff-exclude' neutrino-hd2-plugins.dev/ntvshows/Makefile.am neutrino-hd2-plugins/ntvshows/Makefile.am
+--- neutrino-hd2-plugins.dev/ntvshows/Makefile.am	2020-05-21 19:56:25.999026392 +0200
++++ neutrino-hd2-plugins/ntvshows/Makefile.am	2021-01-27 21:19:08.336667241 +0100
+@@ -23,8 +23,8 @@
+ install-exec-local:
+ 	install -d $(DESTDIR)$(PLUGINDIR)/ntvshows
+ 	install .libs/ntvshows.so $(DESTDIR)$(PLUGINDIR)/ntvshows
+-	install -m 0644  ntvshows.cfg $(DESTDIR)$(PLUGINDIR)/ntvshows
+-	install -m 0644  ntvshows.png $(DESTDIR)$(PLUGINDIR)/ntvshows
++	install -m 0644  $(srcdir)/ntvshows.cfg $(DESTDIR)$(PLUGINDIR)/ntvshows
++	install -m 0644  $(srcdir)/ntvshows.png $(DESTDIR)$(PLUGINDIR)/ntvshows
+ 
+ uninstall-local:
+ 	-rm $(DESTDIR)$(PLUGINDIR)/ntvshows/ntvshows.so
+diff -Nur '--exclude-from=/home/tango/DDT/helpers/diff-exclude' neutrino-hd2-plugins.dev/opkg_manager/Makefile.am neutrino-hd2-plugins/opkg_manager/Makefile.am
+--- neutrino-hd2-plugins.dev/opkg_manager/Makefile.am	2020-05-21 19:56:25.999026392 +0200
++++ neutrino-hd2-plugins/opkg_manager/Makefile.am	2021-01-27 21:19:22.196637323 +0100
+@@ -25,9 +25,9 @@
+ install-exec-local:
+ 	install -d $(DESTDIR)$(PLUGINDIR)/opkg_manager
+ 	install .libs/opkg_manager.so $(DESTDIR)$(PLUGINDIR)/opkg_manager
+-	install -m 0644 opkg_manager.cfg $(DESTDIR)$(PLUGINDIR)/opkg_manager
+-	install -m 0644 opkg_manager.png $(DESTDIR)$(PLUGINDIR)/opkg_manager
+-	install -m 0644 opkg_manager_small.png $(DESTDIR)$(PLUGINDIR)/opkg_manager
++	install -m 0644 $(srcdir)/opkg_manager.cfg $(DESTDIR)$(PLUGINDIR)/opkg_manager
++	install -m 0644 $(srcdir)/opkg_manager.png $(DESTDIR)$(PLUGINDIR)/opkg_manager
++	install -m 0644 $(srcdir)/opkg_manager_small.png $(DESTDIR)$(PLUGINDIR)/opkg_manager
+ 
+ uninstall-local:
+ 	-rm $(DESTDIR)$(PLUGINDIR)/opkg_manager/opkg_manager.so
+diff -Nur '--exclude-from=/home/tango/DDT/helpers/diff-exclude' neutrino-hd2-plugins.dev/picviewer/Makefile.am neutrino-hd2-plugins/picviewer/Makefile.am
+--- neutrino-hd2-plugins.dev/picviewer/Makefile.am	2020-05-21 19:56:26.007026354 +0200
++++ neutrino-hd2-plugins/picviewer/Makefile.am	2021-01-27 21:19:32.988614027 +0100
+@@ -23,8 +23,8 @@
+ install-exec-local:
+ 	install -d $(DESTDIR)$(PLUGINDIR)/picviewer
+ 	install .libs/picviewer.so $(DESTDIR)$(PLUGINDIR)/picviewer
+-	install -m 0644 picviewer.cfg $(DESTDIR)$(PLUGINDIR)/picviewer
+-	install -m 0644 picviewer.png $(DESTDIR)$(PLUGINDIR)/picviewer
++	install -m 0644 $(srcdir)/picviewer.cfg $(DESTDIR)$(PLUGINDIR)/picviewer
++	install -m 0644 $(srcdir)/picviewer.png $(DESTDIR)$(PLUGINDIR)/picviewer
+ 
+ uninstall-local:
+ 	-rm $(DESTDIR)$(PLUGINDIR)/picviewer/picviewer.so
+diff -Nur '--exclude-from=/home/tango/DDT/helpers/diff-exclude' neutrino-hd2-plugins.dev/python/Makefile.am neutrino-hd2-plugins/python/Makefile.am
+--- neutrino-hd2-plugins.dev/python/Makefile.am	2020-05-21 19:56:26.007026354 +0200
++++ neutrino-hd2-plugins/python/Makefile.am	2021-01-27 21:19:45.816586333 +0100
+@@ -1,8 +1,8 @@
+ install-exec-local:
+ 	install -d $(DESTDIR)$(PLUGINDIR)/python
+-	install -m 0644 python.cfg $(DESTDIR)$(PLUGINDIR)/python
+-	install -m 0644 python.py $(DESTDIR)$(PLUGINDIR)/python
+-	install -m 0644 python.png $(DESTDIR)$(PLUGINDIR)/python
++	install -m 0644 $(srcdir)/python.cfg $(DESTDIR)$(PLUGINDIR)/python
++	install -m 0644 $(srcdir)/python.py $(DESTDIR)$(PLUGINDIR)/python
++	install -m 0644 $(srcdir)/python.png $(DESTDIR)$(PLUGINDIR)/python
+ 
+ 
+ uninstall-local:
+diff -Nur '--exclude-from=/home/tango/DDT/helpers/diff-exclude' neutrino-hd2-plugins.dev/satipclient/Makefile.am neutrino-hd2-plugins/satipclient/Makefile.am
+--- neutrino-hd2-plugins.dev/satipclient/Makefile.am	2020-05-21 19:56:26.011026335 +0200
++++ neutrino-hd2-plugins/satipclient/Makefile.am	2021-01-27 21:19:58.572558793 +0100
+@@ -24,9 +24,9 @@
+ install-exec-local:
+ 	install -d $(DESTDIR)$(PLUGINDIR)/satipclient
+ 	install .libs/satipclient.so $(DESTDIR)$(PLUGINDIR)/satipclient
+-	install -m 0644 satipclient.cfg $(DESTDIR)$(PLUGINDIR)/satipclient
+-	install -m 0644 satipclient.png $(DESTDIR)$(PLUGINDIR)/satipclient
+-	install -m 0644 satip-client.conf $(DESTDIR)$(PLUGINDIR)/satipclient
++	install -m 0644 $(srcdir)/satipclient.cfg $(DESTDIR)$(PLUGINDIR)/satipclient
++	install -m 0644 $(srcdir)/satipclient.png $(DESTDIR)$(PLUGINDIR)/satipclient
++	install -m 0644 $(srcdir)/satip-client.conf $(DESTDIR)$(PLUGINDIR)/satipclient
+ 
+ uninstall-local:
+ 	-rm $(DESTDIR)$(PLUGINDIR)/satipclient/satipclient.so
+diff -Nur '--exclude-from=/home/tango/DDT/helpers/diff-exclude' neutrino-hd2-plugins.dev/systeminfo/Makefile.am neutrino-hd2-plugins/systeminfo/Makefile.am
+--- neutrino-hd2-plugins.dev/systeminfo/Makefile.am	2020-05-21 19:56:26.019026296 +0200
++++ neutrino-hd2-plugins/systeminfo/Makefile.am	2021-01-27 21:20:09.520535152 +0100
+@@ -24,8 +24,8 @@
+ install-exec-local:
+ 	install -d $(DESTDIR)$(PLUGINDIR)/systeminfo
+ 	install .libs/systeminfo.so $(DESTDIR)$(PLUGINDIR)/systeminfo
+-	install -m 0644  systeminfo.cfg $(DESTDIR)$(PLUGINDIR)/systeminfo
+-	install -m 0644  systeminfo.png $(DESTDIR)$(PLUGINDIR)/systeminfo
++	install -m 0644  $(srcdir)/systeminfo.cfg $(DESTDIR)$(PLUGINDIR)/systeminfo
++	install -m 0644  $(srcdir)/systeminfo.png $(DESTDIR)$(PLUGINDIR)/systeminfo
+ 
+ uninstall-local:
+ 	-rm $(DESTDIR)$(PLUGINDIR)/systeminfo/systeminfo.so
+diff -Nur '--exclude-from=/home/tango/DDT/helpers/diff-exclude' neutrino-hd2-plugins.dev/tsbrowser/Makefile.am neutrino-hd2-plugins/tsbrowser/Makefile.am
+--- neutrino-hd2-plugins.dev/tsbrowser/Makefile.am	2020-05-21 19:56:26.023026276 +0200
++++ neutrino-hd2-plugins/tsbrowser/Makefile.am	2021-01-27 21:20:20.568511287 +0100
+@@ -23,8 +23,8 @@
+ install-exec-local:
+ 	install -d $(DESTDIR)$(PLUGINDIR)/tsbrowser
+ 	install .libs/tsbrowser.so $(DESTDIR)$(PLUGINDIR)/tsbrowser
+-	install -m 0644  tsbrowser.cfg $(DESTDIR)$(PLUGINDIR)/tsbrowser
+-	install -m 0644  tsbrowser.png $(DESTDIR)$(PLUGINDIR)/tsbrowser
++	install -m 0644  $(srcdir)/tsbrowser.cfg $(DESTDIR)$(PLUGINDIR)/tsbrowser
++	install -m 0644  $(srcdir)/tsbrowser.png $(DESTDIR)$(PLUGINDIR)/tsbrowser
+ 
+ uninstall-local:
+ 	-rm $(DESTDIR)$(PLUGINDIR)/tsbrowser/tsbrowser.so
+diff -Nur '--exclude-from=/home/tango/DDT/helpers/diff-exclude' neutrino-hd2-plugins.dev/upnp/Makefile.am neutrino-hd2-plugins/upnp/Makefile.am
+--- neutrino-hd2-plugins.dev/upnp/Makefile.am	2021-01-27 16:28:03.784812776 +0100
++++ neutrino-hd2-plugins/upnp/Makefile.am	2021-01-27 21:20:56.132434462 +0100
+@@ -25,9 +25,9 @@
+ install-exec-local:
+ 	install -d $(DESTDIR)$(PLUGINDIR)/upnp
+ 	install .libs/upnp.so $(DESTDIR)$(PLUGINDIR)/upnp
+-	install -m 0644 upnp.cfg $(DESTDIR)$(PLUGINDIR)/upnp
+-	install -m 0644 upnp.png $(DESTDIR)$(PLUGINDIR)/upnp
+-	install -m 0644 upnp_small.png $(DESTDIR)$(PLUGINDIR)/upnp
++	install -m 0644 $(srcdir)/upnp.cfg $(DESTDIR)$(PLUGINDIR)/upnp
++	install -m 0644 $(srcdir)/upnp.png $(DESTDIR)$(PLUGINDIR)/upnp
++	install -m 0644 $(srcdir)/upnp_small.png $(DESTDIR)$(PLUGINDIR)/upnp
+ 
+ uninstall-local:
+ 	-rm $(DESTDIR)$(PLUGINDIR)/upnp/upnp.so
+diff -Nur '--exclude-from=/home/tango/DDT/helpers/diff-exclude' neutrino-hd2-plugins.dev/youtube/Makefile.am neutrino-hd2-plugins/youtube/Makefile.am
+--- neutrino-hd2-plugins.dev/youtube/Makefile.am	2021-01-27 16:28:03.784812776 +0100
++++ neutrino-hd2-plugins/youtube/Makefile.am	2021-01-27 21:21:13.064397872 +0100
+@@ -25,11 +25,11 @@
+ install-exec-local:
+ 	install -d $(DESTDIR)$(PLUGINDIR)/youtube
+ 	install .libs/youtube.so $(DESTDIR)$(PLUGINDIR)/youtube
+-	install -m 0644 youtube.cfg $(DESTDIR)$(PLUGINDIR)/youtube
+-	install -m 0644 youtube.png $(DESTDIR)$(PLUGINDIR)/youtube
+-	install -m 0644 youtube_small.png $(DESTDIR)$(PLUGINDIR)/youtube
+-	install -m 0644 english.locale $(DESTDIR)$(PLUGINDIR)/youtube
+-	install -m 0644 deutsch.locale $(DESTDIR)$(PLUGINDIR)/youtube
++	install -m 0644 $(srcdir)/youtube.cfg $(DESTDIR)$(PLUGINDIR)/youtube
++	install -m 0644 $(srcdir)/youtube.png $(DESTDIR)$(PLUGINDIR)/youtube
++	install -m 0644 $(srcdir)/youtube_small.png $(DESTDIR)$(PLUGINDIR)/youtube
++	install -m 0644 $(srcdir)/english.locale $(DESTDIR)$(PLUGINDIR)/youtube
++	install -m 0644 $(srcdir)/deutsch.locale $(DESTDIR)$(PLUGINDIR)/youtube
+ 
+ uninstall-local:
+ 	-rm $(DESTDIR)$(PLUGINDIR)/youtube/youtube.so

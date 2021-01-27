@@ -53,7 +53,11 @@ $(D)/links: $(D)/bootstrap $(D)/freetype $(D)/libpng $(D)/libjpeg $(D)/openssl $
 # neutrino-plugins
 #
 
+ifeq ($(FLAVOUR), HD2)
+NP_OBJDIR = $(BUILD_TMP)/neutrino-hd2-plugins
+else
 NP_OBJDIR = $(BUILD_TMP)/neutrino-plugins
+endif
 
 $(D)/neutrino-plugins.do_prepare: $(D)/bootstrap $(D)/ffmpeg $(D)/libcurl $(D)/libpng $(D)/libjpeg $(D)/giflib $(D)/freetype
 	$(START_BUILD)
@@ -361,21 +365,40 @@ $(D)/neutrino-plugin-mtv:
 #
 # neutrino-hd2 plugins
 #
-NEUTRINO_HD2_PLUGINS_PATCHES =
+NEUTRINO_HD2_PLUGINS_PATCHES = neutrino-hd2-plugins.patch
+
+EXTRA_HDFLAGS  = -I$(NP_OBJDIR)
+EXTRA_HDFLAGS += -I$(SOURCE_DIR)/$(NEUTRINO)/src
+EXTRA_HDFLAGS += -I$(SOURCE_DIR)/$(NEUTRINO)/src/zapit/include/zapit
+EXTRA_HDFLAGS += -I$(SOURCE_DIR)/$(NEUTRINO)/lib
+EXTRA_HDFLAGS += -I$(SOURCE_DIR)/$(NEUTRINO)/lib/connection
+EXTRA_HDFLAGS += -I$(SOURCE_DIR)/$(NEUTRINO)/lib/libeventserver
+EXTRA_HDFLAGS += -I$(SOURCE_DIR)/$(NEUTRINO)/lib/libconfigfile
+EXTRA_HDFLAGS += -I$(SOURCE_DIR)/$(NEUTRINO)/lib/libnet
+EXTRA_HDFLAGS += -I$(SOURCE_DIR)/$(NEUTRINO)/lib/libxmltree
+EXTRA_HDFLAGS += -I$(SOURCE_DIR)/$(NEUTRINO)/lib/libmd5sum
+EXTRA_HDFLAGS += -I$(SOURCE_DIR)/$(NEUTRINO)/lib/libdvbapi
 
 $(D)/neutrino-hd2-plugins.do_prepare:
 	$(START_BUILD)
 	rm -rf $(SOURCE_DIR)/neutrino-hd2-plugins
-	ln -s $(SOURCE_DIR)/neutrino-hd2.git/plugins $(SOURCE_DIR)/neutrino-hd2-plugins
+	rm -rf $(SOURCE_DIR)/neutrino-hd2-plugins.org
+	rm -rf $(SOURCE_DIR)/neutrino-hd2-plugins.dev
+	rm -rf $(NP_OBJDIR)
+	cp -ra $(ARCHIVE)/neutrino-hd2.git/plugins $(SOURCE_DIR)/neutrino-hd2-plugins
+	cp -ra $(SOURCE_DIR)/neutrino-hd2-plugins $(SOURCE_DIR)/neutrino-hd2-plugins.org
 	set -e; cd $(SOURCE_DIR)/neutrino-hd2-plugins; \
 		$(call apply_patches, $(NEUTRINO_HD2_PLUGINS_PATCHES))
+	cp -ra $(SOURCE_DIR)/neutrino-hd2-plugins $(SOURCE_DIR)/neutrino-hd2-plugins.dev
 	@touch $@
 
-$(D)/neutrino-hd2-plugins.config.status: $(D)/bootstrap neutrino-hd2
-	cd $(SOURCE_DIR)/neutrino-hd2-plugins; \
-		./autogen.sh; \
+$(D)/neutrino-hd2-plugins.config.status: $(D)/bootstrap $(D)/neutrino-hd2
+	rm -rf $(NP_OBJDIR)
+	test -d $(NP_OBJDIR) || mkdir -p $(NP_OBJDIR)
+	cd $(NP_OBJDIR); \
+		$(SOURCE_DIR)/neutrino-hd2-plugins/autogen.sh $(SILENT_OPT); \
 		$(BUILDENV) \
-		./configure $(SILENT_OPT) \
+		$(SOURCE_DIR)/neutrino-hd2-plugins/configure $(SILENT_OPT) \
 			--host=$(TARGET) \
 			--build=$(BUILD) \
 			--prefix= \
@@ -387,27 +410,27 @@ $(D)/neutrino-hd2-plugins.config.status: $(D)/bootstrap neutrino-hd2
 			--enable-silent-rules \
 			PKG_CONFIG=$(PKG_CONFIG) \
 			PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
-			CPPFLAGS="$(CPPFLAGS) -I$(driverdir) -I$(KERNEL_DIR)/include -I$(TARGET_DIR)/include" \
+			CPPFLAGS="$(CPPFLAGS) -I$(driverdir) -I$(KERNEL_DIR)/include -I$(TARGET_DIR)/usr/include $(EXTRA_HDFLAGS)" \
 			LDFLAGS="$(TARGET_LDFLAGS)"
 	@touch $@
 
 $(D)/neutrino-hd2-plugins.do_compile: $(D)/neutrino-hd2-plugins.config.status
-	cd $(SOURCE_DIR)/neutrino-hd2-plugins; \
-	$(MAKE) top_srcdir=$(SOURCE_DIR)/neutrino-hd2
+	$(MAKE) -C $(NP_OBJDIR)
 	@touch $@
 
-$(D)/neutrino-hd2-plugins.build: neutrino-hd2-plugins.do_prepare neutrino-hd2-plugins.do_compile
-	$(MAKE) -C $(SOURCE_DIR)/neutrino-hd2-plugins install DESTDIR=$(TARGET_DIR) top_srcdir=$(SOURCE_DIR)/neutrino-hd2
+$(D)/neutrino-hd2-plugins: neutrino-hd2-plugins.do_prepare neutrino-hd2-plugins.do_compile
+	$(MAKE) -C $(NP_OBJDIR) install DESTDIR=$(TARGET_DIR)
 	$(TOUCH)
 
 neutrino-hd2-plugins-clean:
-	cd $(SOURCE_DIR)/neutrino-hd2-plugins; \
-	$(MAKE) clean
-	rm -f $(D)/neutrino-hd2-plugins.build
+	rm -f $(D)/neutrino-hd2-plugins
+	rm -f $(D)/neutrino-hd2-plugins.do_*
 	rm -f $(D)/neutrino-hd2-plugins.config.status
+	cd $(NP_OBJDIR); \
+		$(MAKE) -C $(NP_OBJDIR) clean
 
 neutrino-hd2-plugins-distclean:
-	rm -f $(D)/neutrino-hd2-plugins.build
+	rm -rf $(NP_OBJDIR)
+	rm -f $(D)/neutrino-hd2-plugins
+	rm -f $(D)/neutrino-hd2-plugins.do_*
 	rm -f $(D)/neutrino-hd2-plugins.config.status
-	rm -f $(D)/neutrino-hd2-plugins.do_prepare
-	rm -f $(D)/neutrino-hd2-plugins.do_compile

@@ -1,0 +1,87 @@
+diff -Nur '--exclude-from=/home/tango/DDT/helpers/diff-exclude' neutrino-hd2.dev/lib/libeplayer3/Makefile.am neutrino-hd2/lib/libeplayer3/Makefile.am
+--- neutrino-hd2.dev/lib/libeplayer3/Makefile.am	2021-01-27 16:28:03.764812820 +0100
++++ neutrino-hd2/lib/libeplayer3/Makefile.am	2021-01-27 18:08:51.727486706 +0100
+@@ -5,6 +5,7 @@
+ CXXFLAGS = -Wall
+ 
+ AM_CPPFLAGS = \
++	-I$(top_builddir) \
+ 	-I$(top_srcdir) \
+ 	-I$(srcdir)/include \
+ 	-I$(top_srcdir)/lib/libdvbapi
+diff -Nur '--exclude-from=/home/tango/DDT/helpers/diff-exclude' neutrino-hd2.dev/src/gui/Makefile.am neutrino-hd2/src/gui/Makefile.am
+--- neutrino-hd2.dev/src/gui/Makefile.am	2021-01-27 18:29:39.684798972 +0100
++++ neutrino-hd2/src/gui/Makefile.am	2021-01-27 20:22:59.731913124 +0100
+@@ -3,13 +3,11 @@
+ BUILT_SOURCES = version.h
+ version.h:
+ 	@rm -f $@; \
+-	echo '#define BUILT_DATE "'`date`'"' > $@
+-	@if test -d $(top_srcdir)/../.git ; then \
+-		pushd $(top_srcdir)/.. ; \
+-		GITREV=`git log | grep '^commit' | wc -l`; \
+-		popd ; \
+-		echo '#define GIT "'$$GITREV'"' >> $@ ; \
+-	fi
++	echo '#define BUILT_DATE "'`date`'"' > $@
++	pushd $(git_dir) ; \
++	GITREV=`git log | grep '^commit' | wc -l`; \
++	popd ; \
++	echo '#define GIT "'$$GITREV'"' >> $@
+ 
+ noinst_HEADERS = version.h
+ .PHONY: version.h
+diff -Nur '--exclude-from=/home/tango/DDT/helpers/diff-exclude' neutrino-hd2.dev/src/interfaces/lua/Makefile.am neutrino-hd2/src/interfaces/lua/Makefile.am
+--- neutrino-hd2.dev/src/interfaces/lua/Makefile.am	2021-01-27 17:25:44.885074996 +0100
++++ neutrino-hd2/src/interfaces/lua/Makefile.am	2021-01-27 18:25:20.069354852 +0100
+@@ -44,7 +44,7 @@
+ 	neutrino_lua_wrap.cxx
+ 
+ neutrino_lua_wrap.cxx :
+-	$(AM_V_GEN)$(SWIG) -lua -I$(top_srcdir) -cpperraswarn neutrino_lua.i
++	$(AM_V_GEN)$(SWIG) -lua -I$(top_srcdir) -I$(top_builddir) -outcurrentdir -cpperraswarn $(top_srcdir)/src/interfaces/lua/neutrino_lua.i
+ 
+ CLEANFILES = neutrino_lua_wrap.cxx
+ 
+diff -Nur '--exclude-from=/home/tango/DDT/helpers/diff-exclude' neutrino-hd2.dev/src/interfaces/python/Makefile.am neutrino-hd2/src/interfaces/python/Makefile.am
+--- neutrino-hd2.dev/src/interfaces/python/Makefile.am	2020-05-21 19:56:25.887026927 +0200
++++ neutrino-hd2/src/interfaces/python/Makefile.am	2021-01-27 18:25:14.277367251 +0100
+@@ -44,7 +44,7 @@
+ 	neutrino_python_wrap.cxx
+ 
+ neutrino_python_wrap.cxx :
+-	$(AM_V_GEN)$(SWIG) $(AX_SWIG_PYTHON_OPT) -I$(top_srcdir) -cpperraswarn neutrino_python.i
++	$(AM_V_GEN)$(SWIG) $(AX_SWIG_PYTHON_OPT) -I$(top_srcdir) -I$(top_builddir) -cpperraswarn -outcurrentdir $(top_srcdir)/src/interfaces/python/neutrino_python.i
+ 
+ installdir = $(DATADIR)/neutrino/python
+ 
+diff -Nur '--exclude-from=/home/tango/DDT/helpers/diff-exclude' neutrino-hd2.dev/src/driver/rcinput.cpp neutrino-hd2/src/driver/rcinput.cpp
+--- neutrino-hd2.dev/src/driver/rcinput.cpp	2020-05-21 19:56:25.863027041 +0200
++++ neutrino-hd2/src/driver/rcinput.cpp	2021-01-27 16:34:56.259888115 +0100
+@@ -1076,12 +1076,12 @@
+ 									gettimeofday( &tv, NULL );
+ 									int64_t timeOld = (int64_t) tv.tv_usec + (int64_t)((int64_t) tv.tv_sec * (int64_t) 1000000);
+ 
+-									stime((time_t*) p);
++									//stime((time_t*) p);
+ 
+ 									gettimeofday( &tv, NULL );
+ 									int64_t timeNew = (int64_t) tv.tv_usec + (int64_t)((int64_t) tv.tv_sec * (int64_t) 1000000);
+ 
+-									delete[] p;
++									//delete[] p;
+ 									p= new unsigned char[ sizeof(int64_t) ];
+ 									*(int64_t*) p = timeNew - timeOld;
+ 
+diff -Nur '--exclude-from=/home/tango/DDT/helpers/diff-exclude' neutrino-hd2.dev/src/system/helpers.cpp neutrino-hd2/src/system/helpers.cpp
+--- neutrino-hd2.dev/src/system/helpers.cpp	2021-01-27 16:28:03.780812785 +0100
++++ neutrino-hd2/src/system/helpers.cpp	2021-01-27 16:36:28.671674752 +0100
+@@ -255,7 +255,7 @@
+ 	int ret = -1;
+ 	struct statfs s;
+ 	if (::statfs(dir, &s) == 0) {
+-		switch (s.f_type)	/* f_type is long */
++		switch ((long unsigned int)s.f_type)	/* f_type is long */
+ 		{
+ 			case 0xEF53L:		/*EXT2 & EXT3*/
+ 			case 0x6969L:		/*NFS*/

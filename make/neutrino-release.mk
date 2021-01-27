@@ -41,6 +41,42 @@ ifeq ($(OPTIMIZATIONS), size)
 	find $(RELEASE_DIR)/usr/share/E2emulator/ -name '*.py' -exec rm -f {} \;
 endif
 
+python-install: $(D)/python
+	install -d $(RELEASE_DIR)/usr/bin; \
+	install -d $(RELEASE_DIR)/usr/include; \
+	install -d $(RELEASE_DIR)/usr/lib; \
+	install -d $(RELEASE_DIR)/$(PYTHON_INCLUDE_DIR); \
+	install -d $(RELEASE_DIR)/$(PYTHON_DIR); \
+	cp $(TARGET_DIR)/$(PYTHON_INCLUDE_DIR)/pyconfig.h $(RELEASE_DIR)/$(PYTHON_INCLUDE_DIR); \
+	cp -P $(TARGET_LIB_DIR)/libpython* $(RELEASE_DIR)/usr/lib; \
+	cp -P $(TARGET_DIR)/usr/bin/python* $(RELEASE_DIR)/usr/bin; \
+	cp -a $(TARGET_DIR)/$(PYTHON_DIR)/* $(RELEASE_DIR)/$(PYTHON_DIR)/; \
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/{bsddb,compiler,curses,distutils,lib-old,lib-tk,plat-linux3,test}
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/twisted/{test,conch,mail,names,news,words,flow,lore,pair,runner}
+	#rm -f $(RELEASE_DIR)/usr/bin/{cftp,ckeygen,easy_install*,mailmail,pyhtmlizer,tkconch,trial,twist,twistd}
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/livestreamer_cli
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/lxml
+	rm -f  $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/libxml2mod.so
+	rm -f  $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/libxsltmod.so
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/setuptools
+	rm -rf $(RELEASE_DIR)/$(PYTHON_DIR)/site-packages/*-py$(PYTHON_VERSION).egg-info
+	find $(RELEASE_DIR)/$(PYTHON_DIR)/ \
+		\( -name '*.a' \
+		-o -name '*.c' \
+		-o -name '*.doc' \
+		-o -name '*.egg-info' \
+		-o -name '*.la' \
+		-o -name '*.o' \
+		-o -name '*.pyc' \
+		-o -name '*.pyx' \
+		-o -name '*.txt' \
+		-o -name 'test' \
+		-o -name 'tests' \) \
+		-print0 | xargs --no-run-if-empty -0 rm -rf
+ifeq ($(OPTIMIZATIONS), size)
+	find $(RELEASE_DIR)/$(PYTHON_DIR)/ -name '*.py' -exec rm -f {} \;
+endif
+
 #
 # neutrino-release-base
 #

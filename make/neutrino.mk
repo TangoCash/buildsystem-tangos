@@ -263,6 +263,8 @@ NMP_BRANCH  ?= master
 HAL_BRANCH  ?= mpx
 NMP_PATCHES  = $(NEUTRINO_TUX_PATCHES)
 HAL_PATCHES  = $(LIBSTB_HAL_TUX_PATCHES)
+else ifeq ($(FLAVOUR), HD2)
+NEUTRINO     = neutrino-hd2
 endif
 
 # -----------------------------------------------------------------------------
@@ -302,6 +304,9 @@ $(SOURCE_DIR)/$(NEUTRINO)/src/gui/version.h:
 	echo '#define BUILT_DATE "'`date`'"' > $@
 	@if test -d $(SOURCE_DIR)/$(LIBSTB_HAL); then \
 		echo '#define VCS "BS-rev$(BUILDSYSTEM_REV)_HAL-rev$(LIBSTB_HAL_REV)_$(FLAVOUR)-rev$(NEUTRINO_REV)"' >> $@; \
+	fi
+	if [ "$(FLAVOUR)" = "HD2" ]; then \
+		echo '#define GIT "$(BUILDSYSTEM_REV)"' >> $@; \
 	fi
 
 # -----------------------------------------------------------------------------
@@ -425,7 +430,6 @@ $(D)/neutrino.do_compile: $(D)/neutrino.config.status
 	$(MAKE) -C $(N_OBJDIR) all DESTDIR=$(TARGET_DIR)
 	@touch $@
 
-mp \
 $(D)/neutrino: $(D)/neutrino.do_prepare $(D)/neutrino.do_compile
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 	$(MAKE) -C $(N_OBJDIR) install DESTDIR=$(TARGET_DIR)
@@ -435,7 +439,6 @@ $(D)/neutrino: $(D)/neutrino.do_prepare $(D)/neutrino.do_compile
 	make neutrino-release
 	$(TUXBOX_CUSTOMIZE)
 
-mp-clean \
 neutrino-clean:
 	rm -f $(D)/neutrino
 	rm -f $(D)/neutrino.config.status
@@ -443,7 +446,6 @@ neutrino-clean:
 	cd $(N_OBJDIR); \
 		$(MAKE) -C $(N_OBJDIR) distclean
 
-mp-distclean \
 neutrino-distclean:
 	rm -rf $(N_OBJDIR)
 	rm -f $(D)/neutrino
@@ -454,104 +456,111 @@ neutrino-distclean:
 #
 # neutrino-hd2
 #
-NEUTRINO_HD2_PATCHES = \
-	neutrino-hd2-python.patch
 
-$(D)/neutrino-hd2.do_prepare: | $(NEUTRINO_DEPS) $(D)/libid3tag $(D)/libmad $(D)/flac
+NHD2_DEPS  = $(D)/bootstrap
+NHD2_DEPS += $(D)/ncurses
+NHD2_DEPS += $(D)/libcurl
+NHD2_DEPS += $(D)/libpng
+NHD2_DEPS += $(D)/libjpeg
+NHD2_DEPS += $(D)/giflib
+NHD2_DEPS += $(D)/freetype
+NHD2_DEPS += $(D)/ffmpeg
+NHD2_DEPS += $(D)/libfribidi
+NHD2_DEPS += $(D)/libid3tag
+NHD2_DEPS += $(D)/libmad
+NHD2_DEPS += $(D)/libvorbisidec
+NHD2_DEPS += $(D)/flac
+NHD2_DEPS += $(D)/e2fsprogs
+NHD2_DEPS += $(D)/lua
+NHD2_DEPS += $(D)/luaexpat
+NHD2_DEPS += $(D)/luacurl
+NHD2_DEPS += $(D)/luasocket
+NHD2_DEPS += $(D)/luafeedparser
+NHD2_DEPS += $(D)/luasoap
+NHD2_DEPS += $(D)/luajson
+NHD2_DEPS += $(D)/python
+
+
+NHD2_OPTS += --enable-lua
+NHD2_OPTS += --enable-python
+NHD2_OPTS += --enable-ci
+NHD2_OPTS += --with-datadir=/usr/share/tuxbox
+NHD2_OPTS += --with-fontdir=/usr/share/fonts
+NHD2_OPTS += --with-configdir=/var/tuxbox/config
+NHD2_OPTS += --with-gamesdir=/var/tuxbox/games
+NHD2_OPTS += --with-plugindir=/var/tuxbox/plugins
+NHD2_OPTS += --with-isocodesdir=/usr/share/iso-codes
+
+NEUTRINO_HD2_PATCHES = \
+	neutrino-hd2-python.patch \
+	neutrino-hd2-fix-compile.patch
+
+$(D)/neutrino-hd2.do_prepare: | $(NHD2_DEPS)
 	$(START_BUILD)
-	rm -rf $(SOURCE_DIR)/neutrino-hd2
-	rm -rf $(SOURCE_DIR)/neutrino-hd2.org
-	rm -rf $(SOURCE_DIR)/neutrino-hd2.git
+	rm -rf $(SOURCE_DIR)/$(NEUTRINO)
+	rm -rf $(SOURCE_DIR)/$(NEUTRINO).org
+	rm -rf $(SOURCE_DIR)/$(NEUTRINO).dev
+	rm -rf $(N_OBJDIR)
 	[ -d "$(ARCHIVE)/neutrino-hd2.git" ] && \
 	(cd $(ARCHIVE)/neutrino-hd2.git; git pull;); \
 	[ -d "$(ARCHIVE)/neutrino-hd2.git" ] || \
 	git clone https://github.com/mohousch/neutrinohd2.git $(ARCHIVE)/neutrino-hd2.git; \
-	cp -ra $(ARCHIVE)/neutrino-hd2.git $(SOURCE_DIR)/neutrino-hd2.git; \
-	ln -s $(SOURCE_DIR)/neutrino-hd2.git/nhd2-exp $(SOURCE_DIR)/neutrino-hd2;\
-	cp -ra $(SOURCE_DIR)/neutrino-hd2.git/nhd2-exp $(SOURCE_DIR)/neutrino-hd2.org
+	cp -ra $(ARCHIVE)/neutrino-hd2.git/nhd2-exp $(SOURCE_DIR)/neutrino-hd2; \
+	cp -ra $(SOURCE_DIR)/neutrino-hd2 $(SOURCE_DIR)/neutrino-hd2.org
 	set -e; cd $(SOURCE_DIR)/neutrino-hd2; \
 		$(call apply_patches, $(NEUTRINO_HD2_PATCHES))
-	cp -ra $(SOURCE_DIR)/neutrino-hd2.git/nhd2-exp $(SOURCE_DIR)/neutrino-hd2.dev
+	cp -ra $(SOURCE_DIR)/neutrino-hd2 $(SOURCE_DIR)/neutrino-hd2.dev
 	@touch $@
 
 $(D)/neutrino-hd2.config.status:
-	cd $(SOURCE_DIR)/neutrino-hd2; \
-		./autogen.sh $(SILENT_OPT); \
+	rm -rf $(N_OBJDIR)
+	test -d $(N_OBJDIR) || mkdir -p $(N_OBJDIR)
+	cd $(N_OBJDIR); \
+		$(SOURCE_DIR)/$(NEUTRINO)/autogen.sh $(SILENT_OPT); \
 		$(BUILDENV) \
-		./configure $(SILENT_OPT)\
+		$(SOURCE_DIR)/$(NEUTRINO)/configure $(SILENT_OPT) \
 			--build=$(BUILD) \
 			--host=$(TARGET) \
 			--enable-silent-rules \
 			--with-boxtype=$(BOXTYPE) \
-			--with-datadir=/usr/share/tuxbox \
-			--with-fontdir=/usr/share/fonts \
-			--with-configdir=/var/tuxbox/config \
-			--with-gamesdir=/var/tuxbox/games \
-			--with-plugindir=/var/tuxbox/plugins \
-			--with-isocodesdir=/usr/local/share/iso-codes \
-			--enable-python \
-			--enable-lua \
+			--prefix=/usr \
 			$(NHD2_OPTS) \
-			--enable-scart \
+			git_dir=$(ARCHIVE)/neutrino-hd2.git \
+			LUA=$(HOST_DIR)/bin/lua \
 			PY_PATH=$(TARGET_DIR)/usr \
 			PKG_CONFIG=$(PKG_CONFIG) \
 			PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 			CPPFLAGS="$(N_CPPFLAGS)" LDFLAGS="$(TARGET_LDFLAGS)"
+		+make $(SOURCE_DIR)/$(NEUTRINO)/src/gui/version.h
 	@touch $@
 
 $(D)/neutrino-hd2.do_compile: $(D)/neutrino-hd2.config.status
-	cd $(SOURCE_DIR)/neutrino-hd2; \
-		$(MAKE) all
+	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
+	$(MAKE) -C $(N_OBJDIR) all DESTDIR=$(TARGET_DIR)
 	@touch $@
 
-neutrino-hd2: $(D)/neutrino-hd2.do_prepare $(D)/neutrino-hd2.do_compile
-	$(MAKE) -C $(SOURCE_DIR)/neutrino-hd2 install DESTDIR=$(TARGET_DIR)
-	make $(TARGET_DIR)/.version
-	touch $(D)/$(notdir $@)
+$(D)/neutrino-hd2: $(D)/neutrino-hd2.do_prepare $(D)/neutrino-hd2.do_compile
+	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
+	$(MAKE) -C $(N_OBJDIR) install DESTDIR=$(TARGET_DIR)
+	make .version
+	make python-install
+	make e2-multiboot
+	$(TOUCH)
+	make neutrino-hd2-plugins
 	make neutrino-release
 	$(TUXBOX_CUSTOMIZE)
 
-nhd2 \
-neutrino-hd2-plugins: $(D)/neutrino-hd2.do_prepare $(D)/neutrino-hd2.do_compile
-	$(MAKE) -C $(SOURCE_DIR)/neutrino-hd2 install DESTDIR=$(TARGET_DIR)
-	make $(TARGET_DIR)/.version
-	touch $(D)/$(notdir $@)
-	make neutrino-hd2-plugins.build
-	make neutrino-release
-	$(TUXBOX_CUSTOMIZE)
-
-nhd2-clean \
-neutrino-hd2-clean: neutrino-cdkroot-clean
+neutrino-hd2-clean:
 	rm -f $(D)/neutrino-hd2
 	rm -f $(D)/neutrino-hd2.config.status
-	cd $(SOURCE_DIR)/neutrino-hd2; \
-		$(MAKE) clean
+	cd $(N_OBJDIR); \
+		$(MAKE) -C $(N_OBJDIR) distclean
 
-nhd2-distclean \
-neutrino-hd2-distclean: neutrino-cdkroot-clean
-	rm -f $(D)/neutrino-hd2*
-	rm -f $(D)/neutrino-hd2-plugins*
-
-# -----------------------------------------------------------------------------
-neutrino-cdkroot-clean:
-	[ -e $(TARGET_DIR)/usr/local/bin ] && cd $(TARGET_DIR)/usr/local/bin && find -name '*' -delete || true
-	[ -e $(TARGET_DIR)/usr/local/share/iso-codes ] && cd $(TARGET_DIR)/usr/local/share/iso-codes && find -name '*' -delete || true
-	[ -e $(TARGET_SHARE_DIR)/tuxbox/neutrino ] && cd $(TARGET_SHARE_DIR)/tuxbox/neutrino && find -name '*' -delete || true
-	[ -e $(TARGET_SHARE_DIR)/fonts ] && cd $(TARGET_SHARE_DIR)/fonts && find -name '*' -delete || true
-	[ -e $(TARGET_DIR)/var/tuxbox ] && cd $(TARGET_DIR)/var/tuxbox && find -name '*' -delete || true
-
-dual:
-	make nhd2
-	make neutrino-cdkroot-clean
-	make mp
-
-dual-clean:
-	make nhd2-clean
-	make mp-clean
-
-dual-distclean:
-	make nhd2-distclean
-	make mp-distclean
+neutrino-hd2-distclean:
+	rm -rf $(N_OBJDIR)
+	rm -f $(D)/neutrino-hd2
+	rm -f $(D)/neutrino-hd2.do_*
+	rm -f $(D)/neutrino-hd2.config.status
 
 # -----------------------------------------------------------------------------
 
