@@ -16,7 +16,7 @@ $(ARCHIVE)/$(LUA_SOURCE):
 $(ARCHIVE)/$(LUAPOSIX_SOURCE):
 	$(HELPERS_DIR)/get-git-archive.sh $(LUAPOSIX_URL) release-v$(LUAPOSIX_VER) $(notdir $@) $(ARCHIVE)
 
-$(D)/lua: $(D)/bootstrap $(D)/ncurses $(ARCHIVE)/$(LUAPOSIX_SOURCE) $(ARCHIVE)/$(LUA_SOURCE)
+$(D)/lua: $(D)/bootstrap $(D)/host_lua $(D)/ncurses $(ARCHIVE)/$(LUAPOSIX_SOURCE) $(ARCHIVE)/$(LUA_SOURCE)
 	$(START_BUILD)
 	$(REMOVE)/lua-$(LUA_VER)
 	mkdir -p $(TARGET_SHARE_DIR)/lua/$(LUA_VER_SHORT)

@@ -289,6 +289,28 @@ $(D)/host_atools: $(D)/directories $(ARCHIVE)/$(HAT_CORE_SOURCE) $(ARCHIVE)/$(HA
 	$(TOUCH)
 
 #
+# host-lua
+#
+HOST_LUA_VER    = 5.2.4
+HOST_LUA_SOURCE = lua-$(HOST_LUA_VER).tar.gz
+HOST_LUA_PATCH  = $(HOST_LUA_VER)-fix-lua-root.patch
+HOST_LUA_PATCH += $(HOST_LUA_VER)-remove-readline.patch
+
+# see target-lua.mk
+#$(ARCHIVE)/$(HOST_LUA_SOURCE):
+#	$(DOWNLOAD) https://www.lua.org/ftp/$(HOST_LUA_SOURCE)
+
+$(D)/host-lua: $(D)/directories
+	$(START_BUILD)
+	$(REMOVE)/lua-$(HOST_LUA_VER)
+	$(UNTAR)/$(HOST_LUA_SOURCE)
+	$(CHDIR)/lua-$(HOST_LUA_VER); \
+		$(MAKE) linux; \
+		$(MAKE) install INSTALL_TOP=$(HOST_DIR)
+	$(REMOVE)/lua-$(HOST_LUA_VER)
+	$(TOUCH)
+
+#
 # host-ccache
 #
 HOST_CCACHE_BIN    = $(CCACHE)
