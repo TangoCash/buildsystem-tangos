@@ -300,7 +300,7 @@ HOST_LUA_PATCH += $(HOST_LUA_VER)-remove-readline.patch
 #$(ARCHIVE)/$(HOST_LUA_SOURCE):
 #	$(DOWNLOAD) https://www.lua.org/ftp/$(HOST_LUA_SOURCE)
 
-$(D)/host-lua: $(D)/directories
+$(D)/host_lua: $(D)/directories
 	$(START_BUILD)
 	$(REMOVE)/lua-$(HOST_LUA_VER)
 	$(UNTAR)/$(HOST_LUA_SOURCE)
