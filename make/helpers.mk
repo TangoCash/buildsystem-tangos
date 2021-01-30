@@ -80,11 +80,11 @@ endef
 #
 neutrino%-patch \
 libstb-hal%-patch:
-	( cd $(SOURCE_DIR) && diff -Nur --exclude-from=$(HELPERS_DIR)/diff-exclude $(subst -patch,,$@).org $(subst -patch,,$@) > $(BASE_DIR)/$(subst -patch,.patch,$@) ; [ $$? -eq 1 ] )
+	( cd $(SOURCE_DIR) && diff -Nur --exclude-from=$(HELPERS_DIR)/diff-exclude $(subst -patch,,$@).org $(subst -patch,,$@) > $(BASE_DIR)/`date +%Y%m%d%H%M`-$(subst -patch,.patch,$@) ; [ $$? -eq 1 ] )
 
 neutrino%-diff \
 libstb-hal%-diff:
-	( cd $(SOURCE_DIR) && diff -Nur --exclude-from=$(HELPERS_DIR)/diff-exclude $(subst -diff,,$@).dev $(subst -diff,,$@) > $(BASE_DIR)/$(subst -diff,.patch,$@) ; [ $$? -eq 1 ] )
+	( cd $(SOURCE_DIR) && diff -Nur --exclude-from=$(HELPERS_DIR)/diff-exclude $(subst -diff,,$@).dev $(subst -diff,,$@) > $(BASE_DIR)/`date +%Y%m%d%H%M`-$(subst -diff,.patch,$@) ; [ $$? -eq 1 ] )
 
 # keeping all patches together in one file
 # uncomment if needed
