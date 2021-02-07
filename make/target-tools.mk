@@ -569,7 +569,7 @@ $(D)/f2fs-tools: $(D)/bootstrap $(D)/util_linux $(ARCHIVE)/$(F2FS-TOOLS_SOURCE)
 	$(REMOVE)/f2fs-tools-$(F2FS-TOOLS_VER)
 	$(UNTAR)/$(F2FS-TOOLS_SOURCE)
 	$(CHDIR)/f2fs-tools-$(F2FS-TOOLS_VER); \
-		autoreconf -fi; \
+		autoreconf -fi $(SILENT_OPT); \
 		ac_cv_file__git=no \
 		$(CONFIGURE) \
 			--prefix= \

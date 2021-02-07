@@ -1,7 +1,7 @@
 #
 # DIVERSE STUFF / TOOLS
 #
-$(D)/diverse-tools:
+$(D)/build-root-etc:
 	$(START_BUILD)
 	( cd root/etc && for i in $(DIVERSE_TOOLS_ADAPTED_ETC_FILES); do \
 		[ -f $$i ] && install -m 644 $$i $(TARGET_DIR)/etc/$$i || true; \

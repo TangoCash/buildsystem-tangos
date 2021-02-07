@@ -67,19 +67,20 @@ $(D)/bootstrap: $(BOOTSTRAP)
 #
 # system-tools
 #
-SYSTEM_TOOLS  = $(D)/busybox
-SYSTEM_TOOLS += $(D)/bash
+SYSTEM_TOOLS  = $(D)/bash
+SYSTEM_TOOLS += $(D)/busybox
 ifeq ($(BOXARCH), arm)
 SYSTEM_TOOLS += $(D)/libnsl
 endif
 SYSTEM_TOOLS += $(D)/zlib
 SYSTEM_TOOLS += $(D)/sysvinit
-SYSTEM_TOOLS += $(D)/diverse-tools
+SYSTEM_TOOLS += $(D)/build-root-etc
 SYSTEM_TOOLS += $(D)/e2fsprogs
-SYSTEM_TOOLS += $(D)/hdidle
-SYSTEM_TOOLS += $(D)/portmap
+SYSTEM_TOOLS += $(D)/f2fs-tools
 SYSTEM_TOOLS += $(D)/jfsutils
 SYSTEM_TOOLS += $(D)/nfs_utils
+SYSTEM_TOOLS += $(D)/hdidle
+SYSTEM_TOOLS += $(D)/portmap
 SYSTEM_TOOLS += $(D)/vsftpd
 #SYSTEM_TOOLS += $(D)/autofs
 #SYSTEM_TOOLS += $(D)/udpxy
