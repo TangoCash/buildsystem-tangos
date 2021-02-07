@@ -81,6 +81,7 @@ if [ "$1" == vusolo4k -o "$1" == vuduo4k -o "$1" == vuultimo4k -o "$1" == vuuno4
 	echo "FLAVOUR=TANGOS" >> config
 	echo "EXTERNAL_LCD=both" >> config
 	echo "VU_MULTIBOOT=1" >> config
+	echo "LAYOUT=single" >> config
 	echo " "
 	make printenv
 	exit
@@ -95,6 +96,7 @@ if [ "$1" == osmini4k ] || [ "$1" == osmio4k ] || [ "$1" == osmio4kplus ]; then
 	echo "IMAGE=neutrino" >> config
 	echo "FLAVOUR=TANGOS" >> config
 	echo "EXTERNAL_LCD=both" >> config
+	echo "LAYOUT=single" >> config
 	echo " "
 	make printenv
 	exit
@@ -109,6 +111,7 @@ if [ "$1" == vuduo ] || [ "$1" == vuduo2 ] || [ "$1" == gb800se ] || [ "$1" == o
 	echo "IMAGE=neutrino" >> config
 	echo "FLAVOUR=TANGOS" >> config
 	echo "EXTERNAL_LCD=both" >> config
+	echo "LAYOUT=single" >> config
 	echo " "
 	make printenv
 	exit
@@ -313,6 +316,8 @@ echo "EXTERNAL_LCD=$EXTERNAL_LCD" >> config
 
 ##############################################
 
+LAYOUT=single
+
 if [ $BOXTYPE == 'hd51' -o $BOXTYPE == 'bre2ze4k' -o $BOXTYPE == 'h7' ]; then
 
 case $8 in
@@ -329,12 +334,7 @@ case "$REPLY" in
 	2)  LAYOUT="single";;
 	*)  LAYOUT="multi";;
 esac
-echo "LAYOUT=$LAYOUT" >> config
 
-fi
-
-if [ $BOXTYPE == 'hd60' -o $BOXTYPE == 'hd61' ]; then
-echo "LAYOUT=multi" >> config
 fi
 
 if [ $BOXTYPE == 'vusolo4k' -o $BOXTYPE == 'vuduo4k' -o $BOXTYPE == 'vuultimo4k' -o $BOXTYPE == 'vuuno4k' -o $BOXTYPE == 'vuuno4kse' -o $BOXTYPE == 'vuzero4k' ]; then
@@ -353,6 +353,12 @@ case "$REPLY" in
 	*)  VU_MULTIBOOT="1";;
 esac
 echo "VU_MULTIBOOT=$VU_MULTIBOOT" >> config
+fi
+
+if [ $BOXTYPE == 'hd60' -o $BOXTYPE == 'hd61' ]; then
+echo "LAYOUT=multi" >> config
+else
+echo "LAYOUT=$LAYOUT" >> config
 fi
 
 ##############################################
