@@ -197,7 +197,7 @@ case $2 in
 	[1-2]) REPLY=$2;;
 	*)	echo -e "\nFFmpeg Version:"
 		echo "   1) buildsystem standard"
-		echo "   2) ffmpeg git snapshot"
+		echo "   2) ffmpeg git snapshot (experimental)"
 		read -p "Select FFmpeg version (1-2)? [1]"
 		REPLY="${REPLY:-1}";;
 esac
@@ -367,7 +367,7 @@ case $9 in
 	[1-2]) REPLY=$9;;
 	*)	echo -e "\nBusybox Version:"
 		echo "   1) buildsystem standard"
-		echo "   2) busybox git snapshot"
+		echo "   2) busybox git snapshot (experimental)"
 		read -p "Select Busybox version (1-2)? [1]"
 		REPLY="${REPLY:-1}";;
 esac
