@@ -40,44 +40,50 @@ endif
 
 # -----------------------------------------------------------------------------
 
-LIBSTB_HAL_DEPS  = $(D)/bootstrap
-LIBSTB_HAL_DEPS += $(D)/ffmpeg
-LIBSTB_HAL_DEPS += $(D)/libopenthreads
+COMMON_DEPS  = $(D)/bootstrap
+COMMON_DEPS += $(KERNEL)
+COMMON_DEPS += $(D)/system-tools
+COMMON_DEPS += $(D)/ncurses
+COMMON_DEPS += $(D)/libcurl
+COMMON_DEPS += $(D)/libpng
+COMMON_DEPS += $(D)/libjpeg
+COMMON_DEPS += $(D)/giflib
+COMMON_DEPS += $(D)/alsa_utils
+COMMON_DEPS += $(D)/freetype
+COMMON_DEPS += $(D)/zlib
+COMMON_DEPS += $(D)/ffmpeg
+COMMON_DEPS += $(D)/libopenthreads
+COMMON_DEPS += $(D)/libfribidi
+COMMON_DEPS += $(D)/lua
+COMMON_DEPS += $(D)/luaexpat
+COMMON_DEPS += $(D)/luacurl
+COMMON_DEPS += $(D)/luasocket
+COMMON_DEPS += $(D)/luafeedparser
+COMMON_DEPS += $(D)/luasoap
+COMMON_DEPS += $(D)/luajson
+COMMON_DEPS += $(D)/ntfs_3g
+COMMON_DEPS += $(D)/gptfdisk
+COMMON_DEPS += $(D)/mc
+COMMON_DEPS += $(D)/samba
+COMMON_DEPS += $(D)/rsync
+COMMON_DEPS += $(D)/links
+COMMON_DEPS += $(D)/dropbearmulti
+COMMON_DEPS += $(D)/djmount
+#COMMON_DEPS +=  $(D)/minidlna
+#COMMON_DEPS +=  $(D)/minisatip
 
 # -----------------------------------------------------------------------------
 
-NEUTRINO_DEPS  = $(D)/bootstrap
-NEUTRINO_DEPS += $(KERNEL)
-NEUTRINO_DEPS += $(D)/system-tools
-NEUTRINO_DEPS += $(D)/ncurses
-NEUTRINO_DEPS += $(D)/libcurl
-NEUTRINO_DEPS += $(D)/libpng
-NEUTRINO_DEPS += $(D)/libjpeg
-NEUTRINO_DEPS += $(D)/giflib
-NEUTRINO_DEPS += $(D)/freetype
-NEUTRINO_DEPS += $(D)/alsa_utils
-NEUTRINO_DEPS += $(D)/ffmpeg
+LIBSTB_HAL_DEPS = $(COMMON_DEPS)
+
+# -----------------------------------------------------------------------------
+
+NEUTRINO_DEPS  = $(COMMON_DEPS)
 NEUTRINO_DEPS += $(D)/libsigc
 NEUTRINO_DEPS += $(D)/libdvbsi
 NEUTRINO_DEPS += $(D)/libusb
-NEUTRINO_DEPS += $(D)/zlib
 NEUTRINO_DEPS += $(D)/pugixml
-NEUTRINO_DEPS += $(D)/libopenthreads
-NEUTRINO_DEPS += $(D)/lua
-NEUTRINO_DEPS += $(D)/luaexpat
-NEUTRINO_DEPS += $(D)/luacurl
-NEUTRINO_DEPS += $(D)/luasocket
-NEUTRINO_DEPS += $(D)/luafeedparser
-NEUTRINO_DEPS += $(D)/luasoap
-NEUTRINO_DEPS += $(D)/luajson
-NEUTRINO_DEPS += $(D)/ntfs_3g
-NEUTRINO_DEPS += $(D)/gptfdisk
-NEUTRINO_DEPS += $(D)/mc
-NEUTRINO_DEPS += $(D)/samba
-NEUTRINO_DEPS += $(D)/rsync
-NEUTRINO_DEPS += $(D)/links
-NEUTRINO_DEPS += $(D)/dropbearmulti
-NEUTRINO_DEPS += $(D)/djmount
+
 NEUTRINO_DEPS += $(D)/neutrino-plugins
 NEUTRINO_DEPS += $(D)/neutrino-plugin-scripts-lua
 NEUTRINO_DEPS += $(D)/neutrino-plugin-mediathek
@@ -94,29 +100,10 @@ NEUTRINO_DEPS += $(LOCAL_NEUTRINO_PLUGINS)
 
 N_CONFIG_OPTS  = $(LOCAL_NEUTRINO_BUILD_OPTIONS)
 
-# enable ffmpeg audio decoder in neutrino
-AUDIODEC = ffmpeg
-ifeq ($(AUDIODEC), ffmpeg)
-# enable ffmpeg audio decoder in neutrino
-N_CONFIG_OPTS += --enable-ffmpegdec
-else
-NEUTRINO_DEPS += $(D)/libid3tag
-NEUTRINO_DEPS += $(D)/libmad
-
-N_CONFIG_OPTS += --with-tremor
-NEUTRINO_DEPS += $(D)/libvorbisidec
-
-N_CONFIG_OPTS += --enable-flac
-NEUTRINO_DEPS += $(D)/flac
-endif
-
-#NEUTRINO_DEPS +=  $(D)/minidlna
-
 ifeq ($(IMAGE), neutrino-wlandriver)
 NEUTRINO_DEPS += $(D)/wpa_supplicant
 NEUTRINO_DEPS += $(D)/wireless_tools
 endif
-
 
 N_CFLAGS       = -Wall -W -Wshadow -pipe -Os
 N_CFLAGS      += -D__KERNEL_STRICT_NAMES
@@ -139,8 +126,6 @@ N_CPPFLAGS    += -I$(CROSS_DIR)/$(TARGET)/sys-root/usr/include
 endif
 
 LH_CONFIG_OPTS = $(LOCAL_LIBHAL_BUILD_OPTIONS)
-#LH_CONFIG_OPTS += --enable-flv2mpeg4
-
 
 ifeq ($(FLAVOUR), $(filter $(FLAVOUR), NI TUXBOX))
 N_CONFIG_OPTS += --with-boxtype=armbox
@@ -151,16 +136,16 @@ else
 N_CONFIG_OPTS += --with-boxtype=$(BOXTYPE)
 LH_CONFIG_OPTS += --with-boxtype=$(BOXTYPE)
 endif
+
+N_CONFIG_OPTS += --enable-ffmpegdec
 N_CONFIG_OPTS += --enable-freesatepg
+N_CONFIG_OPTS += --enable-fribidi
+N_CONFIG_OPTS += --disable-upnp
 #N_CONFIG_OPTS += --enable-pip
 #N_CONFIG_OPTS += --enable-dynamicdemux
-#N_CONFIG_OPTS += --disable-webif
-N_CONFIG_OPTS += --disable-upnp
-#N_CONFIG_OPTS += --disable-tangos
 #N_CONFIG_OPTS += --enable-reschange
-
-N_CONFIG_OPTS += --enable-fribidi
-NEUTRINO_DEPS += $(D)/libfribidi
+#N_CONFIG_OPTS += --disable-webif
+#N_CONFIG_OPTS += --disable-tangos
 
 N_CONFIG_OPTS += \
 	--with-libdir=/usr/lib \
@@ -457,29 +442,12 @@ neutrino-distclean:
 # neutrino-hd2
 #
 
-NHD2_DEPS  = $(D)/bootstrap
-NHD2_DEPS += $(D)/ncurses
-NHD2_DEPS += $(D)/libcurl
-NHD2_DEPS += $(D)/libpng
-NHD2_DEPS += $(D)/libjpeg
-NHD2_DEPS += $(D)/giflib
-NHD2_DEPS += $(D)/freetype
-NHD2_DEPS += $(D)/ffmpeg
-NHD2_DEPS += $(D)/libfribidi
+NHD2_DEPS  = $(COMMON_DEPS)
 NHD2_DEPS += $(D)/libid3tag
 NHD2_DEPS += $(D)/libmad
 NHD2_DEPS += $(D)/libvorbisidec
 NHD2_DEPS += $(D)/flac
-NHD2_DEPS += $(D)/e2fsprogs
-NHD2_DEPS += $(D)/lua
-NHD2_DEPS += $(D)/luaexpat
-NHD2_DEPS += $(D)/luacurl
-NHD2_DEPS += $(D)/luasocket
-NHD2_DEPS += $(D)/luafeedparser
-NHD2_DEPS += $(D)/luasoap
-NHD2_DEPS += $(D)/luajson
 NHD2_DEPS += $(D)/python
-
 
 NHD2_OPTS += --enable-lua
 NHD2_OPTS += --enable-python
