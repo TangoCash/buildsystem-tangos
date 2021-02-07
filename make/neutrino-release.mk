@@ -127,7 +127,7 @@ neutrino-release-base:
 	ln -sf /.version $(RELEASE_DIR)/var/etc/.version
 	ln -sf /.version $(RELEASE_DIR)/usr/.version
 	ln -sf /proc/mounts $(RELEASE_DIR)/etc/mtab
-ifeq ($(NEWLAYOUT), $(filter $(NEWLAYOUT), 1))
+ifeq ($(LAYOUT), multi)
 	mv $(RELEASE_DIR)/sbin/init $(RELEASE_DIR)/sbin/init.sysvinit
 	install -m 0755 $(SKEL_ROOT)/sbin/init $(RELEASE_DIR)/sbin/
 endif

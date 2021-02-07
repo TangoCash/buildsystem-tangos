@@ -53,14 +53,14 @@ BS_GCC_VER           ?= 10.2.0
 IMAGE                ?= neutrino
 FLAVOUR              ?= TANGOS
 EXTERNAL_LCD         ?= both
-NEWLAYOUT            ?= 0
+LAYOUT               ?= multi
 #
 ITYPE                ?= usb
 
 TARGET_DIR            = $(BASE_DIR)/build_sysroot
 HOST_DIR              = $(BASE_DIR)/build_host
 RELEASE_DIR_CLEANUP   = $(BASE_DIR)/build_release
-ifeq ($(NEWLAYOUT), $(filter $(NEWLAYOUT), 1))
+ifeq ($(LAYOUT), multi)
 RELEASE_DIR           = $(BASE_DIR)/build_release/linuxrootfs1
 else
 RELEASE_DIR           = $(BASE_DIR)/build_release
@@ -250,6 +250,7 @@ TOUCH                 = @touch $@; \
 TUXBOX_CUSTOMIZE = [ -x $(CUSTOM_DIR)/$(notdir $@)-local.sh ] && \
 	KERNEL_VER=$(KERNEL_VER) && \
 	BOXTYPE=$(BOXTYPE) && \
+	LAYOUT=$(LAYOUT) && \
 	$(CUSTOM_DIR)/$(notdir $@)-local.sh \
 	$(RELEASE_DIR) \
 	$(TARGET_DIR) \

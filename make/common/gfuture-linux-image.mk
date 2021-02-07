@@ -55,7 +55,7 @@ flash-image-$(BOXTYPE)-multi-disk: $(D)/host_resize2fs $(D)/host_parted
 	mv -f $(RELEASE_DIR)/boot/zImage* $(FLASH_BUILD_TMP)/
 	# Create a sparse image block
 	dd if=/dev/zero of=$(FLASH_BUILD_TMP)/$(FLASH_IMAGE_LINK) seek=$(shell expr $(FLASH_IMAGE_ROOTFS_SIZE) \* $(BLOCK_SECTOR)) count=0 bs=$(BLOCK_SIZE)
-ifeq ($(NEWLAYOUT), $(filter $(NEWLAYOUT), 1))
+ifeq ($(LAYOUT), multi)
 	$(HOST_DIR)/bin/mkfs.ext4 -F $(FLASH_BUILD_TMP)/$(FLASH_IMAGE_LINK) -d $(RELEASE_DIR)/..
 else
 	$(HOST_DIR)/bin/mkfs.ext4 -F $(FLASH_BUILD_TMP)/$(FLASH_IMAGE_LINK) -d $(RELEASE_DIR)
@@ -67,7 +67,7 @@ endif
 	dd if=/dev/zero of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) count=0 seek=$(shell expr $(EMMC_IMAGE_SIZE) \* $(BLOCK_SECTOR))
 	parted -s $(EMMC_IMAGE) mklabel gpt
 	parted -s $(EMMC_IMAGE) unit KiB mkpart boot fat16 $(IMAGE_ROOTFS_ALIGNMENT) $(shell expr $(IMAGE_ROOTFS_ALIGNMENT) \+ $(BOOT_PARTITION_SIZE))
-ifeq ($(NEWLAYOUT), $(filter $(NEWLAYOUT), 1))
+ifeq ($(LAYOUT), multi)
 	parted -s $(EMMC_IMAGE) unit KiB mkpart linuxkernel $(KERNEL_PARTITION_OFFSET) $(shell expr $(KERNEL_PARTITION_OFFSET) \+ $(KERNEL_PARTITION_SIZE))
 	parted -s $(EMMC_IMAGE) unit KiB mkpart linuxrootfs ext4 $(ROOTFS_PARTITION_OFFSET) $(shell expr $(ROOTFS_PARTITION_OFFSET) \+ $(ROOTFS_PARTITION_MULTI_SIZE))
 	parted -s $(EMMC_IMAGE) unit KiB mkpart linuxkernel2 $(SECOND_KERNEL_PARTITION_OFFSET_NL) $(shell expr $(SECOND_KERNEL_PARTITION_OFFSET_NL) \+ $(KERNEL_PARTITION_SIZE))
@@ -121,7 +121,7 @@ endif
 #	mcopy -i $(FLASH_BUILD_TMP)/$(FLASH_BOOT_IMAGE) -v $(FLASH_BUILD_TMP)/STARTUP_4_12 ::
 	dd conv=notrunc if=$(FLASH_BUILD_TMP)/$(FLASH_BOOT_IMAGE) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(IMAGE_ROOTFS_ALIGNMENT) \* $(BLOCK_SECTOR))
 	dd conv=notrunc if=$(RELEASE_DIR)/boot/zImage.dtb of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(KERNEL_PARTITION_OFFSET) \* $(BLOCK_SECTOR))
-ifeq ($(NEWLAYOUT), $(filter $(NEWLAYOUT), 1))
+ifeq ($(LAYOUT), multi)
 	$(HOST_DIR)/bin/resize2fs $(FLASH_BUILD_TMP)/$(FLASH_IMAGE_LINK) $(ROOTFS_PARTITION_MULTI_SIZE)k
 else
 	$(HOST_DIR)/bin/resize2fs $(FLASH_BUILD_TMP)/$(FLASH_IMAGE_LINK) $(ROOTFS_PARTITION_SINGLE_SIZE)k
@@ -136,15 +136,9 @@ flash-image-$(BOXTYPE)-multi-rootfs:
 	cd $(RELEASE_DIR); \
 	tar -cvf $(FLASH_BUILD_TMP)/$(BOXTYPE)/rootfs.tar --exclude=zImage* . > /dev/null 2>&1; \
 	bzip2 $(FLASH_BUILD_TMP)/$(BOXTYPE)/rootfs.tar
-ifeq ($(NEWLAYOUT), $(filter $(NEWLAYOUT), 1))
 	echo $(BOXTYPE)_$(FLAVOUR)_multiroot_$(ITYPE)_$(DATE) > $(FLASH_BUILD_TMP)/$(BOXTYPE)/imageversion
 	cd $(FLASH_BUILD_TMP) && \
-	zip -r $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_$(FLAVOUR)_multiroot_$(ITYPE)_$(DATE).zip $(BOXTYPE)/rootfs.tar.bz2 $(BOXTYPE)/kernel.bin $(BOXTYPE)/disk.img $(BOXTYPE)/imageversion
-else
-	echo $(BOXTYPE)_$(FLAVOUR)_singleroot_$(ITYPE)_$(DATE) > $(FLASH_BUILD_TMP)/$(BOXTYPE)/imageversion
-	cd $(FLASH_BUILD_TMP) && \
-	zip -r $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_$(FLAVOUR)_singleroot_$(ITYPE)_$(DATE).zip $(BOXTYPE)/rootfs.tar.bz2 $(BOXTYPE)/kernel.bin $(BOXTYPE)/disk.img $(BOXTYPE)/imageversion
-endif
+	zip -r $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_$(FLAVOUR)_$(LAYOUT)_$(ITYPE)_$(DATE).zip $(BOXTYPE)/rootfs.tar.bz2 $(BOXTYPE)/kernel.bin $(BOXTYPE)/disk.img $(BOXTYPE)/imageversion
 	# cleanup
 	rm -rf $(FLASH_BUILD_TMP)
 
@@ -155,14 +149,8 @@ flash-image-$(BOXTYPE)-online:
 	cd $(RELEASE_DIR); \
 	tar -cvf $(FLASH_BUILD_TMP)/$(BOXTYPE)/rootfs.tar --exclude=zImage* . > /dev/null 2>&1; \
 	bzip2 $(FLASH_BUILD_TMP)/$(BOXTYPE)/rootfs.tar
-ifeq ($(NEWLAYOUT), $(filter $(NEWLAYOUT), 1))
 	echo $(BOXTYPE)_$(FLAVOUR)_$(ITYPE)_$(DATE) > $(FLASH_BUILD_TMP)/$(BOXTYPE)/imageversion
 	cd $(FLASH_BUILD_TMP)/$(BOXTYPE) && \
-	tar -cvzf $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_$(FLAVOUR)_multiroot_$(ITYPE)_$(DATE).tgz rootfs.tar.bz2 kernel.bin imageversion
-else
-	echo $(BOXTYPE)_$(FLAVOUR)_$(ITYPE)_$(DATE) > $(FLASH_BUILD_TMP)/$(BOXTYPE)/imageversion
-	cd $(FLASH_BUILD_TMP)/$(BOXTYPE) && \
-	tar -cvzf $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_$(FLAVOUR)_singleroot_$(ITYPE)_$(DATE).tgz rootfs.tar.bz2 kernel.bin imageversion
-endif
+	tar -cvzf $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_$(FLAVOUR)_$(LAYOUT)_$(ITYPE)_$(DATE).tgz rootfs.tar.bz2 kernel.bin imageversion
 	# cleanup
 	rm -rf $(FLASH_BUILD_TMP)
