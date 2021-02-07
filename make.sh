@@ -22,6 +22,7 @@ if [ "$1" == -h ] || [ "$1" == --help ]; then
 	echo "Parameter 7: External LCD support (1-4)"
 	echo "optional:"
 	echo "Parameter 8: Multiboot layout (1-2)"
+	echo "Parameter 9: Busybox version (1-2)"
 	exit
 fi
 ##############################################
@@ -360,6 +361,23 @@ echo "LAYOUT=multi" >> config
 else
 echo "LAYOUT=$LAYOUT" >> config
 fi
+##############################################
+
+case $9 in
+	[1-2]) REPLY=$9;;
+	*)	echo -e "\nBusybox Version:"
+		echo "   1) buildsystem standard"
+		echo "   2) busybox git snapshot"
+		read -p "Select Busybox version (1-2)? [1]"
+		REPLY="${REPLY:-1}";;
+esac
+
+case "$REPLY" in
+	1) BUSYBOX_SNAPSHOT="0";;
+	2) BUSYBOX_SNAPSHOT="1";;
+	*) BUSYBOX_SNAPSHOT="0";;
+esac
+echo "BUSYBOX_SNAPSHOT=$BUSYBOX_SNAPSHOT" >> config
 
 ##############################################
 echo " "

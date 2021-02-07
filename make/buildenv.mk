@@ -14,6 +14,7 @@ export LD_LIBRARY_PATH
 # -----------------------------------------------------------------------------
 
 # set up default parallelism
+# nproc + 1 results in faster compile times
 PARALLEL_JOBS := $(shell echo $$((1 + `getconf _NPROCESSORS_ONLN 2>/dev/null || echo 1`)))
 override MAKE = make $(if $(findstring j,$(filter-out --%,$(MAKEFLAGS))),,-j$(PARALLEL_JOBS)) $(SILENT_OPT)
 

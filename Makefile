@@ -44,11 +44,6 @@ printenv:
 	@echo "BOXTYPE           : $(BOXTYPE)"
 	@echo "KERNEL_VERSION    : $(KERNEL_VER)"
 	@echo "EXTERNAL_LCD      : $(EXTERNAL_LCD)"
-ifeq ($(FFMPEG_EXPERIMENTAL), 1)
-	@echo "FFMPEG_EXP        : yes"
-else
-	@echo "FFMPEG_EXP        : no"
-endif
 	@echo -e "FLAVOUR           : $(TERM_YELLOW)$(FLAVOUR)$(TERM_NORMAL)"
 	@echo "PARALLEL_JOBS     : $(PARALLEL_JOBS)"
 ifeq ($(KBUILD_VERBOSE), 1)
@@ -57,11 +52,20 @@ else
 	@echo "VERBOSE_BUILD     : no"
 endif
 	@echo "IMAGE             : $(IMAGE)"
-ifeq ($(NEWLAYOUT), 1)
-	@echo -e "IMAGE TYPE        : $(TERM_YELLOW)1 single + multirootfs$(TERM_NORMAL)"
-endif
-ifeq ($(VUSOLO4K_MULTIBOOT), 1)
+ifeq ($(VU_MULTIBOOT), 1)
 	@echo -e "IMAGE TYPE        : $(TERM_YELLOW)multiboot$(TERM_NORMAL)"
+else
+	@echo -e "IMAGE TYPE        : $(TERM_YELLOW)$(LAYOUT)$(TERM_NORMAL)"
+endif
+ifeq ($(FFMPEG_EXPERIMENTAL), 1)
+	@echo -e "FFMPEG_SNAPSHOT   : $(TERM_YELLOW)yes$(TERM_NORMAL)"
+else
+	@echo "FFMPEG_SNAPSHOT   : no"
+endif
+ifeq ($(BUSYBOX_SNAPSHOT), 1)
+	@echo -e "BUSYBOX_SNAPSHOT  : $(TERM_YELLOW)yes$(TERM_NORMAL)"
+else
+	@echo "BUSYBOX_SNAPSHOT  : no"
 endif
 	$(call draw_line,);
 ifeq ($(IMAGE), $(filter $(IMAGE), neutrino neutrino-wlandriver))
