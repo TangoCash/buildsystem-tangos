@@ -366,9 +366,9 @@ endif
 #
 # Neutrino HD2 Workaround Build in Player
 #
-	if [ -e $(TARGET_DIR)/usr/local/bin/eplayer3 ]; then \
-		cp -f $(TARGET_DIR)/usr/local/bin/eplayer3 $(RELEASE_DIR)/bin/; \
-		cp -f $(TARGET_DIR)/usr/local/bin/meta $(RELEASE_DIR)/bin/; \
+	if [ -e $(TARGET_DIR)/usr/bin/eplayer3 ]; then \
+		cp -f $(TARGET_DIR)/usr/bin/eplayer3 $(RELEASE_DIR)/bin/; \
+		cp -f $(TARGET_DIR)/usr/bin/meta $(RELEASE_DIR)/bin/; \
 	fi
 #
 # delete unnecessary files
@@ -419,13 +419,19 @@ $(D)/neutrino-release: neutrino-release-base neutrino-release-$(BOXTYPE)
 	find $(OWN_BUILD)/neutrino-hd/ -mindepth 1 -maxdepth 1 -exec cp -at$(RELEASE_DIR)/ -- {} +
 #	receiver specific (only if directory exist)
 	[ -d "$(OWN_BUILD)/neutrino-hd.$(BOXTYPE)" ] && find $(OWN_BUILD)/neutrino-hd.$(BOXTYPE)/ -mindepth 1 -maxdepth 1 -exec cp -at$(RELEASE_DIR)/ -- {} + || true
+#	receiver/layout specific (only if directory exist)
+	[ -d "$(OWN_BUILD)/neutrino-hd.$(BOXTYPE).$(LAYOUT)" ] && find $(OWN_BUILD)/neutrino-hd.$(BOXTYPE).$(LAYOUT)/ -mindepth 1 -maxdepth 1 -exec cp -at$(RELEASE_DIR)/ -- {} + || true
+#	append boxmodel
 	echo $(BOXTYPE) > $(RELEASE_DIR)/etc/model
+
 #
-# nicht die feine Art, aber funktioniert ;)
+#	moving /etc to /var/etc and create symlink
 #
 	cp -dpfr $(RELEASE_DIR)/etc $(RELEASE_DIR)/var
 	rm -fr $(RELEASE_DIR)/etc
 	ln -sf var/etc $(RELEASE_DIR)/etc
+#
+#	create some needed symlinks
 #
 	ln -s /tmp $(RELEASE_DIR)/lib/init
 	ln -s /tmp $(RELEASE_DIR)/var/lib/urandom
@@ -434,7 +440,7 @@ $(D)/neutrino-release: neutrino-release-base neutrino-release-$(BOXTYPE)
 	ln -s /tmp $(RELEASE_DIR)/var/run
 	ln -s /tmp $(RELEASE_DIR)/var/tmp
 #
-# linux-strip all
+#	cleanup and optimize
 #
 	find $(RELEASE_DIR)/lib $(RELEASE_DIR)/usr/lib/ \
 		\( -name '*.a' \
