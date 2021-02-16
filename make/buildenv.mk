@@ -55,6 +55,7 @@ IMAGE                ?= neutrino
 FLAVOUR              ?= TANGOS
 EXTERNAL_LCD         ?= both
 LAYOUT               ?= multi
+BUSYBOX_SNAPSHOT     ?= 0
 #
 ITYPE                ?= usb
 

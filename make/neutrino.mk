@@ -275,7 +275,7 @@ e2-multiboot:
 	touch $(TARGET_DIR)/usr/bin/enigma2
 	#
 	#echo -e "$(FLAVOUR) `sed -n 's/\#define PACKAGE_VERSION "//p' $(N_OBJDIR)/config.h | sed 's/"//'` \\\n \\\l\n" > $(TARGET_DIR)/etc/issue
-	echo -e "$(FLAVOUR) rev$(shell expr $(BUILDSYSTEM_REV) + $(LIBSTB_HAL_REV) + $(NEUTRINO_REV))" > $(TARGET_DIR)/etc/issue
+	echo -e "$(FLAVOUR) rev$(shell expr $(BUILDSYSTEM_REV) + $(LIBSTB_HAL_REV) + $(NEUTRINO_REV)) \\\n \\\l\n" >> $(TARGET_DIR)/etc/issue
 	#
 	touch $(TARGET_DIR)/var/lib/opkg/status
 	#
