@@ -320,6 +320,7 @@ endif
 			--disable-filters \
 			--enable-filter=scale \
 			--enable-filter=drawtext \
+			--enable-filter=overlay \
 			\
 			--enable-zlib \
 			--enable-bzlib \
