@@ -11,6 +11,15 @@ if [ "$(id -u)" = "0" ]; then
 fi
 
 ##############################################
+# check for link sh to bash
+if [ ! "$(basename $(readlink /bin/sh))" == "bash" ]; then
+	echo -e "\033[01;31m================================================================="
+	echo -e "===> ERROR : sudo ./prepare-for-bs.sh not executet -> EXIT ! <==="
+	echo -e "=================================================================\033[0m"
+	exit
+fi
+
+##############################################
 
 if [ "$1" == -h ] || [ "$1" == --help ]; then
 	echo "Parameter 1: Target receiver (30-70)"
