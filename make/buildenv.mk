@@ -252,7 +252,6 @@ TOUCH                 = @touch $@; \
 TUXBOX_CUSTOMIZE = [ -x $(CUSTOM_DIR)/$(notdir $@)-local.sh ] && \
 	KERNEL_VER=$(KERNEL_VER) && \
 	BOXTYPE=$(BOXTYPE) && \
-	LAYOUT=$(LAYOUT) && \
 	$(CUSTOM_DIR)/$(notdir $@)-local.sh \
 	$(RELEASE_DIR) \
 	$(TARGET_DIR) \
@@ -263,6 +262,7 @@ TUXBOX_CUSTOMIZE = [ -x $(CUSTOM_DIR)/$(notdir $@)-local.sh ] && \
 	$(RELEASE_IMAGE_DIR) \
 	$(NEUTRINO) \
 	$(LIBSTB_HAL) \
+	$(LAYOUT) \
 	|| true
 
 #
