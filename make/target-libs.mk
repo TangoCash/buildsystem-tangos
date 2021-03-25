@@ -2557,7 +2557,7 @@ $(D)/libupnp: $(D)/bootstrap $(ARCHIVE)/$(LIBUPNP_SOURCE)
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--libdir=$(TARGET_LIB_DIR) \
-			--includedir=$(TARGET_DIR)/usr/include \
+			--includedir=$(TARGET_INCLUDE_DIR) \
 		; \
 		$(MAKE) all; \
 		$(MAKE) install
