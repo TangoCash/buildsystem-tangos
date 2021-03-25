@@ -2543,11 +2543,11 @@ $(D)/djmount: $(D)/bootstrap $(D)/fuse $(ARCHIVE)/$(DJMOUNT_SOURCE)
 #
 # libupnp
 #
-LIBUPNP_VER = 1.6.25
+LIBUPNP_VER = 1.14.2
 LIBUPNP_SOURCE = libupnp-$(LIBUPNP_VER).tar.bz2
 
 $(ARCHIVE)/$(LIBUPNP_SOURCE):
-	$(DOWNLOAD) https://sourceforge.net/projects/pupnp/files/pupnp/libUPnP\ $(LIBUPNP_VER)/$(LIBUPNP_SOURCE)
+	$(DOWNLOAD) https://sourceforge.net/projects/pupnp/files/pupnp/libupnp-$(LIBUPNP_VER)/$(LIBUPNP_SOURCE)
 
 $(D)/libupnp: $(D)/bootstrap $(ARCHIVE)/$(LIBUPNP_SOURCE)
 	$(START_BUILD)
@@ -2556,9 +2556,11 @@ $(D)/libupnp: $(D)/bootstrap $(ARCHIVE)/$(LIBUPNP_SOURCE)
 	$(CHDIR)/libupnp-$(LIBUPNP_VER); \
 		$(CONFIGURE) \
 			--prefix=/usr \
+			--libdir=$(TARGET_LIB_DIR) \
+			--includedir=$(TARGET_DIR)/usr/include \
 		; \
 		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
+		$(MAKE) install
 	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libupnp.pc
 	$(REWRITE_LIBTOOL)/libixml.la
 	$(REWRITE_LIBTOOL)/libthreadutil.la
