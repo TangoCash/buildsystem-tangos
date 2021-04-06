@@ -5,7 +5,7 @@ KERNEL_VER             = 3.9.6
 KERNEL_TYPE            = vuduo
 KERNEL_SRC_VER         = 3.9.6
 KERNEL_SRC             = stblinux-${KERNEL_SRC_VER}.tar.bz2
-KERNEL_URL             = http://archive.vuplus.com/download/kernel
+KERNEL_URL             = http://code.vuplus.com/download/release/kernel
 KERNEL_CONFIG          = $(KERNEL_TYPE)/defconfig
 KERNEL_DIR             = $(BUILD_TMP)/linux
 

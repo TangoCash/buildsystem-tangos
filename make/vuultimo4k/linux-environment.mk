@@ -5,7 +5,7 @@ KERNEL_DATE            =
 KERNEL_TYPE            = vuultimo4k
 KERNEL_SRC_VER         = 3.14-1.12
 KERNEL_SRC             = stblinux-${KERNEL_SRC_VER}.tar.bz2
-KERNEL_URL             = http://archive.vuplus.com/download/kernel
+KERNEL_URL             = http://code.vuplus.com/download/release/kernel
 ifeq ($(VU_MULTIBOOT), 1)
 KERNEL_CONFIG          = $(KERNEL_TYPE)/defconfig_multi
 else

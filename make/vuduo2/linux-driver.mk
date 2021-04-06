@@ -4,7 +4,7 @@ DRIVER_REV = r0
 DRIVER_SRC = vuplus-dvb-proxy-$(KERNEL_TYPE)-$(DRIVER_VER)-$(DRIVER_DATE).$(DRIVER_REV).tar.gz
 
 $(ARCHIVE)/$(DRIVER_SRC):
-	$(DOWNLOAD) http://archive.vuplus.com/download/build_support/vuplus/$(DRIVER_SRC)
+	$(DOWNLOAD) http://code.vuplus.com/download/release/vuplus-dvb-modules/$(DRIVER_SRC)
 
 driver-clean:
 	rm -f $(D)/driver $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/$(KERNEL_TYPE)*
