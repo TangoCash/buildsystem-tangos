@@ -14,6 +14,11 @@ do
 done
 echo "[$(basename $0)] $(date +'%H:%M:%S') mmc-blocks added in: $blockdir" >> /tmp/mdev.log
 
+if [ -e /dev/block/by-name/linuxrootfs ]; then
+  mkdir /media/linuxrootfs1
+  mount /dev/block/by-name/linuxrootfs /media/linuxrootfs1
+fi
+
 if [ -e /dev/block/by-name/userdata ]; then
   mkdir /media/userdata
   mount /dev/block/by-name/userdata /media/userdata
