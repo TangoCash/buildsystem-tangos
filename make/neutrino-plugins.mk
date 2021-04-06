@@ -5,7 +5,7 @@
 #
 # links
 #
-LINKS_VER = 2.21
+LINKS_VER = 2.22
 LINKS_PATCH  = links-$(LINKS_VER).patch
 LINKS_PATCH += links-$(LINKS_VER)-ac-prog-cxx.patch
 LINKS_PATCH += links-$(LINKS_VER)-accept_https_play.patch
