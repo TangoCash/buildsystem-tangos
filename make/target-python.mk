@@ -184,7 +184,7 @@ PYTHON_LXML_VER = $(PYTHON_LXML_MAJOR).$(PYTHON_LXML_MINOR)
 PYTHON_LXML_SOURCE = lxml-$(PYTHON_LXML_VER).tgz
 
 $(ARCHIVE)/$(PYTHON_LXML_SOURCE):
-	$(DOWNLOAD) http://launchpad.net/lxml/$(PYTHON_LXML_MAJOR)/$(PYTHON_LXML_VER)/+download/$(PYTHON_LXML_SOURCE)
+	$(DOWNLOAD) https://lxml.de/files/$(PYTHON_LXML_SOURCE)
 
 $(D)/python_lxml: $(D)/bootstrap $(D)/python $(D)/libxslt $(D)/python_setuptools $(ARCHIVE)/$(PYTHON_LXML_SOURCE)
 	$(START_BUILD)
@@ -227,7 +227,7 @@ PYTHON_IMAGING_SOURCE = Imaging-$(PYTHON_IMAGING_VER).tar.gz
 PYTHON_IMAGING_PATCH = python-imaging-$(PYTHON_IMAGING_VER).patch
 
 $(ARCHIVE)/$(PYTHON_IMAGING_SOURCE):
-	$(DOWNLOAD) http://effbot.org/downloads/$(PYTHON_IMAGING_SOURCE)
+	$(DOWNLOAD) https://src.fedoraproject.org/repo/pkgs/python-imaging/$(PYTHON_IMAGING_SOURCE)
 
 $(D)/python_imaging: $(D)/bootstrap $(D)/libjpeg $(D)/freetype $(D)/python $(D)/python_setuptools $(ARCHIVE)/$(PYTHON_IMAGING_SOURCE)
 	$(START_BUILD)
@@ -293,7 +293,7 @@ PYTHON_IPADDRESS_VER = 1.0.18
 PYTHON_IPADDRESS_SOURCE = ipaddress-$(PYTHON_IPADDRESS_VER).tar.gz
 
 $(ARCHIVE)/$(PYTHON_IPADDRESS_SOURCE):
-	$(DOWNLOAD) https://distfiles.macports.org/py-ipaddress/$(PYTHON_IPADDRESS_SOURCE)
+	$(DOWNLOAD) http://sources.buildroot.net/python-ipaddress/$(PYTHON_IPADDRESS_SOURCE)
 
 $(D)/python_ipaddress: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(ARCHIVE)/$(PYTHON_IPADDRESS_SOURCE)
 	$(START_BUILD)
@@ -527,7 +527,7 @@ PYTHON_ELEMENTTREE_VER = 1.2.6-20050316
 PYTHON_ELEMENTTREE_SOURCE = elementtree-$(PYTHON_ELEMENTTREE_VER).tar.gz
 
 $(ARCHIVE)/$(PYTHON_ELEMENTTREE_SOURCE):
-	$(DOWNLOAD) http://effbot.org/media/downloads/$(PYTHON_ELEMENTTREE_SOURCE)
+	$(DOWNLOAD) https://src.fedoraproject.org/repo/pkgs/python-elementtree/$(PYTHON_ELEMENTTREE_SOURCE)
 
 $(D)/python_elementtree: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(ARCHIVE)/$(PYTHON_ELEMENTTREE_SOURCE)
 	$(START_BUILD)
@@ -603,7 +603,7 @@ PYTHON_GDATA_VER = 2.0.18
 PYTHON_GDATA_SOURCE = gdata-$(PYTHON_GDATA_VER).tar.gz
 
 $(ARCHIVE)/$(PYTHON_GDATA_SOURCE):
-	$(DOWNLOAD) https://gdata-python-client.googlecode.com/files/$(PYTHON_GDATA_SOURCE)
+	$(DOWNLOAD) https://src.fedoraproject.org/repo/pkgs/python-gdata/$(PYTHON_GDATA_SOURCE)
 
 $(D)/python_gdata: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(ARCHIVE)/$(PYTHON_GDATA_SOURCE)
 	$(START_BUILD)
