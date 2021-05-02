@@ -116,6 +116,7 @@ PACKAGES="\
 	${UBUNTU:+mtools}                                                                                             \
 	${UBUNTU:+u-boot-tools}                                                                                       \
 	${UBUNTU:+curl}                                                                                               \
+	${UBUNTU:+mtd-utils}                                                                                               \
 ";
 
 if [ "$UBUNTU" == 1 ]; then
