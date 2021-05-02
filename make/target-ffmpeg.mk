@@ -9,7 +9,7 @@ ifeq ($(FFMPEG_EXPERIMENTAL), 1)
 FFMPEG_VER = snapshot
 FFMPEG_SOURCE =
 else
-FFMPEG_VER = 4.3.1
+FFMPEG_VER = 4.4
 FFMPEG_SOURCE = ffmpeg-$(FFMPEG_VER).tar.xz
 FFMPEG_DEPS += $(ARCHIVE)/$(FFMPEG_SOURCE)
 
@@ -18,7 +18,8 @@ $(ARCHIVE)/$(FFMPEG_SOURCE):
 
 endif
 
-FFMPEG_PATCH = ffmpeg-$(FFMPEG_VER)-aac.patch
+FFMPEG_PATCH  = ffmpeg-$(FFMPEG_VER)-aac.patch
+FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-revert-proto.patch
 FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-allow_to_choose_rtmp_impl_at_runtime.patch
 FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-buffer-size.patch
 FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-fix-edit-list-parsing.patch
