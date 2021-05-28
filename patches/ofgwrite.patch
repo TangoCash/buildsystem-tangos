@@ -1,9 +1,9 @@
 --- a/ofgwrite.c
 +++ b/ofgwrite.c
 @@ -942,9 +942,9 @@
+ 	ret += mount("/oldroot/proc/", "proc/", NULL, MS_MOVE, NULL);
  	ret += mount("/oldroot/sys/", "sys/", NULL, MS_MOVE, NULL);
  	ret += mount("/oldroot/mnt/", "mnt/", NULL, MS_MOVE, NULL);
- 	ret += mount("/oldroot/tmp/", "tmp/", NULL, MS_MOVE, NULL);
 -	ret += mount("/oldroot/var/volatile", "var/volatile/", NULL, MS_MOVE, NULL);
 +	//ret += mount("/oldroot/var/volatile", "var/volatile/", NULL, MS_MOVE, NULL);
  	// create link for tmp
