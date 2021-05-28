@@ -89,7 +89,7 @@ NEUTRINO_DEPS += $(D)/neutrino-plugin-scripts-lua
 NEUTRINO_DEPS += $(D)/neutrino-plugin-mediathek
 NEUTRINO_DEPS += $(D)/neutrino-plugin-xupnpd
 NEUTRINO_DEPS += $(D)/neutrino-plugin-channellogos
-NEUTRINO_DEPS += $(D)/neutrino-plugin-iptvplayer
+NEUTRINO_DEPS += $(D)/neutrino-plugin-iptvplayer-nightly
 NEUTRINO_DEPS += $(D)/neutrino-plugin-settings-update
 #NEUTRINO_DEPS += $(D)/neutrino-plugin-spiegel-tv
 #NEUTRINO_DEPS += $(D)/neutrino-plugin-tierwelt-tv
@@ -140,10 +140,10 @@ endif
 N_CONFIG_OPTS += --enable-ffmpegdec
 N_CONFIG_OPTS += --enable-freesatepg
 N_CONFIG_OPTS += --enable-fribidi
-N_CONFIG_OPTS += --disable-upnp
-#N_CONFIG_OPTS += --enable-pip
 #N_CONFIG_OPTS += --enable-dynamicdemux
 #N_CONFIG_OPTS += --enable-reschange
+N_CONFIG_OPTS += --disable-upnp
+#N_CONFIG_OPTS += --disable-pip
 #N_CONFIG_OPTS += --disable-webif
 #N_CONFIG_OPTS += --disable-tangos
 
