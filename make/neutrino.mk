@@ -120,6 +120,7 @@ N_CFLAGS      += $(LOCAL_NEUTRINO_CFLAGS)
 
 N_CPPFLAGS     = -I$(TARGET_INCLUDE_DIR)
 N_CPPFLAGS    += -ffunction-sections -fdata-sections
+N_CPPFLAGS    += -Wno-cast-function-type
 
 ifeq ($(BOXARCH), arm)
 N_CPPFLAGS    += -I$(CROSS_DIR)/$(TARGET)/sys-root/usr/include

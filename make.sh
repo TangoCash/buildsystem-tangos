@@ -157,6 +157,10 @@ case $1 in
 		echo "   53)  ZGEMMA H7"
 		echo
 		echo
+		echo "  Maxytec"
+		echo "   54)  Multibox"
+		echo
+		echo
 		echo "  mips-based receivers"
 		echo "  VU+"
 		echo "   70)  VU+ Duo"
@@ -187,6 +191,7 @@ case "$REPLY" in
 	51) BOXARCH="arm";BOXTYPE="hd51";;
 	52) BOXARCH="arm";BOXTYPE="bre2ze4k";;
 	53) BOXARCH="arm";BOXTYPE="h7";;
+	53) BOXARCH="arm";BOXTYPE="multibox";;
 	60) BOXARCH="arm";BOXTYPE="hd60";;
 	61) BOXARCH="arm";BOXTYPE="hd61";;
 	70) BOXARCH="mips";BOXTYPE="vuduo";;
@@ -365,7 +370,7 @@ esac
 echo "VU_MULTIBOOT=$VU_MULTIBOOT" >> config
 fi
 
-if [ $BOXTYPE == 'hd60' -o $BOXTYPE == 'hd61' ]; then
+if [ $BOXTYPE == 'hd60' -o $BOXTYPE == 'hd61'  -o $BOXTYPE == 'multibox' ]; then
 echo "LAYOUT=multi" >> config
 else
 echo "LAYOUT=$LAYOUT" >> config
