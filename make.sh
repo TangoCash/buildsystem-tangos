@@ -191,7 +191,7 @@ case "$REPLY" in
 	51) BOXARCH="arm";BOXTYPE="hd51";;
 	52) BOXARCH="arm";BOXTYPE="bre2ze4k";;
 	53) BOXARCH="arm";BOXTYPE="h7";;
-	53) BOXARCH="arm";BOXTYPE="multibox";;
+	54) BOXARCH="arm";BOXTYPE="multibox";;
 	60) BOXARCH="arm";BOXTYPE="hd60";;
 	61) BOXARCH="arm";BOXTYPE="hd61";;
 	70) BOXARCH="mips";BOXTYPE="vuduo";;
