@@ -69,7 +69,7 @@ $(D)/neutrino-plugins.do_prepare: $(D)/bootstrap $(D)/ffmpeg $(D)/libcurl $(D)/l
 		fi
 	cp -ra $(ARCHIVE)/neutrino-plugins-ddt.git $(SOURCE_DIR)/neutrino-plugins
 	sed -i -e 's#shellexec fx2#shellexec tuxmail tuxcal#g' $(SOURCE_DIR)/neutrino-plugins/Makefile.am
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51 h7 bre2ze4k multibox hd60 hd61))
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51 h7 bre2ze4k multibox multiboxse hd60 hd61))
 	sed -i -e 's#stb-startup \\#stb-startup-tuxbox \\#g' $(SOURCE_DIR)/neutrino-plugins/Makefile.am
 endif
 	cp -ra $(SOURCE_DIR)/neutrino-plugins $(SOURCE_DIR)/neutrino-plugins.org
