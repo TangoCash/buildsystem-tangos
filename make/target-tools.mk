@@ -145,11 +145,10 @@ $(D)/module_init_tools: $(D)/bootstrap $(D)/lsb $(ARCHIVE)/$(MODULE_INIT_TOOLS_S
 #
 # sysvinit
 #
-SYSVINIT_VER = 2.98
+SYSVINIT_VER = 2.99
 SYSVINIT_SOURCE = sysvinit-$(SYSVINIT_VER).tar.xz
 SYSVINIT_PATCH  = sysvinit-$(SYSVINIT_VER)-crypt-lib.patch
 SYSVINIT_PATCH += sysvinit-$(SYSVINIT_VER)-change-INIT_FIFO.patch
-
 
 $(ARCHIVE)/$(SYSVINIT_SOURCE):
 	$(DOWNLOAD) https://download.savannah.gnu.org/releases/sysvinit/$(SYSVINIT_SOURCE)
@@ -319,7 +318,7 @@ $(D)/e2fsprogs: $(D)/bootstrap $(D)/util_linux $(ARCHIVE)/$(E2FSPROGS_SOURCE)
 #
 # util_linux
 #
-UTIL_LINUX_MAJOR = 2.36
+UTIL_LINUX_MAJOR = 2.37
 UTIL_LINUX_MINOR = 1
 UTIL_LINUX_VER = $(UTIL_LINUX_MAJOR).$(UTIL_LINUX_MINOR)
 UTIL_LINUX_SOURCE = util-linux-$(UTIL_LINUX_VER).tar.xz
@@ -405,7 +404,6 @@ $(D)/util_linux: $(D)/bootstrap $(D)/ncurses $(D)/zlib $(ARCHIVE)/$(UTIL_LINUX_S
 			--disable-zramctl \
 			\
 			--without-audit \
-			--without-ncursesw \
 			--without-python \
 			--without-slang \
 			--without-systemdsystemunitdir \
@@ -440,7 +438,7 @@ $(D)/util_linux: $(D)/bootstrap $(D)/ncurses $(D)/zlib $(ARCHIVE)/$(UTIL_LINUX_S
 #
 # gptfdisk
 #
-GPTFDISK_VER = 1.0.5
+GPTFDISK_VER = 1.0.8
 GPTFDISK_SOURCE = gptfdisk-$(GPTFDISK_VER).tar.gz
 
 $(ARCHIVE)/$(GPTFDISK_SOURCE):
@@ -587,6 +585,8 @@ $(D)/f2fs-tools: $(D)/bootstrap $(D)/util_linux $(ARCHIVE)/$(F2FS-TOOLS_SOURCE)
 #
 NTFS_3G_VER = 2017.3.23
 NTFS_3G_SOURCE = ntfs-3g_ntfsprogs-$(NTFS_3G_VER).tgz
+NTFS_3G_PATCH = ntfs-3g-fuseint-fix-path-mounted-on-musl.patch
+NTFS_3G_PATCH += ntfs-3g-sysmacros.patch
 
 $(ARCHIVE)/$(NTFS_3G_SOURCE):
 	$(DOWNLOAD) https://tuxera.com/opensource/$(NTFS_3G_SOURCE)
@@ -596,6 +596,7 @@ $(D)/ntfs_3g: $(D)/bootstrap $(ARCHIVE)/$(NTFS_3G_SOURCE)
 	$(REMOVE)/ntfs-3g_ntfsprogs-$(NTFS_3G_VER)
 	$(UNTAR)/$(NTFS_3G_SOURCE)
 	$(CHDIR)/ntfs-3g_ntfsprogs-$(NTFS_3G_VER); \
+		$(call apply_patches, $(NTFS_3G_PATCH)); \
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--exec-prefix=/usr \
@@ -620,7 +621,7 @@ $(D)/ntfs_3g: $(D)/bootstrap $(ARCHIVE)/$(NTFS_3G_SOURCE)
 #
 # mc
 #
-MC_VER = 4.8.25
+MC_VER = 4.8.26
 MC_SOURCE = mc-$(MC_VER).tar.xz
 MC_PATCH = mc-$(MC_VER).patch
 
@@ -653,6 +654,37 @@ $(D)/mc: $(D)/bootstrap $(D)/libglib2 $(D)/ncurses $(ARCHIVE)/$(MC_SOURCE)
 	rm -rf $(TARGET_SHARE_DIR)/mc/examples
 	find $(TARGET_SHARE_DIR)/mc/skins -type f ! -name default.ini | xargs --no-run-if-empty rm
 	$(REMOVE)/mc-$(MC_VER)
+	$(TOUCH)
+
+#
+# socat
+#
+SOCAT_VER = 1.7.4.1
+SOCAT_SOURCE = socat-$(SOCAT_VER).tar.gz
+SOCAT_PATCH = socat-$(SOCAT_VER).patch
+
+$(ARCHIVE)/$(SOCAT_SOURCE):
+	$(DOWNLOAD) http://www.dest-unreach.org/socat/download/$(SOCAT_SOURCE)
+
+$(D)/socat: $(D)/bootstrap $(ARCHIVE)/$(SOCAT_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/socat-$(SOCAT_VER)
+	$(UNTAR)/$(SOCAT_SOURCE)
+	$(CHDIR)/socat-$(SOCAT_VER); \
+		$(call apply_patches, $(SOCAT_PATCH)); \
+		$(CONFIGURE) \
+			--target=$(TARGET) \
+			--prefix=/usr \
+			--disable-ip6 \
+			--disable-openssl \
+			--disable-tun \
+			--disable-libwrap \
+			--disable-filan \
+			--disable-sycls \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REMOVE)/socat-$(SOCAT_VER)
 	$(TOUCH)
 
 #
@@ -888,7 +920,7 @@ $(D)/fbshot: $(D)/bootstrap $(D)/libpng $(ARCHIVE)/$(FBSHOT_SOURCE)
 #
 # sysstat
 #
-SYSSTAT_VER = 12.5.2
+SYSSTAT_VER = 12.5.4
 SYSSTAT_SOURCE = sysstat-$(SYSSTAT_VER).tar.bz2
 
 $(ARCHIVE)/$(SYSSTAT_SOURCE):
@@ -1221,7 +1253,7 @@ $(D)/smartmontools: $(D)/bootstrap $(ARCHIVE)/$(SMARTMONTOOLS_SOURCE)
 #
 # nfs_utils
 #
-NFS_UTILS_VER = 2.5.2
+NFS_UTILS_VER = 2.5.3
 NFS_UTILS_SOURCE = nfs-utils-$(NFS_UTILS_VER).tar.bz2
 NFS_UTILS_PATCH = nfs-utils-$(NFS_UTILS_VER).patch
 
@@ -1398,9 +1430,9 @@ $(D)/htop: $(D)/bootstrap $(D)/ncurses $(ARCHIVE)/$(HTOP_SOURCE)
 #
 # ethtool
 #
-ETHTOOL_VER = 5.10
-ETHTOOL_PATCH = ethtool-$(ETHTOOL_VER).patch
+ETHTOOL_VER = 5.13
 ETHTOOL_SOURCE = ethtool-$(ETHTOOL_VER).tar.xz
+ETHTOOL_PATCH = ethtool-$(ETHTOOL_VER).patch
 
 $(ARCHIVE)/$(ETHTOOL_SOURCE):
 	$(DOWNLOAD) https://www.kernel.org/pub/software/network/ethtool/$(ETHTOOL_SOURCE)
@@ -1727,7 +1759,7 @@ $(D)/udpxy: $(D)/bootstrap $(ARCHIVE)/$(UDPXY_SOURCE)
 #
 # openvpn
 #
-OPENVPN_VER = 2.5.0
+OPENVPN_VER = 2.5.3
 OPENVPN_SOURCE = openvpn-$(OPENVPN_VER).tar.xz
 
 $(ARCHIVE)/$(OPENVPN_SOURCE):
@@ -1764,9 +1796,46 @@ $(D)/openvpn: $(D)/bootstrap $(D)/openssl $(D)/lzo $(ARCHIVE)/$(OPENVPN_SOURCE)
 	$(TOUCH)
 
 #
+# vpnc
+#
+VPNC_VER = 0.5.3r550-2jnpr1
+VPNC_DIR = vpnc-$(VPNC_VER)
+VPNC_SOURCE = vpnc-$(VPNC_VER).tar.gz
+VPNC_URL = https://github.com/ndpgroup/vpnc/archive
+
+VPNC_PATCH = \
+	vpnc-fix-build.patch \
+	vpnc-nomanual.patch \
+	vpnc-susv3-legacy.patch \
+	vpnc-conf.patch
+
+VPNC_CPPFLAGS = -DVERSION=\\\"$(VPNC_VER)\\\"
+
+$(ARCHIVE)/$(VPNC_SOURCE):
+	$(DOWNLOAD) $(VPNC_URL)/$(VPNC_VER).tar.gz -O $(@)
+
+$(D)/vpnc: $(D)/bootstrap $(D)/openssl $(D)/lzo $(D)/libgcrypt $(ARCHIVE)/$(VPNC_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/vpnc-$(VPNC_VER)
+	$(UNTAR)/$(VPNC_SOURCE)
+	$(CHDIR)/vpnc-$(VPNC_VER); \
+		$(call apply_patches, $(VPNC_PATCH)); \
+		$(BUILDENV) \
+		$(MAKE) \
+			CPPFLAGS="$(CPPFLAGS) $(VPNC_CPPFLAGS)"; \
+		$(MAKE) \
+			CPPFLAGS="$(CPPFLAGS) $(VPNC_CPPFLAGS)" \
+			install-strip DESTDIR=$(TARGET_DIR) \
+			PREFIX=/usr \
+			MANDIR=$(TARGET_DIR)/.remove \
+			DOCDIR=$(TARGET_DIR)/.remove
+	$(REMOVE)/vpnc-$(VPNC_VER)
+	$(TOUCH)
+
+#
 # openssh
 #
-OPENSSH_VER = 8.4p1
+OPENSSH_VER = 8.6p1
 OPENSSH_SOURCE = openssh-$(OPENSSH_VER).tar.gz
 
 $(ARCHIVE)/$(OPENSSH_SOURCE):
@@ -1829,8 +1898,8 @@ $(D)/dropbear: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/$(DROPBEAR_SOURCE)
 #
 # dropbearmulti
 #
-#DROPBEARMULTI_VER = 34f24b1
-DROPBEARMULTI_VER = 80e9281
+DROPBEARMULTI_VER = 846d38f
+#DROPBEARMULTI_VER = a8d6dac
 DROPBEARMULTI_SOURCE = dropbearmulti-git-$(DROPBEARMULTI_VER).tar.bz2
 DROPBEARMULTI_URL = https://github.com/mkj/dropbear.git
 

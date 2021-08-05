@@ -103,7 +103,7 @@ neutrino-release-base:
 	ln -sf /mnt $(RELEASE_DIR)/var/mnt
 	ln -sf /var/epg $(RELEASE_DIR)/var/net/epg
 	install -d $(RELEASE_DIR)/var/lib/{opkg,nfs,modules}
-	install -d $(RELEASE_DIR)/var/tuxbox/{config,fonts,locale,plugins,themes}
+	install -d $(RELEASE_DIR)/var/tuxbox/{config,control,fonts,locale,plugins,themes}
 	install -d $(RELEASE_DIR)/var/tuxbox/{webtv,webradio}
 	install -d $(RELEASE_DIR)/var/tuxbox/config/zapit
 	mkdir -p $(RELEASE_DIR)/etc/rc.d/rc0.d

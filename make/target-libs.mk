@@ -259,17 +259,18 @@ $(D)/ncurses: $(D)/bootstrap $(ARCHIVE)/$(NCURSES_SOURCE)
 			--enable-echo \
 			--enable-const \
 			--enable-overwrite \
+			--enable-widec \
 		; \
 		$(MAKE) libs \
 			HOSTCC=gcc \
 			HOSTCCFLAGS="$(CFLAGS) -DHAVE_CONFIG_H -I../ncurses -DNDEBUG -D_GNU_SOURCE -I../include" \
 			HOSTLDFLAGS="$(LDFLAGS)"; \
 		$(MAKE) install.libs DESTDIR=$(TARGET_DIR)
-	mv $(TARGET_DIR)/usr/bin/ncurses6-config $(HOST_DIR)/bin
+	mv $(TARGET_DIR)/usr/bin/ncursesw6-config $(HOST_DIR)/bin
 	rm -f $(addprefix $(TARGET_LIB_DIR)/,libform* libmenu* libpanel*)
 	rm -f $(addprefix $(PKG_CONFIG_PATH)/,form.pc menu.pc panel.pc)
-	$(REWRITE_PKGCONF) $(HOST_DIR)/bin/ncurses6-config
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/ncurses.pc
+	$(REWRITE_PKGCONF) $(HOST_DIR)/bin/ncursesw6-config
+	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/ncursesw.pc
 	$(REMOVE)/ncurses-$(NCURSES_VER)
 	$(TOUCH)
 
@@ -839,7 +840,7 @@ $(D)/timezone: $(D)/bootstrap find-zic $(ARCHIVE)/$(TZDATA_SOURCE)
 #
 # freetype
 #
-FREETYPE_VER = 2.10.4
+FREETYPE_VER = 2.11.0
 FREETYPE_SOURCE = freetype-$(FREETYPE_VER).tar.xz
 FREETYPE_PATCH = freetype-$(FREETYPE_VER).patch
 
@@ -960,7 +961,7 @@ $(D)/libjpeg: $(D)/libjpeg_turbo2
 #
 # libjpeg_turbo2
 #
-LIBJPEG_TURBO2_VER = 2.0.6
+LIBJPEG_TURBO2_VER = 2.1.0
 LIBJPEG_TURBO2_SOURCE = libjpeg-turbo-$(LIBJPEG_TURBO2_VER).tar.gz
 LIBJPEG_TURBO2_PATCH = libjpeg-turbo-tiff-ojpeg.patch
 
@@ -1149,7 +1150,7 @@ $(D)/ca-bundle: $(ARCHIVE)/$(CA-BUNDLE_SOURCE)
 #
 # libcurl
 #
-LIBCURL_VER = 7.74.0
+LIBCURL_VER = 7.78.0
 LIBCURL_SOURCE = curl-$(LIBCURL_VER).tar.bz2
 LIBCURL_PATCH = libcurl-$(LIBCURL_VER).patch
 
@@ -1497,7 +1498,7 @@ $(D)/libiconv: $(D)/bootstrap $(ARCHIVE)/$(LIBICONV_SOURCE)
 #
 # expat
 #
-EXPAT_VER = 2.2.10
+EXPAT_VER = 2.4.1
 EXPAT_SOURCE = expat-$(EXPAT_VER).tar.bz2
 EXPAT_PATCH  = expat-$(EXPAT_VER)-libtool-tag.patch
 
@@ -2138,7 +2139,7 @@ $(D)/lcd4linux: $(D)/bootstrap $(D)/libusb_compat $(D)/gd $(D)/libusb $(D)/libdp
 #
 # gd
 #
-GD_VER = 2.2.5
+GD_VER = 2.3.0
 GD_SOURCE = libgd-$(GD_VER).tar.xz
 
 $(ARCHIVE)/$(GD_SOURCE):
@@ -2827,7 +2828,7 @@ $(D)/libgpg-error: $(D)/bootstrap $(ARCHIVE)/$(LIBGPG_ERROR_SOURCE)
 #
 # libgcrypt
 #
-LIBGCRYPT_VER    = 1.8.7
+LIBGCRYPT_VER    = 1.8.8
 LIBGCRYPT_DIR    = libgcrypt-$(LIBGCRYPT_VER)
 LIBGCRYPT_SOURCE = libgcrypt-$(LIBGCRYPT_VER).tar.bz2
 LIBGCRYPT_URL    = https://gnupg.org/ftp/gcrypt/libgcrypt
