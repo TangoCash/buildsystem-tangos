@@ -2139,7 +2139,8 @@ $(D)/lcd4linux: $(D)/bootstrap $(D)/libusb_compat $(D)/gd $(D)/libusb $(D)/libdp
 #
 # gd
 #
-GD_VER = 2.3.0
+GD_VER = 2.2.5
+#GD_VER = 2.3.0
 GD_SOURCE = libgd-$(GD_VER).tar.xz
 
 $(ARCHIVE)/$(GD_SOURCE):
