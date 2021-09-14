@@ -214,7 +214,8 @@ case $2 in
 	*)	echo -e "\nFFmpeg Version:"
 		echo "   1) buildsystem standard 4.3.2"
 		echo "   2) buildsystem standard 4.4 (not stable)"
-		echo "   3) ffmpeg git snapshot (experimental)"
+		echo "   3) ffmpeg git snapshot (highly experimental)"
+		echo "   4) ffmpeg git release/4.4 (with upstream fixes)"
 		read -p "Select FFmpeg version (1-3)? [1]"
 		REPLY="${REPLY:-1}";;
 esac
@@ -223,6 +224,7 @@ case "$REPLY" in
 	1) FFMPEG_EXPERIMENTAL="1";;
 	2) FFMPEG_EXPERIMENTAL="2";;
 	3) FFMPEG_EXPERIMENTAL="3";;
+	4) FFMPEG_EXPERIMENTAL="4";;
 	*) FFMPEG_EXPERIMENTAL="1";;
 esac
 echo "FFMPEG_EXPERIMENTAL=$FFMPEG_EXPERIMENTAL" >> config
