@@ -7,23 +7,24 @@ FFMPEG_DEPS = $(D)/librtmp
 
 FFMPEG_PATCH =
 
-ifeq ($(FFMPEG_EXPERIMENTAL), 1)
+ifeq ($(FFMPEG_EXPERIMENTAL), 3)
 FFMPEG_VER = snapshot
 FFMPEG_SOURCE =
 FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-revert-proto.patch
 else
 ifeq ($(FFMPEG_EXPERIMENTAL), 2)
-FFMPEG_VER = 4.3.2
+
+FFMPEG_VER = 4.4
 FFMPEG_SOURCE = ffmpeg-$(FFMPEG_VER).tar.xz
+FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-revert-proto.patch
 FFMPEG_DEPS += $(ARCHIVE)/$(FFMPEG_SOURCE)
 
 $(ARCHIVE)/$(FFMPEG_SOURCE):
 	$(DOWNLOAD) http://www.ffmpeg.org/releases/$(FFMPEG_SOURCE)
 
 else
-FFMPEG_VER = 4.4
+FFMPEG_VER = 4.3.2
 FFMPEG_SOURCE = ffmpeg-$(FFMPEG_VER).tar.xz
-FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-revert-proto.patch
 FFMPEG_DEPS += $(ARCHIVE)/$(FFMPEG_SOURCE)
 
 $(ARCHIVE)/$(FFMPEG_SOURCE):
