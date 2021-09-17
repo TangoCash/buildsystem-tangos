@@ -212,20 +212,20 @@ echo "BOXTYPE=$BOXTYPE" >> config
 case $2 in
 	[1-2]) REPLY=$2;;
 	*)	echo -e "\nFFmpeg Version:"
-		echo "   1) buildsystem standard 4.3.2"
-		echo "   2) buildsystem standard 4.4 (not stable)"
-		echo "   3) ffmpeg git snapshot (highly experimental)"
-		echo "   4) ffmpeg git release/4.4 (with upstream fixes)"
-		read -p "Select FFmpeg version (1-3)? [1]"
+		echo "   1) buildsystem standard 4.4"
+		echo "   2) ffmpeg git release/4.4 (with upstream fixes)"
+		echo "   3) buildsystem standard 4.3.2"
+		echo "   4) ffmpeg git snapshot (highly experimental)"
+		read -p "Select FFmpeg version (1-4)? [1]"
 		REPLY="${REPLY:-1}";;
 esac
 
 case "$REPLY" in
-	1) FFMPEG_EXPERIMENTAL="1";;
-	2) FFMPEG_EXPERIMENTAL="2";;
-	3) FFMPEG_EXPERIMENTAL="3";;
-	4) FFMPEG_EXPERIMENTAL="4";;
-	*) FFMPEG_EXPERIMENTAL="1";;
+	1) FFMPEG_EXPERIMENTAL="0";;
+	2) FFMPEG_EXPERIMENTAL="1";;
+	3) FFMPEG_EXPERIMENTAL="2";;
+	4) FFMPEG_EXPERIMENTAL="3";;
+	*) FFMPEG_EXPERIMENTAL="0";;
 esac
 echo "FFMPEG_EXPERIMENTAL=$FFMPEG_EXPERIMENTAL" >> config
 
