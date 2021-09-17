@@ -68,7 +68,7 @@ FFMPRG_EXTRA_CFLAGS  = -I$(TARGET_INCLUDE_DIR)/libxml2
 $(D)/ffmpeg: $(D)/bootstrap $(D)/openssl $(D)/bzip2 $(D)/freetype $(D)/alsa_lib $(D)/libass $(D)/libxml2 $(D)/libroxml $(FFMPEG_DEPS)
 	$(START_BUILD)
 	$(REMOVE)/ffmpeg-$(FFMPEG_VER)
-ifeq ($(FFMPEG_EXPERIMENTAL), 4)
+ifeq ($(FFMPEG_EXPERIMENTAL), 1)
 	set -e; if [ -d $(ARCHIVE)/ffmpeg-$(FFMPEG_VER).git ]; \
 		then cd $(ARCHIVE)/ffmpeg-$(FFMPEG_VER).git; git pull; \
 		else cd $(ARCHIVE); git clone git://git.ffmpeg.org/ffmpeg.git -b release/4.4 ffmpeg-$(FFMPEG_VER).git; \
