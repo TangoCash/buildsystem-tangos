@@ -5,12 +5,9 @@
 
 FFMPEG_DEPS = $(D)/librtmp
 
-FFMPEG_PATCH =
-
 ifeq ($(FFMPEG_EXPERIMENTAL), 3)
 FFMPEG_VER = snapshot
 FFMPEG_SOURCE =
-FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-revert-proto.patch
 else
 ifeq ($(FFMPEG_EXPERIMENTAL), 2)
 FFMPEG_VER = 4.3.2
@@ -24,12 +21,10 @@ else
 ifeq ($(FFMPEG_EXPERIMENTAL), 1)
 FFMPEG_VER = 4.4.git
 FFMPEG_SOURCE =
-FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-revert-proto.patch
 
 else
 FFMPEG_VER = 4.4
 FFMPEG_SOURCE = ffmpeg-$(FFMPEG_VER).tar.xz
-FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-revert-proto.patch
 FFMPEG_DEPS += $(ARCHIVE)/$(FFMPEG_SOURCE)
 
 $(ARCHIVE)/$(FFMPEG_SOURCE):
@@ -39,16 +34,7 @@ endif
 endif
 endif
 
-FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-aac.patch
-FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-allow_to_choose_rtmp_impl_at_runtime.patch
-FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-buffer-size.patch
-FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-fix-edit-list-parsing.patch
-FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-fix-hls.patch
-FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-fix_mpegts.patch
-FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-hls_replace_key_uri.patch
-#FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-mips64_cpu_detection.patch
-FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-corrupt-h264-frames.patch
-FFMPEG_PATCH += ffmpeg-$(FFMPEG_VER)-FFmpeg-devel-amfenc-Add-support-for-pict_type-field.patch
+FFMPEG_PATCH = $(PATCHES)/ffmpeg/$(FFMPEG_VER)
 
 FFMPEG_CONF_OPTS   = --enable-librtmp
 FFMPEG_CONF_OPTS  += --enable-openssl
