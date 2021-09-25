@@ -2047,7 +2047,7 @@ OFGWRITE_PATCH = ofgwrite.patch
 
 $(D)/ofgwrite: $(D)/bootstrap $(ARCHIVE)/$(OFGWRITE_SOURCE)
 	$(START_BUILD)
-	$(REMOVE)/ofgwrite-ddt
+	$(REMOVE)/ofgwrite-max
 	set -e; if [ -d $(ARCHIVE)/ofgwrite-max.git ]; \
 		then cd $(ARCHIVE)/ofgwrite-max.git; git pull; \
 		else cd $(ARCHIVE); git clone https://github.com/MaxWiesel/ofgwrite-max.git ofgwrite-max.git; \
