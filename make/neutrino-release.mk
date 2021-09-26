@@ -332,6 +332,10 @@ endif
 		make python-iptv-install; \
 	fi
 
+	if [ -e $(RELEASE_DIR)/var/tuxbox/plugins/tuxcom.so ]; then \
+		mv $(RELEASE_DIR)/var/tuxbox/plugins/tuxcom* $(RELEASE_DIR)/usr/share/tuxbox/neutrino/plugins
+	fi
+
 #
 # webtv/webradio
 #
