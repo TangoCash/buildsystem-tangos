@@ -38,11 +38,11 @@ $(D)/links: $(D)/bootstrap $(D)/freetype $(D)/libpng $(D)/libjpeg $(D)/openssl $
 			; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	mkdir -p $(TARGET_DIR)/var/tuxbox/plugins $(TARGET_DIR)/var/tuxbox/config/links
-	mv $(TARGET_DIR)/bin/links $(TARGET_DIR)/var/tuxbox/plugins/links.so
-	echo "name=Links Web Browser"	 > $(TARGET_DIR)/var/tuxbox/plugins/links.cfg
-	echo "desc=Web Browser"		>> $(TARGET_DIR)/var/tuxbox/plugins/links.cfg
-	echo "type=2"			>> $(TARGET_DIR)/var/tuxbox/plugins/links.cfg
+	mkdir -p $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins $(TARGET_DIR)/var/tuxbox/config/links
+	mv $(TARGET_DIR)/bin/links $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/links.so
+	echo "name=Links Web Browser"	 > $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/links.cfg
+	echo "desc=Web Browser"		>> $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/links.cfg
+	echo "type=2"			>> $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/links.cfg
 	echo "bookmarkcount=0"		 > $(TARGET_DIR)/var/tuxbox/config/bookmarks
 	touch $(TARGET_DIR)/var/tuxbox/config/links/links.his
 	cp -a $(SKEL_ROOT)/var/tuxbox/config/links/bookmarks.html $(SKEL_ROOT)/var/tuxbox/config/links/tables.tar.gz $(TARGET_DIR)/var/tuxbox/config/links
@@ -91,7 +91,7 @@ $(D)/neutrino-plugins.config.status:
 			--with-target=cdk \
 			--include=/usr/include \
 			--with-boxtype=$(BOXTYPE) \
-			--with-plugindir=/var/tuxbox/plugins \
+			--with-plugindir=/usr/share/tuxbox/neutrino/plugins \
 			--with-libdir=/usr/lib \
 			--with-datadir=/usr/share/tuxbox \
 			--with-fontdir=/usr/share/fonts \
@@ -326,11 +326,11 @@ $(D)/neutrino-plugin-custom:
 		fi
 	cp -ra $(ARCHIVE)/plugins-lua-custom.git $(BUILD_TMP)/plugins-lua
 	$(CHDIR)/plugins-lua; \
-		install -d $(TARGET_DIR)/var/tuxbox/plugins
-		cp -R $(BUILD_TMP)/plugins-lua/*/*.cfg $(TARGET_DIR)/var/tuxbox/plugins/
-		cp -R $(BUILD_TMP)/plugins-lua/*/*.lua $(TARGET_DIR)/var/tuxbox/plugins/
-		cp -R $(BUILD_TMP)/plugins-lua/*/*hint.png $(TARGET_DIR)/var/tuxbox/plugins/
-		cp -R $(BUILD_TMP)/plugins-lua/*/*.sh $(TARGET_DIR)/var/tuxbox/plugins/
+		install -d $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins
+		cp -R $(BUILD_TMP)/plugins-lua/*/*.cfg $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
+		cp -R $(BUILD_TMP)/plugins-lua/*/*.lua $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
+		cp -R $(BUILD_TMP)/plugins-lua/*/*hint.png $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
+		cp -R $(BUILD_TMP)/plugins-lua/*/*.sh $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
 		ls $(BUILD_TMP)/plugins-lua/*/*.png | grep -v "hint" | xargs -I {} cp {} $(TARGET_SHARE_DIR)/tuxbox/neutrino/icons/logo
 	$(REMOVE)/plugins-lua
 	$(TOUCH)
@@ -347,7 +347,7 @@ $(D)/neutrino-plugin-spiegel-tv:
 		fi
 	cp -ra $(ARCHIVE)/plugins-lua.git $(BUILD_TMP)/plugins-lua
 	$(CHDIR)/plugins-lua; \
-		install -d $(TARGET_DIR)/var/tuxbox/plugins
+		install -d $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins
 		cp -R $(BUILD_TMP)/plugins-lua/spiegel-tv-doc/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
 	$(REMOVE)/plugins-lua
 	$(TOUCH)
@@ -364,7 +364,7 @@ $(D)/neutrino-plugin-tierwelt-tv:
 		fi
 	cp -ra $(ARCHIVE)/plugins-lua.git $(BUILD_TMP)/plugins-lua
 	$(CHDIR)/plugins-lua; \
-		install -d $(TARGET_DIR)/var/tuxbox/plugins
+		install -d $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins
 		cp -R $(BUILD_TMP)/plugins-lua/tierwelt-tv/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
 	$(REMOVE)/plugins-lua
 	$(TOUCH)
@@ -381,7 +381,7 @@ $(D)/neutrino-plugin-mtv:
 		fi
 	cp -ra $(ARCHIVE)/plugins-lua.git $(BUILD_TMP)/plugins-lua
 	$(CHDIR)/plugins-lua; \
-		install -d $(TARGET_DIR)/var/tuxbox/plugins
+		install -d $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins
 		cp -R $(BUILD_TMP)/plugins-lua/mtv/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
 	$(REMOVE)/plugins-lua
 	$(TOUCH)
