@@ -144,10 +144,12 @@ NFS=$(grep -c nfs /proc/cmdline)
   date "+DATE: %m/%d/%y%nTIME: %H:%M:%S"
 
   if [ -e /var/tuxbox/config/.mbefore ]; then
+    echo "starting early mount ..."
     /etc/init.d/mount_before
   fi
 
   if [ -e /var/tuxbox/config/.nfsd ]; then
+    echo "starting nfd ..."
     if [ ! -e /etc/exports ]; then
       echo "/media/hdd *(ro,wdelay,nohide,insecure,no_root_squash,no_all_squash,no_subtree_check,sync)" >/etc/exports
     fi
@@ -164,21 +166,25 @@ NFS=$(grep -c nfs /proc/cmdline)
   fi
 
   if [ -e /usr/share/tuxbox/neutrino/control/migration.sh ]; then
+    echo "starting migration ..."
     chmod 755 /usr/share/tuxbox/neutrino/control/migration.sh
     /usr/share/tuxbox/neutrino/control/migration.sh
   fi
 
   if [ -e /var/tuxbox/config/.xupnpd ]; then
+    echo "starting xupnpd ..."
     /usr/bin/xupnpd &
   fi
 
   if [ -e /var/tuxbox/config/.crond ]; then
+    echo "starting crond ..."
     mkdir -p /var/spool/cron/crontabs
     touch /var/spool/cron/crontabs/root
     /usr/sbin/crond &
   fi
 
   if [ -e /var/tuxbox/config/.dropbear ]; then
+    echo "starting dropbear ..."
     /etc/init.d/dropbear start &
   fi
 
@@ -193,15 +199,18 @@ NFS=$(grep -c nfs /proc/cmdline)
   fi
 
   if [ -e /var/tuxbox/config/.djmount ]; then
+    echo "starting djmount ..."
     mkdir -p /media/upnp
     /usr/bin/djmount /media/upnp &
   fi
 
   if [ -e /var/tuxbox/config/.samba ]; then
+    echo "starting samba ..."
     /etc/init.d/samba start &
   fi
 
   if [ -e /var/tuxbox/config/.fritzcall ]; then
+    echo "starting fritzcall ..."
     /var/tuxbox/plugins/fb.sh start >/dev/null 2>&1
   fi
 
@@ -219,6 +228,7 @@ if [ -e /etc/init.d/before_gui ]; then
 fi
 
 if [ -e /var/tuxbox/config/.lcd4l ]; then
+    echo "starting lcd4linux ..."
     /usr/bin/lcd4linux
 fi
 
