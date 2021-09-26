@@ -278,6 +278,28 @@ $(D)/neutrino-plugin-l4l-skins:
 	$(TOUCH)
 
 #
+# NI WebTV / Radio
+#
+$(D)/neutrino-plugin-webtv-radio:
+	$(START_BUILD)
+	$(REMOVE)/NI-scripts-lua
+	set -e; if [ -d $(ARCHIVE)/NI-scripts-lua.git ]; \
+		then cd $(ARCHIVE)/NI-scripts-lua.git; git pull origin master; \
+		else cd $(ARCHIVE); mkdir NI-scripts-lua.git; cd $(ARCHIVE)/NI-scripts-lua.git; \
+		git init; git remote add origin -f https://github.com/neutrino-images/ni-neutrino-plugins.git; \
+		git config core.sparseCheckout true ; \
+		echo scripts-lua > .git/info/sparse-checkout ; git pull origin master; \
+		fi
+	install -d $(TARGET_SHARE_DIR)/tuxbox/neutrino/webtv
+	install -d $(TARGET_SHARE_DIR)/tuxbox/neutrino/webradio
+	cp -ra $(ARCHIVE)/NI-scripts-lua.git $(BUILD_TMP)/NI-scripts-lua
+	cp -R $(BUILD_TMP)/NI-scripts-lua/scripts-lua/plugins/webtv/plutotv* $(TARGET_SHARE_DIR)/tuxbox/neutrino/webtv/
+	cp -R $(BUILD_TMP)/NI-scripts-lua/scripts-lua/plugins/webtv/rakutentv* $(TARGET_SHARE_DIR)/tuxbox/neutrino/webtv/
+	cp -R $(BUILD_TMP)/NI-scripts-lua/scripts-lua/plugins/webradio/*.xml $(TARGET_SHARE_DIR)/tuxbox/neutrino/webradio/
+	$(REMOVE)/NI-scripts-lua
+	$(TOUCH)
+
+#
 # annie's settingsupdater
 #
 $(D)/neutrino-plugin-settings-update:
