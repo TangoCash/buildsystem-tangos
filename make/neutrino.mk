@@ -240,6 +240,7 @@ NEUTRINO     = neutrino-ddt
 LIBSTB_HAL   = libstb-hal-ddt
 NMP_BRANCH  ?= master
 HAL_BRANCH  ?= master
+NMP_PATCHES  = neutrino-ddt-plugindir-fix.patch
 NMP_PATCHES  = $(NEUTRINO_DDT_PATCHES)
 HAL_PATCHES  = $(LIBSTB_HAL_DDT_PATCHES)
 else ifeq  ($(FLAVOUR), TUXBOX)

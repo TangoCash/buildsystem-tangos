@@ -1,0 +1,66 @@
+--- neutrino-ddt/acinclude.m4
++++ neutrino-ddt/acinclude.m4
+@@ -147,6 +147,9 @@
+ TUXBOX_APPS_DIRECTORY_ONE(fontdir, FONTDIR, datadir, /share, /fonts,
+ 	[--with-fontdir=PATH], [where to find fonts])
+ 
++TUXBOX_APPS_DIRECTORY_ONE(gamesdir, GAMESDIR, localstatedir, /var, /tuxbox/games,
++	[--with-gamesdir=PATH], [where to find games])
++
+ TUXBOX_APPS_DIRECTORY_ONE(libdir, LIBDIR, libdir, /lib, /tuxbox,
+ 	[--with-libdir=PATH], [where to find internal libs])
+ 
+@@ -155,6 +158,12 @@
+ 
+ TUXBOX_APPS_DIRECTORY_ONE(webtvdir, WEBTVDIR, localstatedir, /var, /tuxbox/webtv,
+ 	[--with-webtvdir=PATH], [where to find webtv content in /var])
++
++TUXBOX_APPS_DIRECTORY_ONE(plugindir_var, PLUGINDIR_VAR, localstatedir, /var, /tuxbox/plugins,
++	[--with-plugindir_var=PATH], [where to find plugins in /var])
++
++TUXBOX_APPS_DIRECTORY_ONE(plugindir_mnt, PLUGINDIR_MNT, mntdir, /mnt, /plugins,
++	[--with-plugindir_mnt=PATH], [where to find external plugins])
+ 
+ TUXBOX_APPS_DIRECTORY_ONE(localedir, LOCALEDIR,datadir, /share, /tuxbox/neutrino/locale,
+ 	[--with-localedir=PATH], [where to find locale])
+@@ -192,9 +201,12 @@
+ AC_SUBST(CONTROLDIR)
+ AC_SUBST(DATADIR)
+ AC_SUBST(FONTDIR)
++AC_SUBST(GAMESDIR)
+ AC_SUBST(LIBDIR)
+ AC_SUBST(MNTDIR)
+ AC_SUBST(PLUGINDIR)
++AC_SUBST(PLUGINDIR_VAR)
++AC_SUBST(PLUGINDIR_MNT)
+ AC_SUBST(WEBTVDIR)
+ AC_SUBST(LOCALEDIR)
+ AC_SUBST(LOCALEDIR_VAR)
+--- neutrino-ddt/src/gui/plugins.cpp
++++ neutrino-ddt/src/gui/plugins.cpp
+@@ -122,7 +122,13 @@
+ 					new_plugin.pluginfile.append(".lua");
+ 				else // CPlugins::P_TYPE_GAME or CPlugins::P_TYPE_TOOL
+ 					new_plugin.pluginfile.append(".so");
+-
++				// We do not check if new_plugin.pluginfile exists since .cfg in
++				// PLUGINDIR_VAR can overwrite settings in read only dir
++				// PLUGINDIR. This needs PLUGINDIR_VAR to be scanned at
++				// first -> .cfg in PLUGINDIR will be skipped since plugin
++				// already exists in the list.
++				// This behavior is used to make sure plugins can be disabled
++				// by creating a .cfg in PLUGINDIR_VAR (PLUGINDIR often is read only).
+ 				if (!plugin_exists(new_plugin.filename))
+ 				{
+ 					plugin_list.push_back(new_plugin);
+@@ -140,7 +146,10 @@
+ 	number_of_plugins = 0;
+ 	plugin_list.clear();
+ 	sindex = 100;
++	scanDir(GAMESDIR);
+ 	scanDir(g_settings.plugin_hdd_dir.c_str());
++	scanDir(PLUGINDIR_MNT);
++	scanDir(PLUGINDIR_VAR);
+ 	scanDir(PLUGINDIR);
+ 
+ 	sort (plugin_list.begin(), plugin_list.end());
