@@ -173,7 +173,8 @@ N_CONFIG_OPTS += \
 	--with-webradiodir=/usr/share/tuxbox/neutrino/webradio \
 	--with-webradiodir_var=/var/tuxbox/webradio \
 	--with-controldir=/usr/share/tuxbox/neutrino/control \
-	--with-controldir_var=/var/tuxbox/control
+	--with-controldir_var=/var/tuxbox/control \
+	--with-zapitdir=/var/tuxbox/config/zapit
 
 ifeq ($(EXTERNAL_LCD), externallcd)
 N_CONFIG_OPTS += --enable-graphlcd
