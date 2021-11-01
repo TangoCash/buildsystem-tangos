@@ -291,9 +291,11 @@ $(D)/neutrino-plugin-webtv-radio:
 		git config core.sparseCheckout true ; \
 		echo scripts-lua > .git/info/sparse-checkout ; git pull origin master; \
 		fi
+	install -d $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins
 	install -d $(TARGET_SHARE_DIR)/tuxbox/neutrino/webtv
 	install -d $(TARGET_SHARE_DIR)/tuxbox/neutrino/webradio
 	cp -ra $(ARCHIVE)/NI-scripts-lua.git $(BUILD_TMP)/NI-scripts-lua
+	cp -R $(BUILD_TMP)/NI-scripts-lua/scripts-lua/plugins/plutotv-update/plutotv* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
 	cp -R $(BUILD_TMP)/NI-scripts-lua/scripts-lua/plugins/webtv/plutotv* $(TARGET_SHARE_DIR)/tuxbox/neutrino/webtv/
 	cp -R $(BUILD_TMP)/NI-scripts-lua/scripts-lua/plugins/webtv/rakutentv* $(TARGET_SHARE_DIR)/tuxbox/neutrino/webtv/
 	cp -R $(BUILD_TMP)/NI-scripts-lua/scripts-lua/plugins/webradio/*.xml $(TARGET_SHARE_DIR)/tuxbox/neutrino/webradio/
