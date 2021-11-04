@@ -66,7 +66,7 @@ if [ "$1" == hd51 ] || [ "$1" == h7 ] || [ "$1" == bre2ze4k ]; then
 	exit
 fi
 
-if [ "$1" == hd60 ] || [ "$1" == hd61 ]; then
+if [ "$1" == hd60 ] || [ "$1" == hd61 ] || [ "$1" == multibox ] || [ "$1" == multiboxse ]; then
 	echo "BOXARCH=arm" > config
 	echo "BOXTYPE=$1" >> config
 	echo "FFMPEG_EXPERIMENTAL=0" >> config
@@ -212,7 +212,7 @@ echo "BOXTYPE=$BOXTYPE" >> config
 case $2 in
 	[1-2]) REPLY=$2;;
 	*)	echo -e "\nFFmpeg Version:"
-		echo "   1) buildsystem standard 4.4"
+		echo "   1) buildsystem standard 4.4.1"
 		echo "   2) ffmpeg git release/4.4 (with upstream fixes)"
 		echo "   3) buildsystem standard 4.3.2"
 		echo "   4) ffmpeg git snapshot (highly experimental)"
