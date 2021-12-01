@@ -1,0 +1,10 @@
+--- a/netsurf/content/handlers/html/html.c
++++ b/netsurf/content/handlers/html/html.c
+@@ -82,6 +82,7 @@
+ 
+ static const char *html_types[] = {
+ 	"application/xhtml+xml",
++	"application/vnd.hbbtv.xhtml+xml",
+ 	"text/html"
+ };
+ 

@@ -112,6 +112,7 @@ include make/target-ffmpeg.mk
 include make/target-gstreamer.mk
 include make/target-libs.mk
 include make/target-lua.mk
+include make/target-netsurf.mk
 include make/target-oscam.mk
 include make/target-python.mk
 include make/target-root-etc.mk
