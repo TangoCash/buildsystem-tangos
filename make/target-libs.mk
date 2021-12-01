@@ -33,7 +33,7 @@ $(ARCHIVE)/$(LIBTIRPC_SOURCE):
 
 $(D)/libtirpc: $(D)/bootstrap $(ARCHIVE)/$(LIBTIRPC_SOURCE)
 	$(START_BUILD)
-	$(REMOVE)/libtirpc-$(LIBNSL_VER)
+	$(REMOVE)/libtirpc-$(LIBTIRPC_VER)
 	$(UNTAR)/$(LIBTIRPC_SOURCE)
 	$(CHDIR)/libtirpc-$(LIBTIRPC_VER); \
 		$(CONFIGURE) \
@@ -44,7 +44,7 @@ $(D)/libtirpc: $(D)/bootstrap $(ARCHIVE)/$(LIBTIRPC_SOURCE)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 		$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libtirpc.pc
 		$(REWRITE_LIBTOOL)/libtirpc.la
-	$(REMOVE)/libtirpc-$(LIBNSL_VER)
+	$(REMOVE)/libtirpc-$(LIBTIRPC_VER)
 	$(TOUCH)
 
 #
