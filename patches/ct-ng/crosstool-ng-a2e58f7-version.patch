@@ -1,0 +1,11 @@
+--- a/scripts/crosstool-NG.sh.in_org
++++ b/scripts/crosstool-NG.sh.in
+@@ -163,7 +163,7 @@
+ CT_CC_GCC_EXTRA_CONFIG_ARRAY=( ${CT_ARCH_CC_EXTRA_CONFIG} "${CT_CC_GCC_EXTRA_CONFIG_ARRAY[@]}" )
+ 
+ # Compute the package version string
+-CT_PKGVERSION="crosstool-NG ${CT_VERSION}${CT_TOOLCHAIN_PKGVERSION:+ - ${CT_TOOLCHAIN_PKGVERSION}}"
++CT_PKGVERSION="crosstool-NG"
+ 
+ # Compute the working directories names
+ CT_TARBALLS_DIR="${CT_WORK_DIR}/tarballs"

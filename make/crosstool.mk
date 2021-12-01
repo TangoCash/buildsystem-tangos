@@ -15,6 +15,7 @@ $(TARGET_DIR)/lib/libc.so.6:
 #
 # crosstool-ng
 #
+#CROSSTOOL_NG_VER = a2e58f7
 CROSSTOOL_NG_VER = 286679e
 CROSSTOOL_NG_SOURCE = crosstool-ng-git-$(CROSSTOOL_NG_VER).tar.bz2
 CROSSTOOL_NG_URL = https://github.com/TangoCash/crosstool-ng.git
