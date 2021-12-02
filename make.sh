@@ -41,7 +41,7 @@ if [ "$1" == defaultconfig ]; then
 	echo "BOXTYPE=hd51" >> config
 	echo "FFMPEG_EXPERIMENTAL=0" >> config
 	echo "OPTIMIZATIONS=size" >> config
-	echo "BS_GCC_VER=10.2.0" >> config
+	echo "BS_GCC_VER=10.3.0" >> config
 	echo "IMAGE=neutrino" >> config
 	echo "FLAVOUR=TANGOS" >> config
 	echo "EXTERNAL_LCD=both" >> config
@@ -56,7 +56,7 @@ if [ "$1" == hd51 ] || [ "$1" == h7 ] || [ "$1" == bre2ze4k ]; then
 	echo "BOXTYPE=$1" >> config
 	echo "FFMPEG_EXPERIMENTAL=0" >> config
 	echo "OPTIMIZATIONS=size" >> config
-	echo "BS_GCC_VER=10.2.0" >> config
+	echo "BS_GCC_VER=10.3.0" >> config
 	echo "IMAGE=neutrino" >> config
 	echo "FLAVOUR=TANGOS" >> config
 	echo "EXTERNAL_LCD=both" >> config
@@ -71,7 +71,7 @@ if [ "$1" == hd60 ] || [ "$1" == hd61 ] || [ "$1" == multibox ] || [ "$1" == mul
 	echo "BOXTYPE=$1" >> config
 	echo "FFMPEG_EXPERIMENTAL=0" >> config
 	echo "OPTIMIZATIONS=size" >> config
-	echo "BS_GCC_VER=10.2.0" >> config
+	echo "BS_GCC_VER=10.3.0" >> config
 	echo "IMAGE=neutrino" >> config
 	echo "FLAVOUR=TANGOS" >> config
 	echo "EXTERNAL_LCD=both" >> config
@@ -86,7 +86,7 @@ if [ "$1" == vusolo4k -o "$1" == vuduo4k -o "$1" == vuultimo4k -o "$1" == vuuno4
 	echo "BOXTYPE=$1" >> config
 	echo "FFMPEG_EXPERIMENTAL=0" >> config
 	echo "OPTIMIZATIONS=size" >> config
-	echo "BS_GCC_VER=10.2.0" >> config
+	echo "BS_GCC_VER=10.3.0" >> config
 	echo "IMAGE=neutrino" >> config
 	echo "FLAVOUR=TANGOS" >> config
 	echo "EXTERNAL_LCD=both" >> config
@@ -102,7 +102,7 @@ if [ "$1" == osmini4k ] || [ "$1" == osmio4k ] || [ "$1" == osmio4kplus ]; then
 	echo "BOXTYPE=$1" >> config
 	echo "FFMPEG_EXPERIMENTAL=0" >> config
 	echo "OPTIMIZATIONS=size" >> config
-	echo "BS_GCC_VER=10.2.0" >> config
+	echo "BS_GCC_VER=10.3.0" >> config
 	echo "IMAGE=neutrino" >> config
 	echo "FLAVOUR=TANGOS" >> config
 	echo "EXTERNAL_LCD=both" >> config
@@ -117,7 +117,7 @@ if [ "$1" == vuduo ] || [ "$1" == vuduo2 ] || [ "$1" == gb800se ] || [ "$1" == o
 	echo "BOXTYPE=$1" >> config
 	echo "FFMPEG_EXPERIMENTAL=0" >> config
 	echo "OPTIMIZATIONS=size" >> config
-	echo "BS_GCC_VER=10.2.0" >> config
+	echo "BS_GCC_VER=10.3.0" >> config
 	echo "IMAGE=neutrino" >> config
 	echo "FLAVOUR=TANGOS" >> config
 	echo "EXTERNAL_LCD=both" >> config
@@ -254,18 +254,20 @@ echo "OPTIMIZATIONS=$OPTIMIZATIONS" >> config
 ##############################################
 
 case $4 in
-	[1-2]) REPLY=$4;;
+	[1-3]) REPLY=$4;;
 	*)	echo -e "\nToolchain gcc version:"
-		echo "   1) GCC version 10.2.0"
-		echo "   2) GCC version  9.2.0"
-		read -p "Select toolchain gcc version (1-2)? [1] "
+		echo "   1) GCC version 10.3.0"
+		echo "   2) GCC version  9.4.0"
+		echo "   3) GCC version 11.2.0"
+		read -p "Select toolchain gcc version (1-3)? [1] "
 		REPLY="${REPLY:-1}";;
 esac
 
 case "$REPLY" in
-	1) BS_GCC_VER="10.2.0";;
-	2) BS_GCC_VER=" 9.2.0";;
-	*) BS_GCC_VER="10.2.0";;
+	1) BS_GCC_VER="10.3.0";;
+	2) BS_GCC_VER=" 9.4.0";;
+	3) BS_GCC_VER="11.2.0";;
+	*) BS_GCC_VER="10.3.0";;
 esac
 echo "BS_GCC_VER=$BS_GCC_VER" >> config
 

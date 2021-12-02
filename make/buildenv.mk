@@ -50,7 +50,7 @@ BOXARCH              ?= arm
 BOXTYPE              ?= hd51
 FFMPEG_EXPERIMENTAL  ?= 0
 OPTIMIZATIONS        ?= size
-BS_GCC_VER           ?= 10.2.0
+BS_GCC_VER           ?= 10.3.0
 IMAGE                ?= neutrino
 FLAVOUR              ?= TANGOS
 EXTERNAL_LCD         ?= both
@@ -132,12 +132,16 @@ TARGET_EXTRA_CFLAGS   =
 TARGET_EXTRA_LDFLAGS  =
 endif
 
-ifeq ($(BS_GCC_VER), 9.2.0)
-CROSSTOOL_GCC_VER = gcc-9.2.0
+ifeq ($(BS_GCC_VER), 9.4.0)
+CROSSTOOL_GCC_VER = gcc-9.4.0
 endif
 
-ifeq ($(BS_GCC_VER), 10.2.0)
-CROSSTOOL_GCC_VER = gcc-10.2.0
+ifeq ($(BS_GCC_VER), 10.3.0)
+CROSSTOOL_GCC_VER = gcc-10.3.0
+endif
+
+ifeq ($(BS_GCC_VER), 11.2.0)
+CROSSTOOL_GCC_VER = gcc-11.2.0
 endif
 
 CROSS_BASE            = $(BASE_DIR)/cross
@@ -151,7 +155,7 @@ TARGET_INCLUDE_DIR    = $(TARGET_DIR)/usr/include
 TARGET_SHARE_DIR      = $(TARGET_DIR)/usr/share
 
 TARGET_CFLAGS         = -pipe $(TARGET_O_CFLAGS) $(TARGET_MARCH_CFLAGS) $(TARGET_EXTRA_CFLAGS) -I$(TARGET_INCLUDE_DIR)
-ifeq ($(BS_GCC_VER), 10.2.0)
+ifeq ($(BS_GCC_VER), $(filter $(BS_GCC_VER), 10.3.0 11.2.0))
 TARGET_CFLAGS        +=-fcommon
 endif
 TARGET_CPPFLAGS       = $(TARGET_CFLAGS)
