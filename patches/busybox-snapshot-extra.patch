@@ -9,7 +9,7 @@
 
 --- a/archival/libarchive/get_header_tar.c
 +++ b/archival/libarchive/get_header_tar.c
-@@ -329,6 +329,8 @@
+@@ -335,6 +335,8 @@
  			file_header->name = concat_path_file(tar.prefix, tar.name);
  		} else
  			file_header->name = xstrdup(tar.name);
@@ -17,7 +17,7 @@
 +			file_header->name[100] = 0;
  	}
  
- 	/* Set bits 12-15 of the files mode */
+ 	switch (tar_typeflag) {
 # copy commit message from OE as the patch comment:
 #    commit 98c24291aa165f53423c27ae033831ce0b3bb676
 #    Author: Roman I Khimov <khimov@altell.ru>
@@ -205,7 +205,7 @@
  }
 --- a/scripts/trylink
 +++ b/scripts/trylink
-@@ -46,7 +46,7 @@
+@@ -47,7 +47,7 @@
  }
  
  check_cc() {
@@ -214,7 +214,7 @@
      echo "int main(int argc,char**argv){return argv?argc:0;}" >"$tempname".c
      # Can use "-o /dev/null", but older gcc tend to *unlink it* on failure! :(
      # Was using "-xc /dev/null", but we need a valid C program.
-@@ -57,7 +57,7 @@
+@@ -58,7 +58,7 @@
  }
  
  check_libc_is_glibc() {
