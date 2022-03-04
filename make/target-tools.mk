@@ -6,7 +6,7 @@ BUSYBOX_VER = snapshot
 BUSYBOX_SOURCE =
 BUSYBOX_DEPS =
 else
-BUSYBOX_VER = 1.32.0
+BUSYBOX_VER = 1.34.0
 BUSYBOX_SOURCE = busybox-$(BUSYBOX_VER).tar.bz2
 BUSYBOX_DEPS = $(ARCHIVE)/$(BUSYBOX_SOURCE)
 
@@ -23,11 +23,11 @@ BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-extra.patch
 BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-extra2.patch
 BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-flashcp-small-output.patch
 BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-block-telnet-internet.patch
+BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-recursive_action-fix.patch
 
 ifeq ($(BUSYBOX_SNAPSHOT), 1)
 #BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-tar-fix.patch
-BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-changed_FreeBSD_fix.patch
-BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-recursive_action-fix.patch
+#BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-changed_FreeBSD_fix.patch
 endif
 
 ifeq ($(BOXARCH), $(filter $(BOXARCH), arm mips))
@@ -145,10 +145,11 @@ $(D)/module_init_tools: $(D)/bootstrap $(D)/lsb $(ARCHIVE)/$(MODULE_INIT_TOOLS_S
 #
 # sysvinit
 #
-SYSVINIT_VER = 2.99
+SYSVINIT_VER = 3.01
 SYSVINIT_SOURCE = sysvinit-$(SYSVINIT_VER).tar.xz
 SYSVINIT_PATCH  = sysvinit-$(SYSVINIT_VER)-crypt-lib.patch
 SYSVINIT_PATCH += sysvinit-$(SYSVINIT_VER)-change-INIT_FIFO.patch
+SYSVINIT_PATCH += sysvinit-$(SYSVINIT_VER)-remove-killall5.patch
 
 $(ARCHIVE)/$(SYSVINIT_SOURCE):
 	$(DOWNLOAD) https://download.savannah.gnu.org/releases/sysvinit/$(SYSVINIT_SOURCE)
@@ -319,7 +320,7 @@ $(D)/e2fsprogs: $(D)/bootstrap $(D)/util_linux $(ARCHIVE)/$(E2FSPROGS_SOURCE)
 # util_linux
 #
 UTIL_LINUX_MAJOR = 2.37
-UTIL_LINUX_MINOR = 1
+UTIL_LINUX_MINOR = 4
 UTIL_LINUX_VER = $(UTIL_LINUX_MAJOR).$(UTIL_LINUX_MINOR)
 UTIL_LINUX_SOURCE = util-linux-$(UTIL_LINUX_VER).tar.xz
 
@@ -621,7 +622,7 @@ $(D)/ntfs_3g: $(D)/bootstrap $(ARCHIVE)/$(NTFS_3G_SOURCE)
 #
 # mc
 #
-MC_VER = 4.8.26
+MC_VER = 4.8.27
 MC_SOURCE = mc-$(MC_VER).tar.xz
 MC_PATCH = mc-$(MC_VER).patch
 
@@ -920,7 +921,7 @@ $(D)/fbshot: $(D)/bootstrap $(D)/libpng $(ARCHIVE)/$(FBSHOT_SOURCE)
 #
 # sysstat
 #
-SYSSTAT_VER = 12.5.4
+SYSSTAT_VER = 12.5.5
 SYSSTAT_SOURCE = sysstat-$(SYSSTAT_VER).tar.bz2
 
 $(ARCHIVE)/$(SYSSTAT_SOURCE):
@@ -1159,7 +1160,7 @@ $(D)/avahi: $(D)/bootstrap $(D)/expat $(D)/libdaemon $(D)/dbus $(ARCHIVE)/$(AVAH
 #
 # wget
 #
-WGET_VER = 1.21.1
+WGET_VER = 1.21.2
 WGET_SOURCE = wget-$(WGET_VER).tar.gz
 WGET_PATCH = wget-$(WGET_VER).patch
 
@@ -1345,7 +1346,7 @@ $(D)/libnfsidmap: $(D)/bootstrap $(ARCHIVE)/$(LIBNFSIDMAP_SOURCE)
 #
 # vsftpd
 #
-VSFTPD_VER = 3.0.3
+VSFTPD_VER = 3.0.5
 VSFTPD_SOURCE = vsftpd-$(VSFTPD_VER).tar.gz
 VSFTPD_PATCH = vsftpd-$(VSFTPD_VER).patch
 VSFTPD_PATCH += vsftpd-$(VSFTPD_VER)-find_libs.patch
@@ -1430,7 +1431,7 @@ $(D)/htop: $(D)/bootstrap $(D)/ncurses $(ARCHIVE)/$(HTOP_SOURCE)
 #
 # ethtool
 #
-ETHTOOL_VER = 5.13
+ETHTOOL_VER = 5.16
 ETHTOOL_SOURCE = ethtool-$(ETHTOOL_VER).tar.xz
 ETHTOOL_PATCH = ethtool-$(ETHTOOL_VER).patch
 
@@ -1759,7 +1760,7 @@ $(D)/udpxy: $(D)/bootstrap $(ARCHIVE)/$(UDPXY_SOURCE)
 #
 # openvpn
 #
-OPENVPN_VER = 2.5.3
+OPENVPN_VER = 2.5.5
 OPENVPN_SOURCE = openvpn-$(OPENVPN_VER).tar.xz
 
 $(ARCHIVE)/$(OPENVPN_SOURCE):
@@ -1835,7 +1836,7 @@ $(D)/vpnc: $(D)/bootstrap $(D)/openssl $(D)/lzo $(D)/libgcrypt $(ARCHIVE)/$(VPNC
 #
 # openssh
 #
-OPENSSH_VER = 8.6p1
+OPENSSH_VER = 8.8p1
 OPENSSH_SOURCE = openssh-$(OPENSSH_VER).tar.gz
 
 $(ARCHIVE)/$(OPENSSH_SOURCE):
@@ -2064,6 +2065,46 @@ $(D)/ofgwrite: $(D)/bootstrap $(ARCHIVE)/$(OFGWRITE_SOURCE)
 	$(TOUCH)
 
 #
+# iptables
+#
+IPTABLES_VER = 1.8.7
+IPTABLES_SOURCE = iptables-$(IPTABLES_VER).tar.bz2
+
+$(ARCHIVE)/$(IPTABLES_SOURCE):
+	$(DOWNLOAD) https://netfilter.org/pub/iptables/$(IPTABLES_SOURCE)
+
+$(D)/iptables: $(D)/bootstrap $(ARCHIVE)/$(IPTABLES_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/iptables-$(IPTABLES_VER)
+	$(UNTAR)/$(IPTABLES_SOURCE)
+	$(CHDIR)/iptables-$(IPTABLES_VER); \
+		$(BUILDENV) \
+		autoreconf -fi $(SILENT_OPT); \
+		$(CONFIGURE) \
+			--prefix=/usr \
+			--infodir=/.remove \
+			--localedir=/.remove \
+			--mandir=/.remove \
+			--docdir=/.remove \
+			--htmldir=/.remove \
+			--dvidir=/.remove \
+			--pdfdir=/.remove \
+			--psdir=/.remove \
+			--disable-nftables \
+			--disable-devel \
+			--disable-connlabel \
+			--disable-ipv6 \
+			--enable-shared=no \
+			--without-pkgconfigdir \
+			--without-xtlibdir \
+			--without-xt-lock-name \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REMOVE)/iptables-$(IPTABLES_VER)
+	$(TOUCH)
+
+#
 # Astra (Advanced Streamer) SlonikMod
 #
 $(D)/astra-sm: $(D)/bootstrap $(D)/openssl
@@ -2268,7 +2309,7 @@ $(D)/mupen64: $(D)/mupen64core $(D)/mupen64vid $(D)/mupen64aud $(D)/mupen64inp $
 #
 # libzen
 #
-LIBZEN_VER = 0.4.38
+LIBZEN_VER = 0.4.39
 LIBZEN_SOURCE = libzen_$(LIBZEN_VER).tar.bz2
 
 $(ARCHIVE)/$(LIBZEN_SOURCE):
@@ -2294,7 +2335,7 @@ $(D)/libzen: bootstrap $(D)/zlib $(ARCHIVE)/$(LIBZEN_SOURCE)
 #
 # libmediainfo
 #
-LIBMEDIAINFO_VER = 20.08
+LIBMEDIAINFO_VER = 21.09
 LIBMEDIAINFO_SOURCE = libmediainfo_$(LIBMEDIAINFO_VER).tar.bz2
 
 $(ARCHIVE)/$(LIBMEDIAINFO_SOURCE):
@@ -2320,7 +2361,7 @@ $(D)/libmediainfo: bootstrap $(D)/zlib $(D)/libzen $(ARCHIVE)/$(LIBMEDIAINFO_SOU
 #
 # mediainfo
 #
-MEDIAINFO_VER = 20.08
+MEDIAINFO_VER = 21.09
 MEDIAINFO_SOURCE = mediainfo_$(MEDIAINFO_VER).tar.bz2
 
 $(ARCHIVE)/$(MEDIAINFO_SOURCE):
