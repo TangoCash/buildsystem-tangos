@@ -1,17 +1,15 @@
 #
 # KERNEL
 #
-KERNEL_VER             = 5.9.0
-KERNEL_SOURCE_VER      = 5.9
+KERNEL_VER             = 5.15.0
+KERNEL_SOURCE_VER      = 5.15
 KERNEL_TYPE            = osmio4kplus
 KERNEL_SRC             = linux-edision-$(KERNEL_SOURCE_VER).tar.gz
 KERNEL_URL             = http://source.mynonpublic.com/edision
 KERNEL_CONFIG          = $(KERNEL_TYPE)/defconfig
 KERNEL_DIR             = $(BUILD_TMP)/linux-brcmstb-$(KERNEL_SOURCE_VER)
 
-KERNEL_PATCHES = \
-		armbox/$(KERNEL_TYPE)/0001-scripts-Use-fixed-input-and-output-files-instead-of-.patch \
-		armbox/$(KERNEL_TYPE)/0002-kbuild-install_headers.sh-Strip-_UAPI-from-if-define.patch
+KERNEL_PATCHES = 
 
 # crosstool
 CUSTOM_KERNEL_VER       = edision-$(KERNEL_SOURCE_VER)
