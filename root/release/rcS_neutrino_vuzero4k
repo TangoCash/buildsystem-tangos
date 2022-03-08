@@ -73,7 +73,7 @@ fi
 (ntpd -n -q -p time.fu-berlin.de) &
 
 /etc/init.d/hostname start
-/etc/init.d/portmap start
+/usr/sbin/rpcbind -f
 /usr/sbin/inetd
 # rpc.statd for nfs
 /etc/init.d/nfs-common start

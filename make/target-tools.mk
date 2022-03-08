@@ -36,7 +36,7 @@ else
 BUSYBOX_CONFIG = busybox-$(BUSYBOX_VER).config
 endif
 
-$(D)/busybox: $(D)/bootstrap $(BUSYBOX_DEPS) $(PATCHES)/$(BUSYBOX_CONFIG)
+$(D)/busybox: $(D)/bootstrap $(D)/libnsl $(BUSYBOX_DEPS) $(PATCHES)/$(BUSYBOX_CONFIG)
 	$(START_BUILD)
 	$(REMOVE)/$(BUSYBOX)
 ifeq ($(BUSYBOX_SNAPSHOT), 1)
@@ -52,6 +52,9 @@ endif
 		$(call apply_patches, $(BUSYBOX_PATCH)); \
 		install -m 0644 $(lastword $^) .config; \
 		sed -i -e 's#^CONFIG_PREFIX.*#CONFIG_PREFIX="$(TARGET_DIR)"#' .config; \
+		sed -i -e 's#^CONFIG_EXTRA_CFLAGS.*#CONFIG_EXTRA_CFLAGS="-I$(TARGET_DIR)/usr/include/tirpc"#' .config; \
+		sed -i -e 's#^CONFIG_EXTRA_LDFLAGS.*#CONFIG_EXTRA_LDFLAGS="-L$(TARGET_DIR)/usr/lib"#' .config; \
+		sed -i -e 's#^CONFIG_EXTRA_LDLIBS.*#CONFIG_EXTRA_LDLIBS="tirpc"#' .config; \
 		$(BUILDENV) \
 		$(MAKE) ARCH=$(BOXARCH) CROSS_COMPILE=$(TARGET)- CFLAGS_EXTRA="$(TARGET_CFLAGS)" busybox; \
 		$(MAKE) ARCH=$(BOXARCH) CROSS_COMPILE=$(TARGET)- CFLAGS_EXTRA="$(TARGET_CFLAGS)" CONFIG_PREFIX=$(TARGET_DIR) install-noclobber 
@@ -61,7 +64,7 @@ endif
 #
 # bash
 #
-BASH_VER = 5.0
+BASH_VER = 5.1.16
 BASH_SOURCE = bash-$(BASH_VER).tar.gz
 BASH_PATCH  = $(PATCHES)/bash
 
@@ -73,8 +76,8 @@ $(D)/bash: $(D)/bootstrap $(ARCHIVE)/$(BASH_SOURCE)
 	$(REMOVE)/bash-$(BASH_VER)
 	$(UNTAR)/$(BASH_SOURCE)
 	$(CHDIR)/bash-$(BASH_VER); \
-		$(call apply_patches, $(BASH_PATCH), 0); \
-		$(CONFIGURE) \
+		$(call apply_patches, $(BASH_PATCH)); \
+		$(CONFIGURE) bash_cv_termcap_lib=gnutermcap \
 			--libdir=$(TARGET_LIB_DIR) \
 			--includedir=$(TARGET_INCLUDE_DIR) \
 			--docdir=$(TARGET_DIR)/.remove \
@@ -247,6 +250,34 @@ $(D)/portmap: $(D)/bootstrap $(D)/lsb $(ARCHIVE)/$(PORTMAP_SOURCE) $(ARCHIVE)/po
 		install -m 0755 pmap_set $(TARGET_DIR)/sbin; \
 		install -m755 debian/init.d $(TARGET_DIR)/etc/init.d/portmap
 	$(REMOVE)/portmap-$(PORTMAP_VER)
+	$(TOUCH)
+
+#
+# rpcbind
+#
+RPCBIND_VER = 1.2.6
+RPCBIND_DIR = rpcbind-$(RPCBIND_VER)
+RPCBIND_SOURCE = rpcbind-$(RPCBIND_VER).tar.bz2
+RPCBIND_SITE = https://sourceforge.net/projects/rpcbind/files/rpcbind/$(RPCBIND_VER)
+RPCBIND_PATCH = rpcbind-$(RPCBIND_VER)-0001-Remove-yellow-pages-support.patch
+
+$(ARCHIVE)/$(RPCBIND_SOURCE):
+	$(DOWNLOAD) $(RPCBIND_SITE)/$(RPCBIND_SOURCE)
+
+$(D)/rpcbind: $(D)/bootstrap $(D)/libtirpc $(ARCHIVE)/$(RPCBIND_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/$(RPCBIND_DIR)
+	$(UNTAR)/$(RPCBIND_SOURCE)
+	$(CHDIR)/$(RPCBIND_DIR); \
+		$(call apply_patches, $(RPCBIND_PATCH)); \
+		autoreconf -fi $(SILENT_OPT); \
+		$(CONFIGURE) \
+			--with-rpcuser=root \
+			--with-systemdsystemunitdir=no \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REMOVE)/$(RPCBIND_DIR)
 	$(TOUCH)
 
 #
@@ -745,15 +776,18 @@ $(D)/rsync: $(D)/bootstrap $(ARCHIVE)/$(RSYNC_SOURCE)
 #
 FUSE_VER = 2.9.9
 FUSE_SOURCE = fuse-$(FUSE_VER).tar.gz
+FUSE_PATCH = $(PATCHES)/fuse
 
 $(ARCHIVE)/$(FUSE_SOURCE):
 	$(DOWNLOAD) https://github.com/libfuse/libfuse/releases/download/fuse-$(FUSE_VER)/$(FUSE_SOURCE)
 
-$(D)/fuse: $(D)/bootstrap $(ARCHIVE)/$(FUSE_SOURCE)
+$(D)/fuse: $(D)/bootstrap $(D)/libnsl $(ARCHIVE)/$(FUSE_SOURCE)
 	$(START_BUILD)
 	$(REMOVE)/fuse-$(FUSE_VER)
 	$(UNTAR)/$(FUSE_SOURCE)
 	$(CHDIR)/fuse-$(FUSE_VER); \
+		$(call apply_patches, $(FUSE_PATCH)); \
+		autoreconf -fi $(SILENT_OPT); \
 		$(CONFIGURE) \
 			CFLAGS="$(TARGET_CFLAGS) -I$(KERNEL_DIR)/arch/sh" \
 			--prefix=/usr \
@@ -1274,7 +1308,6 @@ $(D)/nfs_utils: $(D)/bootstrap $(D)/e2fsprogs $(ARCHIVE)/$(NFS_UTILS_SOURCE)
 			--mandir=/.remove \
 			--disable-gss \
 			--enable-ipv6=no \
-			--disable-tirpc \
 			--disable-nfsv4 \
 			--without-tcp-wrappers \
 		; \
@@ -1365,6 +1398,7 @@ $(D)/vsftpd: $(D)/bootstrap $(D)/openssl $(ARCHIVE)/$(VSFTPD_SOURCE)
 		$(MAKE) install PREFIX=$(TARGET_DIR)
 	install -m 755 $(SKEL_ROOT)/etc/init.d/vsftpd $(TARGET_DIR)/etc/init.d/
 	install -m 644 $(SKEL_ROOT)/etc/vsftpd.conf $(TARGET_DIR)/etc/
+	cd $(TARGET_DIR)/usr/sbin && ln -sf /usr/bin/vsftpd vsftpd
 	$(REMOVE)/vsftpd-$(VSFTPD_VER)
 	$(TOUCH)
 
