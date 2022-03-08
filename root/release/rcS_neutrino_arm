@@ -111,7 +111,7 @@ if [ "$hstname" == "$model" ]; then
 	echo "${model}-${hwaddr}" > /etc/hostname
 fi
 /etc/init.d/hostname start
-/usr/sbin/rpcbind -f
+/etc/init.d/portmap start
 /usr/sbin/inetd
 NFS=$(grep -c nfs /proc/cmdline)
   if [ "$NFS" -eq "1" ]; then

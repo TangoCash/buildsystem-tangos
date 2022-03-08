@@ -53,7 +53,7 @@ echo "Booting...TC-NMP" > /dev/dbox/oled0
 
 echo "setup network"
 /etc/init.d/hostname start
-/usr/sbin/rpcbind -f
+/etc/init.d/portmap start
 /usr/sbin/inetd
 NFS=$(grep -c nfs /proc/cmdline)
   if [ "$NFS" -eq "1" ]; then

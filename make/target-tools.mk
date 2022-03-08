@@ -259,7 +259,9 @@ RPCBIND_VER = 1.2.6
 RPCBIND_DIR = rpcbind-$(RPCBIND_VER)
 RPCBIND_SOURCE = rpcbind-$(RPCBIND_VER).tar.bz2
 RPCBIND_SITE = https://sourceforge.net/projects/rpcbind/files/rpcbind/$(RPCBIND_VER)
-RPCBIND_PATCH = rpcbind-$(RPCBIND_VER)-0001-Remove-yellow-pages-support.patch
+RPCBIND_PATCH  = rpcbind-$(RPCBIND_VER)-0001-Remove-yellow-pages-support.patch
+RPCBIND_PATCH += 001-rpcbind-1.2.5-vulnerability_fixes-1.patch
+RPCBIND_PATCH += 100-servername.patch
 
 $(ARCHIVE)/$(RPCBIND_SOURCE):
 	$(DOWNLOAD) $(RPCBIND_SITE)/$(RPCBIND_SOURCE)
@@ -274,6 +276,9 @@ $(D)/rpcbind: $(D)/bootstrap $(D)/libtirpc $(ARCHIVE)/$(RPCBIND_SOURCE)
 		$(CONFIGURE) \
 			--with-rpcuser=root \
 			--with-systemdsystemunitdir=no \
+			--enable-rmtcalls \
+			--enable-warmstarts \
+			--with-rpcuser=nobody \
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
