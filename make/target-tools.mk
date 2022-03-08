@@ -52,9 +52,9 @@ endif
 		$(call apply_patches, $(BUSYBOX_PATCH)); \
 		install -m 0644 $(lastword $^) .config; \
 		sed -i -e 's#^CONFIG_PREFIX.*#CONFIG_PREFIX="$(TARGET_DIR)"#' .config; \
-		sed -i -e 's#^CONFIG_EXTRA_CFLAGS.*#CONFIG_EXTRA_CFLAGS="-I$(TARGET_DIR)/usr/include/tirpc"#' .config; \
-		sed -i -e 's#^CONFIG_EXTRA_LDFLAGS.*#CONFIG_EXTRA_LDFLAGS="-L$(TARGET_DIR)/usr/lib"#' .config; \
-		sed -i -e 's#^CONFIG_EXTRA_LDLIBS.*#CONFIG_EXTRA_LDLIBS="tirpc"#' .config; \
+		#sed -i -e 's#^CONFIG_EXTRA_CFLAGS.*#CONFIG_EXTRA_CFLAGS="-I$(TARGET_DIR)/usr/include/tirpc"#' .config; \
+		#sed -i -e 's#^CONFIG_EXTRA_LDFLAGS.*#CONFIG_EXTRA_LDFLAGS="-L$(TARGET_DIR)/usr/lib"#' .config; \
+		#sed -i -e 's#^CONFIG_EXTRA_LDLIBS.*#CONFIG_EXTRA_LDLIBS="tirpc"#' .config; \
 		$(BUILDENV) \
 		$(MAKE) ARCH=$(BOXARCH) CROSS_COMPILE=$(TARGET)- CFLAGS_EXTRA="$(TARGET_CFLAGS)" busybox; \
 		$(MAKE) ARCH=$(BOXARCH) CROSS_COMPILE=$(TARGET)- CFLAGS_EXTRA="$(TARGET_CFLAGS)" CONFIG_PREFIX=$(TARGET_DIR) install-noclobber 
