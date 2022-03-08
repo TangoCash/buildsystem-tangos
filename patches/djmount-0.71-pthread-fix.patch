@@ -1,0 +1,12 @@
+--- djmount-0.71/libupnp/threadutil/inc/ithread.h
++++ djmount-0.71/libupnp/threadutil/inc/ithread.h
+@@ -179,7 +179,7 @@
+  *      Returns EINVAL if the kind is not supported.
+  *      See man page for pthread_mutexattr_setkind_np
+  *****************************************************************************/
+-#define ithread_mutexattr_setkind_np pthread_mutexattr_setkind_np
++#define ithread_mutexattr_setkind_np pthread_mutexattr_settype
+ 
+ 
+ /****************************************************************************
+
