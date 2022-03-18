@@ -47,17 +47,8 @@ $(D)/gstreamer: $(D)/bootstrap $(D)/libglib2 $(D)/libxml2 $(D)/glib_networking $
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-base-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-controller-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-net-1.0.pc
-	$(REWRITE_LIBTOOL)/libgstreamer-1.0.la
-	$(REWRITE_LIBTOOL)/libgstbase-1.0.la
-	$(REWRITE_LIBTOOL)/libgstcontroller-1.0.la
-	$(REWRITE_LIBTOOL)/libgstnet-1.0.la
-	$(REWRITE_LIBTOOLDEP)/libgstbase-1.0.la
-	$(REWRITE_LIBTOOLDEP)/libgstcontroller-1.0.la
-	$(REWRITE_LIBTOOLDEP)/libgstnet-1.0.la
+	$(REWRITE_PKGCONF)
+	$(REWRITE_LIBTOOL)
 	$(REMOVE)/gstreamer-$(GSTREAMER_VER)
 	$(TOUCH)
 
@@ -94,40 +85,8 @@ $(D)/gst_plugins_base: $(D)/bootstrap $(D)/zlib $(D)/libglib2 $(D)/orc $(D)/gstr
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	for i in `cd $(TARGET_LIB_DIR)/gstreamer-1.0; echo *.la`; do \
 		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; done
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-allocators-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-app-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-audio-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-fft-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-pbutils-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-riff-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-rtp-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-rtsp-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-sdp-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-tag-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-video-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-plugins-base-1.0.pc
-	$(REWRITE_LIBTOOL)/libgstallocators-1.0.la
-	$(REWRITE_LIBTOOL)/libgstapp-1.0.la
-	$(REWRITE_LIBTOOL)/libgstaudio-1.0.la
-	$(REWRITE_LIBTOOL)/libgstfft-1.0.la
-	$(REWRITE_LIBTOOL)/libgstpbutils-1.0.la
-	$(REWRITE_LIBTOOL)/libgstriff-1.0.la
-	$(REWRITE_LIBTOOL)/libgstrtp-1.0.la
-	$(REWRITE_LIBTOOL)/libgstrtsp-1.0.la
-	$(REWRITE_LIBTOOL)/libgstsdp-1.0.la
-	$(REWRITE_LIBTOOL)/libgsttag-1.0.la
-	$(REWRITE_LIBTOOL)/libgstvideo-1.0.la
-	$(REWRITE_LIBTOOLDEP)/libgstallocators-1.0.la
-	$(REWRITE_LIBTOOLDEP)/libgstapp-1.0.la
-	$(REWRITE_LIBTOOLDEP)/libgstaudio-1.0.la
-	$(REWRITE_LIBTOOLDEP)/libgstfft-1.0.la
-	$(REWRITE_LIBTOOLDEP)/libgstpbutils-1.0.la
-	$(REWRITE_LIBTOOLDEP)/libgstriff-1.0.la
-	$(REWRITE_LIBTOOLDEP)/libgstrtp-1.0.la
-	$(REWRITE_LIBTOOLDEP)/libgstrtsp-1.0.la
-	$(REWRITE_LIBTOOLDEP)/libgstsdp-1.0.la
-	$(REWRITE_LIBTOOLDEP)/libgsttag-1.0.la
-	$(REWRITE_LIBTOOLDEP)/libgstvideo-1.0.la
+	$(REWRITE_PKGCONF)
+	$(REWRITE_LIBTOOL)
 	$(REMOVE)/gst-plugins-base-$(GST_PLUGINS_BASE_VER)
 	$(TOUCH)
 
@@ -160,7 +119,7 @@ $(D)/gst_plugins_good: $(D)/bootstrap $(D)/libpng $(D)/libjpeg $(D)/gstreamer $(
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	for i in `cd $(TARGET_LIB_DIR)/gstreamer-1.0; echo *.la`; do \
-		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; done
+		sed -i -e $(REWRITE_LIBTOOL_RULES) $(TARGET_LIB_DIR)/gstreamer-1.0/$$i; done
 	$(REMOVE)/gst-plugins-good-$(GST_PLUGINS_GOOD_VER)
 	$(TOUCH)
 
@@ -201,30 +160,8 @@ $(D)/gst_plugins_bad: $(D)/bootstrap $(D)/libass $(D)/libcurl $(D)/libxml2 $(D)/
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	for i in `cd $(TARGET_LIB_DIR)/gstreamer-1.0; echo *.la`; do \
 		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; done
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-codecparsers-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-bad-allocators-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-bad-audio-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-bad-base-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-bad-video-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-insertbin-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-mpegts-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-player-1.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/gstreamer-plugins-bad-1.0.pc
-	$(REWRITE_LIBTOOL)/libgstbasecamerabinsrc-1.0.la
-	$(REWRITE_LIBTOOL)/libgstcodecparsers-1.0.la
-	$(REWRITE_LIBTOOL)/libgstphotography-1.0.la
-	$(REWRITE_LIBTOOL)/libgstadaptivedemux-1.0.la
-	$(REWRITE_LIBTOOL)/libgstbadbase-1.0.la
-	$(REWRITE_LIBTOOL)/libgstbadaudio-1.0.la
-	$(REWRITE_LIBTOOL)/libgstbadvideo-1.0.la
-	$(REWRITE_LIBTOOL)/libgstinsertbin-1.0.la
-	$(REWRITE_LIBTOOL)/libgstmpegts-1.0.la
-	$(REWRITE_LIBTOOL)/libgstplayer-1.0.la
-	$(REWRITE_LIBTOOL)/libgsturidownloader-1.0.la
-	$(REWRITE_LIBTOOL)/libgstbadallocators-1.0.la
-	$(REWRITE_LIBTOOLDEP)/libgstbadaudio-1.0.la
-	$(REWRITE_LIBTOOLDEP)/libgstadaptivedemux-1.0.la
-	$(REWRITE_LIBTOOLDEP)/libgstbadvideo-1.0.la
+	$(REWRITE_PKGCONF)
+	$(REWRITE_LIBTOOL)
 	$(REMOVE)/gst-plugins-bad-$(GST_PLUGINS_BAD_VER)
 	$(TOUCH)
 
@@ -255,7 +192,7 @@ $(D)/gst_plugins_ugly: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base $(ARC
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	for i in `cd $(TARGET_LIB_DIR)/gstreamer-1.0; echo *.la`; do \
-		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; done
+		sed -i -e $(REWRITE_LIBTOOL_RULES) $(TARGET_LIB_DIR)/gstreamer-1.0/$$i; done
 	$(REMOVE)/gst-plugins-ugly-$(GST_PLUGINS_UGLY_VER)
 	$(TOUCH)
 
@@ -269,7 +206,7 @@ $(D)/gst_plugin_subsink: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base $(D
 	$(REMOVE)/gstreamer-$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink
 	set -e; if [ -d $(ARCHIVE)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git ]; \
 		then cd $(ARCHIVE)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git; git pull; \
-		else cd $(ARCHIVE); git clone git://github.com/christophecvr/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git; \
+		else cd $(ARCHIVE); git clone $(GITHUB)/christophecvr/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git; \
 		fi
 	cp -ra $(ARCHIVE)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink.git $(BUILD_TMP)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink
 	$(CHDIR)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink; \
@@ -285,7 +222,7 @@ $(D)/gst_plugin_subsink: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_base $(D
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	for i in `cd $(TARGET_LIB_DIR)/gstreamer-1.0; echo *.la`; do \
-		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; done
+		sed -i -e $(REWRITE_LIBTOOL_RULES) $(TARGET_LIB_DIR)/gstreamer-1.0/$$i; done
 	$(REMOVE)/gstreamer$(GST_PLUGIN_SUBSINK_VER)-plugin-subsink
 	$(TOUCH)
 
@@ -299,7 +236,7 @@ $(D)/gst_plugins_dvbmediasink: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_ba
 	$(REMOVE)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink
 	set -e; if [ -d $(ARCHIVE)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink.git ]; \
 		then cd $(ARCHIVE)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink.git; git pull; \
-		else cd $(ARCHIVE); git clone -b gst-1.0 https://github.com/OpenPLi/gst-plugin-dvbmediasink.git gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink.git; \
+		else cd $(ARCHIVE); git clone -b gst-1.0 $(GITHUB)/OpenPLi/gst-plugin-dvbmediasink.git gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink.git; \
 		fi
 	cp -ra $(ARCHIVE)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink.git $(BUILD_TMP)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink
 	$(CHDIR)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink; \
@@ -326,7 +263,7 @@ $(D)/gst_plugins_dvbmediasink: $(D)/bootstrap $(D)/gstreamer $(D)/gst_plugins_ba
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	for i in `cd $(TARGET_LIB_DIR)/gstreamer-1.0; echo *.la`; do \
-		$(REWRITE_LIBTOOL)/gstreamer-1.0/$$i; done
+		sed -i -e $(REWRITE_LIBTOOL_RULES) $(TARGET_LIB_DIR)/gstreamer-1.0/$$i; done
 	$(REMOVE)/gstreamer$(GST_PLUGINS_DVBMEDIASINK_VER)-plugin-dvbmediasink
 	$(TOUCH)
 
@@ -365,7 +302,7 @@ $(D)/gst_gmediarender: $(D)/bootstrap $(D)/gst_plugins_dvbmediasink $(D)/libupnp
 	$(REMOVE)/gmrender-resurrect
 	set -e; if [ -d $(ARCHIVE)/gmrender-resurrect.git ]; \
 		then cd $(ARCHIVE)/gmrender-resurrect.git; git pull; \
-		else cd $(ARCHIVE); git clone https://github.com/hzeller/gmrender-resurrect.git gmrender-resurrect.git; \
+		else cd $(ARCHIVE); git clone $(GITHUB)/hzeller/gmrender-resurrect.git gmrender-resurrect.git; \
 		fi
 	cp -ra $(ARCHIVE)/gmrender-resurrect.git $(BUILD_TMP)/gmrender-resurrect
 	$(CHDIR)/gmrender-resurrect; \
@@ -397,10 +334,8 @@ $(D)/orc: $(D)/bootstrap $(ARCHIVE)/$(ORC_SOURCE)
 		; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/orc-0.4.pc
-	$(REWRITE_LIBTOOL)/liborc-0.4.la
-	$(REWRITE_LIBTOOL)/liborc-test-0.4.la
-	$(REWRITE_LIBTOOLDEP)/liborc-test-0.4.la
+	$(REWRITE_PKGCONF)
+	$(REWRITE_LIBTOOL)
 	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,orc-bugreport orcc)
 	$(REMOVE)/orc-$(ORC_VER)
 	$(TOUCH)
@@ -425,9 +360,8 @@ $(D)/libdca: $(D)/bootstrap $(ARCHIVE)/$(LIBDCA_SOURCE)
 		; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libdca.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libdts.pc
-	$(REWRITE_LIBTOOL)/libdca.la
+	$(REWRITE_PKGCONF)
+	$(REWRITE_LIBTOOL)
 	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,extract_dca extract_dts)
 	$(REMOVE)/libdca-$(LIBDCA_VER)
 	$(TOUCH)

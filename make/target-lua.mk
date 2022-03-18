@@ -7,7 +7,7 @@ LUA_SOURCE = lua-$(LUA_VER).tar.gz
 
 LUAPOSIX_VER = 31
 LUAPOSIX_SOURCE = luaposix-git-$(LUAPOSIX_VER).tar.bz2
-LUAPOSIX_URL = git://github.com/luaposix/luaposix.git
+LUAPOSIX_URL = $(GITHUB)/luaposix/luaposix.git
 LUAPOSIX_PATCH = lua-$(LUA_VER)-luaposix-$(LUAPOSIX_VER).patch
 
 $(ARCHIVE)/$(LUA_SOURCE):
@@ -61,7 +61,7 @@ $(D)/luaexpat: $(D)/bootstrap $(D)/lua $(D)/expat $(ARCHIVE)/$(LUAEXPAT_SOURCE)
 #
 LUAFEEDPARSER_VER = 9b284bc
 LUAFEEDPARSER_SOURCE = luafeedparser-git-$(LUAFEEDPARSER_VER).tar.bz2
-LUAFEEDPARSER_URL = git://github.com/slact/lua-feedparser.git
+LUAFEEDPARSER_URL = $(GITHUB)/slact/lua-feedparser.git
 
 $(ARCHIVE)/$(LUAFEEDPARSER_SOURCE):
 	$(HELPERS_DIR)/get-git-archive.sh $(LUAFEEDPARSER_URL) $(LUAFEEDPARSER_VER) $(notdir $@) $(ARCHIVE)
@@ -80,7 +80,7 @@ $(D)/luafeedparser: $(D)/bootstrap $(D)/lua $(D)/luasocket $(D)/luaexpat $(ARCHI
 # luajson
 #
 $(ARCHIVE)/json.lua:
-	$(DOWNLOAD) https://github.com/swiboe/swiboe/raw/master/term_gui/json.lua
+	$(DOWNLOAD) $(GITHUB)/swiboe/swiboe/raw/master/term_gui/json.lua
 
 $(D)/luajson: $(D)/bootstrap $(D)/lua $(ARCHIVE)/json.lua
 	$(START_BUILD)
@@ -92,7 +92,7 @@ $(D)/luajson: $(D)/bootstrap $(D)/lua $(ARCHIVE)/json.lua
 #
 LUACURL_VER = e0b1d2ee
 LUACURL_SOURCE = luacurl-git-$(LUACURL_VER).tar.bz2
-LUACURL_URL = git://github.com/Lua-cURL/Lua-cURLv3.git
+LUACURL_URL = $(GITHUB)/Lua-cURL/Lua-cURLv3.git
 
 $(ARCHIVE)/$(LUACURL_SOURCE):
 	$(HELPERS_DIR)/get-git-archive.sh $(LUACURL_URL) $(LUACURL_VER) $(notdir $@) $(ARCHIVE)
@@ -114,7 +114,7 @@ $(D)/luacurl: $(D)/bootstrap $(D)/libcurl $(D)/lua $(ARCHIVE)/$(LUACURL_SOURCE)
 #
 LUASOCKET_VER = 5a17f79
 LUASOCKET_SOURCE = luasocket-git-$(LUASOCKET_VER).tar.bz2
-LUASOCKET_URL = git://github.com/diegonehab/luasocket.git
+LUASOCKET_URL = $(GITHUB)/diegonehab/luasocket.git
 
 $(ARCHIVE)/$(LUASOCKET_SOURCE):
 	$(HELPERS_DIR)/get-git-archive.sh $(LUASOCKET_URL) $(LUASOCKET_VER) $(notdir $@) $(ARCHIVE)
@@ -138,7 +138,7 @@ LUASOAP_SOURCE = luasoap-$(LUASOAP_VER).tar.gz
 LUASOAP_PATCH = luasoap-$(LUASOAP_VER).patch
 
 $(ARCHIVE)/$(LUASOAP_SOURCE):
-	$(DOWNLOAD) https://github.com/downloads/tomasguisasola/luasoap/$(LUASOAP_SOURCE)
+	$(DOWNLOAD) $(GITHUB)/downloads/tomasguisasola/luasoap/$(LUASOAP_SOURCE)
 
 $(D)/luasoap: $(D)/bootstrap $(D)/lua $(D)/luasocket $(D)/luaexpat $(ARCHIVE)/$(LUASOAP_SOURCE)
 	$(START_BUILD)

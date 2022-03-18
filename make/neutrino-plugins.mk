@@ -65,7 +65,7 @@ $(D)/neutrino-plugins.do_prepare: $(D)/bootstrap $(D)/ffmpeg $(D)/libcurl $(D)/l
 	rm -rf $(SOURCE_DIR)/neutrino-plugins.org
 	set -e; if [ -d $(ARCHIVE)/neutrino-plugins-ddt.git ]; \
 		then cd $(ARCHIVE)/neutrino-plugins-ddt.git; git pull; \
-		else cd $(ARCHIVE); git clone https://github.com/Duckbox-Developers/neutrino-ddt-plugins.git neutrino-plugins-ddt.git; \
+		else cd $(ARCHIVE); git clone $(GITHUB)/Duckbox-Developers/neutrino-ddt-plugins.git neutrino-plugins-ddt.git; \
 		fi
 	cp -ra $(ARCHIVE)/neutrino-plugins-ddt.git $(SOURCE_DIR)/neutrino-plugins
 	sed -i -e 's#shellexec fx2#shellexec tuxmail tuxcal#g' $(SOURCE_DIR)/neutrino-plugins/Makefile.am
@@ -135,7 +135,7 @@ $(D)/neutrino-plugin-xupnpd: $(D)/bootstrap $(D)/lua $(D)/openssl $(D)/neutrino-
 	$(REMOVE)/xupnpd
 	set -e; if [ -d $(ARCHIVE)/xupnpd.git ]; \
 		then cd $(ARCHIVE)/xupnpd.git; git pull; \
-		else cd $(ARCHIVE); git clone https://github.com/clark15b/xupnpd.git xupnpd.git; \
+		else cd $(ARCHIVE); git clone $(GITHUB)/clark15b/xupnpd.git xupnpd.git; \
 		fi
 	cp -ra $(ARCHIVE)/xupnpd.git $(BUILD_TMP)/xupnpd
 	($(CHDIR)/xupnpd; git checkout -q $(XUPNPD_BRANCH);)
@@ -158,51 +158,42 @@ $(D)/neutrino-plugin-xupnpd: $(D)/bootstrap $(D)/lua $(D)/openssl $(D)/neutrino-
 #
 # neutrino-plugin-scripts-lua
 #
+NEUTRINO_SCRIPTLUA_GIT = $(GITHUB)/tuxbox-neutrino/plugin-scripts-lua.git
 NEUTRINO_SCRIPTLUA_PATCH =
 
 $(D)/neutrino-plugin-scripts-lua: $(D)/bootstrap
 	$(START_BUILD)
-	$(REMOVE)/neutrino-plugin-scripts-lua
-	set -e; if [ -d $(ARCHIVE)/tuxbox-scripts-lua.git ]; \
-		then cd $(ARCHIVE)/tuxbox-scripts-lua.git; git pull; \
-		else cd $(ARCHIVE); git clone https://github.com/tuxbox-neutrino/plugin-scripts-lua.git tuxbox-scripts-lua.git; \
-		fi
-	cp -ra $(ARCHIVE)/tuxbox-scripts-lua.git/plugins $(BUILD_TMP)/neutrino-plugin-scripts-lua
-	$(CHDIR)/neutrino-plugin-scripts-lua; \
-		$(call apply_patches, $(NEUTRINO_SCRIPTLUA_PATCH))
-	$(CHDIR)/neutrino-plugin-scripts-lua; \
+	$(REMOVE)/$(PKG_NAME)
+	$(call update_git, $(NEUTRINO_SCRIPTLUA_GIT))
+	$(CHDIR)/$(PKG_NAME); \
+		$(call apply_patches, $(NEUTRINO_SCRIPTLUA_PATCH)) ;\
 		install -d $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins
-		cp -R $(BUILD_TMP)/neutrino-plugin-scripts-lua/ard_mediathek/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
-		cp -R $(BUILD_TMP)/neutrino-plugin-scripts-lua/mtv/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
-		cp -R $(BUILD_TMP)/neutrino-plugin-scripts-lua/zdfhbbtv/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
-		cp -R $(BUILD_TMP)/neutrino-plugin-scripts-lua/netzkino/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
-#		cp -R $(BUILD_TMP)/neutrino-plugin-scripts-lua/2webTVxml/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
-#		cp -R $(BUILD_TMP)/neutrino-plugin-scripts-lua/favorites2bin/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
+		cp -R $(PKG_DIR)/plugins/ard_mediathek/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
+		cp -R $(PKG_DIR)/plugins/mtv/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
+		cp -R $(PKG_DIR)/plugins/zdfhbbtv/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
+		cp -R $(PKG_DIR)/plugins/netzkino/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
+#		cp -R $(PKG_DIR)/plugins/2webTVxml/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
+#		cp -R $(PKG_DIR)/plugins/favorites2bin/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
 		install -d $(TARGET_SHARE_DIR)/tuxbox/neutrino/webtv
-		cp -R $(BUILD_TMP)/neutrino-plugin-scripts-lua/webtv/best_bitrate_m3u8.lua $(TARGET_SHARE_DIR)/tuxbox/neutrino/webtv/
-	$(REMOVE)/neutrino-plugin-scripts-lua
+		cp -R $(PKG_DIR)/plugins/webtv/best_bitrate_m3u8.lua $(TARGET_SHARE_DIR)/tuxbox/neutrino/webtv/
+	$(REMOVE)/$(PKG_NAME)
 	$(TOUCH)
 
 #
 # neutrino-mediathek
 #
+NEUTRINO_MEDIATHEK_GIT = $(GITHUB)/neutrino-mediathek/mediathek.git
 NEUTRINO_MEDIATHEK_PATCH = neutrino-mediathek.patch
 
 $(D)/neutrino-plugin-mediathek:
 	$(START_BUILD)
-	$(REMOVE)/neutrino-mediathek
-	set -e; if [ -d $(ARCHIVE)/neutrino-mediathek.git ]; \
-		then cd $(ARCHIVE)/neutrino-mediathek.git; git pull; \
-		else cd $(ARCHIVE); git clone https://github.com/neutrino-mediathek/mediathek.git neutrino-mediathek.git; \
-		fi
-	cp -ra $(ARCHIVE)/neutrino-mediathek.git $(BUILD_TMP)/neutrino-mediathek
-	install -d $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins
-	$(CHDIR)/neutrino-mediathek; \
-		$(call apply_patches, $(NEUTRINO_MEDIATHEK_PATCH))
-	$(CHDIR)/neutrino-mediathek; \
+	$(REMOVE)/$(PKG_NAME)
+	$(call update_git, $(NEUTRINO_MEDIATHEK_GIT))
+	$(CHDIR)/$(PKG_NAME); \
+		$(call apply_patches, $(NEUTRINO_MEDIATHEK_PATCH)) ; \
 		cp -a plugins/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/; \
 		cp -a share $(TARGET_DIR)/usr/
-	$(REMOVE)/neutrino-mediathek
+	$(REMOVE)/$(PKG_NAME)
 	$(TOUCH)
 
 #
@@ -214,7 +205,7 @@ $(D)/neutrino-plugin-iptvplayer: $(D)/librtmp $(D)/python_twisted_small
 	$(REMOVE)/iptvplayer
 	set -e; if [ -d $(ARCHIVE)/iptvplayer.git ]; \
 		then cd $(ARCHIVE)/iptvplayer.git; git pull; \
-		else cd $(ARCHIVE); git clone https://github.com/TangoCash/crossplatform_iptvplayer.git iptvplayer.git; \
+		else cd $(ARCHIVE); git clone $(GITHUB)/TangoCash/crossplatform_iptvplayer.git iptvplayer.git; \
 		fi
 	cp -ra $(ARCHIVE)/iptvplayer.git $(BUILD_TMP)/iptvplayer
 	@if [ "$@" = "$(D)/neutrino-plugin-iptvplayer-nightly" ]; then \
@@ -243,10 +234,10 @@ $(D)/neutrino-plugin-channellogos:
 	$(REMOVE)/channellogos
 #	set -e; if [ -d $(ARCHIVE)/channellogos.git ]; \
 #		then cd $(ARCHIVE)/channellogos.git; git pull; \
-#		else cd $(ARCHIVE); git clone https://github.com/neutrino-images/ni-logo-stuff.git channellogos.git; \
+#		else cd $(ARCHIVE); git clone $(GITHUB)/neutrino-images/ni-logo-stuff.git channellogos.git; \
 #		fi
 #	cp -ra $(ARCHIVE)/channellogos.git $(BUILD_TMP)/channellogos
-	git clone https://github.com/neutrino-images/ni-logo-stuff.git $(BUILD_TMP)/channellogos
+	git clone $(GITHUB)/neutrino-images/ni-logo-stuff.git $(BUILD_TMP)/channellogos
 	rm -rf $(TARGET_SHARE_DIR)/tuxbox/neutrino/icons/logo
 	install -d $(TARGET_SHARE_DIR)/tuxbox/neutrino/icons/logo
 	install -m 0644 $(BUILD_TMP)/channellogos/logos/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/icons/logo
@@ -262,20 +253,18 @@ $(D)/neutrino-plugin-channellogos:
 #
 # annie's lcd4linux skins
 #
+L4L_SKINS_GIT = $(GITHUB)/TangoCash/SamsungLCD4Linux.git
+
 $(D)/neutrino-plugin-l4l-skins:
 	$(START_BUILD)
-	$(REMOVE)/l4l-skins
-	set -e; if [ -d $(ARCHIVE)/l4l-skins.git ]; \
-		then cd $(ARCHIVE)/l4l-skins.git; git pull; \
-		else cd $(ARCHIVE); git clone https://github.com/TangoCash/SamsungLCD4Linux.git l4l-skins.git; \
-		fi
-	cp -ra $(ARCHIVE)/l4l-skins.git $(BUILD_TMP)/l4l-skins
-	install -m 0600 $(BUILD_TMP)/l4l-skins/tango/etc/lcd4linux.conf $(TARGET_DIR)/etc
+	$(REMOVE)/$(PKG_NAME)
+	$(call update_git, $(L4L_SKINS_GIT))
+	install -m 0600 $(PKG_DIR)/tango/etc/lcd4linux.conf $(TARGET_DIR)/etc
 	install -d $(TARGET_SHARE_DIR)/lcd/icons
-	cp -aR $(BUILD_TMP)/l4l-skins/tango/share/* $(TARGET_SHARE_DIR)
+	cp -aR $(PKG_DIR)/tango/share/* $(TARGET_SHARE_DIR)
 	install -d $(TARGET_DIR)/var/lcd
-	cp -aR $(BUILD_TMP)/l4l-skins/tango/var/lcd/* $(TARGET_DIR)/var/lcd
-	$(REMOVE)/l4l-skins
+	cp -aR $(PKG_DIR)/tango/var/lcd/* $(TARGET_DIR)/var/lcd
+	$(REMOVE)/$(PKG_NAME)
 	$(TOUCH)
 
 #
@@ -287,7 +276,7 @@ $(D)/neutrino-plugin-webtv-radio:
 	set -e; if [ -d $(ARCHIVE)/NI-scripts-lua.git ]; \
 		then cd $(ARCHIVE)/NI-scripts-lua.git; git pull origin master; \
 		else cd $(ARCHIVE); mkdir NI-scripts-lua.git; cd $(ARCHIVE)/NI-scripts-lua.git; \
-		git init; git remote add origin -f https://github.com/neutrino-images/ni-neutrino-plugins.git; \
+		git init; git remote add origin -f $(GITHUB)/neutrino-images/ni-neutrino-plugins.git; \
 		git config core.sparseCheckout true ; \
 		echo scripts-lua > .git/info/sparse-checkout ; git pull origin master; \
 		fi
@@ -306,88 +295,33 @@ $(D)/neutrino-plugin-webtv-radio:
 #
 # annie's settingsupdater
 #
+SETTINGS_UPDATE_GIT = $(GITHUB)/horsti58/lua-data.git
+
 $(D)/neutrino-plugin-settings-update:
 	$(START_BUILD)
-	$(REMOVE)/settings-update
-	set -e; if [ -d $(ARCHIVE)/settings-update.git ]; \
-		then cd $(ARCHIVE)/settings-update.git; git pull; \
-		else cd $(ARCHIVE); git clone https://github.com/horsti58/lua-data.git settings-update.git; \
-		fi
-	cp -ra $(ARCHIVE)/settings-update.git $(BUILD_TMP)/settings-update
-	cp -R $(BUILD_TMP)/settings-update/lua/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
-	$(REMOVE)/settings-update
+	$(REMOVE)/$(PKG_NAME)
+	$(call update_git, $(SETTINGS_UPDATE_GIT))
+	cp -R $(PKG_DIR)/lua/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
+	$(REMOVE)/$(PKG_NAME)
 	$(TOUCH)
 
 #
 # lua-custom-plugins
 #
+PLUGIN_CUSTOM_GIT = $(GITHUB)/bazi-98/plugins.git
+
 $(D)/neutrino-plugin-custom:
 	$(START_BUILD)
-	$(REMOVE)/plugins-lua
-	set -e; if [ -d $(ARCHIVE)/plugins-lua-custom.git ]; \
-		then cd $(ARCHIVE)/plugins-lua-custom.git; git pull; \
-		else cd $(ARCHIVE); git clone https://github.com/bazi-98/plugins.git plugins-lua-custom.git; \
-		fi
-	cp -ra $(ARCHIVE)/plugins-lua-custom.git $(BUILD_TMP)/plugins-lua
-	$(CHDIR)/plugins-lua; \
+	$(REMOVE)/$(PKG_NAME)
+	$(call update_git, $(PLUGIN_CUSTOM_GIT))
+	$(CHDIR)/$(PKG_NAME); \
 		install -d $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins
-		cp -R $(BUILD_TMP)/plugins-lua/*/*.cfg $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
-		cp -R $(BUILD_TMP)/plugins-lua/*/*.lua $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
-		cp -R $(BUILD_TMP)/plugins-lua/*/*hint.png $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
-		cp -R $(BUILD_TMP)/plugins-lua/*/*.sh $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
-		ls $(BUILD_TMP)/plugins-lua/*/*.png | grep -v "hint" | xargs -I {} cp {} $(TARGET_SHARE_DIR)/tuxbox/neutrino/icons/logo
-	$(REMOVE)/plugins-lua
-	$(TOUCH)
-
-#
-# spiegel-tv
-#
-$(D)/neutrino-plugin-spiegel-tv:
-	$(START_BUILD)
-	$(REMOVE)/plugins-lua
-	set -e; if [ -d $(ARCHIVE)/plugins-lua.git ]; \
-		then cd $(ARCHIVE)/plugins-lua.git; git pull; \
-		else cd $(ARCHIVE); git clone https://github.com/fs-basis/plugins-lua.git plugins-lua.git; \
-		fi
-	cp -ra $(ARCHIVE)/plugins-lua.git $(BUILD_TMP)/plugins-lua
-	$(CHDIR)/plugins-lua; \
-		install -d $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins
-		cp -R $(BUILD_TMP)/plugins-lua/spiegel-tv-doc/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
-	$(REMOVE)/plugins-lua
-	$(TOUCH)
-
-#
-# tierwelt-tv
-#
-$(D)/neutrino-plugin-tierwelt-tv:
-	$(START_BUILD)
-	$(REMOVE)/plugins-lua
-	set -e; if [ -d $(ARCHIVE)/plugins-lua.git ]; \
-		then cd $(ARCHIVE)/plugins-lua.git; git pull; \
-		else cd $(ARCHIVE); git clone https://github.com/fs-basis/plugins-lua.git plugins-lua.git; \
-		fi
-	cp -ra $(ARCHIVE)/plugins-lua.git $(BUILD_TMP)/plugins-lua
-	$(CHDIR)/plugins-lua; \
-		install -d $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins
-		cp -R $(BUILD_TMP)/plugins-lua/tierwelt-tv/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
-	$(REMOVE)/plugins-lua
-	$(TOUCH)
-
-#
-# mtv
-#
-$(D)/neutrino-plugin-mtv:
-	$(START_BUILD)
-	$(REMOVE)/plugins-lua
-	set -e; if [ -d $(ARCHIVE)/plugins-lua.git ]; \
-		then cd $(ARCHIVE)/plugins-lua.git; git pull; \
-		else cd $(ARCHIVE); git clone https://github.com/fs-basis/plugins-lua.git plugins-lua.git; \
-		fi
-	cp -ra $(ARCHIVE)/plugins-lua.git $(BUILD_TMP)/plugins-lua
-	$(CHDIR)/plugins-lua; \
-		install -d $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins
-		cp -R $(BUILD_TMP)/plugins-lua/mtv/* $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
-	$(REMOVE)/plugins-lua
+		cp -R $(PKG_DIR)/*/*.cfg $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
+		cp -R $(PKG_DIR)/*/*.lua $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
+		cp -R $(PKG_DIR)/*/*hint.png $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
+		cp -R $(PKG_DIR)/*/*.sh $(TARGET_SHARE_DIR)/tuxbox/neutrino/plugins/
+		ls $(PKG_DIR)/*/*.png | grep -v "hint" | xargs -I {} cp {} $(TARGET_SHARE_DIR)/tuxbox/neutrino/icons/logo
+	$(REMOVE)/$(PKG_NAME)
 	$(TOUCH)
 
 #

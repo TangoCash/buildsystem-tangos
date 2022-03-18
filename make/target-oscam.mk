@@ -37,7 +37,7 @@ $(D)/oscam-emu.do_prepare:
 	cp -ra $(ARCHIVE)/oscam-svn $(SOURCE_DIR)/oscam-svn;\
 	cp -ra $(SOURCE_DIR)/oscam-svn $(SOURCE_DIR)/oscam-svn.org;\
 	cd $(SOURCE_DIR)/oscam-svn; \
-		wget --progress=bar:force --no-check-certificate $(DOWNLOAD_SILENT_OPT) -t6 -T20 -O oscam-emu.patch https://github.com/oscam-emu/oscam-emu/raw/master/oscam-emu.patch; \
+		wget --progress=bar:force --no-check-certificate $(DOWNLOAD_SILENT_OPT) -t6 -T20 -O oscam-emu.patch $(GITHUB)/oscam-emu/oscam-emu/raw/master/oscam-emu.patch; \
 		sed -i 's/SoftCam\.Key/oscam.keys/ig' oscam-emu.patch; \
 		sed -i 's/SoftCam_Key/oscam_keys/ig' oscam-emu.patch; \
 		$(call apply_patches, $(SOURCE_DIR)/oscam-svn/oscam-emu.patch, 0); \

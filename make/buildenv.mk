@@ -36,12 +36,8 @@ RELEASE_IMAGE_DIR     = $(BASE_DIR)/release_image
 -include $(BASE_DIR)/config.local
 
 
-GIT_PROTOCOL         ?= http
-ifneq ($(GIT_PROTOCOL), http)
-GITHUB               ?= git://github.com
-else
-GITHUB               ?= https://github.com
-endif
+GITHUB                = https://github.com
+
 GIT_NAME             ?= TangoCash
 GIT_NAME_TOOLS       ?= Duckbox-Developers
 
@@ -150,6 +146,7 @@ CROSS_DIR             = $(CROSS_BASE)/$(CROSSTOOL_GCC_VER)-$(BOXARCH)-kernel-$(K
 
 # -----------------------------------------------------------------------------
 
+TARGET_BASE_LIB_DIR   = $(TARGET_DIR)/lib
 TARGET_LIB_DIR        = $(TARGET_DIR)/usr/lib
 TARGET_INCLUDE_DIR    = $(TARGET_DIR)/usr/include
 TARGET_SHARE_DIR      = $(TARGET_DIR)/usr/share
@@ -209,9 +206,9 @@ CA_BUNDLE_DIR         = /etc/ssl/certs
 # -----------------------------------------------------------------------------
 
 # helper-"functions"
-REWRITE_LIBTOOL       = sed -i "s,^libdir=.*,libdir='$(TARGET_LIB_DIR)'," $(TARGET_LIB_DIR)
-REWRITE_LIBTOOLDEP    = sed -i -e "s,\(^dependency_libs='\| \|-L\|^dependency_libs='\)/usr/lib,\ $(TARGET_LIB_DIR),g" $(TARGET_LIB_DIR)
-REWRITE_PKGCONF       = sed -i "s,^prefix=.*,prefix='$(TARGET_DIR)/usr',"
+REWRITE_LIBTOOLX       = sed -i "s,^libdir=.*,libdir='$(TARGET_LIB_DIR)'," $(TARGET_LIB_DIR)
+REWRITE_LIBTOOLDEPX    = sed -i -e "s,\(^dependency_libs='\| \|-L\|^dependency_libs='\)/usr/lib,\ $(TARGET_LIB_DIR),g" $(TARGET_LIB_DIR)
+REWRITE_PKGCONFX       = sed -i "s,^prefix=.*,prefix='$(TARGET_DIR)/usr',"
 
 # unpack tarballs, clean up
 UNTAR                 = $(SILENT)tar -C $(BUILD_TMP) -xf $(ARCHIVE)
@@ -234,6 +231,9 @@ PKG_NAME              = $(word 1,$(call split_deps_dir,$(DEPS_DIR)))
 PKG_NAME_HELPER       = $(shell echo $(PKG_NAME) | sed 's/.*/\U&/')
 PKG_VER_HELPER        = A$($(PKG_NAME_HELPER)_VER)A
 PKG_VER               = $($(PKG_NAME_HELPER)_VER)
+PKG_DIR               = $(BUILD_TMP)/$(PKG_NAME)
+PKG_PATCH             = $(BASE_DIR)/make/extra_packages/$(basename $(@F))/patches
+PKG_FILES             = $(BASE_DIR)/make/extra_packages/$(basename $(@F))/files
 
 START_BUILD           = @$(call draw_line,$(PKG_NAME),6); \
                         echo; \

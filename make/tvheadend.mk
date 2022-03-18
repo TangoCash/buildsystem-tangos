@@ -12,7 +12,7 @@ TVHEADEND_PATCHES += tvheadend-adjust-for-64bit-time_t.patch
 
 TVHEADEND_VER = 22eeadd
 TVHEADEND_SOURCE = tvheadend-git-$(TVHEADEND_VER).tar.bz2
-TVHEADEND_URL = https://github.com/tvheadend/tvheadend.git
+TVHEADEND_URL = $(GITHUB)/tvheadend/tvheadend.git
 
 $(ARCHIVE)/$(TVHEADEND_SOURCE):
 	$(HELPERS_DIR)/get-git-archive.sh $(TVHEADEND_URL) $(TVHEADEND_VER) $(notdir $@) $(ARCHIVE)

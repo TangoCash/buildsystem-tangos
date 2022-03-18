@@ -88,7 +88,7 @@ $(D)/bash: $(D)/bootstrap $(ARCHIVE)/$(BASH_SOURCE)
 		; \
 		$(MAKE); \
 		$(MAKE) install prefix=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/bash.pc
+	$(REWRITE_PKGCONF)
 	$(REMOVE)/bash-$(BASH_VER)
 	$(TOUCH)
 
@@ -197,8 +197,8 @@ $(D)/opkg: $(D)/bootstrap $(D)/host_opkg $(D)/libarchive $(ARCHIVE)/$(OPKG_SOURC
 	install -d -m 0755 $(TARGET_LIB_DIR)/opkg
 	install -d -m 0755 $(TARGET_DIR)/etc/opkg
 	ln -sf opkg $(TARGET_DIR)/usr/bin/opkg-cl
-	$(REWRITE_LIBTOOL)/libopkg.la
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libopkg.pc
+	$(REWRITE_LIBTOOL)
+	$(REWRITE_PKGCONF)
 	$(REMOVE)/opkg-$(OPKG_VER)
 	$(TOUCH)
 
@@ -342,10 +342,7 @@ $(D)/e2fsprogs: $(D)/bootstrap $(D)/util_linux $(ARCHIVE)/$(E2FSPROGS_SOURCE)
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/com_err.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/ext2fs.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/e2p.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/ss.pc
+	$(REWRITE_PKGCONF)
 	rm -f $(addprefix $(TARGET_DIR)/sbin/,badblocks dumpe2fs e2mmpstatus e2undo logsave)
 	rm -f $(addprefix $(TARGET_DIR)/usr/sbin/,filefrag e2freefrag mk_cmds mklost+found uuidd e4crypt)
 	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,chattr lsattr uuidgen)
@@ -450,21 +447,8 @@ $(D)/util_linux: $(D)/bootstrap $(D)/ncurses $(D)/zlib $(ARCHIVE)/$(UTIL_LINUX_S
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)/libuuid.la
-	$(REWRITE_LIBTOOL)/libblkid.la
-	$(REWRITE_LIBTOOL)/libmount.la
-	$(REWRITE_LIBTOOL)/libsmartcols.la
-	$(REWRITE_LIBTOOL)/libfdisk.la
-	$(REWRITE_LIBTOOLDEP)/libuuid.la
-	$(REWRITE_LIBTOOLDEP)/libblkid.la
-	$(REWRITE_LIBTOOLDEP)/libmount.la
-	$(REWRITE_LIBTOOLDEP)/libsmartcols.la
-	$(REWRITE_LIBTOOLDEP)/libfdisk.la
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/blkid.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/uuid.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/fdisk.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/mount.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/smartcols.pc
+	$(REWRITE_LIBTOOL)
+	$(REWRITE_PKGCONF)
 	rm -f $(addprefix $(TARGET_DIR)/bin/,findmnt)
 	rm -f $(addprefix $(TARGET_DIR)/sbin/,blkdiscard blkzone blockdev cfdisk chcpu ctrlaltdel fdisk findfs fsck fsfreeze fstrim losetup mkfs swaplabel wipefs)
 	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,col colcrt colrm column fincore flock getopt ipcmk ipcrm ipcs isosize linux32 linux64 look lscpu lsipc lslocks lsns mcookie namei prlimit renice rev script scriptreplay setarch setsid uname26 uuidgen uuidparse whereis)
@@ -523,9 +507,8 @@ $(D)/parted: $(D)/bootstrap $(D)/e2fsprogs $(ARCHIVE)/$(PARTED_SOURCE)
 		; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libparted.pc
-	$(REWRITE_LIBTOOL)/libparted.la
-	$(REWRITE_LIBTOOL)/libparted-fs-resize.la
+	$(REWRITE_PKGCONF)
+	$(REWRITE_LIBTOOL)
 	$(REMOVE)/parted-$(PARTED_VER)
 	$(TOUCH)
 
@@ -536,7 +519,7 @@ DOSFSTOOLS_VER = 4.1
 DOSFSTOOLS_SOURCE = dosfstools-$(DOSFSTOOLS_VER).tar.xz
 
 $(ARCHIVE)/$(DOSFSTOOLS_SOURCE):
-	$(DOWNLOAD) https://github.com/dosfstools/dosfstools/releases/download/v$(DOSFSTOOLS_VER)/$(DOSFSTOOLS_SOURCE)
+	$(DOWNLOAD) $(GITHUB)/dosfstools/dosfstools/releases/download/v$(DOSFSTOOLS_VER)/$(DOSFSTOOLS_SOURCE)
 
 DOSFSTOOLS_CFLAGS = $(TARGET_CFLAGS) -D_GNU_SOURCE -fomit-frame-pointer -D_FILE_OFFSET_BITS=64
 
@@ -648,8 +631,8 @@ $(D)/ntfs_3g: $(D)/bootstrap $(ARCHIVE)/$(NTFS_3G_SOURCE)
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libntfs-3g.pc
-	$(REWRITE_LIBTOOL)/libntfs-3g.la
+	$(REWRITE_PKGCONF)
+	$(REWRITE_LIBTOOL)
 	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,lowntfs-3g ntfs-3g.probe)
 	rm -f $(addprefix $(TARGET_DIR)/sbin/,mount.lowntfs-3g)
 	$(REMOVE)/ntfs-3g_ntfsprogs-$(NTFS_3G_VER)
@@ -784,7 +767,7 @@ FUSE_SOURCE = fuse-$(FUSE_VER).tar.gz
 FUSE_PATCH = $(PATCHES)/fuse
 
 $(ARCHIVE)/$(FUSE_SOURCE):
-	$(DOWNLOAD) https://github.com/libfuse/libfuse/releases/download/fuse-$(FUSE_VER)/$(FUSE_SOURCE)
+	$(DOWNLOAD) $(GITHUB)/libfuse/libfuse/releases/download/fuse-$(FUSE_VER)/$(FUSE_SOURCE)
 
 $(D)/fuse: $(D)/bootstrap $(D)/libnsl $(ARCHIVE)/$(FUSE_SOURCE)
 	$(START_BUILD)
@@ -805,9 +788,8 @@ $(D)/fuse: $(D)/bootstrap $(D)/libnsl $(ARCHIVE)/$(FUSE_SOURCE)
 		-rm $(TARGET_DIR)/etc/udev/rules.d/99-fuse.rules
 		-rmdir $(TARGET_DIR)/etc/udev/rules.d
 		-rmdir $(TARGET_DIR)/etc/udev
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/fuse.pc
-	$(REWRITE_LIBTOOL)/libfuse.la
-	$(REWRITE_LIBTOOL)/libulockmgr.la
+	$(REWRITE_PKGCONF)
+	$(REWRITE_LIBTOOL)
 	$(REMOVE)/fuse-$(FUSE_VER)
 	$(TOUCH)
 
@@ -1017,35 +999,32 @@ $(D)/autofs: $(D)/bootstrap $(D)/e2fsprogs $(D)/libnsl $(ARCHIVE)/$(AUTOFS_SOURC
 #
 # shairport
 #
+SHAIRPORT_GIT = $(GITHUB)/abrasive/shairport.git
+SHAIRPORT_BRANCH = 1.0-dev
+
 $(D)/shairport: $(D)/bootstrap $(D)/openssl $(D)/howl $(D)/alsa_lib
 	$(START_BUILD)
-	$(REMOVE)/shairport
-	set -e; if [ -d $(ARCHIVE)/shairport.git ]; \
-		then cd $(ARCHIVE)/shairport.git; git pull; \
-		else cd $(ARCHIVE); git clone -b 1.0-dev git://github.com/abrasive/shairport.git shairport.git; \
-		fi
-	cp -ra $(ARCHIVE)/shairport.git $(BUILD_TMP)/shairport
-	$(CHDIR)/shairport; \
+	$(REMOVE)/$(PKG_NAME)
+	$(call update_git, $(SHAIRPORT_GIT),$(SHAIRPORT_BRANCH))
+	$(CHDIR)/$(PKG_NAME); \
 		sed -i 's|pkg-config|$$PKG_CONFIG|g' configure; \
 		PKG_CONFIG=$(PKG_CONFIG) \
 		$(BUILDENV) \
 		$(MAKE); \
 		$(MAKE) install PREFIX=$(TARGET_DIR)/usr
-	$(REMOVE)/shairport
+	$(REMOVE)/$(PKG_NAME)
 	$(TOUCH)
 
 #
 # shairport-sync
 #
+SHAIRPORT_SYNC_GIT = $(GITHUB)/mikebrady/shairport-sync.git
+
 $(D)/shairport-sync: $(D)/bootstrap $(D)/libdaemon $(D)/libpopt $(D)/libconfig $(D)/openssl $(D)/alsa_lib
 	$(START_BUILD)
-	$(REMOVE)/shairport-sync
-	set -e; if [ -d $(ARCHIVE)/shairport-sync.git ]; \
-		then cd $(ARCHIVE)/shairport-sync.git; git pull; \
-		else cd $(ARCHIVE); git clone https://github.com/mikebrady/shairport-sync.git shairport-sync.git; \
-		fi
-	cp -ra $(ARCHIVE)/shairport-sync.git $(BUILD_TMP)/shairport-sync
-	$(CHDIR)/shairport-sync; \
+	$(REMOVE)/$(PKG_NAME)
+	$(call update_git, $(SHAIRPORT_SYNC_GIT))
+	$(CHDIR)/$(PKG_NAME); \
 		autoreconf -fi $(SILENT_OPT); \
 		PKG_CONFIG=$(PKG_CONFIG) \
 		$(BUILDENV) \
@@ -1060,7 +1039,7 @@ $(D)/shairport-sync: $(D)/bootstrap $(D)/libdaemon $(D)/libpopt $(D)/libconfig $
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/shairport-sync
+	$(REMOVE)/$(PKG_NAME)
 	$(TOUCH)
 
 #
@@ -1068,7 +1047,7 @@ $(D)/shairport-sync: $(D)/bootstrap $(D)/libdaemon $(D)/libpopt $(D)/libconfig $
 #
 SHAIRPLAY_VER = 193138f39adc47108e4091753ea6db8d15ae289a
 SHAIRPLAY_SOURCE = shairplay-git-$(SHAIRPLAY_VER).tar.bz2
-SHAIRPLAY_URL = https://github.com/juhovh/shairplay.git
+SHAIRPLAY_URL = $(GITHUB)/juhovh/shairplay.git
 SHAIRPLAY_PATCH = shairplay-howl.diff
 
 $(ARCHIVE)/$(SHAIRPLAY_SOURCE):
@@ -1092,7 +1071,7 @@ $(D)/shairplay: libao $(D)/howl $(ARCHIVE)/$(SHAIRPLAY_SOURCE)
 		$(MAKE) install DESTDIR=$(TARGET_DIR); \
 		install -d $(TARGET_SHARE_DIR)/shairplay ; \
 		install -m 644 airport.key $(TARGET_SHARE_DIR)/shairplay && \
-	$(REWRITE_LIBTOOL)/libshairplay.la
+	$(REWRITE_LIBTOOL)
 	$(REMOVE)/shairplay-git-$(SHAIRPLAY_VER)
 	$(TOUCH)
 
@@ -1124,8 +1103,8 @@ $(D)/dbus: $(D)/bootstrap $(D)/expat $(ARCHIVE)/$(DBUS_SOURCE)
 		; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/dbus-1.pc
-	$(REWRITE_LIBTOOL)/libdbus-1.la
+	$(REWRITE_PKGCONF)
+	$(REWRITE_LIBTOOL)
 	rm -f $(addprefix $(TARGET_DIR)/usr/bin/,dbus-cleanup-sockets dbus-daemon dbus-launch dbus-monitor)
 	$(REMOVE)/dbus-$(DBUS_VER)
 	$(TOUCH)
@@ -1137,7 +1116,7 @@ AVAHI_VER = 0.7
 AVAHI_SOURCE = avahi-$(AVAHI_VER).tar.gz
 
 $(ARCHIVE)/$(AVAHI_SOURCE):
-	$(DOWNLOAD) https://github.com/lathiat/avahi/releases/download/v$(AVAHI_VER)/$(AVAHI_SOURCE)
+	$(DOWNLOAD) $(GITHUB)/lathiat/avahi/releases/download/v$(AVAHI_VER)/$(AVAHI_SOURCE)
 
 $(D)/avahi: $(D)/bootstrap $(D)/expat $(D)/libdaemon $(D)/dbus $(ARCHIVE)/$(AVAHI_SOURCE)
 	$(START_BUILD)
@@ -1188,11 +1167,8 @@ $(D)/avahi: $(D)/bootstrap $(D)/expat $(D)/libdaemon $(D)/dbus $(ARCHIVE)/$(AVAH
 		; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/avahi-core.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/avahi-client.pc
-	$(REWRITE_LIBTOOL)/libavahi-common.la
-	$(REWRITE_LIBTOOL)/libavahi-core.la
-	$(REWRITE_LIBTOOL)/libavahi-client.la
+	$(REWRITE_PKGCONF)
+	$(REWRITE_LIBTOOL)
 	$(REMOVE)/avahi-$(AVAHI_VER)
 	$(TOUCH)
 
@@ -1333,7 +1309,7 @@ LIBEVENT_VER = 2.0.21-stable
 LIBEVENT_SOURCE = libevent-$(LIBEVENT_VER).tar.gz
 
 $(ARCHIVE)/$(LIBEVENT_SOURCE):
-	$(DOWNLOAD) https://github.com/downloads/libevent/libevent/$(LIBEVENT_SOURCE)
+	$(DOWNLOAD) $(GITHUB)/downloads/libevent/libevent/$(LIBEVENT_SOURCE)
 
 $(D)/libevent: $(D)/bootstrap $(ARCHIVE)/$(LIBEVENT_SOURCE)
 	$(START_BUILD)
@@ -1345,14 +1321,8 @@ $(D)/libevent: $(D)/bootstrap $(ARCHIVE)/$(LIBEVENT_SOURCE)
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libevent.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libevent_openssl.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libevent_pthreads.pc
-	$(REWRITE_LIBTOOL)/libevent_core.la
-	$(REWRITE_LIBTOOL)/libevent_extra.la
-	$(REWRITE_LIBTOOL)/libevent.la
-	$(REWRITE_LIBTOOL)/libevent_openssl.la
-	$(REWRITE_LIBTOOL)/libevent_pthreads.la
+	$(REWRITE_PKGCONF)
+	$(REWRITE_LIBTOOL)
 	$(REMOVE)/libevent-$(LIBEVENT_VER)
 	$(TOUCH)
 
@@ -1376,35 +1346,9 @@ $(D)/libnfsidmap: $(D)/bootstrap $(ARCHIVE)/$(LIBNFSIDMAP_SOURCE)
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libnfsidmap.pc
-	$(REWRITE_LIBTOOL)/libnfsidmap.la
+	$(REWRITE_PKGCONF)
+	$(REWRITE_LIBTOOL)
 	$(REMOVE)/libnfsidmap-$(LIBNFSIDMAP_VER)
-	$(TOUCH)
-
-#
-# vsftpd
-#
-VSFTPD_VER = 3.0.5
-VSFTPD_SOURCE = vsftpd-$(VSFTPD_VER).tar.gz
-VSFTPD_PATCH = vsftpd-$(VSFTPD_VER).patch
-VSFTPD_PATCH += vsftpd-$(VSFTPD_VER)-find_libs.patch
-
-$(ARCHIVE)/$(VSFTPD_SOURCE):
-	$(DOWNLOAD) https://security.appspot.com/downloads/$(VSFTPD_SOURCE)
-
-$(D)/vsftpd: $(D)/bootstrap $(D)/openssl $(ARCHIVE)/$(VSFTPD_SOURCE)
-	$(START_BUILD)
-	$(REMOVE)/vsftpd-$(VSFTPD_VER)
-	$(UNTAR)/$(VSFTPD_SOURCE)
-	$(CHDIR)/vsftpd-$(VSFTPD_VER); \
-		$(call apply_patches, $(VSFTPD_PATCH)); \
-		$(MAKE) clean; \
-		$(MAKE) $(BUILDENV); \
-		$(MAKE) install PREFIX=$(TARGET_DIR)
-	install -m 755 $(SKEL_ROOT)/etc/init.d/vsftpd $(TARGET_DIR)/etc/init.d/
-	install -m 644 $(SKEL_ROOT)/etc/vsftpd.conf $(TARGET_DIR)/etc/
-	cd $(TARGET_DIR)/usr/sbin && ln -sf /usr/bin/vsftpd vsftpd
-	$(REMOVE)/vsftpd-$(VSFTPD_VER)
 	$(TOUCH)
 
 #
@@ -1702,17 +1646,8 @@ $(D)/libnl: $(D)/bootstrap $(D)/openssl $(ARCHIVE)/$(LIBNL_SOURCE)
 			--infodir=/.remove \
 		make $(SILENT_OPT); \
 		make install $(SILENT_OPT) DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libnl-3.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libnl-cli-3.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libnl-genl-3.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libnl-nf-3.0.pc
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libnl-route-3.0.pc
-	$(REWRITE_LIBTOOL)/libnl-3.la
-	$(REWRITE_LIBTOOL)/libnl-cli-3.la
-	$(REWRITE_LIBTOOL)/libnl-genl-3.la
-	$(REWRITE_LIBTOOL)/libnl-idiag-3.la
-	$(REWRITE_LIBTOOL)/libnl-nf-3.la
-	$(REWRITE_LIBTOOL)/libnl-route-3.la
+	$(REWRITE_PKGCONF)
+	$(REWRITE_LIBTOOL)
 	$(REMOVE)/libnl-$(LIBNL_VER)
 	$(TOUCH)
 
@@ -1752,7 +1687,7 @@ $(D)/wpa_supplicant: $(D)/bootstrap $(D)/openssl $(D)/wireless_tools $(ARCHIVE)/
 #
 DVBSNOOP_VER = d3f134b
 DVBSNOOP_SOURCE = dvbsnoop-git-$(DVBSNOOP_VER).tar.bz2
-DVBSNOOP_URL = https://github.com/Duckbox-Developers/dvbsnoop.git
+DVBSNOOP_URL = $(GITHUB)/Duckbox-Developers/dvbsnoop.git
 
 $(ARCHIVE)/$(DVBSNOOP_SOURCE):
 	$(HELPERS_DIR)/get-git-archive.sh $(DVBSNOOP_URL) $(DVBSNOOP_VER) $(notdir $@) $(ARCHIVE)
@@ -1778,7 +1713,7 @@ $(D)/dvbsnoop: $(D)/bootstrap $(D)/kernel $(ARCHIVE)/$(DVBSNOOP_SOURCE)
 #
 UDPXY_VER = 612d227
 UDPXY_SOURCE = udpxy-git-$(UDPXY_VER).tar.bz2
-UDPXY_URL = https://github.com/pcherenkov/udpxy.git
+UDPXY_URL = $(GITHUB)/pcherenkov/udpxy.git
 UDPXY_PATCH = udpxy-git-$(UDPXY_VER).patch
 
 $(ARCHIVE)/$(UDPXY_SOURCE):
@@ -1841,7 +1776,7 @@ $(D)/openvpn: $(D)/bootstrap $(D)/openssl $(D)/lzo $(ARCHIVE)/$(OPENVPN_SOURCE)
 VPNC_VER = 0.5.3r550-2jnpr1
 VPNC_DIR = vpnc-$(VPNC_VER)
 VPNC_SOURCE = vpnc-$(VPNC_VER).tar.gz
-VPNC_URL = https://github.com/ndpgroup/vpnc/archive
+VPNC_URL = $(GITHUB)/ndpgroup/vpnc/archive
 
 VPNC_PATCH = \
 	vpnc-fix-build.patch \
@@ -1936,54 +1871,6 @@ $(D)/dropbear: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/$(DROPBEAR_SOURCE)
 	$(TOUCH)
 
 #
-# dropbearmulti
-#
-DROPBEARMULTI_VER = 846d38f
-#DROPBEARMULTI_VER = a8d6dac
-DROPBEARMULTI_SOURCE = dropbearmulti-git-$(DROPBEARMULTI_VER).tar.bz2
-DROPBEARMULTI_URL = https://github.com/mkj/dropbear.git
-
-$(ARCHIVE)/$(DROPBEARMULTI_SOURCE):
-	$(HELPERS_DIR)/get-git-archive.sh $(DROPBEARMULTI_URL) $(DROPBEARMULTI_VER) $(notdir $@) $(ARCHIVE)
-
-$(D)/dropbearmulti: $(D)/bootstrap $(ARCHIVE)/$(DROPBEARMULTI_SOURCE)
-	$(START_BUILD)
-	$(REMOVE)/dropbearmulti-git-$(DROPBEARMULTI_VER)
-	$(UNTAR)/$(DROPBEARMULTI_SOURCE)
-	$(CHDIR)/dropbearmulti-git-$(DROPBEARMULTI_VER); \
-		$(BUILDENV) \
-		autoreconf -fi $(SILENT_OPT); \
-		$(CONFIGURE) \
-			--prefix=/usr \
-			--disable-syslog \
-			--disable-lastlog \
-			--infodir=/.remove \
-			--localedir=/.remove/locale \
-			--mandir=/.remove \
-			--docdir=/.remove \
-			--htmldir=/.remove \
-			--dvidir=/.remove \
-			--pdfdir=/.remove \
-			--psdir=/.remove \
-			--disable-shadow \
-			--disable-zlib \
-			--disable-utmp \
-			--disable-utmpx \
-			--disable-wtmp \
-			--disable-wtmpx \
-			--disable-loginfunc \
-			--disable-pututline \
-			--disable-pututxline \
-		; \
-		$(MAKE) PROGRAMS="dropbear scp dropbearkey" MULTI=1; \
-		$(MAKE) PROGRAMS="dropbear scp dropbearkey" MULTI=1 install DESTDIR=$(TARGET_DIR)
-	cd $(TARGET_DIR)/usr/bin && ln -sf /usr/bin/dropbearmulti dropbear
-	install -m 755 $(SKEL_ROOT)/etc/init.d/dropbear $(TARGET_DIR)/etc/init.d/
-	install -d -m 0755 $(TARGET_DIR)/etc/dropbear
-	$(REMOVE)/dropbearmulti-git-$(DROPBEARMULTI_VER)
-	$(TOUCH)
-
-#
 # usb_modeswitch_data
 #
 USB_MODESWITCH_DATA_VER = 20160112
@@ -2030,38 +1917,32 @@ $(D)/usb_modeswitch: $(D)/bootstrap $(D)/libusb $(D)/usb_modeswitch_data $(ARCHI
 #
 # dvb-apps
 #
+DVB_APPS_GIT = $(GITHUB)/openpli-arm/dvb-apps.git
 DVB_APPS_PATCH = dvb-apps.patch
 
-$(D)/dvb-apps: $(D)/bootstrap $(ARCHIVE)/$(DVB_APPS_SOURCE)
+$(D)/dvb-apps: $(D)/bootstrap
 	$(START_BUILD)
-	$(REMOVE)/dvb-apps
-	set -e; if [ -d $(ARCHIVE)/dvb-apps.git ]; \
-		then cd $(ARCHIVE)/dvb-apps.git; git pull; \
-		else cd $(ARCHIVE); git clone https://github.com/openpli-arm/dvb-apps.git dvb-apps.git; \
-		fi
-	cp -ra $(ARCHIVE)/dvb-apps.git $(BUILD_TMP)/dvb-apps
-	$(CHDIR)/dvb-apps; \
+	$(REMOVE)/$(PKG_NAME)
+	$(call update_git, $(DVB_APPS_GIT))
+	$(CHDIR)/$(PKG_NAME); \
 		$(call apply_patches,$(DVB_APPS_PATCH)); \
 		$(BUILDENV) \
 		$(BUILDENV) $(MAKE) DESTDIR=$(TARGET_DIR); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/dvb-apps
+	$(REMOVE)/$(PKG_NAME)
 	$(TOUCH)
 
 #
 # minisatip
 #
+MINISATIP_GIT = $(GITHUB)/catalinii/minisatip.git
 MINISATIP_PATCH = minisatip.patch
 
-$(D)/minisatip: $(D)/bootstrap $(D)/openssl $(D)/libdvbcsa $(D)/dvb-apps $(ARCHIVE)/$(MINISATIP_SOURCE)
+$(D)/minisatip: $(D)/bootstrap $(D)/openssl $(D)/libdvbcsa $(D)/dvb-apps
 	$(START_BUILD)
-	$(REMOVE)/minisatip
-	set -e; if [ -d $(ARCHIVE)/minisatip.git ]; \
-		then cd $(ARCHIVE)/minisatip.git; git pull; \
-		else cd $(ARCHIVE); git clone https://github.com/catalinii/minisatip.git minisatip.git; \
-		fi
-	cp -ra $(ARCHIVE)/minisatip.git $(BUILD_TMP)/minisatip
-	$(CHDIR)/minisatip; \
+	$(REMOVE)/$(PKG_NAME)
+	$(call update_git, $(MINISATIP_GIT))
+	$(CHDIR)/$(PKG_NAME); \
 		$(call apply_patches,$(MINISATIP_PATCH)); \
 		$(BUILDENV) \
 		export CFLAGS="-pipe -Os -Wall -g0 -I$(TARGET_DIR)/usr/include"; \
@@ -2073,34 +1954,11 @@ $(D)/minisatip: $(D)/bootstrap $(D)/openssl $(D)/libdvbcsa $(D)/dvb-apps $(ARCHI
 			--enable-enigma \
 			--enable-static \
 		; \
-		$(MAKE); \
-	install -m 755 $(BUILD_TMP)/minisatip/minisatip $(TARGET_DIR)/usr/bin
+		$(MAKE)
+	install -m 755 $(PKG_DIR)/minisatip $(TARGET_DIR)/usr/bin
 	install -d $(TARGET_DIR)/usr/share/minisatip
-	cp -a $(BUILD_TMP)/minisatip/html $(TARGET_DIR)/usr/share/minisatip
-	$(REMOVE)/minisatip
-	$(TOUCH)
-
-#
-# ofgwrite
-#
-OFGWRITE_PATCH = ofgwrite.patch
-
-$(D)/ofgwrite: $(D)/bootstrap $(ARCHIVE)/$(OFGWRITE_SOURCE)
-	$(START_BUILD)
-	$(REMOVE)/ofgwrite-max
-	set -e; if [ -d $(ARCHIVE)/ofgwrite-max.git ]; \
-		then cd $(ARCHIVE)/ofgwrite-max.git; git pull; \
-		else cd $(ARCHIVE); git clone https://github.com/MaxWiesel/ofgwrite-max.git ofgwrite-max.git; \
-		fi
-	cp -ra $(ARCHIVE)/ofgwrite-max.git $(BUILD_TMP)/ofgwrite-max
-	$(CHDIR)/ofgwrite-max; \
-		$(call apply_patches,$(OFGWRITE_PATCH)); \
-		$(BUILDENV) \
-		$(MAKE); \
-	install -m 755 $(BUILD_TMP)/ofgwrite-max/ofgwrite_bin $(TARGET_DIR)/usr/bin
-	install -m 755 $(BUILD_TMP)/ofgwrite-max/ofgwrite_caller $(TARGET_DIR)/usr/bin
-	install -m 755 $(BUILD_TMP)/ofgwrite-max/ofgwrite $(TARGET_DIR)/usr/bin
-	$(REMOVE)/ofgwrite-max
+	cp -a $(PKG_DIR)/html $(TARGET_DIR)/usr/share/minisatip
+	$(REMOVE)/$(PKG_NAME)
 	$(TOUCH)
 
 #
@@ -2146,15 +2004,13 @@ $(D)/iptables: $(D)/bootstrap $(ARCHIVE)/$(IPTABLES_SOURCE)
 #
 # Astra (Advanced Streamer) SlonikMod
 #
+ASTRA_SM_GIT = https://gitlab.com/crazycat69/astra-sm.git
+
 $(D)/astra-sm: $(D)/bootstrap $(D)/openssl
 	$(START_BUILD)
-	$(REMOVE)/astra-sm
-	set -e; if [ -d $(ARCHIVE)/astra-sm.git ]; \
-		then cd $(ARCHIVE)/astra-sm.git; git pull; \
-		else cd $(ARCHIVE); git clone https://gitlab.com/crazycat69/astra-sm.git $(ARCHIVE)/astra-sm.git; \
-		fi
-	cp -ra $(ARCHIVE)/astra-sm.git $(BUILD_TMP)/astra-sm
-	$(CHDIR)/astra-sm; \
+	$(REMOVE)/$(PKG_NAME)
+	$(call update_git, $(ASTRA_SM_GIT))
+	$(CHDIR)/$(PKG_NAME); \
 		$(BUILDENV) \
 		autoreconf -fi $(SILENT_OPT); \
 		sed -i 's:(CFLAGS):(CFLAGS_FOR_BUILD):' tools/Makefile.am; \
@@ -2164,7 +2020,7 @@ $(D)/astra-sm: $(D)/bootstrap $(D)/openssl
 			--prefix=/usr \
 		; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/astra-sm
+	$(REMOVE)/$(PKG_NAME)
 	$(TOUCH)
 
 #
@@ -2197,7 +2053,7 @@ $(D)/iozone3: $(D)/bootstrap $(ARCHIVE)/$(IOZONE_SOURCE)
 #
 MUPEN64CORE_VER = ef15526
 MUPEN64CORE_SOURCE = mupen64core-git-$(MUPEN64CORE_VER).tar.bz2
-MUPEN64CORE_URL = https://github.com/mupen64plus/mupen64plus-core.git
+MUPEN64CORE_URL = $(GITHUB)/mupen64plus/mupen64plus-core.git
 
 $(ARCHIVE)/$(MUPEN64CORE_SOURCE):
 	$(HELPERS_DIR)/get-git-archive.sh $(MUPEN64CORE_URL) $(MUPEN64CORE_VER) $(notdir $@) $(ARCHIVE)
@@ -2223,7 +2079,7 @@ $(D)/mupen64core: $(D)/bootstrap $(ARCHIVE)/$(MUPEN64CORE_SOURCE) $(D)/libsdl2 $
 
 MUPEN64CMD_VER = 5926250
 MUPEN64CMD_SOURCE = mupen64cmd-git-$(MUPEN64CMD_VER).tar.bz2
-MUPEN64CMD_URL = https://github.com/mupen64plus/mupen64plus-ui-console.git
+MUPEN64CMD_URL = $(GITHUB)/mupen64plus/mupen64plus-ui-console.git
 
 $(ARCHIVE)/$(MUPEN64CMD_SOURCE):
 	$(HELPERS_DIR)/get-git-archive.sh $(MUPEN64CMD_URL) $(MUPEN64CMD_VER) $(notdir $@) $(ARCHIVE)
@@ -2253,7 +2109,7 @@ $(D)/mupen64cmd: $(D)/bootstrap $(ARCHIVE)/$(MUPEN64CMD_SOURCE) $(D)/mupen64core
 
 MUPEN64VID_VER = 7f10448
 MUPEN64VID_SOURCE = mupen64vid-git-$(MUPEN64VID_VER).tar.bz2
-MUPEN64VID_URL = https://github.com/mupen64plus/mupen64plus-video-rice.git
+MUPEN64VID_URL = $(GITHUB)/mupen64plus/mupen64plus-video-rice.git
 
 $(ARCHIVE)/$(MUPEN64VID_SOURCE):
 	$(HELPERS_DIR)/get-git-archive.sh $(MUPEN64VID_URL) $(MUPEN64VID_VER) $(notdir $@) $(ARCHIVE)
@@ -2283,7 +2139,7 @@ $(D)/mupen64vid: $(D)/bootstrap $(ARCHIVE)/$(MUPEN64VID_SOURCE) $(D)/mupen64core
 
 MUPEN64AUD_VER = 732722c
 MUPEN64AUD_SOURCE = mupen64aud-git-$(MUPEN64AUD_VER).tar.bz2
-MUPEN64AUD_URL = https://github.com/mupen64plus/mupen64plus-audio-sdl.git
+MUPEN64AUD_URL = $(GITHUB)/mupen64plus/mupen64plus-audio-sdl.git
 
 $(ARCHIVE)/$(MUPEN64AUD_SOURCE):
 	$(HELPERS_DIR)/get-git-archive.sh $(MUPEN64AUD_URL) $(MUPEN64AUD_VER) $(notdir $@) $(ARCHIVE)
@@ -2314,7 +2170,7 @@ $(D)/mupen64aud: $(D)/bootstrap $(ARCHIVE)/$(MUPEN64AUD_SOURCE) $(D)/mupen64core
 
 MUPEN64INP_VER = f5c3995
 MUPEN64INP_SOURCE = mupen64inp-git-$(MUPEN64INP_VER).tar.bz2
-MUPEN64INP_URL = https://github.com/mupen64plus/mupen64plus-input-sdl.git
+MUPEN64INP_URL = $(GITHUB)/mupen64plus/mupen64plus-input-sdl.git
 
 $(ARCHIVE)/$(MUPEN64INP_SOURCE):
 	$(HELPERS_DIR)/get-git-archive.sh $(MUPEN64INP_URL) $(MUPEN64INP_VER) $(notdir $@) $(ARCHIVE)
@@ -2345,77 +2201,4 @@ $(D)/mupen64inp: $(D)/bootstrap $(ARCHIVE)/$(MUPEN64INP_SOURCE) $(D)/mupen64core
 $(D)/mupen64: $(D)/mupen64core $(D)/mupen64vid $(D)/mupen64aud $(D)/mupen64inp $(D)/mupen64cmd
 	$(TOUCH)
 
-#
-# libzen
-#
-LIBZEN_VER = 0.4.39
-LIBZEN_SOURCE = libzen_$(LIBZEN_VER).tar.bz2
 
-$(ARCHIVE)/$(LIBZEN_SOURCE):
-	$(DOWNLOAD) https://mediaarea.net/download/source/libzen/$(LIBZEN_VER)/$(LIBZEN_SOURCE)
-
-$(D)/libzen: bootstrap $(D)/zlib $(ARCHIVE)/$(LIBZEN_SOURCE)
-	$(START_BUILD)
-	$(REMOVE)/ZenLib
-	$(UNTAR)/$(LIBZEN_SOURCE)
-	$(CHDIR)/ZenLib/Project/GNU/Library; \
-		autoreconf -fi $(SILENT_OPT); \
-		$(CONFIGURE) \
-			--prefix=/usr \
-		; \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libzen.pc
-	$(REWRITE_LIBTOOL)/libzen.la
-	$(REWRITE_LIBTOOLDEP)/libzen.la
-	$(REMOVE)/ZenLib
-	$(TOUCH)
-
-#
-# libmediainfo
-#
-LIBMEDIAINFO_VER = 21.09
-LIBMEDIAINFO_SOURCE = libmediainfo_$(LIBMEDIAINFO_VER).tar.bz2
-
-$(ARCHIVE)/$(LIBMEDIAINFO_SOURCE):
-	$(DOWNLOAD) https://mediaarea.net/download/source/libmediainfo/$(LIBMEDIAINFO_VER)/$(LIBMEDIAINFO_SOURCE)
-
-$(D)/libmediainfo: bootstrap $(D)/zlib $(D)/libzen $(ARCHIVE)/$(LIBMEDIAINFO_SOURCE)
-	$(START_BUILD)
-	$(REMOVE)/MediaInfoLib
-	$(UNTAR)/$(LIBMEDIAINFO_SOURCE)
-	$(CHDIR)/MediaInfoLib/Project/GNU/Library; \
-		autoreconf -fi $(SILENT_OPT); \
-		$(CONFIGURE) \
-			--prefix=/usr \
-		; \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/libmediainfo.pc
-	$(REWRITE_LIBTOOL)/libmediainfo.la
-	$(REWRITE_LIBTOOLDEP)/libmediainfo.la
-	$(REMOVE)/MediaInfoLib
-	$(TOUCH)
-
-#
-# mediainfo
-#
-MEDIAINFO_VER = 21.09
-MEDIAINFO_SOURCE = mediainfo_$(MEDIAINFO_VER).tar.bz2
-
-$(ARCHIVE)/$(MEDIAINFO_SOURCE):
-	$(DOWNLOAD) https://mediaarea.net/download/source/mediainfo/$(MEDIAINFO_VER)/$(MEDIAINFO_SOURCE)
-
-$(D)/mediainfo: bootstrap $(D)/zlib $(D)/libzen $(D)/libmediainfo $(ARCHIVE)/$(MEDIAINFO_SOURCE)
-	$(START_BUILD)
-	$(REMOVE)/MediaInfo
-	$(UNTAR)/$(MEDIAINFO_SOURCE)
-	$(CHDIR)/MediaInfo/Project/GNU/CLI; \
-		autoreconf -fi $(SILENT_OPT); \
-		$(CONFIGURE) \
-			--prefix=/usr \
-		; \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/MediaInfo
-	$(TOUCH)

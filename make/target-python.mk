@@ -128,7 +128,7 @@ $(D)/python: $(D)/bootstrap $(D)/host_python $(D)/ncurses $(D)/zlib $(D)/openssl
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	ln -sf ../../libpython$(PYTHON_VER_MAJOR).so.1.0 $(TARGET_DIR)/$(PYTHON_DIR)/config/libpython$(PYTHON_VER_MAJOR).so; \
 	ln -sf $(TARGET_DIR)/$(PYTHON_INCLUDE_DIR) $(TARGET_INCLUDE_DIR)/python
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/python-2.7.pc
+	$(REWRITE_PKGCONF)
 	$(REMOVE)/Python-$(PYTHON_VER)
 	$(TOUCH)
 
@@ -171,7 +171,7 @@ $(D)/libxmlccwrap: $(D)/bootstrap $(D)/libxml2 $(D)/libxslt $(ARCHIVE)/$(LIBXMLC
 		; \
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)/libxmlccwrap.la
+	$(REWRITE_LIBTOOL)
 	$(REMOVE)/libxmlccwrap-$(LIBXMLCCWRAP_VER)
 	$(TOUCH)
 
@@ -694,35 +694,31 @@ $(D)/python_singledispatch: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(
 #
 # python_livestreamer
 #
+PYTHON_LIVESTREAMER_GIT = $(GITHUB)/chrippa/livestreamer.git
+
 $(D)/python_livestreamer: $(D)/bootstrap $(D)/python $(D)/python_setuptools
 	$(START_BUILD)
-	$(REMOVE)/livestreamer
-	set -e; if [ -d $(ARCHIVE)/livestreamer.git ]; \
-		then cd $(ARCHIVE)/livestreamer.git; git pull; \
-		else cd $(ARCHIVE); git clone https://github.com/chrippa/livestreamer.git livestreamer.git; \
-		fi
-	cp -ra $(ARCHIVE)/livestreamer.git $(BUILD_TMP)/livestreamer
-	$(CHDIR)/livestreamer; \
+	$(REMOVE)/$(PKG_NAME)
+	$(call update_git, $(PYTHON_LIVESTREAMER_GIT))
+	$(CHDIR)/$(PKG_NAME); \
 		$(PYTHON_BUILD); \
 		$(PYTHON_INSTALL)
-	$(REMOVE)/livestreamer
+	$(REMOVE)/$(PKG_NAME)
 	$(TOUCH)
 
 #
 # python_livestreamersrv
 #
+PYTHON_LIVESTREAMERSRV_GIT = $(GITHUB)/athoik/livestreamersrv.git
+
 $(D)/python_livestreamersrv: $(D)/bootstrap $(D)/python $(D)/python_setuptools $(D)/python_livestreamer
 	$(START_BUILD)
-	$(REMOVE)/livestreamersrv
-	set -e; if [ -d $(ARCHIVE)/livestreamersrv.git ]; \
-		then cd $(ARCHIVE)/livestreamersrv.git; git pull; \
-		else cd $(ARCHIVE); git clone https://github.com/athoik/livestreamersrv.git livestreamersrv.git; \
-		fi
-	cp -ra $(ARCHIVE)/livestreamersrv.git $(BUILD_TMP)/livestreamersrv
-	$(CHDIR)/livestreamersrv; \
+	$(REMOVE)/$(PKG_NAME)
+	$(call update_git, $(PYTHON_LIVESTREAMERSRV_GIT))
+	$(CHDIR)/$(PKG_NAME); \
 		cp -rd livestreamersrv $(TARGET_DIR)/usr/sbin; \
 		cp -rd offline.mp4 $(TARGET_SHARE_DIR)
-	$(REMOVE)/livestreamersrv
+	$(REMOVE)/$(PKG_NAME)
 	$(TOUCH)
 
 #
@@ -825,7 +821,7 @@ $(D)/python_small: $(D)/bootstrap $(D)/host_python $(D)/ncurses $(D)/zlib $(D)/o
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	ln -sf ../../libpython$(PYTHON_VER_MAJOR).so.1.0 $(TARGET_DIR)/$(PYTHON_DIR)/config/libpython$(PYTHON_VER_MAJOR).so; \
 	ln -sf $(TARGET_DIR)/$(PYTHON_INCLUDE_DIR) $(TARGET_INCLUDE_DIR)/python
-	$(REWRITE_PKGCONF) $(PKG_CONFIG_PATH)/python-2.7.pc
+	$(REWRITE_PKGCONF)
 	$(REMOVE)/Python-$(PYTHON_VER)
 	$(TOUCH)
 

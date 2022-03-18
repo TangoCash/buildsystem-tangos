@@ -21,16 +21,16 @@ define apply_patches
         if [ -d $$i ]; then \
             for p in $$i/*; do \
                 if [ $${p:0:1} == "/" ]; then \
-                    echo -e "==> $(TERM_RED)Applying Patch:$(TERM_NORMAL) $$p"; patch -p$$l $(SILENT_PATCH) -i $$p; \
+                    echo -e "==> $(TERM_RED)Applying Patch:$(TERM_NORMAL) $${p##*/}"; patch -p$$l $(SILENT_PATCH) -i $$p; \
                 else \
-                    echo -e "==> $(TERM_RED)Applying Patch:$(TERM_NORMAL) $$p"; patch -p$$l $(SILENT_PATCH) -i $(PATCHES)/$$p; \
+                    echo -e "==> $(TERM_RED)Applying Patch:$(TERM_NORMAL) $${p##*/}"; patch -p$$l $(SILENT_PATCH) -i $(PATCHES)/$$p; \
                 fi; \
             done; \
         else \
             if [ $${i:0:1} == "/" ]; then \
-                echo -e "==> $(TERM_RED)Applying Patch:$(TERM_NORMAL) $$i"; patch -p$$l $(SILENT_PATCH) -i $$i; \
+                echo -e "==> $(TERM_RED)Applying Patch:$(TERM_NORMAL) $${i##*/}"; patch -p$$l $(SILENT_PATCH) -i $$i; \
             else \
-                echo -e "==> $(TERM_RED)Applying Patch:$(TERM_NORMAL) $$i"; patch -p$$l $(SILENT_PATCH) -i $(PATCHES)/$$i; \
+                echo -e "==> $(TERM_RED)Applying Patch:$(TERM_NORMAL) $${i##*/}"; patch -p$$l $(SILENT_PATCH) -i $(PATCHES)/$$i; \
             fi; \
         fi; \
     done; \
@@ -43,7 +43,63 @@ define apply_patches
 endef
 
 # -----------------------------------------------------------------------------
+define update_git
+	set -e; \
+	b=`echo $(2)`; test -z $$b || b=`echo -b $(2)`; \
+	if [ -d $(ARCHIVE)/$(PKG_NAME).git ]; \
+	then \
+		cd $(ARCHIVE)/$(PKG_NAME).git; git pull; \
+	else \
+		cd $(ARCHIVE); git clone $$b $(1) $(PKG_NAME).git; \
+	fi; \
+	cp -ra $(ARCHIVE)/$(PKG_NAME).git $(BUILD_TMP)/$(PKG_NAME); \
+	echo
+endef
+# -----------------------------------------------------------------------------
 
+# rewrite libtool libraries
+REWRITE_LIBTOOL_RULES = "s,^libdir=.*,libdir='$(1)',; \
+			 s,\(^dependency_libs='\| \|-L\|^dependency_libs='\)/lib,\ $(1),g"
+
+REWRITE_LIBTOOL_TAG = rewritten=1
+
+define rewrite_libtool # (libdir)
+	echo -e "Fixing libtool files in $(subst $(TARGET_DIR)/,,$(1))"
+	$(SILENT)( \
+	for la in $$(find $(1) -name "*.la" -type f); do \
+		if ! grep -q "$(REWRITE_LIBTOOL_TAG)" $${la}; then \
+			sed -i -e $(REWRITE_LIBTOOL_RULES) $${la}; \
+			echo -e "\n# Adapted to buildsystem\n$(REWRITE_LIBTOOL_TAG)" >> $${la}; \
+		fi; \
+	done; \
+	); \
+	echo
+endef
+
+# rewrite libtool libraries automatically
+REWRITE_LIBTOOL = $(foreach libdir,$(TARGET_BASE_LIB_DIR) $(TARGET_LIB_DIR),\
+			$(call rewrite_libtool,$(libdir)))
+
+# -----------------------------------------------------------------------------
+REWRITE_PKGCONF_RULES = "s,^prefix=.*,prefix='$(TARGET_DIR)/usr',g"
+
+REWRITE_PKGCONF_TAG = rewritten=1
+
+define rewrite_pkgconf # (pkg config path)
+	echo -e "Fixing pkg config files in $(subst $(TARGET_DIR)/,,$(1))"
+	$(SILENT)( \
+	for pc in $$(find $(1) -name "*.pc" -type f); do \
+		if ! grep -q "$(REWRITE_PKGCONF_TAG)" $${pc}; then \
+			sed -i -e $(REWRITE_PKGCONF_RULES) $${pc}; \
+			echo -e "\n# Adapted to buildsystem\n# $(REWRITE_PKGCONF_TAG)" >> $${pc}; \
+		fi; \
+	done; \
+	); \
+	echo
+endef
+
+REWRITE_PKGCONF = $(call rewrite_pkgconf,$(PKG_CONFIG_PATH))
+# -----------------------------------------------------------------------------
 #
 # $(1) = title
 # $(2) = color

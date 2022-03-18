@@ -92,9 +92,6 @@ NEUTRINO_DEPS += $(D)/neutrino-plugin-channellogos
 NEUTRINO_DEPS += $(D)/neutrino-plugin-iptvplayer-nightly
 NEUTRINO_DEPS += $(D)/neutrino-plugin-settings-update
 NEUTRINO_DEPS += $(D)/neutrino-plugin-webtv-radio
-#NEUTRINO_DEPS += $(D)/neutrino-plugin-spiegel-tv
-#NEUTRINO_DEPS += $(D)/neutrino-plugin-tierwelt-tv
-#NEUTRINO_DEPS += $(D)/neutrino-plugin-mtv
 NEUTRINO_DEPS += $(D)/neutrino-plugin-custom
 NEUTRINO_DEPS += $(LOCAL_NEUTRINO_DEPS)
 NEUTRINO_DEPS += $(LOCAL_NEUTRINO_PLUGINS)
@@ -211,7 +208,7 @@ N_OBJDIR = $(BUILD_TMP)/$(NEUTRINO)
 LH_OBJDIR = $(BUILD_TMP)/$(LIBSTB_HAL)
 
 ifeq ($(FLAVOUR), MAX)
-GIT_URL     ?= https://github.com/MaxWiesel
+GIT_URL     ?= $(GITHUB)/MaxWiesel
 NEUTRINO     = neutrino-max
 LIBSTB_HAL   = libstb-hal-max
 NMP_BRANCH  ?= master
@@ -219,7 +216,7 @@ HAL_BRANCH  ?= master
 NMP_PATCHES  = $(NEUTRINO_MAX_PATCHES)
 HAL_PATCHES  = $(LIBSTB_HAL_MAX_PATCHES)
 else ifeq  ($(FLAVOUR), NI)
-GIT_URL     ?= https://github.com/neutrino-images
+GIT_URL     ?= $(GITHUB)/neutrino-images
 NEUTRINO     = ni-neutrino
 LIBSTB_HAL   = ni-libstb-hal
 NMP_BRANCH  ?= master
@@ -228,7 +225,7 @@ NMP_PATCHES  = neutrino-ni-exit-codes.patch
 NMP_PATCHES += $(NEUTRINO_NI_PATCHES)
 HAL_PATCHES  = $(LIBSTB_HAL_NI_PATCHES)
 else ifeq  ($(FLAVOUR), TANGOS)
-GIT_URL     ?= https://github.com/TangoCash
+GIT_URL     ?= $(GITHUB)/TangoCash
 NEUTRINO     = neutrino-tangos
 LIBSTB_HAL   = libstb-hal-tangos
 NMP_BRANCH  ?= master
@@ -236,7 +233,7 @@ HAL_BRANCH  ?= master
 NMP_PATCHES  = $(NEUTRINO_TANGOS_PATCHES)
 HAL_PATCHES  = $(LIBSTB_HAL_TANGOS_PATCHES)
 else ifeq  ($(FLAVOUR), DDT)
-GIT_URL     ?= https://github.com/Duckbox-Developers
+GIT_URL     ?= $(GITHUB)/Duckbox-Developers
 NEUTRINO     = neutrino-ddt
 LIBSTB_HAL   = libstb-hal-ddt
 NMP_BRANCH  ?= master
@@ -245,7 +242,7 @@ NMP_PATCHES  = neutrino-ddt-plugindir-fix.patch
 NMP_PATCHES  = $(NEUTRINO_DDT_PATCHES)
 HAL_PATCHES  = $(LIBSTB_HAL_DDT_PATCHES)
 else ifeq  ($(FLAVOUR), TUXBOX)
-GIT_URL     ?= https://github.com/tuxbox-neutrino
+GIT_URL     ?= $(GITHUB)/tuxbox-neutrino
 NEUTRINO     = gui-neutrino
 LIBSTB_HAL   = library-stb-hal
 NMP_BRANCH  ?= master
@@ -349,7 +346,7 @@ $(D)/libstb-hal.do_compile: $(D)/libstb-hal.config.status
 $(D)/libstb-hal: $(D)/libstb-hal.do_prepare $(D)/libstb-hal.do_compile
 	PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) \
 	$(MAKE) -C $(LH_OBJDIR) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)/libstb-hal.la
+	$(REWRITE_LIBTOOL)
 	$(TOUCH)
 
 libstb-hal-clean:
@@ -476,7 +473,7 @@ $(D)/neutrino-hd2.do_prepare: | $(NHD2_DEPS)
 	[ -d "$(ARCHIVE)/neutrino-hd2.git" ] && \
 	(cd $(ARCHIVE)/neutrino-hd2.git; git pull;); \
 	[ -d "$(ARCHIVE)/neutrino-hd2.git" ] || \
-	git clone https://github.com/mohousch/neutrinohd2.git $(ARCHIVE)/neutrino-hd2.git; \
+	git clone $(GITHUB)/mohousch/neutrinohd2.git $(ARCHIVE)/neutrino-hd2.git; \
 	cp -ra $(ARCHIVE)/neutrino-hd2.git/nhd2-exp $(SOURCE_DIR)/neutrino-hd2; \
 	cp -ra $(SOURCE_DIR)/neutrino-hd2 $(SOURCE_DIR)/neutrino-hd2.org
 	set -e; cd $(SOURCE_DIR)/neutrino-hd2; \
