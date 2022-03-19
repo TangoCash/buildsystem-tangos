@@ -422,6 +422,7 @@ $(D)/neutrino: $(D)/neutrino.do_prepare $(D)/neutrino.do_compile
 	make .version
 	make e2-multiboot
 	$(TOUCH)
+	$(HOST_DIR)/bin/qrencode -o $(TARGET_DIR)/usr/share/tuxbox/neutrino/icons/qr.png "$(GIT_URL)" -m 1 -s 5
 	make neutrino-release
 	$(TUXBOX_CUSTOMIZE)
 

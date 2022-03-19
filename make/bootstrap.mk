@@ -57,6 +57,7 @@ BOOTSTRAP += $(TARGET_DIR)/lib/libc.so.6
 BOOTSTRAP += $(D)/host_pkgconfig
 BOOTSTRAP += $(D)/host_resize2fs
 BOOTSTRAP += $(D)/host_parted
+BOOTSTRAP += $(D)/host_qrencode
 ifeq ($(BOXARCH), arm)
 BOOTSTRAP += $(D)/cortex_strings
 endif
