@@ -52,8 +52,7 @@ define update_git
 	else \
 		cd $(ARCHIVE); git clone $$b $(1) $(PKG_NAME).git; \
 	fi; \
-	cp -ra $(ARCHIVE)/$(PKG_NAME).git $(BUILD_TMP)/$(PKG_NAME); \
-	echo
+	cp -ra $(ARCHIVE)/$(PKG_NAME).git $(BUILD_TMP)/$(PKG_NAME);
 endef
 # -----------------------------------------------------------------------------
 
@@ -72,8 +71,7 @@ define rewrite_libtool # (libdir)
 			echo -e "\n# Adapted to buildsystem\n$(REWRITE_LIBTOOL_TAG)" >> $${la}; \
 		fi; \
 	done; \
-	); \
-	echo
+	);
 endef
 
 # rewrite libtool libraries automatically
@@ -94,8 +92,7 @@ define rewrite_pkgconf # (pkg config path)
 			echo -e "\n# Adapted to buildsystem\n# $(REWRITE_PKGCONF_TAG)" >> $${pc}; \
 		fi; \
 	done; \
-	); \
-	echo
+	);
 endef
 
 REWRITE_PKGCONF = $(call rewrite_pkgconf,$(PKG_CONFIG_PATH))
