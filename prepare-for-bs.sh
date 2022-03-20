@@ -116,7 +116,8 @@ PACKAGES="\
 	${UBUNTU:+mtools}                                                                                             \
 	${UBUNTU:+u-boot-tools}                                                                                       \
 	${UBUNTU:+curl}                                                                                               \
-	${UBUNTU:+mtd-utils}                                                                                               \
+	${UBUNTU:+mtd-utils}                                                                                          \
+	${UBUNTU:+libpng-dev}           ${SUSE:+libpng-devel}        ${FEDORA:+libpng-devel}   ${GENTOO:+libpng}      \
 ";
 
 if [ "$UBUNTU" == 1 ]; then
