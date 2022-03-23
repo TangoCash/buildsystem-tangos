@@ -70,6 +70,7 @@ $(D)/bootstrap: $(BOOTSTRAP)
 #
 SYSTEM_TOOLS  = $(D)/libnsl
 SYSTEM_TOOLS += $(D)/bash
+SYSTEM_TOOLS += $(D)/wget
 SYSTEM_TOOLS += $(D)/busybox
 SYSTEM_TOOLS += $(D)/zlib
 SYSTEM_TOOLS += $(D)/sysvinit
