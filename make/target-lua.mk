@@ -38,22 +38,23 @@ $(D)/lua: $(D)/bootstrap $(D)/host_lua $(D)/ncurses $(ARCHIVE)/$(LUAPOSIX_SOURCE
 #
 # luaexpat
 #
-LUAEXPAT_VER = 1.3.0
-LUAEXPAT_SOURCE = luaexpat-$(LUAEXPAT_VER).tar.gz
-LUAEXPAT_PATCH = luaexpat-$(LUAEXPAT_VER).patch
+LUAEXPAT_VER = 33744ae
+LUAEXPAT_SOURCE = luaexpat-git-$(LUAEXPAT_VER).tar.bz2
+LUAEXPAT_URL = $(GITHUB)/lunarmodules/luaexpat.git
+LUAEXPAT_PATCH = luaexpat-git-$(LUAEXPAT_VER).patch
 
 $(ARCHIVE)/$(LUAEXPAT_SOURCE):
-	$(DOWNLOAD) https://matthewwild.co.uk/projects/luaexpat/$(LUAEXPAT_SOURCE)
+	$(HELPERS_DIR)/get-git-archive.sh $(LUAEXPAT_URL) $(LUAEXPAT_VER) $(notdir $@) $(ARCHIVE)
 
 $(D)/luaexpat: $(D)/bootstrap $(D)/lua $(D)/expat $(ARCHIVE)/$(LUAEXPAT_SOURCE)
 	$(START_BUILD)
 	$(REMOVE)/luaexpat-$(LUAEXPAT_VER)
 	$(UNTAR)/$(LUAEXPAT_SOURCE)
-	$(CHDIR)/luaexpat-$(LUAEXPAT_VER); \
+	$(CHDIR)/luaexpat-git-$(LUAEXPAT_VER); \
 		$(call apply_patches, $(LUAEXPAT_PATCH)); \
 		$(MAKE) CC=$(TARGET)-gcc LDFLAGS="-L$(TARGET_LIB_DIR)" PREFIX=$(TARGET_DIR)/usr; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)/usr
-	$(REMOVE)/luaexpat-$(LUAEXPAT_VER)
+	$(REMOVE)/luaexpat-git-$(LUAEXPAT_VER)
 	$(TOUCH)
 
 #
