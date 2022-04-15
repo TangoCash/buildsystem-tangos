@@ -148,7 +148,7 @@ $(D)/module_init_tools: $(D)/bootstrap $(D)/lsb $(ARCHIVE)/$(MODULE_INIT_TOOLS_S
 #
 # sysvinit
 #
-SYSVINIT_VER = 3.01
+SYSVINIT_VER = 3.02
 SYSVINIT_SOURCE = sysvinit-$(SYSVINIT_VER).tar.xz
 SYSVINIT_PATCH  = sysvinit-$(SYSVINIT_VER)-crypt-lib.patch
 SYSVINIT_PATCH += sysvinit-$(SYSVINIT_VER)-change-INIT_FIFO.patch
@@ -319,8 +319,8 @@ $(D)/e2fsprogs: $(D)/bootstrap $(D)/util_linux $(ARCHIVE)/$(E2FSPROGS_SOURCE)
 #
 # util_linux
 #
-UTIL_LINUX_MAJOR = 2.37
-UTIL_LINUX_MINOR = 4
+UTIL_LINUX_MAJOR = 2.38
+UTIL_LINUX_MINOR = 1
 UTIL_LINUX_VER = $(UTIL_LINUX_MAJOR).$(UTIL_LINUX_MINOR)
 UTIL_LINUX_SOURCE = util-linux-$(UTIL_LINUX_VER).tar.xz
 
@@ -482,7 +482,7 @@ $(D)/parted: $(D)/bootstrap $(D)/e2fsprogs $(ARCHIVE)/$(PARTED_SOURCE)
 #
 # dosfstools
 #
-DOSFSTOOLS_VER = 4.1
+DOSFSTOOLS_VER = 4.2
 DOSFSTOOLS_SOURCE = dosfstools-$(DOSFSTOOLS_VER).tar.xz
 
 $(ARCHIVE)/$(DOSFSTOOLS_SOURCE):
@@ -608,7 +608,7 @@ $(D)/ntfs_3g: $(D)/bootstrap $(ARCHIVE)/$(NTFS_3G_SOURCE)
 #
 # mc
 #
-MC_VER = 4.8.27
+MC_VER = 4.8.28
 MC_SOURCE = mc-$(MC_VER).tar.xz
 MC_PATCH = mc-$(MC_VER).patch
 
@@ -633,6 +633,12 @@ $(D)/mc: $(D)/bootstrap $(D)/libglib2 $(D)/ncurses $(ARCHIVE)/$(MC_SOURCE)
 			--disable-doxygen-html \
 			--enable-charset \
 			--disable-nls \
+			--disable-maintainer-mode \
+			--disable-dependency-tracking \
+			AWK=awk \
+			--disable-rpath \
+			--disable-static \
+			--disable-silent-rules \
 			--with-screen=ncurses \
 			--without-x \
 		; \
@@ -646,7 +652,7 @@ $(D)/mc: $(D)/bootstrap $(D)/libglib2 $(D)/ncurses $(ARCHIVE)/$(MC_SOURCE)
 #
 # socat
 #
-SOCAT_VER = 1.7.4.1
+SOCAT_VER = 1.7.4.3
 SOCAT_SOURCE = socat-$(SOCAT_VER).tar.gz
 SOCAT_PATCH = socat-$(SOCAT_VER).patch
 
@@ -792,8 +798,9 @@ $(D)/curlftpfs: $(D)/bootstrap $(D)/libcurl $(D)/fuse $(D)/libglib2 $(ARCHIVE)/$
 #
 # sdparm
 #
-SDPARM_VER = 1.11
+SDPARM_VER = 1.12
 SDPARM_SOURCE = sdparm-$(SDPARM_VER).tgz
+SDPARM_PATCH = sdparm-$(SDPARM_VER).patch
 
 $(ARCHIVE)/$(SDPARM_SOURCE):
 	$(DOWNLOAD) http://sg.danny.cz/sg/p/$(SDPARM_SOURCE)
@@ -803,6 +810,7 @@ $(D)/sdparm: $(D)/bootstrap $(ARCHIVE)/$(SDPARM_SOURCE)
 	$(REMOVE)/sdparm-$(SDPARM_VER)
 	$(UNTAR)/$(SDPARM_SOURCE)
 	$(CHDIR)/sdparm-$(SDPARM_VER); \
+		$(call apply_patches, $(SDPARM_PATCH)); \
 		$(CONFIGURE) \
 			--prefix= \
 			--bindir=/sbin \
@@ -844,7 +852,7 @@ $(D)/hddtemp: $(D)/bootstrap $(ARCHIVE)/$(HDDTEMP_SOURCE)
 #
 # hdparm
 #
-HDPARM_VER = 9.58
+HDPARM_VER = 9.63
 HDPARM_SOURCE = hdparm-$(HDPARM_VER).tar.gz
 
 $(ARCHIVE)/$(HDPARM_SOURCE):
@@ -909,7 +917,7 @@ $(D)/fbshot: $(D)/bootstrap $(D)/libpng $(ARCHIVE)/$(FBSHOT_SOURCE)
 #
 # sysstat
 #
-SYSSTAT_VER = 12.5.5
+SYSSTAT_VER = 12.5.6
 SYSSTAT_SOURCE = sysstat-$(SYSSTAT_VER).tar.bz2
 
 $(ARCHIVE)/$(SYSSTAT_SOURCE):
@@ -1214,7 +1222,7 @@ $(D)/coreutils: $(D)/bootstrap $(D)/openssl $(ARCHIVE)/$(COREUTILS_SOURCE)
 #
 # smartmontools
 #
-SMARTMONTOOLS_VER = 7.2
+SMARTMONTOOLS_VER = 7.3
 SMARTMONTOOLS_SOURCE = smartmontools-$(SMARTMONTOOLS_VER).tar.gz
 
 $(ARCHIVE)/$(SMARTMONTOOLS_SOURCE):
@@ -1256,6 +1264,7 @@ $(D)/nfs_utils: $(D)/bootstrap $(D)/e2fsprogs $(ARCHIVE)/$(NFS_UTILS_SOURCE)
 			--mandir=/.remove \
 			--disable-gss \
 			--enable-ipv6=no \
+			--disable-tirpc \
 			--disable-nfsv4 \
 			--without-tcp-wrappers \
 		; \
@@ -1701,7 +1710,7 @@ $(D)/udpxy: $(D)/bootstrap $(ARCHIVE)/$(UDPXY_SOURCE)
 #
 # openvpn
 #
-OPENVPN_VER = 2.5.5
+OPENVPN_VER = 2.5.6
 OPENVPN_SOURCE = openvpn-$(OPENVPN_VER).tar.xz
 
 $(ARCHIVE)/$(OPENVPN_SOURCE):
@@ -1777,7 +1786,7 @@ $(D)/vpnc: $(D)/bootstrap $(D)/openssl $(D)/lzo $(D)/libgcrypt $(ARCHIVE)/$(VPNC
 #
 # openssh
 #
-OPENSSH_VER = 8.8p1
+OPENSSH_VER = 8.9p1
 OPENSSH_SOURCE = openssh-$(OPENSSH_VER).tar.gz
 
 $(ARCHIVE)/$(OPENSSH_SOURCE):

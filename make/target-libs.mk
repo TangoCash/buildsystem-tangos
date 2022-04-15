@@ -1104,7 +1104,7 @@ $(D)/ca-bundle: $(ARCHIVE)/$(CA-BUNDLE_SOURCE)
 #
 # libcurl
 #
-LIBCURL_VER = 7.81.0
+LIBCURL_VER = 7.82.0
 LIBCURL_SOURCE = curl-$(LIBCURL_VER).tar.bz2
 LIBCURL_PATCH = libcurl-$(LIBCURL_VER).patch
 
@@ -1444,7 +1444,7 @@ $(D)/libiconv: $(D)/bootstrap $(ARCHIVE)/$(LIBICONV_SOURCE)
 #
 # expat
 #
-EXPAT_VER = 2.4.1
+EXPAT_VER = 2.4.8
 EXPAT_SOURCE = expat-$(EXPAT_VER).tar.bz2
 EXPAT_PATCH  = expat-$(EXPAT_VER)-libtool-tag.patch
 
@@ -2718,7 +2718,7 @@ $(D)/gnutls: $(D)/bootstrap $(D)/nettle $(ARCHIVE)/$(GNUTLS_SOURCE)
 #
 # libgpg-error
 #
-LIBGPG_ERROR_VER    = 1.41
+LIBGPG_ERROR_VER    = 1.44
 LIBGPG_ERROR_DIR    = libgpg-error-$(LIBGPG_ERROR_VER)
 LIBGPG_ERROR_SOURCE = libgpg-error-$(LIBGPG_ERROR_VER).tar.bz2
 LIBGPG_ERROR_URL    = https://www.gnupg.org/ftp/gcrypt/libgpg-error
@@ -2747,7 +2747,7 @@ $(D)/libgpg-error: $(D)/bootstrap $(ARCHIVE)/$(LIBGPG_ERROR_SOURCE)
 #
 # libgcrypt
 #
-LIBGCRYPT_VER    = 1.8.8
+LIBGCRYPT_VER    = 1.8.9
 LIBGCRYPT_DIR    = libgcrypt-$(LIBGCRYPT_VER)
 LIBGCRYPT_SOURCE = libgcrypt-$(LIBGCRYPT_VER).tar.bz2
 LIBGCRYPT_URL    = https://gnupg.org/ftp/gcrypt/libgcrypt
