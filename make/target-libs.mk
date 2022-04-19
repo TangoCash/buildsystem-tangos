@@ -1,11 +1,11 @@
 #
 # libnsl
 #
-LIBNSL_VER = 1.2.0
+LIBNSL_VER = 2.0.0
 LIBNSL_SOURCE = libnsl-$(LIBNSL_VER).tar.gz
 
 $(ARCHIVE)/$(LIBNSL_SOURCE):
-	$(DOWNLOAD) $(GITHUB)/thkukuk/libnsl/archive/v1.2.0/$(LIBNSL_SOURCE)
+	$(DOWNLOAD) $(GITHUB)/thkukuk/libnsl/archive/v$(LIBNSL_VER)/$(LIBNSL_SOURCE)
 
 $(D)/libnsl: $(D)/bootstrap $(D)/libtirpc $(ARCHIVE)/$(LIBNSL_SOURCE)
 	$(START_BUILD)
@@ -25,7 +25,7 @@ $(D)/libnsl: $(D)/bootstrap $(D)/libtirpc $(ARCHIVE)/$(LIBNSL_SOURCE)
 #
 # libtirpc
 #
-LIBTIRPC_VER = 1.2.6
+LIBTIRPC_VER = 1.3.2
 LIBTIRPC_SOURCE = libtirpc-$(LIBTIRPC_VER).tar.bz2
 
 $(ARCHIVE)/$(LIBTIRPC_SOURCE):
@@ -45,139 +45,6 @@ $(D)/libtirpc: $(D)/bootstrap $(ARCHIVE)/$(LIBTIRPC_SOURCE)
 		$(REWRITE_PKGCONF)
 		$(REWRITE_LIBTOOL)
 	$(REMOVE)/libtirpc-$(LIBTIRPC_VER)
-	$(TOUCH)
-
-#
-# DirectFB
-#
-DIRECTFB_VER = 1.7.7
-DIRECTFB_SOURCE = DirectFB-$(DIRECTFB_VER).tar.gz
-DIRECTFB_PATCH  = DirectFB-$(DIRECTFB_VER)-configurefix.patch
-DIRECTFB_PATCH += DirectFB-$(DIRECTFB_VER)-fusion.patch
-DIRECTFB_PATCH += DirectFB-$(DIRECTFB_VER)-bashism.patch
-DIRECTFB_PATCH += DirectFB-$(DIRECTFB_VER)-gfx-direct-Aboid-usng-VLAs-and-printf-formats.patch
-DIRECTFB_PATCH += DirectFB-$(DIRECTFB_VER)-compar_fn_t.patch
-DIRECTFB_PATCH += DirectFB-$(DIRECTFB_VER)-union-sigval.patch
-DIRECTFB_PATCH += DirectFB-$(DIRECTFB_VER)-use-PTHREAD_MUTEX_RECURSIVE.patch
-DIRECTFB_PATCH += DirectFB-$(DIRECTFB_VER)-fix-client-gfx_state-initialisation.patch
-
-$(ARCHIVE)/$(DIRECTFB_SOURCE):
-	$(DOWNLOAD) http://sources.buildroot.net/$(DIRECTFB_SOURCE)
-
-$(D)/directfb: $(D)/bootstrap $(ARCHIVE)/$(DIRECTFB_SOURCE)
-	$(START_BUILD)
-	$(REMOVE)/DirectFB-$(DIRECTFB_VER)
-	$(UNTAR)/$(DIRECTFB_SOURCE)
-	$(CHDIR)/DirectFB-$(DIRECTFB_VER); \
-		$(call apply_patches, $(DIRECTFB_PATCH)); \
-		$(BUILDENV) \
-		autoreconf -fi $(SILENT_OPT); \
-		EGL_CFLAGS=-I$(TARGET_INCLUDE_DIR)/EGL -I$(TARGET_INCLUDE_DIR)/GLES2 \
-		EGL_LIBS=-lEGL -lGLESv2 -L$(TARGET_LIB_DIR) \
-		$(CONFIGURE) \
-			--prefix=/usr \
-			--sysconfdir=/etc \
-			--enable-egl=yes \
-			--with-gfxdrivers=gles2 \
-			--enable-freetype=yes \
-			--enable-zlib \
-			--disable-imlib2 \
-			--disable-mesa \
-			--disable-sdl \
-			--disable-vnc \
-			--disable-x11 \
-			--without-tools \
-			--with-inputdrivers=linuxinput \
-			--enable-fusion \
-		; \
-		$(MAKE) ; \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-		$(REWRITE_LIBTOOL)
-		$(REWRITE_PKGCONF)
-		sed -i -e $(REWRITE_PKGCONF_RULES) $(TARGET_DIR)/usr/bin/directfb-config
-	$(REMOVE)/DirectFB-$(DIRECTFB_VER)
-	$(TOUCH)
-
-#
-# Simple DirectMedia Layer 2.0
-#
-LIBSDL2_VER = 2.0.9
-LIBSDL2_SOURCE = SDL2-$(LIBSDL2_VER).tar.gz
-LIBSDL2_PATCH  = SDL2-$(LIBSDL2_VER)-more-gen-depends.patch
-
-$(ARCHIVE)/$(LIBSDL2_SOURCE):
-	$(DOWNLOAD) https://www.libsdl.org/release/$(LIBSDL2_SOURCE)
-
-$(D)/libsdl2: $(D)/bootstrap $(ARCHIVE)/$(LIBSDL2_SOURCE) $(KERNEL)
-	$(START_BUILD)
-	$(REMOVE)/SDL2-$(LIBSDL2_VER)
-	$(UNTAR)/$(LIBSDL2_SOURCE)
-	$(CHDIR)/SDL2-$(LIBSDL2_VER); \
-		$(call apply_patches, $(LIBSDL2_PATCH)); \
-		$(CONFIGURE) \
-			--target=$(TARGET) \
-			--prefix=/usr \
-			--disable-oss \
-			--disable-esd \
-			--disable-arts \
-			--disable-diskaudio \
-			--disable-nas \
-			--disable-esd-shared \
-			--disable-esdtest \
-			--disable-video-dummy \
-			--enable-pthreads \
-			--enable-sdl-dlopen \
-			--disable-rpath \
-			--disable-sndio \
-		; \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR) ; \
-	$(REWRITE_LIBTOOL)
-	$(REWRITE_PKGCONF)
-	sed -i -e $(REWRITE_PKGCONF_RULES) $(TARGET_DIR)/usr/bin/sdl2-config
-	$(REMOVE)/SDL2-$(LIBSDL2_VER)
-	$(TOUCH)
-
-#
-# Simple DirectMedia Layer 1.2
-#
-LIBSDL_VER = 1.2.15
-LIBSDL_SOURCE = SDL-$(LIBSDL_VER).tar.gz
-#LIBSDL_PATCH  = SDL-$(LIBSDL_VER)-more-gen-depends.patch
-
-$(ARCHIVE)/$(LIBSDL_SOURCE):
-	$(DOWNLOAD) https://www.libsdl.org/release/$(LIBSDL_SOURCE)
-
-$(D)/libsdl: $(D)/bootstrap $(ARCHIVE)/$(LIBSDL_SOURCE) $(KERNEL)
-	$(START_BUILD)
-	$(REMOVE)/SDL-$(LIBSDL_VER)
-	$(UNTAR)/$(LIBSDL_SOURCE)
-	$(CHDIR)/SDL-$(LIBSDL_VER); \
-		$(call apply_patches, $(LIBSDL_PATCH)); \
-		$(CONFIGURE) \
-			--target=$(TARGET) \
-			--prefix=/usr \
-			--disable-static --enable-cdrom --enable-threads --enable-timers \
-			--enable-file --disable-oss --disable-esd --disable-arts \
-			--disable-diskaudio --disable-nas --disable-esd-shared --disable-esdtest \
-			--disable-mintaudio --disable-nasm --disable-video-dga \
-			--enable-video-fbcon \
-			--disable-video-ps2gs --disable-video-ps3 \
-			--disable-xbios --disable-gem --disable-video-dummy \
-			--enable-input-events --enable-input-tslib --enable-pthreads \
-			--enable-video-opengl \
-			--disable-video-x11 \
-			--disable-video-svga \
-			--disable-video-picogui --disable-video-qtopia --enable-sdl-dlopen \
-			--disable-rpath \
-			--disable-pulseaudio \
-		; \
-		$(MAKE) ; \
-		$(MAKE) install DESTDIR=$(TARGET_DIR) ; \
-	$(REWRITE_LIBTOOL)
-	$(REWRITE_PKGCONF)
-	sed -i -e $(REWRITE_PKGCONF_RULES) $(TARGET_DIR)/usr/bin/sdl-config
-	$(REMOVE)/SDL-$(LIBSDL_VER)
 	$(TOUCH)
 
 #
@@ -442,36 +309,6 @@ $(D)/libpcre: $(D)/bootstrap $(ARCHIVE)/$(LIBPCRE_SOURCE)
 	$(TOUCH)
 
 #
-# libpcre2
-#
-LIBPCRE2_VER = 10.33
-LIBPCRE2_SOURCE = pcre2-$(LIBPCRE2_VER).tar.bz2
-
-$(ARCHIVE)/$(LIBPCRE2_SOURCE):
-	$(DOWNLOAD) https://sourceforge.net/projects/pcre/files/pcre2/$(LIBPCRE2_VER)/$(LIBPCRE2_SOURCE)
-
-$(D)/libpcre2: $(D)/bootstrap $(ARCHIVE)/$(LIBPCRE2_SOURCE)
-	$(START_BUILD)
-	$(REMOVE)/pcre2-$(LIBPCRE2_VER)
-	$(UNTAR)/$(LIBPCRE2_SOURCE)
-	$(CHDIR)/pcre2-$(LIBPCRE2_VER); \
-		$(CONFIGURE) \
-			--prefix=/usr \
-			--mandir=/.remove \
-			--enable-utf8 \
-			--enable-unicode-properties \
-			--enable-pcre2-16 \
-		; \
-		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	mv $(TARGET_DIR)/usr/bin/pcre2-config $(HOST_DIR)/bin/pcre2-config
-	sed -i -e $(REWRITE_PKGCONF_RULES) $(HOST_DIR)/bin/pcre2-config
-	$(REWRITE_LIBTOOL)
-	$(REWRITE_PKGCONF)
-	$(REMOVE)/pcre2-$(LIBPCRE2_VER)
-	$(TOUCH)
-
-#
 # host_libarchive
 #
 LIBARCHIVE_VER = 3.4.0
@@ -597,53 +434,6 @@ $(D)/openssl: $(D)/bootstrap $(ARCHIVE)/$(OPENSSL_SOURCE)
 	ln -sf libcrypto.so.1.0.0 $(TARGET_LIB_DIR)/libcrypto.so.0.9.8
 	ln -sf libssl.so.1.0.0 $(TARGET_LIB_DIR)/libssl.so.0.9.8
 	$(REMOVE)/openssl-$(OPENSSL_VER)
-	$(TOUCH)
-
-#
-# openssl2
-#
-OPENSSL2_MAJOR = 1.1.1
-OPENSSL2_MINOR = h
-OPENSSL2_VER = $(OPENSSL2_MAJOR)$(OPENSSL2_MINOR)
-OPENSSL2_SOURCE = openssl-$(OPENSSL2_VER).tar.gz
-#OPENSSL2_PATCH  = openssl-$(OPENSSL2_VER)-optimize-for-size.patch
-#OPENSSL2_PATCH += openssl-$(OPENSSL2_VER)-makefile-dirs.patch
-#OPENSSL2_PATCH += openssl-$(OPENSSL2_VER)-disable_doc_tests.patch
-#OPENSSL2_PATCH += openssl-$(OPENSSL2_VER)-fix-parallel-building.patch
-#OPENSSL2_PATCH += openssl-$(OPENSSL2_VER)-compat_versioned_symbols-1.patch
-
-OPENSSL2_SED_PATCH = sed -i 's|MAKEDEPPROG=makedepend|MAKEDEPPROG=$(CROSS_DIR)/bin/$$(CC) -M|' Makefile
-
-$(ARCHIVE)/$(OPENSSL2_SOURCE):
-	$(DOWNLOAD) https://www.openssl.org/source/$(OPENSSL2_SOURCE)
-
-$(D)/openssl2: $(D)/bootstrap $(ARCHIVE)/$(OPENSSL2_SOURCE)
-	$(START_BUILD)
-	$(REMOVE)/openssl-$(OPENSSL2_VER)
-	$(UNTAR)/$(OPENSSL2_SOURCE)
-	$(CHDIR)/openssl-$(OPENSSL2_VER); \
-		$(call apply_patches, $(OPENSSL2_PATCH)); \
-		$(BUILDENV) \
-		./Configure $(SILENT_OPT) \
-			-DL_ENDIAN \
-			shared \
-			no-hw \
-			linux-generic32 \
-			--prefix=/usr \
-			--openssldir=/etc/ssl \
-		; \
-		$(OPENSSL2_SED_PATCH); \
-		$(MAKE) depend; \
-		$(MAKE) all; \
-		$(MAKE) install_sw DESTDIR=$(TARGET_DIR)
-	chmod 0755 $(TARGET_LIB_DIR)/lib{crypto,ssl}.so.*
-	$(REWRITE_PKGCONF)
-	cd $(TARGET_DIR) && rm -rf etc/ssl/man usr/bin/openssl usr/lib/engines
-	ln -sf libcrypto.so.1.1 $(TARGET_LIB_DIR)/libcrypto.so.0.9.8
-	ln -sf libssl.so.1.1 $(TARGET_LIB_DIR)/libssl.so.0.9.8
-	ln -sf libcrypto.so.1.1 $(TARGET_LIB_DIR)/libcrypto.so.1.0.0
-	ln -sf libssl.so.1.1 $(TARGET_LIB_DIR)/libssl.so.1.0.0
-	$(REMOVE)/openssl-$(OPENSSL2_VER)
 	$(TOUCH)
 
 #
@@ -918,7 +708,7 @@ $(D)/libjpeg: $(D)/libjpeg_turbo2
 #
 # libjpeg_turbo2
 #
-LIBJPEG_TURBO2_VER = 2.1.2
+LIBJPEG_TURBO2_VER = 2.1.3
 LIBJPEG_TURBO2_SOURCE = libjpeg-turbo-$(LIBJPEG_TURBO2_VER).tar.gz
 LIBJPEG_TURBO2_PATCH = libjpeg-turbo-tiff-ojpeg.patch
 
@@ -1505,114 +1295,6 @@ $(D)/fontconfig: $(D)/bootstrap $(D)/freetype $(D)/expat $(ARCHIVE)/$(FONTCONFIG
 	$(TOUCH)
 
 #
-# Pixman: Pixel Manipulation library
-#
-PIXMAN_VER = 0.34.0
-PIXMAN_SOURCE = pixman-$(PIXMAN_VER).tar.gz
-PIXMAN_PATCH  = pixman-$(PIXMAN_VER)-0001-ARM-qemu-related-workarounds-in-cpu-features-detecti.patch
-PIXMAN_PATCH += pixman-$(PIXMAN_VER)-asm_include.patch
-PIXMAN_PATCH += pixman-$(PIXMAN_VER)-0001-test-utils-Check-for-FE_INVALID-definition-before-us.patch
-
-$(ARCHIVE)/$(PIXMAN_SOURCE):
-	$(DOWNLOAD) https://www.cairographics.org/releases/$(PIXMAN_SOURCE)
-
-$(D)/pixman: $(ARCHIVE)/$(PIXMAN_SOURCE) $(D)/bootstrap $(D)/zlib $(D)/libpng
-	$(START_BUILD)
-	$(REMOVE)/pixman-$(PIXMAN_VER)
-	$(UNTAR)/$(PIXMAN_SOURCE)
-	$(CHDIR)/pixman-$(PIXMAN_VER); \
-		$(call apply_patches, $(PIXMAN_PATCH)); \
-		$(CONFIGURE) \
-			--prefix=/usr \
-			--disable-gtk \
-			--disable-arm-simd \
-			--disable-loongson-mmi \
-			--disable-docs \
-		; \
-		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)
-	$(REWRITE_PKGCONF)
-	$(REMOVE)/pixman-$(PIXMAN_VER)
-	$(TOUCH)
-
-#
-# The Cairo library GObject wrapper library
-#
-CAIRO_VER = 1.16.0
-CAIRO_SOURCE = cairo-$(CAIRO_VER).tar.xz
-CAIRO_PATCH  = cairo-$(CAIRO_VER)-get_bitmap_surface.diff
-
-CAIRO_OPTS ?= \
-		--disable-egl \
-		--disable-glesv2
-
-$(ARCHIVE)/$(CAIRO_SOURCE):
-	$(DOWNLOAD) https://www.cairographics.org/releases/$(CAIRO_SOURCE)
-
-$(D)/cairo: $(ARCHIVE)/$(CAIRO_SOURCE) $(D)/bootstrap $(D)/libglib2 $(D)/libpng $(D)/pixman $(D)/zlib
-	$(START_BUILD)
-	$(REMOVE)/cairo-$(CAIRO_VER)
-	$(UNTAR)/$(CAIRO_SOURCE)
-	$(CHDIR)/cairo-$(CAIRO_VER); \
-		$(call apply_patches, $(CAIRO_PATCH)); \
-		$(BUILDENV) \
-		ax_cv_c_float_words_bigendian="no" \
-		./configure $(SILENT_OPT) $(CONFIGURE_OPTS) \
-			--prefix=/usr \
-			--with-x=no \
-			--disable-xlib \
-			--disable-xcb \
-			$(CAIRO_OPTS) \
-			--disable-gl \
-			--enable-tee \
-		; \
-		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	rm -rf $(TARGET_DIR)/usr/bin/cairo-sphinx
-	rm -rf $(TARGET_LIB_DIR)/cairo/cairo-fdr*
-	rm -rf $(TARGET_LIB_DIR)/cairo/cairo-sphinx*
-	rm -rf $(TARGET_LIB_DIR)/cairo/.debug/cairo-fdr*
-	rm -rf $(TARGET_LIB_DIR)/cairo/.debug/cairo-sphinx*
-	$(REWRITE_LIBTOOL)
-	$(REWRITE_PKGCONF)
-	$(REMOVE)/cairo-$(CAIRO_VER)
-	$(TOUCH)
-
-#
-# HarfBuzz is an OpenType text shaping engine
-#
-HARFBUZZ_VER = 1.8.8
-HARFBUZZ_SOURCE = harfbuzz-$(HARFBUZZ_VER).tar.bz2
-HARFBUZZ_PATCH  = harfbuzz-$(HARFBUZZ_VER)-disable-docs.patch
-
-$(ARCHIVE)/$(HARFBUZZ_SOURCE):
-	$(DOWNLOAD) https://www.freedesktop.org/software/harfbuzz/release/$(HARFBUZZ_SOURCE)
-
-$(D)/harfbuzz: $(ARCHIVE)/$(HARFBUZZ_SOURCE) $(D)/bootstrap $(D)/libglib2 $(D)/cairo $(D)/freetype
-	$(START_BUILD)
-	$(REMOVE)/harfbuzz-$(HARFBUZZ_VER)
-	$(UNTAR)/$(HARFBUZZ_SOURCE)
-	$(CHDIR)/harfbuzz-$(HARFBUZZ_VER); \
-		$(call apply_patches, $(HARFBUZZ_PATCH)); \
-		autoreconf -fi $(SILENT_OPT); \
-		$(CONFIGURE) \
-			--prefix=/usr \
-			--with-cairo \
-			--with-freetype \
-			--without-fontconfig \
-			--with-glib \
-			--without-graphite2 \
-			--without-icu \
-		; \
-		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_LIBTOOL)
-	$(REWRITE_PKGCONF)
-	$(REMOVE)/harfbuzz-$(HARFBUZZ_VER)
-	$(TOUCH)
-
-#
 # libdvdcss
 #
 LIBDVDCSS_VER = 1.2.13
@@ -1959,7 +1641,7 @@ $(D)/libroxml: $(D)/bootstrap $(ARCHIVE)/$(LIBROXML_SOURCE)
 #
 # pugixml
 #
-PUGIXML_VER = 1.11
+PUGIXML_VER = 1.12
 PUGIXML_SOURCE = pugixml-$(PUGIXML_VER).tar.gz
 PUGIXML_PATCH = pugixml-$(PUGIXML_VER)-config.patch
 
@@ -1984,7 +1666,8 @@ $(D)/pugixml: $(D)/bootstrap $(ARCHIVE)/$(PUGIXML_SOURCE)
 #
 # graphlcd
 #
-GRAPHLCD_VER = 55d4bd8
+#GRAPHLCD_VER = 55d4bd8
+GRAPHLCD_VER = aafdbdf
 GRAPHLCD_SOURCE = graphlcd-git-$(GRAPHLCD_VER).tar.bz2
 GRAPHLCD_URL = https://projects.vdr-developer.org/git/graphlcd-base.git
 GRAPHLCD_PATCH = graphlcd-git-$(GRAPHLCD_VER).patch
