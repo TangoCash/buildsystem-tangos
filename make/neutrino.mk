@@ -96,6 +96,12 @@ NEUTRINO_DEPS += $(D)/neutrino-plugin-custom
 NEUTRINO_DEPS += $(LOCAL_NEUTRINO_DEPS)
 NEUTRINO_DEPS += $(LOCAL_NEUTRINO_PLUGINS)
 
+NEUTRINO_DEPS += $(D)/mediainfo
+NEUTRINO_DEPS += $(D)/netsurf
+
+#NEUTRINO_DEPS += $(D)/gdb
+#NEUTRINO_DEPS += $(D)/host-gdb
+
 N_CONFIG_OPTS  = $(LOCAL_NEUTRINO_BUILD_OPTIONS)
 
 ifeq ($(IMAGE), neutrino-wlandriver)
@@ -145,6 +151,10 @@ N_CONFIG_OPTS += --disable-upnp
 #N_CONFIG_OPTS += --disable-pip
 #N_CONFIG_OPTS += --disable-webif
 #N_CONFIG_OPTS += --disable-tangos
+
+ifeq  ($(FLAVOUR), TANGOS)
+N_CONFIG_OPTS += --with-default-theme=TangoCash
+endif
 
 N_CONFIG_OPTS += \
 	--with-libdir=/usr/lib \
