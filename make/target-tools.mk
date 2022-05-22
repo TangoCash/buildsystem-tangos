@@ -1419,6 +1419,9 @@ $(D)/ethtool: $(D)/bootstrap $(ARCHIVE)/$(ETHTOOL_SOURCE)
 SAMBA_VER = 3.6.25
 SAMBA_SOURCE = samba-$(SAMBA_VER).tar.gz
 SAMBA_PATCH = $(PATCHES)/samba
+ifeq ($(AUTOCONF_NEW),1)
+	SAMBA2_PATCH = samba-autoconf.patch
+endif
 
 ifeq ($(SAMBA_SMALL_INSTALL), 1)
 SAMBA_INSTALL = \
@@ -1446,6 +1449,7 @@ $(D)/samba: $(D)/bootstrap $(ARCHIVE)/$(SAMBA_SOURCE)
 		$(call apply_patches, $(SAMBA_PATCH)); \
 		cd source3; \
 		./autogen.sh $(SILENT_OPT); \
+		$(call apply_patches, $(SAMBA2_PATCH)); \
 		$(BUILDENV) \
 		ac_cv_lib_attr_getxattr=no \
 		ac_cv_search_getxattr=no \
