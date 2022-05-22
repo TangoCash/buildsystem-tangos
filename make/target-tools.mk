@@ -264,6 +264,7 @@ E2FSPROGS_PATCH += e2fsprogs-003-overridable-pc-exec-prefix.patch
 E2FSPROGS_PATCH += e2fsprogs-004-Revert-mke2fs-enable-the-metadata_csum-and-64bit-fea.patch
 E2FSPROGS_PATCH += e2fsprogs-005-misc-create_inode.c-set-dir-s-mode-correctly.patch
 E2FSPROGS_PATCH += e2fsprogs-006-mkdir_p.patch
+E2FSPROGS_PATCH += e2fsprogs-007-gettext.patch
 
 $(ARCHIVE)/$(E2FSPROGS_SOURCE):
 	$(DOWNLOAD) https://sourceforge.net/projects/e2fsprogs/files/e2fsprogs/v$(E2FSPROGS_VER)/$(E2FSPROGS_SOURCE)

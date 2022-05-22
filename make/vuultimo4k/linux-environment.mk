@@ -44,7 +44,8 @@ KERNEL_PATCHES = \
 		armbox/vuplus_common/3_14_0004-log2-give-up-on-gcc-constant-optimizations.patch \
 		armbox/vuplus_common/3_14_0005-uaccess-dont-mark-register-as-const.patch \
 		armbox/vuplus_common/3_14_0006-makefile-disable-warnings.patch \
-		armbox/vuplus_common/3_14_linux_dvb_adapter.patch
+		armbox/vuplus_common/3_14_linux_dvb_adapter.patch \
+		armbox/vuplus_common/3.14.28-1.12_fix-multiple-defs-yyloc.patch
 
 KERNEL_PATCHES += \
 		armbox/$(KERNEL_TYPE)/bcmsysport_3.14.28-1.12.patch \

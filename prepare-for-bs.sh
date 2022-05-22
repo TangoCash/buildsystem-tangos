@@ -136,6 +136,12 @@ if ([ "$UBUNTU" == 1 ] &&  [ "$UBUNTU_VERSION" -ge "16" ]) || \
 	";
 fi
 
+if ([ "$UBUNTU" == 1 ] &&  [ "$UBUNTU_VERSION" -ge "22" ]); then
+	PACKAGES="$PACKAGES \
+	${UBUNTU:+gtk-doc-tools} \
+	";
+fi
+
 if [ `which arch > /dev/null 2>&1 && arch || uname -m` == "x86_64" ]; then
 	# ST changed to the -m32 option for their gcc compiler build
 	# we might need to install more 32bit versions of some packages

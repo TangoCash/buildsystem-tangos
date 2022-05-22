@@ -23,7 +23,8 @@ KERNEL_PATCHES = \
 		armbox/$(KERNEL_TYPE)/export_pmpoweroffprepare.patch \
 		armbox/$(KERNEL_TYPE)/t230c2.patch \
 		armbox/$(KERNEL_TYPE)/add-more-devices-rtl8xxxu.patch \
-		armbox/$(KERNEL_TYPE)/dvbs2x.patch
+		armbox/$(KERNEL_TYPE)/dvbs2x.patch \
+		armbox/$(KERNEL_TYPE)/4.10.12_fix-multiple-defs-yyloc.patch
 
 # crosstool
 CUSTOM_KERNEL_VER       = $(KERNEL_VER)-arm

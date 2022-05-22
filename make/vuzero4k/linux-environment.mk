@@ -52,7 +52,8 @@ KERNEL_PATCHES = \
 		armbox/vuplus_common/4_1_blindscan2.patch \
 		armbox/vuplus_common/4_1_0001-stv090x-optimized-TS-sync-control.patch \
 		armbox/vuplus_common/4_1_0002-log2-give-up-on-gcc-constant-optimizations.patch \
-		armbox/vuplus_common/4_1_0003-uaccess-dont-mark-register-as-const.patch
+		armbox/vuplus_common/4_1_0003-uaccess-dont-mark-register-as-const.patch \
+		armbox/vuplus_common/4.1.20-1.9_fix-multiple-defs-yyloc.patch
 
 KERNEL_PATCHES += \
 		armbox/vuuno4kse_bcmgenet-recovery-fix.patch \

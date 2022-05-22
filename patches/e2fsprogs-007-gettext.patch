@@ -1,0 +1,22 @@
+--- a/configure.ac
++++ b/configure.ac
+@@ -873,7 +873,7 @@ AC_SUBST(GETTEXT_PACKAGE)
+ AC_SUBST(PACKAGE)
+ AC_SUBST(VERSION)
+ 
+-AM_GNU_GETTEXT
++AM_GNU_GETTEXT([external])
+ dnl @MKDIR_P@ is expanded in AM_GNU_GETTEXT
+ AC_SUBST([mkdir_p],['$(MKDIR_P)'])
+ dnl
+--- a/intl/Makefile.in
++++ b/intl/Makefile.in
+@@ -175,7 +175,7 @@ libgnuintl.h.msvc-static libgnuintl.h.msvc-shared README.woe32Makefile.msvc
+ DISTFILES.obsolete = xopen-msg.sed linux-msg.sed po2tbl.sed.in cat-compat.c \
+ COPYING.LIB-2 gettext.h libgettext.h plural-eval.c libgnuintl.h
+ 
+-all: all-@USE_INCLUDED_LIBINTL@
++all:
+ all-yes: libintl.$la libintl.h charset.alias ref-add.sed ref-del.sed
+ all-no: all-no-@BUILD_INCLUDED_LIBINTL@
+ all-no-yes: libgnuintl.$la
