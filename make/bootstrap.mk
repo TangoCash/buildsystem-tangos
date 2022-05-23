@@ -80,8 +80,11 @@ SYSTEM_TOOLS += $(D)/f2fs-tools
 SYSTEM_TOOLS += $(D)/jfsutils
 SYSTEM_TOOLS += $(D)/nfs_utils
 SYSTEM_TOOLS += $(D)/hdidle
+ifeq ($(NEED_TIRPC), 1)
+SYSTEM_TOOLS += $(D)/rpcbind
+else
 SYSTEM_TOOLS += $(D)/portmap
-#SYSTEM_TOOLS += $(D)/rpcbind
+endif
 SYSTEM_TOOLS += $(D)/vsftpd
 #SYSTEM_TOOLS += $(D)/autofs
 #SYSTEM_TOOLS += $(D)/udpxy

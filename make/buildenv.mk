@@ -138,6 +138,7 @@ endif
 
 ifeq ($(BS_GCC_VER), 11.2.0)
 CROSSTOOL_GCC_VER = gcc-11.2.0
+NEED_TIRPC             = 1
 endif
 
 CROSS_BASE            = $(BASE_DIR)/cross

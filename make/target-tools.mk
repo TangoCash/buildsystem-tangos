@@ -6,7 +6,7 @@ BUSYBOX_VER = snapshot
 BUSYBOX_SOURCE =
 BUSYBOX_DEPS =
 else
-BUSYBOX_VER = 1.34.0
+BUSYBOX_VER = 1.34.1
 BUSYBOX_SOURCE = busybox-$(BUSYBOX_VER).tar.bz2
 BUSYBOX_DEPS = $(ARCHIVE)/$(BUSYBOX_SOURCE)
 
@@ -36,6 +36,13 @@ else
 BUSYBOX_CONFIG = busybox-$(BUSYBOX_VER).config
 endif
 
+ifeq ($(NEED_TIRPC), 1)
+BUSYBOX_EXTRA_CFLAGS  = -I$(TARGET_DIR)/usr/include/tirpc
+BUSYBOX_EXTRA_LDFLAGS = -L$(TARGET_DIR)/usr/lib
+BUSYBOX_EXTRA_LDLIBS  = tirpc
+endif
+
+
 $(D)/busybox: $(D)/bootstrap $(D)/libnsl $(BUSYBOX_DEPS) $(PATCHES)/$(BUSYBOX_CONFIG)
 	$(START_BUILD)
 	$(REMOVE)/$(BUSYBOX)
@@ -52,9 +59,9 @@ endif
 		$(call apply_patches, $(BUSYBOX_PATCH)); \
 		install -m 0644 $(lastword $^) .config; \
 		sed -i -e 's#^CONFIG_PREFIX.*#CONFIG_PREFIX="$(TARGET_DIR)"#' .config; \
-		#sed -i -e 's#^CONFIG_EXTRA_CFLAGS.*#CONFIG_EXTRA_CFLAGS="-I$(TARGET_DIR)/usr/include/tirpc"#' .config; \
-		#sed -i -e 's#^CONFIG_EXTRA_LDFLAGS.*#CONFIG_EXTRA_LDFLAGS="-L$(TARGET_DIR)/usr/lib"#' .config; \
-		#sed -i -e 's#^CONFIG_EXTRA_LDLIBS.*#CONFIG_EXTRA_LDLIBS="tirpc"#' .config; \
+		sed -i -e 's#^CONFIG_EXTRA_CFLAGS.*#CONFIG_EXTRA_CFLAGS="$(BUSYBOX_EXTRA_CFLAGS)"#' .config; \
+		sed -i -e 's#^CONFIG_EXTRA_LDFLAGS.*#CONFIG_EXTRA_LDFLAGS="$(BUSYBOX_EXTRA_LDFLAGS)"#' .config; \
+		sed -i -e 's#^CONFIG_EXTRA_LDLIBS.*#CONFIG_EXTRA_LDLIBS="$(BUSYBOX_EXTRA_LDLIBS)"#' .config; \
 		$(BUILDENV) \
 		$(MAKE) ARCH=$(BOXARCH) CROSS_COMPILE=$(TARGET)- CFLAGS_EXTRA="$(TARGET_CFLAGS)" busybox; \
 		$(MAKE) ARCH=$(BOXARCH) CROSS_COMPILE=$(TARGET)- CFLAGS_EXTRA="$(TARGET_CFLAGS)" CONFIG_PREFIX=$(TARGET_DIR) install-noclobber 
@@ -1246,6 +1253,11 @@ $(D)/smartmontools: $(D)/bootstrap $(ARCHIVE)/$(SMARTMONTOOLS_SOURCE)
 NFS_UTILS_VER = 2.5.3
 NFS_UTILS_SOURCE = nfs-utils-$(NFS_UTILS_VER).tar.bz2
 NFS_UTILS_PATCH = nfs-utils-$(NFS_UTILS_VER).patch
+ifeq ($(NEED_TIRPC), 1)
+	NFS_UTILS_OPTION = --enable-tirpc
+else
+	NFS_UTILS_OPTION = --disable-tirpc
+endif
 
 $(ARCHIVE)/$(NFS_UTILS_SOURCE):
 	$(DOWNLOAD) https://sourceforge.net/projects/nfs/files/nfs-utils/$(NFS_UTILS_VER)/$(NFS_UTILS_SOURCE)
@@ -1263,7 +1275,7 @@ $(D)/nfs_utils: $(D)/bootstrap $(D)/e2fsprogs $(ARCHIVE)/$(NFS_UTILS_SOURCE)
 			--mandir=/.remove \
 			--disable-gss \
 			--enable-ipv6=no \
-			--disable-tirpc \
+			$(NFS_UTILS_OPTION) \
 			--disable-nfsv4 \
 			--without-tcp-wrappers \
 		; \
