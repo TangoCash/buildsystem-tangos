@@ -25,6 +25,7 @@ $(D)/rpcbind: $(D)/bootstrap $(D)/libtirpc $(ARCHIVE)/$(RPCBIND_SOURCE)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 		install -m 644 $(PKG_FILES)/rpc $(TARGET_DIR)/etc/rpc
 		install -m 644 $(PKG_FILES)/rpcbind.conf $(TARGET_DIR)/etc/rpcbind.conf
+		install -m 644 $(PKG_FILES)/netconfig $(TARGET_DIR)/etc/netconfig
 		install -m 755 $(PKG_FILES)/rpcbind.init $(TARGET_DIR)/etc/init.d/rpcbind
 		install -m 755 $(PKG_FILES)/rpcbind.init $(TARGET_DIR)/etc/init.d/portmap
 	$(REMOVE)/$(RPCBIND_DIR)

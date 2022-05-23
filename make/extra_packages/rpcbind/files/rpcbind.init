@@ -17,7 +17,7 @@
 ### END INIT INFO
 
 # Source function library.
-. /lib/lsb/init-functions
+#. /lib/lsb/init-functions
 
 test -f /usr/sbin/rpcbind || exit 0
 
@@ -32,7 +32,7 @@ fi
 
 start ()
 {
-    log_begin_msg "Starting rpcbind daemon..."
+    echo "Starting rpcbind daemon..."
     if pidof /usr/sbin/rpcbind >/dev/null; then
         echo "already running."
         exit 0
@@ -47,7 +47,7 @@ start ()
 
 stop ()
 {
-    log_begin_msg "Stopping rpcbind daemon..."
+    echo "Stopping rpcbind daemon..."
     if ! pidof /usr/sbin/rpcbind >/dev/null; then
         echo "not running."
         return 0
@@ -75,11 +75,8 @@ case "$1" in
         stop
         start $OPTIONS
         ;;
-    status)
-        status_of_proc /usr/sbin/rpcbind rpcbind && exit 0 || exit $?
-        ;;
     *)
-        log_success_msg "Usage: /etc/init.d/rpcbind {start|stop|force-reload|restart|status}"
+        echo "Usage: /etc/init.d/rpcbind {start|stop|force-reload|restart}"
         exit 1
         ;;
 esac
