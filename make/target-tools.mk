@@ -42,7 +42,7 @@ BUSYBOX_EXTRA_LDFLAGS = -L$(TARGET_DIR)/usr/lib
 BUSYBOX_EXTRA_LDLIBS  = tirpc
 endif
 
-
+$(D)/busybox-own \
 $(D)/busybox: $(D)/bootstrap $(D)/libnsl $(BUSYBOX_DEPS) $(PATCHES)/$(BUSYBOX_CONFIG)
 	$(START_BUILD)
 	$(REMOVE)/$(BUSYBOX)
@@ -58,6 +58,9 @@ endif
 	$(CHDIR)/$(BUSYBOX); \
 		$(call apply_patches, $(BUSYBOX_PATCH)); \
 		install -m 0644 $(lastword $^) .config; \
+		if [[ "$@" == "$(D)/busybox-own" && -f $(PATCHES)/busybox-$(BUSYBOX_VER).config_own ]]; then \
+			install -m 0644 $(PATCHES)/busybox-$(BUSYBOX_VER).config_own .config; \
+		fi; \
 		sed -i -e 's#^CONFIG_PREFIX.*#CONFIG_PREFIX="$(TARGET_DIR)"#' .config; \
 		sed -i -e 's#^CONFIG_EXTRA_CFLAGS.*#CONFIG_EXTRA_CFLAGS="$(BUSYBOX_EXTRA_CFLAGS)"#' .config; \
 		sed -i -e 's#^CONFIG_EXTRA_LDFLAGS.*#CONFIG_EXTRA_LDFLAGS="$(BUSYBOX_EXTRA_LDFLAGS)"#' .config; \
@@ -67,6 +70,27 @@ endif
 		$(MAKE) ARCH=$(BOXARCH) CROSS_COMPILE=$(TARGET)- CFLAGS_EXTRA="$(TARGET_CFLAGS)" CONFIG_PREFIX=$(TARGET_DIR) install-noclobber 
 	$(REMOVE)/$(BUSYBOX)
 	$(TOUCH)
+
+busybox-config: $(PATCHES)/$(BUSYBOX_CONFIG)
+	$(REMOVE)/$(BUSYBOX)
+ifeq ($(BUSYBOX_SNAPSHOT), 1)
+	set -e; if [ -d $(ARCHIVE)/busybox.git ]; \
+		then cd $(ARCHIVE)/busybox.git; git pull; \
+		else cd $(ARCHIVE); git clone git://git.busybox.net/busybox.git busybox.git; \
+		fi
+	cp -ra $(ARCHIVE)/busybox.git $(BUILD_TMP)/$(BUSYBOX)
+else
+	$(UNTAR)/$(BUSYBOX_SOURCE)
+endif
+	$(CHDIR)/$(BUSYBOX); \
+		$(call apply_patches, $(BUSYBOX_PATCH)); \
+		install -m 0644 $(lastword $^) .config; \
+		if [[ -f $(PATCHES)/busybox-$(BUSYBOX_VER).config_own ]]; then \
+			install -m 0644 $(PATCHES)/busybox-$(BUSYBOX_VER).config_own .config; \
+		fi; \
+		make menuconfig; \
+		cp -f .config $(PATCHES)/busybox-$(BUSYBOX_VER).config_own
+	$(REMOVE)/$(BUSYBOX)
 
 #
 # bash
