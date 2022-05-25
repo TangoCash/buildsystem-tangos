@@ -8,6 +8,7 @@ build_sysroot
 build_release
 /build_oscam/
 /build_source/
+/develop/
 cross/
 custom/*-local*
 make/develop/
