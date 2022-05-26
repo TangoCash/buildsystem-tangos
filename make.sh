@@ -212,7 +212,7 @@ echo "BOXTYPE=$BOXTYPE" >> config
 case $2 in
 	[1-2]) REPLY=$2;;
 	*)	echo -e "\nFFmpeg Version:"
-		echo "   1) buildsystem standard 4.4.1"
+		echo "   1) buildsystem standard 4.4.2"
 		echo "   2) ffmpeg git release/4.4 (with upstream fixes)"
 		echo "   3) buildsystem standard 4.3.2"
 		echo "   4) ffmpeg git snapshot (highly experimental)"
@@ -254,19 +254,21 @@ echo "OPTIMIZATIONS=$OPTIMIZATIONS" >> config
 ##############################################
 
 case $4 in
-	[1-3]) REPLY=$4;;
+	[1-4]) REPLY=$4;;
 	*)	echo -e "\nToolchain gcc version:"
 		echo "   1) GCC version 10.3.0"
 		echo "   2) GCC version  9.4.0"
-		echo "   3) GCC version 11.2.0"
-		read -p "Select toolchain gcc version (1-3)? [1] "
+		echo "   3) GCC version 11.3.0"
+		echo "   3) GCC version 12.1.0"
+		read -p "Select toolchain gcc version (1-4)? [1] "
 		REPLY="${REPLY:-1}";;
 esac
 
 case "$REPLY" in
 	1) BS_GCC_VER="10.3.0";;
 	2) BS_GCC_VER=" 9.4.0";;
-	3) BS_GCC_VER="11.2.0";;
+	3) BS_GCC_VER="11.3.0";;
+	4) BS_GCC_VER="12.1.0";;
 	*) BS_GCC_VER="10.3.0";;
 esac
 echo "BS_GCC_VER=$BS_GCC_VER" >> config
@@ -388,7 +390,7 @@ fi
 case $9 in
 	[1-2]) REPLY=$9;;
 	*)	echo -e "\nBusybox Version:"
-		echo "   1) buildsystem standard"
+		echo "   1) buildsystem standard 1.35.0"
 		echo "   2) busybox git snapshot (experimental)"
 		read -p "Select Busybox version (1-2)? [1]"
 		REPLY="${REPLY:-1}";;
