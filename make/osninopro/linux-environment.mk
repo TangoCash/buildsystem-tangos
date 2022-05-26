@@ -20,10 +20,6 @@ KERNEL_PATCHES = \
 		mipsbox/$(KERNEL_TYPE)/0003-cp1emu-do-not-use-bools-for-arithmetic.patch \
 		mipsbox/$(KERNEL_TYPE)/makefile-silence-warnings.patch
 
-# crosstool
-CUSTOM_KERNEL_VER       = $(KERNEL_SRC_VER)
-CROSSTOOL_BOXTYPE_PATCH = 
-
 # others
 CUSTOM_RCS     =
 CUSTOM_INITTAB =

@@ -1,9 +1,4 @@
 # makefile to build crosstools
-crosstool-renew:
-	ccache -cCz
-	make distclean
-	rm -rf $(CROSS_DIR)
-	make crosstool
 
 $(TARGET_DIR)/lib/libc.so.6:
 	if test -e $(CROSS_DIR)/$(TARGET)/sys-root/lib; then \
@@ -15,18 +10,14 @@ $(TARGET_DIR)/lib/libc.so.6:
 #
 # crosstool-ng
 #
-CROSSTOOL_NG_VER = a2e58f7
-#CROSSTOOL_NG_VER = 286679e
-CROSSTOOL_NG_SOURCE = crosstool-ng-git-$(CROSSTOOL_NG_VER).tar.bz2
-CROSSTOOL_NG_URL = $(GITHUB)/TangoCash/crosstool-ng.git
-CROSSTOOL_NG_CONFIG  = crosstool-ng-$(CROSSTOOL_NG_VER)-$(CROSSTOOL_GCC_VER)-$(BOXARCH)
-CROSSTOOL_NG_BACKUP = $(ARCHIVE)/$(CROSSTOOL_GCC_VER)-$(BOXARCH)-kernel-$(KERNEL_VER)-backup.tar.gz
-CROSSTOOL_NG_VER_PATCH = $(PATCHES)/ct-ng/crosstool-ng-$(CROSSTOOL_NG_VER)-version.patch
+CROSSTOOL_NG_VER     = db6f703
+CROSSTOOL_NG_DIR     = crosstool-ng.git
+CROSSTOOL_NG_SOURCE  = $(CROSSTOOL_NG_DIR)
+CROSSTOOL_NG_URL     = $(GITHUB)/crosstool-ng/crosstool-ng
+CROSSTOOL_NG_CONFIG  = crosstool-ng-$(BOXARCH)-$(CROSSTOOL_GCC_VER)
+CROSSTOOL_NG_BACKUP  = $(ARCHIVE)/$(CROSSTOOL_NG_CONFIG)-kernel-$(KERNEL_VER)-backup.tar.gz
 
-$(ARCHIVE)/$(CROSSTOOL_NG_SOURCE):
-	$(HELPERS_DIR)/get-git-archive.sh $(CROSSTOOL_NG_URL) $(CROSSTOOL_NG_VER) $(notdir $@) $(ARCHIVE)
-
-CUSTOM_KERNEL = $(ARCHIVE)/$(KERNEL_SRC)
+# -----------------------------------------------------------------------------
 
 ifeq ($(wildcard $(CROSS_DIR)/build.log.bz2),)
 CROSSTOOL = crosstool
@@ -36,41 +27,70 @@ crosstool:
 		make crosstool-backup; \
 	fi;
 
-crosstool-ng: $(D)/directories $(ARCHIVE)/$(KERNEL_SRC) $(ARCHIVE)/$(CROSSTOOL_NG_SOURCE)
-	make $(BUILD_TMP)
-	if [ ! -e $(CROSS_DIR) ]; then \
-		mkdir -p $(CROSS_DIR); \
-	fi;
-	$(REMOVE)/crosstool-ng-$(CROSSTOOL_NG_VER)
-	$(UNTAR)/$(CROSSTOOL_NG_SOURCE)
-	unset CONFIG_SITE LIBRARY_PATH CPATH C_INCLUDE_PATH PKG_CONFIG_PATH CPLUS_INCLUDE_PATH INCLUDE; \
-	$(CHDIR)/crosstool-ng-git-$(CROSSTOOL_NG_VER); \
-		cp -a $(PATCHES)/ct-ng/$(CROSSTOOL_NG_CONFIG).config .config; \
-		NUM_CPUS=$$(expr `getconf _NPROCESSORS_ONLN` \* 2); \
-		MEM_512M=$$(awk '/MemTotal/ {M=int($$2/1024/512); print M==0?1:M}' /proc/meminfo); \
-		test $$NUM_CPUS -gt $$MEM_512M && NUM_CPUS=$$MEM_512M; \
-		test $$NUM_CPUS = 0 && NUM_CPUS=1; \
-		sed -i "s@^CT_PARALLEL_JOBS=.*@CT_PARALLEL_JOBS=$$NUM_CPUS@" .config; \
-		\
-		$(call apply_patches, $(CROSSTOOL_NG_VER_PATCH)); \
-		$(call apply_patches, $(CROSSTOOL_BOXTYPE_PATCH)); \
+crosstool-ng: $(D)/directories $(D)/kernel.do_prepare $(ARCHIVE)/$(KERNEL_SRC)
+	$(START_BUILD)
+	$(REMOVE)/$(CROSSTOOL_NG_DIR)
+	$(HELPERS_DIR)/get-git-source.sh $(CROSSTOOL_NG_URL) $(ARCHIVE)/$(CROSSTOOL_NG_SOURCE)
+	cp -a -t $(BUILD_TMP) $(ARCHIVE)/$(CROSSTOOL_NG_DIR)
+	unset CONFIG_SITE LIBRARY_PATH CPATH C_INCLUDE_PATH PKG_CONFIG_PATH CPLUS_INCLUDE_PATH INCLUDE LD_LIBRARY_PATH; \
+	ulimit -n 2048; \
+	$(CHDIR)/$(CROSSTOOL_NG_DIR); \
+		git checkout -q $(CROSSTOOL_NG_VER); \
+		install -m 644 $(PATCHES)/ct-ng/$(CROSSTOOL_NG_CONFIG).config .config; \
+		sed -i "s|^CT_PARALLEL_JOBS=.*|CT_PARALLEL_JOBS=$(PARALLEL_JOBS)|" .config; \
 		\
 		export CT_NG_ARCHIVE=$(ARCHIVE); \
 		export CT_NG_BASE_DIR=$(CROSS_DIR); \
-		export CT_NG_CUSTOM_KERNEL=$(CUSTOM_KERNEL); \
-		export CT_NG_CUSTOM_KERNEL_VER=$(CUSTOM_KERNEL_VER); \
-		export LD_LIBRARY_PATH=; \
-		test -f ./configure || ./bootstrap && \
-		./configure --enable-local; \
+		export CT_NG_CUSTOM_KERNEL=$(KERNEL_DIR); \
+		test -f ./configure || ./bootstrap; \
+		./configure --enable-local $(SILENT_OPT); \
 		MAKELEVEL=0 make; \
 		chmod 0755 ct-ng; \
 		./ct-ng oldconfig; \
 		./ct-ng build
-	chmod -R +w $(CROSS_DIR)
 	test -e $(CROSS_DIR)/$(TARGET)/lib || ln -sf sys-root/lib $(CROSS_DIR)/$(TARGET)/
 	rm -f $(CROSS_DIR)/$(TARGET)/sys-root/lib/libstdc++.so.6.0.*-gdb.py
-	$(REMOVE)/crosstool-ng-git-$(CROSSTOOL_NG_VER)
+	$(REMOVE)/$(CROSSTOOL_NG_DIR)
 endif
+
+# -----------------------------------------------------------------------------
+
+crosstool-config:
+	make MAKEFLAGS=--no-print-directory crosstool-ng-config
+
+crosstool-ng-config: directories
+	$(REMOVE)/$(CROSSTOOL_NG_DIR)
+	$(HELPERS_DIR)/get-git-source.sh $(CROSSTOOL_NG_URL) $(ARCHIVE)/$(CROSSTOOL_NG_SOURCE)
+	cp -a -t $(BUILD_TMP) $(ARCHIVE)/$(CROSSTOOL_NG_DIR)
+	unset CONFIG_SITE; \
+	$(CHDIR)/$(CROSSTOOL_NG_DIR); \
+		git checkout -q $(CROSSTOOL_NG_VER); \
+		install -m 644 $(PATCHES)/ct-ng/$(CROSSTOOL_NG_CONFIG).config .config; \
+		test -f ./configure || ./bootstrap && \
+		./configure --enable-local; \
+		MAKELEVEL=0 make; \
+		chmod 0755 ct-ng; \
+		./ct-ng menuconfig
+
+# -----------------------------------------------------------------------------
+
+crosstool-upgradeconfig:
+	make MAKEFLAGS=--no-print-directory crosstool-ng-upgradeconfig
+
+crosstool-ng-upgradeconfig: directories
+	$(REMOVE)/$(CROSSTOOL_NG_DIR)
+	$(HELPERS_DIR)/get-git-source.sh $(CROSSTOOL_NG_URL) $(ARCHIVE)/$(CROSSTOOL_NG_SOURCE)
+	cp -a -t $(BUILD_TMP) $(ARCHIVE)/$(CROSSTOOL_NG_DIR)
+	unset CONFIG_SITE; \
+	$(CHDIR)/$(CROSSTOOL_NG_DIR); \
+		git checkout -q $(CROSSTOOL_NG_VER); \
+		install -m 644 $(PATCHES)/ct-ng/$(CROSSTOOL_NG_CONFIG).config .config; \
+		test -f ./configure || ./bootstrap && \
+		./configure --enable-local; \
+		MAKELEVEL=0 make; \
+		./ct-ng upgradeconfig
+
+# -----------------------------------------------------------------------------
 
 crosstool-backup:
 	if [ -e $(CROSSTOOL_NG_BACKUP) ]; then \
@@ -86,13 +106,8 @@ crosstool-restore: $(CROSSTOOL_NG_BACKUP)
 	fi;
 	tar xzvf $(CROSSTOOL_NG_BACKUP) -C $(CROSS_DIR)
 
-crossmenuconfig: $(D)/directories $(ARCHIVE)/$(CROSSTOOL_NG_SOURCE)
-	$(REMOVE)/crosstool-ng-git-$(CROSSTOOL_NG_VER)
-	$(UNTAR)/$(CROSSTOOL_NG_SOURCE)
-	set -e; unset CONFIG_SITE; cd $(BUILD_TMP)/crosstool-ng-git-$(CROSSTOOL_NG_VER); \
-		cp -a $(PATCHES)/ct-ng/$(CROSSTOOL_NG_CONFIG).config .config; \
-		test -f ./configure || ./bootstrap && \
-		./configure --enable-local; \
-		MAKELEVEL=0 make; \
-		chmod 0755 ct-ng; \
-		./ct-ng menuconfig
+crosstool-renew:
+	ccache -cCz
+	make distclean
+	rm -rf $(CROSS_DIR)
+	make crosstool

@@ -136,8 +136,13 @@ ifeq ($(BS_GCC_VER), 10.3.0)
 CROSSTOOL_GCC_VER = gcc-10.3.0
 endif
 
-ifeq ($(BS_GCC_VER), 11.2.0)
-CROSSTOOL_GCC_VER = gcc-11.2.0
+ifeq ($(BS_GCC_VER), 11.3.0)
+CROSSTOOL_GCC_VER = gcc-11.3.0
+NEED_TIRPC             = 1
+endif
+
+ifeq ($(BS_GCC_VER), 12.1.0)
+CROSSTOOL_GCC_VER = gcc-12.1.0
 NEED_TIRPC             = 1
 endif
 

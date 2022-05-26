@@ -47,10 +47,6 @@ KERNEL_PATCHES = \
 		mipsbox/$(KERNEL_TYPE)/dvbsky-t330.patch
 #		mipsbox/$(KERNEL_TYPE)/fixed_mtd.patch
 
-# crosstool
-CUSTOM_KERNEL_VER       = $(KERNEL_SRC_VER)
-CROSSTOOL_BOXTYPE_PATCH = $(PATCHES)/ct-ng/crosstool-ng-$(CROSSTOOL_NG_VER)-vu-kernel.patch
-
 # others
 CUSTOM_RCS     =
 CUSTOM_INITTAB =

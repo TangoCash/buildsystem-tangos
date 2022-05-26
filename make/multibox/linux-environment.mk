@@ -28,10 +28,6 @@ KERNEL_PATCHES = \
 		armbox/$(KERNEL_TYPE)/0007-dvb-mn88472-staging.patch \
 		armbox/$(KERNEL_TYPE)/mn88472_reset_stream_ID_reg_if_no_PLP_given.patch
 
-# crosstool
-CUSTOM_KERNEL_VER       = $(KERNEL_VER)-$(KERNEL_DATE)-arm
-CROSSTOOL_BOXTYPE_PATCH =
-
 # others
 #CAIRO_OPTS = \
 #		--enable-egl \

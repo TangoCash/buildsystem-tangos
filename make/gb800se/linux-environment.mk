@@ -51,10 +51,6 @@ KERNEL_PATCHES = \
 		mipsbox/$(KERNEL_TYPE)/add-attributes-fix-modules-compile.patch \
 		mipsbox/$(KERNEL_TYPE)/makefile-silence-warnings.patch \
 
-# crosstool
-CUSTOM_KERNEL_VER       = $(KERNEL_SRC_VER)
-CROSSTOOL_BOXTYPE_PATCH = $(PATCHES)/ct-ng/crosstool-ng-$(CROSSTOOL_NG_VER)-gigablue-kernel.patch
-
 # others
 CUSTOM_RCS     =
 CUSTOM_INITTAB =

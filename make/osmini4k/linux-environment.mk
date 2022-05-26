@@ -13,10 +13,6 @@ KERNEL_PATCHES = \
 		armbox/$(KERNEL_TYPE)/0001-scripts-Use-fixed-input-and-output-files-instead-of-.patch \
 		armbox/$(KERNEL_TYPE)/0002-kbuild-install_headers.sh-Strip-_UAPI-from-if-define.patch
 
-# crosstool
-CUSTOM_KERNEL_VER       = edision-$(KERNEL_SOURCE_VER)
-CROSSTOOL_BOXTYPE_PATCH =
-
 # others
 CAIRO_OPTS =
 

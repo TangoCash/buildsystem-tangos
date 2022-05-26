@@ -51,10 +51,6 @@ KERNEL_PATCHES += \
 		armbox/$(KERNEL_TYPE)/bcmsysport_3.14.28-1.12.patch \
 		armbox/$(KERNEL_TYPE)/linux_prevent_usb_dma_from_bmem.patch
 
-# crosstool
-CUSTOM_KERNEL_VER = $(KERNEL_SRC_VER)
-CROSSTOOL_BOXTYPE_PATCH = $(PATCHES)/ct-ng/crosstool-ng-$(CROSSTOOL_NG_VER)-vu-kernel.patch
-
 # others
 CAIRO_OPTS =
 

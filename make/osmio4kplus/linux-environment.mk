@@ -11,10 +11,6 @@ KERNEL_DIR             = $(BUILD_TMP)/linux-brcmstb-$(KERNEL_SOURCE_VER)
 
 KERNEL_PATCHES = 
 
-# crosstool
-CUSTOM_KERNEL_VER       = edision-$(KERNEL_SOURCE_VER)
-CROSSTOOL_BOXTYPE_PATCH =
-
 # others
 CAIRO_OPTS =
 

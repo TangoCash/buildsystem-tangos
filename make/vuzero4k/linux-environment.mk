@@ -59,10 +59,6 @@ KERNEL_PATCHES += \
 		armbox/vuuno4kse_bcmgenet-recovery-fix.patch \
 		armbox/vuuno4kse_linux_rpmb_not_alloc.patch
 
-# crosstool
-CUSTOM_KERNEL_VER = $(KERNEL_SRC_VER)
-CROSSTOOL_BOXTYPE_PATCH = $(PATCHES)/ct-ng/crosstool-ng-$(CROSSTOOL_NG_VER)-vu-kernel.patch
-
 # others
 CAIRO_OPTS =
 

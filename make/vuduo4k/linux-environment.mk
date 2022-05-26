@@ -55,10 +55,6 @@ KERNEL_PATCHES = \
 		armbox/vuplus_common/4_1_0003-uaccess-dont-mark-register-as-const.patch \
 		armbox/vuplus_common/4.1.45-1.17_fix-multiple-defs-yyloc.patch
 
-# crosstool
-CUSTOM_KERNEL_VER = $(KERNEL_SRC_VER)
-CROSSTOOL_BOXTYPE_PATCH = $(PATCHES)/ct-ng/crosstool-ng-$(CROSSTOOL_NG_VER)-vu-kernel.patch
-
 # others
 CAIRO_OPTS =
 

@@ -53,11 +53,6 @@ KERNEL_PATCHES = \
 		mipsbox/$(KERNEL_TYPE)/mm-Move-__vma_address-to-internal.h-to-be-inlined-in-huge_memory.c.patch \
 		mipsbox/$(KERNEL_TYPE)/compile-with-gcc9.patch
 
-
-# crosstool
-CUSTOM_KERNEL_VER       = $(KERNEL_SRC_VER)
-CROSSTOOL_BOXTYPE_PATCH = $(PATCHES)/ct-ng/crosstool-ng-$(CROSSTOOL_NG_VER)-vu-kernel.patch
-
 # others
 CUSTOM_RCS     =
 CUSTOM_INITTAB =

@@ -25,10 +25,6 @@ KERNEL_PATCHES = \
 		armbox/$(KERNEL_TYPE)/add-more-devices-rtl8xxxu.patch \
 		armbox/$(KERNEL_TYPE)/dvbs2x.patch
 
-# crosstool
-CUSTOM_KERNEL_VER       = $(KERNEL_VER)-arm
-CROSSTOOL_BOXTYPE_PATCH =
-
 # others
 CAIRO_OPTS = \
 		--enable-egl \
