@@ -45,6 +45,8 @@ KERNEL_PATCHES = \
 		armbox/vuplus_common/4_1_kernel-add-support-for-gcc8.patch \
 		armbox/vuplus_common/4_1_kernel-add-support-for-gcc9.patch \
 		armbox/vuplus_common/4_1_kernel-add-support-for-gcc10.patch \
+		armbox/vuplus_common/4_1_kernel-add-support-for-gcc11.patch \
+		armbox/vuplus_common/4_1_kernel-add-support-for-gcc12.patch \
 		armbox/vuplus_common/4_1_0001-Support-TBS-USB-drivers-for-4.1-kernel.patch \
 		armbox/vuplus_common/4_1_0001-TBS-fixes-for-4.1-kernel.patch \
 		armbox/vuplus_common/4_1_0001-STV-Add-PLS-support.patch \
@@ -53,7 +55,7 @@ KERNEL_PATCHES = \
 		armbox/vuplus_common/4_1_0001-stv090x-optimized-TS-sync-control.patch \
 		armbox/vuplus_common/4_1_0002-log2-give-up-on-gcc-constant-optimizations.patch \
 		armbox/vuplus_common/4_1_0003-uaccess-dont-mark-register-as-const.patch \
-		armbox/vuplus_common/4.1.45-1.17_fix-multiple-defs-yyloc.patch
+		armbox/vuplus_common/4_1_fix-multiple-defs-yyloc.patch
 
 # others
 CAIRO_OPTS =

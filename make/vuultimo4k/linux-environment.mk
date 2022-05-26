@@ -28,6 +28,8 @@ KERNEL_PATCHES = \
 		armbox/vuplus_common/3_14_kernel-add-support-for-gcc8.patch \
 		armbox/vuplus_common/3_14_kernel-add-support-for-gcc9.patch \
 		armbox/vuplus_common/3_14_kernel-add-support-for-gcc10.patch \
+		armbox/vuplus_common/3_14_kernel-add-support-for-gcc11.patch \
+		armbox/vuplus_common/3_14_kernel-add-support-for-gcc12.patch \
 		armbox/vuplus_common/3_14_0001-Support-TBS-USB-drivers.patch \
 		armbox/vuplus_common/3_14_0001-STV-Add-PLS-support.patch \
 		armbox/vuplus_common/3_14_0001-STV-Add-SNR-Signal-report-parameters.patch \
@@ -45,7 +47,7 @@ KERNEL_PATCHES = \
 		armbox/vuplus_common/3_14_0005-uaccess-dont-mark-register-as-const.patch \
 		armbox/vuplus_common/3_14_0006-makefile-disable-warnings.patch \
 		armbox/vuplus_common/3_14_linux_dvb_adapter.patch \
-		armbox/vuplus_common/3.14.28-1.12_fix-multiple-defs-yyloc.patch
+		armbox/vuplus_common/3_14_fix-multiple-defs-yyloc.patch
 
 KERNEL_PATCHES += \
 		armbox/$(KERNEL_TYPE)/bcmsysport_3.14.28-1.12.patch \
