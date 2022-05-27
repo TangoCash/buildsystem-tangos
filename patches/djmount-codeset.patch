@@ -26,3 +26,14 @@
 +  fi
 +])
 +
+--- a/djmount/upnp_util.h
++++ b/djmount/upnp_util.h
+@@ -27,7 +27,7 @@
+ #define UPNP_UTIL_H_INCLUDED
+ 
+ 
+-#include <upnp/upnptools.h>
++#include <upnp/upnp.h>
+ 
+ 
+ #ifdef __cplusplus

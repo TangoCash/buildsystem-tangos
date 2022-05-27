@@ -2131,7 +2131,7 @@ DJMOUNT_PATCH += djmount-codeset.patch
 $(ARCHIVE)/$(DJMOUNT_SOURCE):
 	$(DOWNLOAD) https://sourceforge.net/projects/djmount/files/djmount/$(DJMOUNT_VER)/$(DJMOUNT_SOURCE)
 
-$(D)/djmount: $(D)/bootstrap $(D)/fuse $(ARCHIVE)/$(DJMOUNT_SOURCE)
+$(D)/djmount: $(D)/bootstrap $(D)/fuse $(D)/libupnp $(ARCHIVE)/$(DJMOUNT_SOURCE)
 	$(START_BUILD)
 	$(REMOVE)/djmount-$(DJMOUNT_VER)
 	$(UNTAR)/$(DJMOUNT_SOURCE)
@@ -2142,6 +2142,8 @@ $(D)/djmount: $(D)/bootstrap $(D)/fuse $(ARCHIVE)/$(DJMOUNT_SOURCE)
 		$(CONFIGURE) -C \
 			--prefix=/usr \
 			--disable-debug \
+			--with-external-libupnp \
+			--with-libupnp-prefix=$(TARGET_DIR)/usr \
 		; \
 		make; \
 		make install DESTDIR=$(TARGET_DIR)
