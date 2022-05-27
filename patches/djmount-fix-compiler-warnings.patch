@@ -1,0 +1,80 @@
+--- a/djmount/didl_object.c
++++ b/djmount/didl_object.c
+@@ -114,7 +114,8 @@ DIDLObject_Create (void* talloc_context,
+ 		if (o->cds_class == NULL)
+ 			o->cds_class = "";
+ 
+-		char* s = ixmlElement_getAttribute (o->element, "searchable");
++		const char* s = ixmlElement_getAttribute (o->element,
++							  "searchable");
+ 		o->searchable = String_ToBoolean (s, false);
+ 
+ 		Log_Printf (LOG_DEBUG,
+--- a/djmount/xml_util.c
++++ b/djmount/xml_util.c
+@@ -43,7 +43,7 @@
+ const char*
+ XMLUtil_GetElementValue (IN const IXML_Element* element)
+ {
+-	char* res = NULL;
++	const char* res = NULL;
+ 	IXML_Node* child = ixmlNode_getFirstChild 
+ 		(discard_const_p (IXML_Node, XML_E2N (element)));
+ 	while (child && !res) {
+@@ -133,7 +133,7 @@
+  * XMLUtil_GetDocumentString
+  *****************************************************************************/
+ char*
+-XMLUtil_GetDocumentString (void* context, const IXML_Document* doc)
++XMLUtil_GetDocumentString (void* context, IXML_Document* doc)
+ {
+ 	// TBD XXX
+ 	// TBD prepend <?xml version="1.0"?> if not already done ???
+--- a/djmount/xml_util.h
++++ b/djmount/xml_util.h
+@@ -138,7 +138,7 @@
+  * 	  The returned string should be freed using "talloc_free".
+  *****************************************************************************/
+ char*
+-XMLUtil_GetDocumentString (void* talloc_context, IN const IXML_Document* doc);
++XMLUtil_GetDocumentString (void* talloc_context, IN IXML_Document* doc);
+ 
+ 
+ /*****************************************************************************
+--- a/djmount/upnp_util.c
++++ b/djmount/upnp_util.c
+@@ -28,6 +28,7 @@
+ #	include <config.h>
+ #endif
+ 
++#include <string.h>
+ #include "upnp_util.h"
+ #include "log.h"
+ #include "xml_util.h"
+--- a/djmount/device_list.c
++++ b/djmount/device_list.c
+@@ -938,6 +958,7 @@
+ 		isleep (CHECK_SUBSCRIPTIONS_TIMEOUT);
+ 		VerifyTimeouts (CHECK_SUBSCRIPTIONS_TIMEOUT);
+ 	}
++	return NULL;
+ }
+ 
+ 
+--- a/djmount/test_upnp.c
++++ b/djmount/test_upnp.c
+@@ -480,11 +480,13 @@
+ 		char cmdline[100];
+ 		printf ("\n>> " ); 
+ 		fflush (stdout);
+-		fgets (cmdline, sizeof (cmdline), stdin);
++		if (fgets (cmdline, sizeof (cmdline), stdin) == NULL)
++			break;
+ 		if (*cmdline)
+ 			process_command (cmdline);
+ 	}
+ #endif
++	return NULL;
+ }
+ 
+ 
