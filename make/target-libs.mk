@@ -407,7 +407,7 @@ OPENSSL_PATCH += openssl-$(OPENSSL_VER)-remove_timestamp_check.patch
 OPENSSL_SED_PATCH = sed -i 's|MAKEDEPPROG=makedepend|MAKEDEPPROG=$(CROSS_DIR)/bin/$$(CC) -M|' Makefile
 
 $(ARCHIVE)/$(OPENSSL_SOURCE):
-	$(DOWNLOAD) https://www.openssl.org/source/$(OPENSSL_SOURCE)
+	$(DOWNLOAD) https://www.openssl.org/source/old/$(OPENSSL_MAJOR)/$(OPENSSL_SOURCE)
 
 $(D)/openssl: $(D)/bootstrap $(ARCHIVE)/$(OPENSSL_SOURCE)
 	$(START_BUILD)
@@ -1204,7 +1204,7 @@ $(D)/libvorbisidec: $(D)/bootstrap $(D)/libogg $(ARCHIVE)/$(LIBVORBISIDEC_SOURCE
 #
 # libiconv
 #
-LIBICONV_VER = 1.15
+LIBICONV_VER = 1.17
 LIBICONV_SOURCE = libiconv-$(LIBICONV_VER).tar.gz
 
 $(ARCHIVE)/$(LIBICONV_SOURCE):
@@ -1669,7 +1669,7 @@ $(D)/pugixml: $(D)/bootstrap $(ARCHIVE)/$(PUGIXML_SOURCE)
 #GRAPHLCD_VER = 55d4bd8
 GRAPHLCD_VER = aafdbdf
 GRAPHLCD_SOURCE = graphlcd-git-$(GRAPHLCD_VER).tar.bz2
-GRAPHLCD_URL = https://projects.vdr-developer.org/git/graphlcd-base.git
+GRAPHLCD_URL = https://vdr-projects.e-tobi.net/git/graphlcd-base
 GRAPHLCD_PATCH = graphlcd-git-$(GRAPHLCD_VER).patch
 
 $(ARCHIVE)/$(GRAPHLCD_SOURCE):
@@ -1835,7 +1835,7 @@ $(D)/libusb_compat: $(D)/bootstrap $(D)/libusb $(ARCHIVE)/$(LIBUSB_COMPAT_SOURCE
 #
 # alsa-lib
 #
-ALSA_LIB_VER = 1.2.6.1
+ALSA_LIB_VER = 1.2.7.2
 ALSA_LIB_SOURCE = alsa-lib-$(ALSA_LIB_VER).tar.bz2
 ALSA_LIB_PATCH  = alsa-lib-$(ALSA_LIB_VER).patch
 ALSA_LIB_PATCH += alsa-lib-$(ALSA_LIB_VER)-link_fix.patch
@@ -1879,7 +1879,7 @@ $(D)/alsa_lib: $(D)/bootstrap $(ARCHIVE)/$(ALSA_LIB_SOURCE)
 #
 # alsa-utils
 #
-ALSA_UTILS_VER = 1.2.6
+ALSA_UTILS_VER = 1.2.7
 ALSA_UTILS_SOURCE = alsa-utils-$(ALSA_UTILS_VER).tar.bz2
 ALSA_UTILS_PATCH = alsa-utils-$(ALSA_UTILS_VER).patch
 
@@ -2407,7 +2407,7 @@ $(D)/gnutls: $(D)/bootstrap $(D)/nettle $(ARCHIVE)/$(GNUTLS_SOURCE)
 #
 # libgpg-error
 #
-LIBGPG_ERROR_VER    = 1.44
+LIBGPG_ERROR_VER    = 1.45
 LIBGPG_ERROR_DIR    = libgpg-error-$(LIBGPG_ERROR_VER)
 LIBGPG_ERROR_SOURCE = libgpg-error-$(LIBGPG_ERROR_VER).tar.bz2
 LIBGPG_ERROR_URL    = https://www.gnupg.org/ftp/gcrypt/libgpg-error

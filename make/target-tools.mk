@@ -355,7 +355,7 @@ UTIL_LINUX_VER = 2.38
 UTIL_LINUX_SOURCE = util-linux-$(UTIL_LINUX_VER).tar.xz
 
 $(ARCHIVE)/$(UTIL_LINUX_SOURCE):
-	$(DOWNLOAD) https://www.kernel.org/pub/linux/utils/util-linux/v$(UTIL_LINUX_VER)/$(UTIL_LINUX_SOURCE)
+	$(DOWNLOAD) https://www.kernel.org/pub/linux/utils/util-linux/v$(UTIL_LINUX_MAJOR)/$(UTIL_LINUX_SOURCE)
 
 $(D)/util_linux: $(D)/bootstrap $(D)/ncurses $(D)/zlib $(ARCHIVE)/$(UTIL_LINUX_SOURCE)
 	$(START_BUILD)
@@ -574,8 +574,9 @@ $(D)/jfsutils: $(D)/bootstrap $(D)/e2fsprogs $(ARCHIVE)/$(JFSUTILS_SOURCE)
 # f2fs-tools
 #
 
-F2FS-TOOLS_VER = 1.14.0
+F2FS-TOOLS_VER = 1.15.0
 F2FS-TOOLS_SOURCE = f2fs-tools-$(F2FS-TOOLS_VER).tar.gz
+F2FS-TOOLS_PATCH = f2fs-tools-$(F2FS-TOOLS_VER).patch
 
 $(ARCHIVE)/$(F2FS-TOOLS_SOURCE):
 	$(DOWNLOAD) https://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs-tools.git/snapshot/$(F2FS-TOOLS_SOURCE)
@@ -584,6 +585,7 @@ $(D)/f2fs-tools: $(D)/bootstrap $(D)/util_linux $(ARCHIVE)/$(F2FS-TOOLS_SOURCE)
 	$(REMOVE)/f2fs-tools-$(F2FS-TOOLS_VER)
 	$(UNTAR)/$(F2FS-TOOLS_SOURCE)
 	$(CHDIR)/f2fs-tools-$(F2FS-TOOLS_VER); \
+		$(call apply_patches, $(F2FS-TOOLS_PATCH)); \
 		autoreconf -fi $(SILENT_OPT); \
 		ac_cv_file__git=no \
 		$(CONFIGURE) \
@@ -947,7 +949,7 @@ $(D)/fbshot: $(D)/bootstrap $(D)/libpng $(ARCHIVE)/$(FBSHOT_SOURCE)
 #
 # sysstat
 #
-SYSSTAT_VER = 12.5.6
+SYSSTAT_VER = 12.6.0
 SYSSTAT_SOURCE = sysstat-$(SYSSTAT_VER).tar.bz2
 
 $(ARCHIVE)/$(SYSSTAT_SOURCE):
@@ -1749,7 +1751,7 @@ $(D)/udpxy: $(D)/bootstrap $(ARCHIVE)/$(UDPXY_SOURCE)
 #
 # openvpn
 #
-OPENVPN_VER = 2.5.6
+OPENVPN_VER = 2.5.7
 OPENVPN_SOURCE = openvpn-$(OPENVPN_VER).tar.xz
 
 $(ARCHIVE)/$(OPENVPN_SOURCE):
