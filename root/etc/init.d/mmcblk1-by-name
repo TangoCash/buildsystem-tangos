@@ -1,0 +1,43 @@
+#!/bin/sh
+
+blockdir=/dev/block/by-name
+blocks=/sys/block/mmcblk1/mmcblk1p*
+mkdir -p $blockdir
+
+for block in $blocks;
+do
+	if [ "$block" != "$blocks" ]; then
+		partname=$(cat $block/uevent | grep PARTNAME | cut -d '=' -f 2)
+		devname=$(cat $block/uevent | grep DEVNAME | cut -d '=' -f 2)
+		ln -sf /dev/$devname $blockdir/$partname
+	fi
+done
+echo "[$(basename $0)] $(date +'%H:%M:%S') mmc-blocks added in: $blockdir" >> /tmp/mdev.log
+
+if [ -e /dev/block/by-name/linuxrootfs ]; then
+  mkdir /media/linuxrootfs1
+  mount /dev/block/by-name/linuxrootfs /media/linuxrootfs1
+fi
+
+if [ -e /dev/block/by-name/userdata ]; then
+  mkdir /media/userdata
+  mount /dev/block/by-name/userdata /media/userdata
+  if [ -e /media/userdata/linuxrootfs1 ]; then
+    mkdir /media/linuxrootfs1
+    mount --bind /media/userdata/linuxrootfs1 /media/linuxrootfs1
+  fi
+  if [ -e /media/userdata/linuxrootfs2 ]; then
+    mkdir /media/linuxrootfs2
+    mount --bind /media/userdata/linuxrootfs2 /media/linuxrootfs2
+  fi
+  if [ -e /media/userdata/linuxrootfs3 ]; then
+    mkdir /media/linuxrootfs3
+    mount --bind /media/userdata/linuxrootfs3 /media/linuxrootfs3
+  fi
+  if [ -e /media/userdata/linuxrootfs4 ]; then
+    mkdir /media/linuxrootfs4
+    mount --bind /media/userdata/linuxrootfs4 /media/linuxrootfs4
+  fi
+fi
+
+exit 0
