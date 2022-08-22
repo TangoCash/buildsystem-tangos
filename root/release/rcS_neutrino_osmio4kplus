@@ -4,6 +4,8 @@
 
 read model < /etc/model
 
+mount -o remount,rw /
+
 if [ -e /var/etc/.firstboot ]; then
 /usr/bin/passwd root <<EOF
 root
@@ -27,15 +29,17 @@ echo "starting interface"
 /etc/init.d/mountall start
 
 echo "mounting everything"
-/etc/init.d/mount_everything
+/etc/init.d/mmcblk-by-name
 
 insmod /lib/modules/avl6261.ko
 insmod /lib/modules/avl6862.ko
 insmod /lib/modules/si2183.ko
 insmod /lib/modules/ci.ko
+insmod /lib/modules/brcmstb-decoder.ko
 insmod /lib/modules/brcmstb-osmio4kplus.ko
 
 if [ -e /lib/modules/wlan.ko ]; then
+  insmod /lib/modules/cfg80211.ko
   insmod /lib/modules/wlan.ko
 fi
 
