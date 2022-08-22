@@ -25,11 +25,14 @@ mount -t devpts devpts /dev/pts
 echo /sbin/mdev >/proc/sys/kernel/hotplug
 mdev -s
 
+echo -n "add mmcblks in /dev/block"
+/etc/init.d/mmcblk-by-name
+
+echo -n "check partitions"
+/etc/init.d/check_partitions
+
 echo "starting interface"
 /etc/init.d/mountall start
-
-echo "mounting everything"
-/etc/init.d/mmcblk-by-name
 
 insmod /lib/modules/avl6261.ko
 insmod /lib/modules/avl6862.ko
@@ -51,13 +54,18 @@ if [ -e /var/backup_flash.tar.gz ]; then
   rm -f /var/backup_flash.tar.gz
 fi
 
-if [ -e /share/tuxbox/neutrino/icons/bootlogo.m2v ]; then
-  showiframe /share/tuxbox/neutrino/icons/bootlogo.m2v
+if [ -e /var/tuxbox/config/.bootlogo ]; then
+  showiframe /usr/share/tuxbox/neutrino/icons/bootlogo.m2v &
 fi
 
 echo "Booting...TC-NMP" > /dev/dbox/oled0
 
 echo "setup network"
+read hstname < /etc/hostname
+if [ "$hstname" == "$model" ]; then
+	hwaddr=$(ifconfig eth0 | awk '/HWaddr/ { split($5,v,":"); print v[4] v[5] v[6] }')
+	echo "${model}-${hwaddr}" > /etc/hostname
+fi
 /etc/init.d/hostname start
 /etc/init.d/portmap start
 /usr/sbin/inetd
@@ -80,10 +88,118 @@ NFS=$(grep -c nfs /proc/cmdline)
   fi
 /sbin/ifconfig lo 127.0.0.1 up
 
-# set dummy time
-date -s "2017-01-01 00:00"
+  #date fix
+  ntp="$(sed -n 's/network_ntpserver=//p' /var/tuxbox/config/neutrino.conf)"
+  rdate ${ntp:-time.fu-berlin.de}
+  if [ "$?" != "0" ]; then
+    datefix=$(cat /.version | grep "version=" | grep -v image | awk -F "=" '{print $2}')
+    if [ "$datefix" != "" ]; then
+      date -s ${datefix:4}
+    else
+      date -s "202010011200"
+    fi
+  fi
+  date "+DATE: %m/%d/%y%nTIME: %H:%M:%S"
 
-killall -9 showiframe
+  if [ -e /var/tuxbox/config/.mbefore ]; then
+    echo "starting early mount ..."
+    /etc/init.d/mount_before
+  fi
+
+  if [ -e /var/tuxbox/config/.nfsd ]; then
+    echo "starting nfd ..."
+    if [ ! -e /etc/exports ]; then
+      echo "/media/hdd *(ro,wdelay,nohide,insecure,no_root_squash,no_all_squash,no_subtree_check,sync)" >/etc/exports
+    fi
+    if [ ! -e /etc/hosts.allow ]; then
+      echo 'ALL: ALL' > /etc/hosts.allow
+    fi
+    touch /var/lib/nfs/etab
+    touch /var/lib/nfs/rmtab
+    touch /var/lib/nfs/xtab
+    touch /var/lib/nfs/state
+    /usr/sbin/rpc.nfsd 1
+    /usr/sbin/rpc.mountd -V 3
+    /usr/sbin/exportfs -ra
+  fi
+
+  if [ -e /usr/share/tuxbox/neutrino/control/migration.sh ]; then
+    echo "starting migration ..."
+    chmod 755 /usr/share/tuxbox/neutrino/control/migration.sh
+    /usr/share/tuxbox/neutrino/control/migration.sh
+  fi
+
+  if [ -e /var/tuxbox/config/.xupnpd ]; then
+    echo "starting xupnpd ..."
+    /usr/bin/xupnpd &
+  fi
+
+  if [ -e /var/tuxbox/config/.crond ]; then
+    echo "starting crond ..."
+    mkdir -p /var/spool/cron/crontabs
+    touch /var/spool/cron/crontabs/root
+    /usr/sbin/crond &
+  fi
+
+  if [ -e /var/tuxbox/config/.dropbear ]; then
+    echo "starting dropbear ..."
+    /etc/init.d/dropbear start &
+  fi
+
+  if [ -e /var/tuxbox/config/.tuxcald ]; then
+    echo "starting tuxcald ..."
+    /etc/init.d/tuxcald start &
+  fi
+
+  if [ -e /var/tuxbox/config/.tuxmaild ]; then
+    echo "starting tuxmaild ..."
+    /etc/init.d/tuxmaild start &
+  fi
+
+  if [ -e /var/tuxbox/config/.djmount ]; then
+    echo "starting djmount ..."
+    mkdir -p /media/upnp
+    /usr/bin/djmount /media/upnp &
+  fi
+
+  if [ -e /var/tuxbox/config/.samba ]; then
+    echo "starting samba ..."
+    /etc/init.d/samba start &
+  fi
+
+  if [ -e /var/tuxbox/config/.fritzcall ]; then
+    echo "starting fritzcall ..."
+    /var/tuxbox/plugins/fb.sh start >/dev/null 2>&1
+  fi
+
+# fix frontend.conf (uni_qrg->uni_freq)
+[ -e /var/tuxbox/config/zapit/frontend.conf ] && sed -i "s/_uni_qrg=/_uni_freq=/g" /var/tuxbox/config/zapit/frontend.conf
+
+if [ -e /var/bin/tangos ]; then
+    chmod 755 /var/bin/tangos
+    /var/bin/tangos
+fi
+
+if [ -e /etc/init.d/before_gui ]; then
+    chmod 755 /etc/init.d/before_gui
+    /etc/init.d/before_gui
+fi
+
+if [ -e /var/tuxbox/config/.lcd4l ]; then
+    echo "starting lcd4linux ..."
+    /usr/bin/lcd4linux
+fi
+
+hdd_idle="$(sed -n 's/hdd_sleep=//p' /var/tuxbox/config/neutrino.conf)"
+if [ "$hdd_idle" == "" ]; then
+    hdd_idle="60"
+fi
+/sbin/hd-idle -i $((hdd_idle*5))
+
+if [ -e /var/tuxbox/config/.bootlogo ]; then
+    killall -9 showiframe
+fi
+
 
 until false
 do
@@ -121,4 +237,3 @@ echo "      *-*       " > /dev/dbox/oled0
 echo "REBOOT $model" > /dev/dbox/oled0
 echo "REBOOT $model"
 reboot -f
-
