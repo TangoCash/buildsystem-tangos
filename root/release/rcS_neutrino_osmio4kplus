@@ -1,18 +1,6 @@
 #!/bin/sh
 
-. /etc/profile
-
 read model < /etc/model
-
-mount -o remount,rw /
-
-if [ -e /var/etc/.firstboot ]; then
-/usr/bin/passwd root <<EOF
-root
-root
-EOF
-  rm /var/etc/.firstboot
-fi
 
 mount -t proc proc /proc
 mount -t sysfs sys /sys
@@ -22,6 +10,18 @@ mount -t tmpfs mnt /mnt
 #mkdir -p /media/hdd
 mkdir -p /dev/pts
 mount -t devpts devpts /dev/pts
+
+mount -o remount,rw /
+ln -sf /proc/mounts /dev/mtab
+
+if [ -e /var/etc/.firstboot ]; then
+/usr/bin/passwd root <<EOF
+root
+root
+EOF
+  rm /var/etc/.firstboot
+fi
+
 echo /sbin/mdev >/proc/sys/kernel/hotplug
 mdev -s
 
@@ -58,7 +58,7 @@ if [ -e /var/tuxbox/config/.bootlogo ]; then
   showiframe /usr/share/tuxbox/neutrino/icons/bootlogo.m2v &
 fi
 
-echo "Booting...TC-NMP" > /dev/dbox/oled0
+echo "Booting...TC-NMP" > /dev/dbox/lcd0
 
 echo "setup network"
 read hstname < /etc/hostname
@@ -219,21 +219,21 @@ do
       init 0;;
       1) echo "1"
         echo "REBOOT"
-        echo "      *-*       " > /dev/dbox/oled0
+        echo "      *-*       " > /dev/dbox/lcd0
       init 6;;
       3) echo "3"
         echo "RESTART"
-        echo "    RESTART     " > /dev/dbox/oled0
+        echo "    RESTART     " > /dev/dbox/lcd0
       sync;;
       *) echo "*"
         echo -e "\033[01;31mERROR: $rtv\033[00m"
-        echo "    *ERROR*     " > /dev/dbox/oled0
+        echo "    *ERROR*     " > /dev/dbox/lcd0
       init 6;;
     esac
 done
-echo "      *-*       " > /dev/dbox/oled0
+echo "      *-*       " > /dev/dbox/lcd0
 
 #never reached
-echo "REBOOT $model" > /dev/dbox/oled0
+echo "REBOOT $model" > /dev/dbox/lcd0
 echo "REBOOT $model"
 reboot -f
