@@ -259,7 +259,7 @@ case $4 in
 		echo "   1) GCC version 10.3.0"
 		echo "   2) GCC version  9.4.0"
 		echo "   3) GCC version 11.3.0"
-		echo "   3) GCC version 12.1.0"
+		echo "   4) GCC version 12.1.0"
 		read -p "Select toolchain gcc version (1-4)? [1] "
 		REPLY="${REPLY:-1}";;
 esac
