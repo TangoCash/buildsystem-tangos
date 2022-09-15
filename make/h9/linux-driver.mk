@@ -41,7 +41,7 @@ $(ARCHIVE)/$(TNTFS_SRC):
 	$(DOWNLOAD) http://source.mynonpublic.com/tntfs/$(TNTFS_SRC)
 
 $(ARCHIVE)/$(WIFI_SRC):
-	$(DOWNLOAD) https://github.com/zukon/RTL8192EU/archive/refs/heads/$(WIFI_SRC) -O $(ARCHIVE)/$(WIFI)
+	$(DOWNLOAD) https://github.com/tangocash/RTL8192EU/archive/refs/heads/$(WIFI_SRC) -O $(ARCHIVE)/$(WIFI)
 
 $(ARCHIVE)/$(MALI_MODULE_SRC):
 	$(DOWNLOAD) https://developer.arm.com/-/media/Files/downloads/mali-drivers/kernel/mali-utgard-gpu/$(MALI_MODULE_SRC);name=driver

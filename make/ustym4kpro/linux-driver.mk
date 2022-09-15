@@ -52,7 +52,7 @@ $(ARCHIVE)/$(LIBJPEG_SRC):
 	$(DOWNLOAD) https://github.com/oe-alliance/oe-alliance-core/blob/5.0/meta-brands/meta-$(BRAND)/recipes-graphics/files/$(LIBJPEG_SRC)
 
 $(ARCHIVE)/$(WIFI_SRC):
-	$(DOWNLOAD) https://github.com/zukon/RTL8192EU/archive/refs/heads/$(WIFI_SRC) -O $(ARCHIVE)/$(WIFI)
+	$(DOWNLOAD) https://github.com/tangocash/RTL8192EU/archive/refs/heads/$(WIFI_SRC) -O $(ARCHIVE)/$(WIFI)
 
 driver-clean:
 	rm -f $(D)/driver $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/$(KERNEL_TYPE)*
