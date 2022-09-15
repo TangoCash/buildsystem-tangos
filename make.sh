@@ -127,10 +127,39 @@ if [ "$1" == vuduo ] || [ "$1" == vuduo2 ] || [ "$1" == gb800se ] || [ "$1" == o
 	exit
 fi
 
+if [ "$1" == sf8008 ] || [ "$1" == sf8008m ] || [ "$1" == ustym4kpro ] || [ "$1" == h9combo ]; then
+	echo "BOXARCH=arm" > config
+	echo "BOXTYPE=$1" >> config
+	echo "FFMPEG_EXPERIMENTAL=0" >> config
+	echo "OPTIMIZATIONS=size" >> config
+	echo "BS_GCC_VER=10.3.0" >> config
+	echo "IMAGE=neutrino-wlandriver" >> config
+	echo "FLAVOUR=TANGOS" >> config
+	echo "EXTERNAL_LCD=both" >> config
+	echo "LAYOUT=multi" >> config
+	echo " "
+	make printenv
+	exit
+fi
+
+if [ "$1" == h9 ]; then
+	echo "BOXARCH=arm" > config
+	echo "BOXTYPE=$1" >> config
+	echo "FFMPEG_EXPERIMENTAL=0" >> config
+	echo "OPTIMIZATIONS=size" >> config
+	echo "BS_GCC_VER=10.3.0" >> config
+	echo "IMAGE=neutrino-wlandriver" >> config
+	echo "FLAVOUR=TANGOS" >> config
+	echo "EXTERNAL_LCD=both" >> config
+	echo "LAYOUT=single" >> config
+	echo " "
+	make printenv
+	exit
+fi
 ##############################################
 
 case $1 in
-	3[0-2] | 4[0-5] | 5[1-3] | 6[0-1] | 7[0-1] | 8[0-2] | 90) REPLY=$1;;
+	3[0-2] | 4[0-5] | 5[1-3] | 6[0-6] | 7[0-1] | 8[0-2] | 90) REPLY=$1;;
 	*)
 		echo "Target receivers:"
 		echo
@@ -154,12 +183,18 @@ case $1 in
 		echo "   52)  WWIO BRE2ZE 4K"
 		echo
 		echo "  Air Digital"
-		echo "   53)  ZGEMMA H7"
-		echo
+		echo "   53)  Zgemma H7"
+		echo "   65)  Zgemma H9 Combo/Twin"
+		echo "   66)  Zgemma H9s/H9.2s"
 		echo
 		echo "  Maxytec"
 		echo "   54)  Multibox"
 		echo "   55)  Multibox SE"
+		echo
+		echo "  Octagon & Uclan"
+		echo "   62)  Octagon SF8008"
+		echo "   63)  Octagon SF8008m"
+		echo "   64)  Ustym 4k Pro"
 		echo
 		echo
 		echo "  mips-based receivers"
@@ -196,6 +231,11 @@ case "$REPLY" in
 	55) BOXARCH="arm";BOXTYPE="multiboxse";;
 	60) BOXARCH="arm";BOXTYPE="hd60";;
 	61) BOXARCH="arm";BOXTYPE="hd61";;
+	62) BOXARCH="arm";BOXTYPE="sf8008";;
+	63) BOXARCH="arm";BOXTYPE="sf8008m";;
+	64) BOXARCH="arm";BOXTYPE="ustym4kpro";;
+	65) BOXARCH="arm";BOXTYPE="h9combo";;
+	66) BOXARCH="arm";BOXTYPE="h9";;
 	70) BOXARCH="mips";BOXTYPE="vuduo";;
 	71) BOXARCH="mips";BOXTYPE="vuduo2";;
 	80) BOXARCH="mips";BOXTYPE="osnino";;
@@ -287,7 +327,11 @@ esac
 case "$REPLY" in
 	1) IMAGE="neutrino";;
 	2) IMAGE="neutrino-wlandriver";;
+	if [ $BOXTYPE == 'sf8008' -o $BOXTYPE == 'sf8008m' -o $BOXTYPE == 'ustym4kpro' -o $BOXTYPE == 'h9combo' -o $BOXTYPE == 'h9' ]; then
+		*) IMAGE="neutrino-wlandriver";;
+	else
 	*) IMAGE="neutrino";;
+	fi
 esac
 echo "IMAGE=$IMAGE" >> config
 
@@ -380,7 +424,7 @@ esac
 echo "VU_MULTIBOOT=$VU_MULTIBOOT" >> config
 fi
 
-if [ $BOXTYPE == 'hd60' -o $BOXTYPE == 'hd61' -o $BOXTYPE == 'multibox' -o $BOXTYPE == 'multiboxse' ]; then
+if [ $BOXTYPE == 'hd60' -o $BOXTYPE == 'hd61' -o $BOXTYPE == 'multibox' -o $BOXTYPE == 'multiboxse' -o $BOXTYPE == 'sf8008' -o $BOXTYPE == 'sf8008m'  -o $BOXTYPE == 'ustym4kpro' -o $BOXTYPE == 'h9combo' ]; then
 echo "LAYOUT=multi" >> config
 else
 echo "LAYOUT=$LAYOUT" >> config
