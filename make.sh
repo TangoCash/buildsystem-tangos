@@ -97,13 +97,28 @@ if [ "$1" == vusolo4k -o "$1" == vuduo4k -o "$1" == vuultimo4k -o "$1" == vuuno4
 	exit
 fi
 
-if [ "$1" == osmini4k ] || [ "$1" == osmio4k ] || [ "$1" == osmio4kplus ]; then
+if [ "$1" == osmini4k ]; then
 	echo "BOXARCH=arm" > config
 	echo "BOXTYPE=$1" >> config
 	echo "FFMPEG_EXPERIMENTAL=0" >> config
 	echo "OPTIMIZATIONS=size" >> config
 	echo "BS_GCC_VER=10.3.0" >> config
 	echo "IMAGE=neutrino" >> config
+	echo "FLAVOUR=TANGOS" >> config
+	echo "EXTERNAL_LCD=both" >> config
+	echo "LAYOUT=single" >> config
+	echo " "
+	make printenv
+	exit
+fi
+
+if [ "$1" == osmio4k ] || [ "$1" == osmio4kplus ]; then
+	echo "BOXARCH=arm" > config
+	echo "BOXTYPE=$1" >> config
+	echo "FFMPEG_EXPERIMENTAL=0" >> config
+	echo "OPTIMIZATIONS=size" >> config
+	echo "BS_GCC_VER=10.3.0" >> config
+	echo "IMAGE=neutrino-wlandriver" >> config
 	echo "FLAVOUR=TANGOS" >> config
 	echo "EXTERNAL_LCD=both" >> config
 	echo "LAYOUT=single" >> config
@@ -327,10 +342,10 @@ esac
 case "$REPLY" in
 	1) IMAGE="neutrino";;
 	2) IMAGE="neutrino-wlandriver";;
-	if [ $BOXTYPE == 'sf8008' -o $BOXTYPE == 'sf8008m' -o $BOXTYPE == 'ustym4kpro' -o $BOXTYPE == 'h9combo' -o $BOXTYPE == 'h9' ]; then
+	if [ $BOXTYPE == 'osmio4k' -o $BOXTYPE == 'osmio4kplus' -o $BOXTYPE == 'sf8008' -o $BOXTYPE == 'sf8008m' -o $BOXTYPE == 'ustym4kpro' -o $BOXTYPE == 'h9combo' -o $BOXTYPE == 'h9' ]; then
 		*) IMAGE="neutrino-wlandriver";;
 	else
-	*) IMAGE="neutrino";;
+		*) IMAGE="neutrino";;
 	fi
 esac
 echo "IMAGE=$IMAGE" >> config

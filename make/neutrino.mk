@@ -155,6 +155,10 @@ N_CONFIG_OPTS += --disable-upnp
 #N_CONFIG_OPTS += --disable-webif
 #N_CONFIG_OPTS += --disable-tangos
 
+ifeq ($(IMAGE), neutrino-wlandriver)
+N_CONFIG_OPTS += --enable-wifi
+endif
+
 ifeq  ($(FLAVOUR), TANGOS)
 N_CONFIG_OPTS += --with-default-theme=TangoCash
 endif
