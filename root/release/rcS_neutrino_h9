@@ -38,7 +38,7 @@ insmod /lib/modules/h9_4.ko
 wifi=`lsusb | grep -c 0bda:818b`
 if [ $wifi  == 1 ]; then
   insmod /lib/modules/cfg80211.ko
-  insmod /lib/modules/8192eu.ko
+  insmod /lib/modules/8192fu.ko
 fi
 
 #xbox=`lsusb | grep -c 045e:02d5`

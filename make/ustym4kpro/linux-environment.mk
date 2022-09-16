@@ -53,5 +53,4 @@ neutrino-release-ustym4kpro:
 	install -m 0755 $(SKEL_ROOT)/release/$(BRAND)-libreader $(RELEASE_DIR)/etc/init.d/
 	cd $(RELEASE_DIR)/etc/rc.d/rc0.d; ln -sf ../../init.d/$(BRAND)-libreader ./S05$(BRAND)-libreader 
 	cd $(RELEASE_DIR)/etc/rc.d/rc6.d; ln -sf ../../init.d/$(BRAND)-libreader ./S05$(BRAND)-libreader 
-	  
 

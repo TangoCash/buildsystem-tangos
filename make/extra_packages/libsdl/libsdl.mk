@@ -12,7 +12,6 @@ $(D)/libsdl: $(D)/bootstrap $(ARCHIVE)/$(LIBSDL_SOURCE) $(KERNEL)
 	$(REMOVE)/SDL-$(LIBSDL_VER)
 	$(UNTAR)/$(LIBSDL_SOURCE)
 	$(CHDIR)/SDL-$(LIBSDL_VER); \
-		$(call apply_patches, $(PKG_PATCH)); \
 		$(CONFIGURE) \
 			--target=$(TARGET) \
 			--prefix=/usr \
