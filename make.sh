@@ -337,21 +337,24 @@ case $5 in
 		echo "   2)  Neutrino (includes WiFi functions)"
 	if [ $BOXTYPE == 'osmio4k' -o $BOXTYPE == 'osmio4kplus' -o $BOXTYPE == 'sf8008' -o $BOXTYPE == 'sf8008m' -o $BOXTYPE == 'ustym4kpro' -o $BOXTYPE == 'h9combo' -o $BOXTYPE == 'h9' ]; then
 		read -p "Select Image to build (1-2)? [2]"
-		REPLY="${REPLY:-2}";;
+		REPLY="${REPLY:-2}"
 	else
 		read -p "Select Image to build (1-2)? [1]"
-		REPLY="${REPLY:-1}";;
+		REPLY="${REPLY:-1}"
 	fi
+	;;
 esac
 
 case "$REPLY" in
 	1) IMAGE="neutrino";;
 	2) IMAGE="neutrino-wifi";;
+	*)
 	if [ $BOXTYPE == 'osmio4k' -o $BOXTYPE == 'osmio4kplus' -o $BOXTYPE == 'sf8008' -o $BOXTYPE == 'sf8008m' -o $BOXTYPE == 'ustym4kpro' -o $BOXTYPE == 'h9combo' -o $BOXTYPE == 'h9' ]; then
-		*) IMAGE="neutrino-wifi";;
+		IMAGE="neutrino-wifi"
 	else
-		*) IMAGE="neutrino";;
+		IMAGE="neutrino"
 	fi
+	;;
 esac
 echo "IMAGE=$IMAGE" >> config
 
