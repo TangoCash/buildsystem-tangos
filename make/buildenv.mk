@@ -354,14 +354,4 @@ CMAKE_OPTS := \
 CMAKE := \
 	rm -f CMakeCache.txt; \
 	cmake $(SILENT_OPT) --no-warn-unused-cli $(CMAKE_OPTS)
-#
-# image
-#
-ifeq ($(IMAGE), neutrino)
-BUILD_CONFIG       = build-neutrino
-else ifeq ($(IMAGE), neutrino-wlandriver)
-BUILD_CONFIG       = build-neutrino
-WLANDRIVER         = WLANDRIVER=wlandriver
-else
-BUILD_CONFIG       = build-neutrino
-endif
+

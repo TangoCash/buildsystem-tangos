@@ -118,7 +118,7 @@ if [ "$1" == osmio4k ] || [ "$1" == osmio4kplus ]; then
 	echo "FFMPEG_EXPERIMENTAL=0" >> config
 	echo "OPTIMIZATIONS=size" >> config
 	echo "BS_GCC_VER=10.3.0" >> config
-	echo "IMAGE=neutrino-wlandriver" >> config
+	echo "IMAGE=neutrino-wifi" >> config
 	echo "FLAVOUR=TANGOS" >> config
 	echo "EXTERNAL_LCD=both" >> config
 	echo "LAYOUT=single" >> config
@@ -148,7 +148,7 @@ if [ "$1" == sf8008 ] || [ "$1" == sf8008m ] || [ "$1" == ustym4kpro ] || [ "$1"
 	echo "FFMPEG_EXPERIMENTAL=0" >> config
 	echo "OPTIMIZATIONS=size" >> config
 	echo "BS_GCC_VER=10.3.0" >> config
-	echo "IMAGE=neutrino-wlandriver" >> config
+	echo "IMAGE=neutrino-wifi" >> config
 	echo "FLAVOUR=TANGOS" >> config
 	echo "EXTERNAL_LCD=both" >> config
 	echo "LAYOUT=multi" >> config
@@ -163,7 +163,7 @@ if [ "$1" == h9 ]; then
 	echo "FFMPEG_EXPERIMENTAL=0" >> config
 	echo "OPTIMIZATIONS=size" >> config
 	echo "BS_GCC_VER=10.3.0" >> config
-	echo "IMAGE=neutrino-wlandriver" >> config
+	echo "IMAGE=neutrino-wifi" >> config
 	echo "FLAVOUR=TANGOS" >> config
 	echo "EXTERNAL_LCD=both" >> config
 	echo "LAYOUT=single" >> config
@@ -334,16 +334,21 @@ case $5 in
 	[1-2]) REPLY=$5;;
 	*)	echo -e "\nWhich Image do you want to build:"
 		echo "   1)  Neutrino"
-		echo "   2)  Neutrino (includes WLAN drivers)"
+		echo "   2)  Neutrino (includes WiFi functions)"
+	if [ $BOXTYPE == 'osmio4k' -o $BOXTYPE == 'osmio4kplus' -o $BOXTYPE == 'sf8008' -o $BOXTYPE == 'sf8008m' -o $BOXTYPE == 'ustym4kpro' -o $BOXTYPE == 'h9combo' -o $BOXTYPE == 'h9' ]; then
+		read -p "Select Image to build (1-2)? [2]"
+		REPLY="${REPLY:-2}";;
+	else
 		read -p "Select Image to build (1-2)? [1]"
 		REPLY="${REPLY:-1}";;
+	fi
 esac
 
 case "$REPLY" in
 	1) IMAGE="neutrino";;
-	2) IMAGE="neutrino-wlandriver";;
+	2) IMAGE="neutrino-wifi";;
 	if [ $BOXTYPE == 'osmio4k' -o $BOXTYPE == 'osmio4kplus' -o $BOXTYPE == 'sf8008' -o $BOXTYPE == 'sf8008m' -o $BOXTYPE == 'ustym4kpro' -o $BOXTYPE == 'h9combo' -o $BOXTYPE == 'h9' ]; then
-		*) IMAGE="neutrino-wlandriver";;
+		*) IMAGE="neutrino-wifi";;
 	else
 		*) IMAGE="neutrino";;
 	fi

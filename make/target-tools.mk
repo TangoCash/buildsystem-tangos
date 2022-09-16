@@ -1628,7 +1628,7 @@ WIRELESS_TOOLS_SOURCE = wireless_tools.$(WIRELESS_TOOLS_VER).tar.gz
 WIRELESS_TOOLS_PATCH = wireless-tools.$(WIRELESS_TOOLS_VER).patch
 
 $(ARCHIVE)/$(WIRELESS_TOOLS_SOURCE):
-	$(DOWNLOAD) https://src.fedoraproject.org/repo/pkgs/wireless-tools/$(WIRELESS_TOOLS_SOURCE)
+	$(DOWNLOAD) https://src.fedoraproject.org/repo/pkgs/wireless-tools/wireless_tools.29.tar.gz/e06c222e186f7cc013fd272d023710cb/$(WIRELESS_TOOLS_SOURCE)
 
 $(D)/wireless_tools: $(D)/bootstrap $(ARCHIVE)/$(WIRELESS_TOOLS_SOURCE)
 	$(START_BUILD)

@@ -107,7 +107,7 @@ NEUTRINO_DEPS += $(D)/netsurf
 
 N_CONFIG_OPTS  = $(LOCAL_NEUTRINO_BUILD_OPTIONS)
 
-ifeq ($(IMAGE), neutrino-wlandriver)
+ifeq ($(IMAGE), neutrino-wifi)
 NEUTRINO_DEPS += $(D)/wpa_supplicant
 NEUTRINO_DEPS += $(D)/wireless_tools
 endif
@@ -155,8 +155,12 @@ N_CONFIG_OPTS += --disable-upnp
 #N_CONFIG_OPTS += --disable-webif
 #N_CONFIG_OPTS += --disable-tangos
 
-ifeq ($(IMAGE), neutrino-wlandriver)
+ifeq ($(IMAGE), neutrino-wifi)
 N_CONFIG_OPTS += --enable-wifi
+endif
+
+ifeq ($(BOXTYPE), osmio4kplus)
+N_CONFIG_OPTS += --enable-lcd
 endif
 
 ifeq  ($(FLAVOUR), TANGOS)
