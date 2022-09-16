@@ -141,8 +141,8 @@ CROSSTOOL_GCC_VER = gcc-11.3.0
 NEED_TIRPC             = 1
 endif
 
-ifeq ($(BS_GCC_VER), 12.1.0)
-CROSSTOOL_GCC_VER = gcc-12.1.0
+ifeq ($(BS_GCC_VER), 12.2.0)
+CROSSTOOL_GCC_VER = gcc-12.2.0
 NEED_TIRPC             = 1
 endif
 
@@ -158,7 +158,7 @@ TARGET_INCLUDE_DIR    = $(TARGET_DIR)/usr/include
 TARGET_SHARE_DIR      = $(TARGET_DIR)/usr/share
 
 TARGET_CFLAGS         = -pipe $(TARGET_O_CFLAGS) $(TARGET_MARCH_CFLAGS) $(TARGET_EXTRA_CFLAGS) -I$(TARGET_INCLUDE_DIR)
-ifeq ($(BS_GCC_VER), $(filter $(BS_GCC_VER), 10.3.0 11.2.0))
+ifeq ($(BS_GCC_VER), $(filter $(BS_GCC_VER), 10.3.0 11.3.0 12.2.0))
 TARGET_CFLAGS        +=-fcommon
 endif
 TARGET_CPPFLAGS       = $(TARGET_CFLAGS)
