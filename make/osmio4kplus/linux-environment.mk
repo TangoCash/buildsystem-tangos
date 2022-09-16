@@ -14,7 +14,7 @@ KERNEL_PATCHES =
 # others
 CAIRO_OPTS =
 
-LINKS_PATCH_BOXTYPE = links-$(LINKS_VER)-event1-input.patch
+#LINKS_PATCH_BOXTYPE = links-$(LINKS_VER)-event1-input.patch
 
 CUSTOM_RCS     =
 CUSTOM_INITTAB =
