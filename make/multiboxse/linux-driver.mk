@@ -1,7 +1,7 @@
 #
 # driver
 #
-DRIVER_DATE = 20201204
+DRIVER_DATE = 20211129
 DRIVER_VER = 4.4.35
 DRIVER_SRC = multiboxse-drivers-$(DRIVER_VER)-$(DRIVER_DATE).zip
 
@@ -43,8 +43,8 @@ $(D)/driver: $(ARCHIVE)/$(DRIVER_SRC) $(D)/bootstrap $(D)/kernel
 	ls $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra | sed s/.ko//g > $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/modules.default
 	#$(MAKE) install-v3ddriver
 	#$(MAKE) install-v3ddriver-header
-	$(MAKE) install-hisiplayer-preq
-	$(MAKE) install-hisiplayer-libs
+	#$(MAKE) install-hisiplayer-preq
+	#$(MAKE) install-hisiplayer-libs
 	#$(MAKE) mali-gpu-modul
 	$(TOUCH)
 

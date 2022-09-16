@@ -30,7 +30,7 @@ insmod /lib/modules/multiboxse_2.ko
 insmod /lib/modules/multiboxse_3.ko
 insmod /lib/modules/multiboxse_4.ko
 
-insmod /lib/modules/hi_play.ko
+#insmod /lib/modules/hi_play.ko
 
 [ -f /lib/modules/mali.ko ] && insmod /lib/modules/mali.ko
 

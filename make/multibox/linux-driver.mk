@@ -43,8 +43,8 @@ $(D)/driver: $(ARCHIVE)/$(DRIVER_SRC) $(D)/bootstrap $(D)/kernel
 	ls $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra | sed s/.ko//g > $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/modules.default
 	#$(MAKE) install-v3ddriver
 	#$(MAKE) install-v3ddriver-header
-	$(MAKE) install-hisiplayer-preq
-	$(MAKE) install-hisiplayer-libs
+	#$(MAKE) install-hisiplayer-preq
+	#$(MAKE) install-hisiplayer-libs
 	#$(MAKE) mali-gpu-modul
 	$(TOUCH)
 
