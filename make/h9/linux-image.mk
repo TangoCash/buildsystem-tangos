@@ -56,7 +56,7 @@ $(ARCHIVE)/$(PARAM_SRC):
 flash-image-h9: $(ARCHIVE)/$(BOOTARGS_SRC) $(ARCHIVE)/$(FASTBOOT_SRC) $(ARCHIVE)/$(PARAM_SRC)
 	rm -rf $(FLASH_BUILD_TMP) || true
 	mkdir -p $(FLASH_BUILD_TMP)/$(FLASH_PREFIX)
-	$(MAKE) install-bootagrs
+	$(MAKE) install-bootargs
 	$(MAKE) install-fastboot
 	$(MAKE) install-param
 #	cp $(SKEL_ROOT)/release/splash.bin $(FLASH_BUILD_TMP)/$(FLASH_PREFIX)
@@ -93,11 +93,11 @@ flash-image-h9-online:
 	# cleanup
 	rm -rf $(FLASH_BUILD_TMP)
 
-$(D)/install-bootagrs: $(ARCHIVE)/$(BOOTARGS_SRC)
-	install -d $(FLASH_BUILD_TMP)/bootagrs
-	unzip -o $(ARCHIVE)/$(BOOTARGS_SRC) -d $(FLASH_BUILD_TMP)/bootagrs
-	install -m 0644 $(FLASH_BUILD_TMP)/bootagrs/bootargs_h9.bin $(FLASH_BUILD_TMP)/$(FLASH_PREFIX)/bootargs.bin
-	install -m 0644 $(FLASH_BUILD_TMP)/bootagrs/rescue_bootargs_h9.bin $(FLASH_BUILD_TMP)/bootargs.bin
+$(D)/install-bootargs: $(ARCHIVE)/$(BOOTARGS_SRC)
+	install -d $(FLASH_BUILD_TMP)/bootargs
+	unzip -o $(ARCHIVE)/$(BOOTARGS_SRC) -d $(FLASH_BUILD_TMP)/bootargs
+	install -m 0644 $(FLASH_BUILD_TMP)/bootargs/bootargs_h9.bin $(FLASH_BUILD_TMP)/$(FLASH_PREFIX)/bootargs.bin
+	install -m 0644 $(FLASH_BUILD_TMP)/bootargs/rescue_bootargs_h9.bin $(FLASH_BUILD_TMP)/bootargs.bin
 
 $(D)/install-fastboot: $(ARCHIVE)/$(FASTBOOT_SRC)
 	install -d $(FLASH_BUILD_TMP)/fastboot
