@@ -1,41 +1,9 @@
 #
 # flashimage
 #
-
-### armbox 
-
-flashimage: $(D)/neutrino
-	$(START_BUILD)
-	$(MAKE) flash-image-$(BOXTYPE)-multi-disk flash-image-$(BOXTYPE)-multi-rootfs
-	$(TUXBOX_CUSTOMIZE)
-	@$(call draw_line,);
-	@$(call draw_line,Build of $@ for $(BOXTYPE) successfully completed.,2);
-	@$(call draw_line,);
-
-ofgimage: $(D)/neutrino
-	$(START_BUILD)
-	$(MAKE) ITYPE=ofg flash-image-$(BOXTYPE)-multi-rootfs
-	$(TUXBOX_CUSTOMIZE)
-	@$(call draw_line,);
-	@$(call draw_line,Build of $@ for $(BOXTYPE) successfully completed.,2);
-	@$(call draw_line,);
-
-online-image: $(D)/neutrino
-	$(START_BUILD)
-	$(MAKE) ITYPE=online flash-image-$(BOXTYPE)-online
-	$(TUXBOX_CUSTOMIZE)
-	@$(call draw_line,);
-	@$(call draw_line,Build of $@ for $(BOXTYPE) successfully completed.,2);
-	@$(call draw_line,);
-
-flash-clean:
-	echo ""
-
-# general
 FLASH_IMAGE_NAME = disk
 FLASH_BOOT_IMAGE = bootoptions.img
 FLASH_IMAGE_LINK = $(FLASH_IMAGE_NAME).ext4
-FLASH_BUILD_TMP = $(BUILD_TMP)/image-build
 
 FLASH_BOOTOPTIONS_PARTITION_SIZE = 32768
 FLASH_IMAGE_ROOTFS_SIZE = 1024M
