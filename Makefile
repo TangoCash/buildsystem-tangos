@@ -118,9 +118,9 @@ include make/target-python.mk
 include make/target-root-etc.mk
 include make/target-tools.mk
 include make/target-tools-git.mk
-include make/$(BOXTYPE)/linux-kernel.mk
-include make/$(BOXTYPE)/linux-driver.mk
-include make/$(BOXTYPE)/linux-image.mk
+include make/target-kernel.mk
+include machine/$(BOXTYPE)/linux-driver.mk
+include machine/$(BOXTYPE)/linux-image.mk
 include make/helpers.mk
 include make/host-tools.mk
 include make/crosstool.mk
@@ -133,7 +133,7 @@ include make/tvheadend.mk
 include make/bootstrap.mk
 
 # -----------------------------------------------------------------------------
--include $(sort $(wildcard make/extra_packages/*/*.mk))
+-include $(sort $(wildcard packages/*/*.mk))
 # -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------

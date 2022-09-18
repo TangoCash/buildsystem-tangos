@@ -71,6 +71,11 @@ HELPERS_DIR           = $(BASE_DIR)/helpers
 SKEL_ROOT             = $(BASE_DIR)/root
 D                     = $(BASE_DIR)/.deps
 
+MACHINE_DIR           = $(BASE_DIR)/machine/$(BOXTYPE)
+MACHINE_PATCHES       = $(MACHINE_DIR)/patches
+MACHINE_FILES         = $(MACHINE_DIR)/files
+MACHINE_COMMON_DIR    = $(BASE_DIR)/machine/common/files
+
 ifneq ($(SUDOPASSWD),)
 SUDOCMD               = fakeroot
 else
@@ -96,14 +101,6 @@ CCACHE_DIR            = $(BASE_DIR)/.ccache-bs-aarch64
 export CCACHE_DIR
 TARGET               ?= aarch64-unknown-linux-gnu
 TARGET_MARCH_CFLAGS   =
-CORTEX_STRINGS        =
-endif
-
-ifeq ($(BOXARCH), mips)
-CCACHE_DIR            = $(BASE_DIR)/.ccache-bs-mips
-export CCACHE_DIR
-TARGET               ?= mipsel-unknown-linux-gnu
-TARGET_MARCH_CFLAGS   = -march=mips32 -mtune=mips32
 CORTEX_STRINGS        =
 endif
 
@@ -147,7 +144,7 @@ NEED_TIRPC             = 1
 endif
 
 CROSS_BASE            = $(BASE_DIR)/cross
-include               $(BASE_DIR)/make/$(BOXTYPE)/linux-environment.mk
+include               $(BASE_DIR)/machine/$(BOXTYPE)/linux-environment.mk
 CROSS_DIR             = $(CROSS_BASE)/$(CROSSTOOL_GCC_VER)-$(BOXARCH)-kernel-$(KERNEL_VER)
 
 # -----------------------------------------------------------------------------
@@ -230,6 +227,7 @@ CD                    = set -e; cd
 CHDIR                 = $(CD) $(BUILD_TMP)
 MKDIR                 = mkdir -p $(BUILD_TMP)
 STRIP                 = $(TARGET)-strip
+DEPMOD                = $(HOST_DIR)/bin/depmod
 
 DATE                  = $(shell date '+%d.%m.%Y-%H.%M')
 # -----------------------------------------------------------------------------
@@ -241,8 +239,8 @@ PKG_NAME_HELPER       = $(shell echo $(PKG_NAME) | sed 's/.*/\U&/')
 PKG_VER_HELPER        = A$($(PKG_NAME_HELPER)_VER)A
 PKG_VER               = $($(PKG_NAME_HELPER)_VER)
 PKG_DIR               = $(BUILD_TMP)/$(PKG_NAME)
-PKG_PATCH             = $(BASE_DIR)/make/extra_packages/$(basename $(@F))/patches
-PKG_FILES             = $(BASE_DIR)/make/extra_packages/$(basename $(@F))/files
+PKG_PATCH             = $(BASE_DIR)/packages/$(basename $(@F))/patches
+PKG_FILES             = $(BASE_DIR)/packages/$(basename $(@F))/files
 
 START_BUILD           = @$(call draw_line,$(PKG_NAME),6); \
                         echo; \

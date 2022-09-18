@@ -14,6 +14,7 @@ LIBSTB_HAL_REV=$(shell cd $(SOURCE_DIR)/$(LIBSTB_HAL); git log | grep "^commit" 
 
 # apply patch sets
 PATCH  = patch -Np1 $(SILENT_PATCH) -i $(PATCHES)
+KPATCH = patch -Np1 $(SILENT_PATCH) -i $(MACHINE_PATCHES)
 
 define apply_patches
     l=`echo $(2)`; test -z $$l && l=1; \

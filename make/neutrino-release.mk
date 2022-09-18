@@ -144,12 +144,11 @@ endif
 	install -m 0755 $(SKEL_ROOT)/etc/init.d/mmcblk-by-name $(RELEASE_DIR)/etc/init.d/
 	install -m 0755 $(SKEL_ROOT)/etc/init.d/before_gui $(RELEASE_DIR)/etc/init.d/
 	install -m 0755 $(TARGET_DIR)/etc/init.d/* $(RELEASE_DIR)/etc/init.d/
-	install -m 0644 $(SKEL_ROOT)/release/bootlogo.m2v $(RELEASE_DIR)/usr/share/tuxbox/neutrino/icons/bootlogo.m2v
+	install -m 0644 $(MACHINE_COMMON_DIR)/bootlogo.m2v $(RELEASE_DIR)/usr/share/tuxbox/neutrino/icons/bootlogo.m2v
 	cp -aR $(TARGET_DIR)/etc/* $(RELEASE_DIR)/etc/
 	echo "$(BOXTYPE)" > $(RELEASE_DIR)/etc/hostname
 	ln -sf ../../bin/busybox $(RELEASE_DIR)/usr/bin/ether-wake
 	ln -sf ../../bin/showiframe $(RELEASE_DIR)/usr/bin/showiframe
-	install -m 0755 $(SKEL_ROOT)/release/rcS_neutrino_$(BOXTYPE) $(RELEASE_DIR)/etc/init.d/rcS
 	[ ! -z "$(CUSTOM_RCS)" ] && install -m 0755 $(CUSTOM_RCS) $(RELEASE_DIR)/etc/init.d/rcS || true
 #
 #
@@ -190,7 +189,7 @@ endif
 #
 # modules.available // modules.default
 #
-	cp -aR $(SKEL_ROOT)/release/modules.available_$(BOXARCH) $(RELEASE_DIR)/etc/modules.available
+	cp -aR $(MACHINE_COMMON_DIR)/modules.available_$(BOXARCH) $(RELEASE_DIR)/etc/modules.available
 	if [ -e $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/modules.default ]; then \
 		cp -aR $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/modules.default $(RELEASE_DIR)/etc/modules.default; \
 	fi;
@@ -405,7 +404,7 @@ endif
 	rm -f $(RELEASE_DIR)/sbin/ldconfig
 	rm -f $(RELEASE_DIR)/usr/bin/pic2m2v
 	rm -f $(RELEASE_DIR)/usr/bin/{gdbus-codegen,glib-*,gtester-report}
-ifeq ($(BOXARCH), $(filter $(BOXARCH), arm mips))
+ifeq ($(BOXARCH), $(filter $(BOXARCH), arm aarch64))
 	rm -rf $(RELEASE_DIR)/dev.static
 	rm -rf $(RELEASE_DIR)/ram
 	rm -rf $(RELEASE_DIR)/root

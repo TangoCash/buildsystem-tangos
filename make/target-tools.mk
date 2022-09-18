@@ -30,7 +30,7 @@ ifeq ($(BUSYBOX_SNAPSHOT), 1)
 #BUSYBOX_PATCH += busybox-$(BUSYBOX_VER)-changed_FreeBSD_fix.patch
 endif
 
-ifeq ($(BOXARCH), $(filter $(BOXARCH), arm mips))
+ifeq ($(BOXARCH), $(filter $(BOXARCH), arm))
 BUSYBOX_CONFIG = busybox-$(BUSYBOX_VER).config_arm
 else
 BUSYBOX_CONFIG = busybox-$(BUSYBOX_VER).config
@@ -877,7 +877,7 @@ $(D)/hddtemp: $(D)/bootstrap $(ARCHIVE)/$(HDDTEMP_SOURCE)
 		$(MAKE) all; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 		install -d $(TARGET_DIR)/var/tuxbox/config
-		install -m 644 $(SKEL_ROOT)/release/hddtemp.db $(TARGET_DIR)/var
+		install -m 644 $(MACHINE_COMMON_DIR)/hddtemp.db $(TARGET_DIR)/var
 	$(REMOVE)/hddtemp-$(HDDTEMP_VER)
 	$(TOUCH)
 

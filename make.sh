@@ -127,21 +127,6 @@ if [ "$1" == osmio4k ] || [ "$1" == osmio4kplus ]; then
 	exit
 fi
 
-if [ "$1" == vuduo ] || [ "$1" == vuduo2 ] || [ "$1" == gb800se ] || [ "$1" == osnino ] || [ "$1" == osninoplus ] || [ "$1" == osninopro ]; then
-	echo "BOXARCH=mips" > config
-	echo "BOXTYPE=$1" >> config
-	echo "FFMPEG_EXPERIMENTAL=0" >> config
-	echo "OPTIMIZATIONS=size" >> config
-	echo "BS_GCC_VER=10.3.0" >> config
-	echo "IMAGE=neutrino" >> config
-	echo "FLAVOUR=TANGOS" >> config
-	echo "EXTERNAL_LCD=both" >> config
-	echo "LAYOUT=single" >> config
-	echo " "
-	make printenv
-	exit
-fi
-
 if [ "$1" == sf8008 ] || [ "$1" == sf8008m ] || [ "$1" == ustym4kpro ] || [ "$1" == h9combo ]; then
 	echo "BOXARCH=arm" > config
 	echo "BOXTYPE=$1" >> config
@@ -174,7 +159,7 @@ fi
 ##############################################
 
 case $1 in
-	3[0-2] | 4[0-5] | 5[1-3] | 6[0-6] | 7[0-1] | 8[0-2] | 90) REPLY=$1;;
+	3[0-2] | 4[0-5] | 5[1-3] | 6[0-6]) REPLY=$1;;
 	*)
 		echo "Target receivers:"
 		echo
@@ -212,20 +197,7 @@ case $1 in
 		echo "   64)  Ustym 4k Pro"
 		echo
 		echo
-		echo "  mips-based receivers"
-		echo "  VU+"
-		echo "   70)  VU+ Duo"
-		echo "   71)  VU+ Duo2"
-		echo
-		echo "  Edision"
-		echo "   80)  Edision OS nino"
-		echo "   81)  Edision OS nino+"
-		echo "   82)  Edision OS nino pro"
-		echo
-		echo "  Gigablue"
-		echo "   90)  Gigablue 800 SE"
-		echo
-		read -p "Select target (30-90)? [51]"
+		read -p "Select target (30-66)? [51]"
 		REPLY="${REPLY:-51}";;
 esac
 
@@ -251,12 +223,6 @@ case "$REPLY" in
 	64) BOXARCH="arm";BOXTYPE="ustym4kpro";;
 	65) BOXARCH="arm";BOXTYPE="h9combo";;
 	66) BOXARCH="arm";BOXTYPE="h9";;
-	70) BOXARCH="mips";BOXTYPE="vuduo";;
-	71) BOXARCH="mips";BOXTYPE="vuduo2";;
-	80) BOXARCH="mips";BOXTYPE="osnino";;
-	81) BOXARCH="mips";BOXTYPE="osninoplus";;
-	82) BOXARCH="mips";BOXTYPE="osninopro";;
-	90) BOXARCH="mips";BOXTYPE="gb800se";;
 	 *) BOXARCH="arm";BOXTYPE="hd51";;
 esac
 echo "BOXARCH=$BOXARCH" > config

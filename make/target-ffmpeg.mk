@@ -45,9 +45,6 @@ FFMPEG_CONF_OPTS  += --disable-x86asm
 ifeq ($(BOXARCH), arm)
 FFMPEG_CONF_OPTS  += --cpu=cortex-a15
 endif
-ifeq ($(BOXARCH), mips)
-FFMPEG_CONF_OPTS  += --cpu=generic
-endif
 
 FFMPRG_EXTRA_CFLAGS  = -I$(TARGET_INCLUDE_DIR)/libxml2
 
