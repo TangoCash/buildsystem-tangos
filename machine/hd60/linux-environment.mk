@@ -61,10 +61,6 @@ CUSTOM_RCS = $(MACHINE_COMMON_DIR)/rcS_neutrino_$(BOXARCH)
 # release target
 #
 neutrino-release-hd60:
-	install -m 0755 $(MACHINE_FILES)/rcS_neutrino $(RELEASE_DIR)/etc/init.d/rcS
-	install -m 0755 $(MACHINE_FILES)/halt $(RELEASE_DIR)/etc/init.d/halt
-	install -m 0644	$(MACHINE_FILES)/fstab $(RELEASE_DIR)/etc/fstab
 	install -m 0755 $(MACHINE_FILES)/showiframe $(RELEASE_DIR)/bin
-	cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/*.ko $(RELEASE_DIR)/lib/modules/
 	cp $(TARGET_DIR)/boot/uImage $(RELEASE_DIR)/boot/
 

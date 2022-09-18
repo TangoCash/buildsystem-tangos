@@ -96,12 +96,8 @@ CUSTOM_INITTAB = $(SKEL_ROOT)/etc/inittab_ttyS0
 
 # release target
 neutrino-release-vuduo4k:
-	install -m 0755 $(MACHINE_FILES)/rcS_neutrino $(RELEASE_DIR)/etc/init.d/rcS
-	install -m 0755 $(MACHINE_FILES)/halt $(RELEASE_DIR)/etc/init.d/halt
-	install -m 0644	$(MACHINE_FILES)/fstab $(RELEASE_DIR)/etc/fstab
 	install -m 0755 $(MACHINE_FILES)/bp3flash.sh $(RELEASE_DIR)/usr/bin
 	install -m 0755 $(MACHINE_FILES)/nvram $(RELEASE_DIR)/usr/bin
-	cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/*.ko $(RELEASE_DIR)/lib/modules/
 	rm -f $(RELEASE_DIR)/lib/modules/fpga_directc.ko
 ifeq ($(VU_MULTIBOOT), 1)
 	cp $(MACHINE_FILES)/$(KERNEL_INITRD) $(RELEASE_DIR)/boot/

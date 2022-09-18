@@ -149,6 +149,9 @@ endif
 	echo "$(BOXTYPE)" > $(RELEASE_DIR)/etc/hostname
 	ln -sf ../../bin/busybox $(RELEASE_DIR)/usr/bin/ether-wake
 	ln -sf ../../bin/showiframe $(RELEASE_DIR)/usr/bin/showiframe
+	[ -e $(MACHINE_FILES)/halt ] && install -m 0755 $(MACHINE_FILES)/halt $(RELEASE_DIR)/etc/init.d/halt
+	[ -e $(MACHINE_FILES)/fstab ] && install -m 0644	$(MACHINE_FILES)/fstab $(RELEASE_DIR)/etc/fstab
+	install -m 0755 $(MACHINE_FILES)/rcS_neutrino $(RELEASE_DIR)/etc/init.d/rcS
 	[ ! -z "$(CUSTOM_RCS)" ] && install -m 0755 $(CUSTOM_RCS) $(RELEASE_DIR)/etc/init.d/rcS || true
 #
 #
@@ -189,6 +192,7 @@ endif
 #
 # modules.available // modules.default
 #
+	cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/*.ko $(RELEASE_DIR)/lib/modules/
 	cp -aR $(MACHINE_COMMON_DIR)/modules.available_$(BOXARCH) $(RELEASE_DIR)/etc/modules.available
 	if [ -e $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/modules.default ]; then \
 		cp -aR $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/modules.default $(RELEASE_DIR)/etc/modules.default; \

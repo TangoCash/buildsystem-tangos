@@ -56,9 +56,6 @@ CUSTOM_RCS =
 
 # release target
 neutrino-release-ustym4kpro:
-	install -m 0755 $(MACHINE_FILES)/rcS_neutrino $(RELEASE_DIR)/etc/init.d/rcS
-	install -m 0755 $(MACHINE_FILES)/halt $(RELEASE_DIR)/etc/init.d/halt
-	install -m 0644	$(MACHINE_FILES)/fstab $(RELEASE_DIR)/etc/fstab
 	install -m 0755 $(MACHINE_FILES)/showiframe $(RELEASE_DIR)/bin
 	install -m 0755 $(MACHINE_FILES)/libreader.sh  $(RELEASE_DIR)/usr/bin/libreader.sh
 	install -d $(RELEASE_DIR)/var/spool/cron/crontabs
@@ -66,9 +63,7 @@ neutrino-release-ustym4kpro:
 	install -d $(RELEASE_DIR)/var/tuxbox/config
 	touch $(RELEASE_DIR)/var/tuxbox/config/.crond
 	install -m 0755 $(MACHINE_FILES)/suspend  $(RELEASE_DIR)/etc/init.d/suspend
-	cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/*.ko $(RELEASE_DIR)/lib/modules/
 	cp $(TARGET_DIR)/boot/uImage $(RELEASE_DIR)/boot/
-	install -m 0755 $(SKEL_ROOT)/etc/init.d/mmcblk-by-name $(RELEASE_DIR)/etc/init.d/mmcblk-by-name
 	install -m 0755 $(MACHINE_FILES)/libreader $(RELEASE_DIR)/etc/init.d/
 	cd $(RELEASE_DIR)/etc/rc.d/rc0.d; ln -sf ../../init.d/libreader ./S05libreader
 	cd $(RELEASE_DIR)/etc/rc.d/rc6.d; ln -sf ../../init.d/libreader ./S05libreader

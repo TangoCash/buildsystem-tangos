@@ -31,12 +31,8 @@ CUSTOM_INITTAB =
 
 # release target
 neutrino-release-osmio4kplus:
-	install -m 0755 $(MACHINE_FILES)/rcS_neutrino $(RELEASE_DIR)/etc/init.d/rcS
-	install -m 0755 $(MACHINE_FILES)/halt $(RELEASE_DIR)/etc/init.d/halt
-	install -m 0644	$(MACHINE_FILES)/fstab $(RELEASE_DIR)/etc/fstab
 	cp -rf $(SKEL_ROOT)/firmware/availink $(RELEASE_DIR)/lib/firmware
 	install -m 0755 $(SKEL_ROOT)/etc/init.d/mmcblk1-by-name $(RELEASE_DIR)/etc/init.d/mmcblk-by-name
-	cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/*.ko $(RELEASE_DIR)/lib/modules/
 	cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/kernel/net/wireless/cfg80211.ko $(RELEASE_DIR)/lib/modules/
 	cp $(TARGET_DIR)/boot/zImage $(RELEASE_DIR)/boot/
 
