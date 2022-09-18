@@ -1,27 +1,19 @@
 #
 # driver
 #
-MACHINE = ustym4kpro
 HICHIPSET = 3798mv200
-BRAND = uclan
+SOC_FAMILY = hisi3798mv200
 
-DRIVER_DATE = 20220326
-DRIVER_VER = 4.4.35
-DRIVER_SRC = $(MACHINE)-hiko-$(DRIVER_DATE).zip
+DRIVER_SRC = $(BOXTYPE)-hiko-$(DRIVER_DATE).zip
 
-HILIB_DATE = 20190603
-HILIB_SRC = $(MACHINE)-hilib-$(HILIB_DATE).tar.gz
+HILIB_SRC = $(BOXTYPE)-hilib-$(HILIB_DATE).tar.gz
 
-LIBGLES_DATE = 20180301
-LIBGLES_SRC = $(MACHINE)-opengl-$(LIBGLES_DATE).tar.gz
+LIBGLES_SRC = $(BOXTYPE)-opengl-$(LIBGLES_DATE).tar.gz
 
-LIBREADER_DATE = 20200612
-LIBREADER_SRC = $(MACHINE)-libreader-$(LIBREADER_DATE).zip
+LIBREADER_SRC = $(BOXTYPE)-libreader-$(LIBREADER_DATE).zip
 
-HIHALT_DATE = 20190603
-HIHALT_SRC = $(MACHINE)-hihalt-$(HIHALT_DATE).tar.gz
+HIHALT_SRC = $(BOXTYPE)-hihalt-$(HIHALT_DATE).tar.gz
 
-TNTFS_DATE = 20200528
 TNTFS_SRC = $(HICHIPSET)-tntfs-$(TNTFS_DATE).zip
 
 LIBJPEG_SRC = libjpeg.so.62.2.0
@@ -31,25 +23,25 @@ WIFI_SRC = main.zip
 WIFI = RTL8192EU.zip
 
 $(ARCHIVE)/$(DRIVER_SRC):
-	$(DOWNLOAD) http://source.mynonpublic.com/$(BRAND)/$(DRIVER_SRC)
+	$(DOWNLOAD) http://source.mynonpublic.com/$(MACHINE)/$(DRIVER_SRC)
 
 $(ARCHIVE)/$(HILIB_SRC):
-	$(DOWNLOAD) http://source.mynonpublic.com/$(BRAND)/$(HILIB_SRC)
+	$(DOWNLOAD) http://source.mynonpublic.com/$(MACHINE)/$(HILIB_SRC)
 
 $(ARCHIVE)/$(LIBGLES_SRC):
-	$(DOWNLOAD) http://source.mynonpublic.com/$(BRAND)/$(LIBGLES_SRC)
+	$(DOWNLOAD) http://source.mynonpublic.com/$(MACHINE)/$(LIBGLES_SRC)
 
 $(ARCHIVE)/$(LIBREADER_SRC):
-	$(DOWNLOAD) http://source.mynonpublic.com/$(BRAND)/$(LIBREADER_SRC)
+	$(DOWNLOAD) http://source.mynonpublic.com/$(MACHINE)/$(LIBREADER_SRC)
 
 $(ARCHIVE)/$(HIHALT_SRC):
-	$(DOWNLOAD) http://source.mynonpublic.com/$(BRAND)/$(HIHALT_SRC)
+	$(DOWNLOAD) http://source.mynonpublic.com/$(MACHINE)/$(HIHALT_SRC)
 
 $(ARCHIVE)/$(TNTFS_SRC):
 	$(DOWNLOAD) http://source.mynonpublic.com/tntfs/$(TNTFS_SRC)
 
 $(ARCHIVE)/$(LIBJPEG_SRC):	
-	$(DOWNLOAD) https://github.com/oe-alliance/oe-alliance-core/blob/5.0/meta-brands/meta-$(BRAND)/recipes-graphics/files/$(LIBJPEG_SRC)
+	$(DOWNLOAD) https://github.com/oe-alliance/oe-alliance-core/blob/5.0/meta-brands/meta-$(MACHINE)/recipes-graphics/files/$(LIBJPEG_SRC)
 
 $(ARCHIVE)/$(WIFI_SRC):
 	$(DOWNLOAD) https://github.com/TangoCash/RTL8192FU/archive/refs/heads/$(WIFI_SRC) -O $(ARCHIVE)/$(WIFI)

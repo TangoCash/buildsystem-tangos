@@ -4,7 +4,7 @@
 KERNEL_VER             = 4.4.35
 KERNEL_DATE            = 20181224
 KERNEL_TYPE            = ustym4kpro
-KERNEL_SRC             = $(BRAND)-linux-$(KERNEL_VER)-$(KERNEL_DATE).tar.gz
+KERNEL_SRC             = uclan-linux-$(KERNEL_VER)-$(KERNEL_DATE).tar.gz
 KERNEL_URL             = http://source.mynonpublic.com/uclan
 KERNEL_CONFIG          = defconfig
 KERNEL_DIR             = $(BUILD_TMP)/linux-$(KERNEL_VER)
@@ -32,19 +32,20 @@ KERNEL_PATCHES = \
 # DRIVER
 #
 
-#DRIVER_VER     = $(KERNEL_VER)
-#DRIVER_DATE    = 20200731
-#PLAYERLIB_DATE = 20200622
-#LIBGLES_DATE   = 20181201
+DRIVER_VER     = $(KERNEL_VER)
+DRIVER_DATE    = 20220326
+HILIB_DATE     = 20190603
+LIBGLES_DATE   = 20180301
+LIBREADER_DATE = 20200612
+HIHALT_DATE    = 20190603
+TNTFS_DATE     = 20200528
 
 #
 # IMAGE
 #
 
-#MACHINE              = uclan
-#FLASH_BOOTARGS_DATE  = 20200504
-#FLASH_PARTITONS_DATE = 20200319
-#FLASH_RECOVERY_DATE  = 20200424
+MACHINE              = uclan
+FLASH_PARTITONS_DATE = 20201218
 
 # others
 #CAIRO_OPTS = \
