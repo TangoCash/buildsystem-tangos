@@ -39,7 +39,7 @@ RELEASE_IMAGE_DIR     = $(BASE_DIR)/release_image
 GITHUB                = https://github.com
 
 GIT_NAME             ?= TangoCash
-GIT_NAME_TOOLS       ?= Duckbox-Developers
+GIT_NAME_TOOLS       ?= TangoCash
 
 # default config...
 BOXARCH              ?= arm

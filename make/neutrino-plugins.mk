@@ -63,11 +63,11 @@ $(D)/neutrino-plugins.do_prepare: $(D)/bootstrap $(D)/ffmpeg $(D)/libcurl $(D)/l
 	$(START_BUILD)
 	rm -rf $(SOURCE_DIR)/neutrino-plugins
 	rm -rf $(SOURCE_DIR)/neutrino-plugins.org
-	set -e; if [ -d $(ARCHIVE)/neutrino-plugins-ddt.git ]; \
-		then cd $(ARCHIVE)/neutrino-plugins-ddt.git; git pull; \
-		else cd $(ARCHIVE); git clone $(GITHUB)/Duckbox-Developers/neutrino-ddt-plugins.git neutrino-plugins-ddt.git; \
+	set -e; if [ -d $(ARCHIVE)/neutrino-plugins-tangos.git ]; \
+		then cd $(ARCHIVE)/neutrino-plugins-tangos.git; git pull; \
+		else cd $(ARCHIVE); git clone $(GITHUB)/Duckbox-Developers/neutrino-tangos-plugins.git neutrino-plugins-tangos.git; \
 		fi
-	cp -ra $(ARCHIVE)/neutrino-plugins-ddt.git $(SOURCE_DIR)/neutrino-plugins
+	cp -ra $(ARCHIVE)/neutrino-plugins-tangos.git $(SOURCE_DIR)/neutrino-plugins
 	sed -i -e 's#shellexec fx2#shellexec tuxmail tuxcal#g' $(SOURCE_DIR)/neutrino-plugins/Makefile.am
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51 h7 bre2ze4k multibox multiboxse hd60 hd61 osmio4k osmio4kplus))
 	sed -i -e 's#stb-startup \\#stb-startup-tuxbox \\#g' $(SOURCE_DIR)/neutrino-plugins/Makefile.am
