@@ -65,7 +65,7 @@ $(D)/neutrino-plugins.do_prepare: $(D)/bootstrap $(D)/ffmpeg $(D)/libcurl $(D)/l
 	rm -rf $(SOURCE_DIR)/neutrino-plugins.org
 	set -e; if [ -d $(ARCHIVE)/neutrino-plugins-tangos.git ]; \
 		then cd $(ARCHIVE)/neutrino-plugins-tangos.git; git pull; \
-		else cd $(ARCHIVE); git clone $(GITHUB)/Duckbox-Developers/neutrino-tangos-plugins.git neutrino-plugins-tangos.git; \
+		else cd $(ARCHIVE); git clone $(GITHUB)/TangoCash/neutrino-tangos-plugins.git neutrino-plugins-tangos.git; \
 		fi
 	cp -ra $(ARCHIVE)/neutrino-plugins-tangos.git $(SOURCE_DIR)/neutrino-plugins
 	sed -i -e 's#shellexec fx2#shellexec tuxmail tuxcal#g' $(SOURCE_DIR)/neutrino-plugins/Makefile.am
