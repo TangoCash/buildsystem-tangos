@@ -145,6 +145,10 @@ N_CONFIG_OPTS += --with-boxtype=$(BOXTYPE)
 LH_CONFIG_OPTS += --with-boxtype=$(BOXTYPE)
 endif
 
+ifeq ($(CI_ENABLED), 1)
+N_CONFIG_OPTS += --enable-ci
+endif
+
 N_CONFIG_OPTS += --enable-ffmpegdec
 N_CONFIG_OPTS += --enable-freesatepg
 N_CONFIG_OPTS += --enable-fribidi
@@ -253,6 +257,11 @@ NMP_BRANCH  ?= master
 HAL_BRANCH  ?= master
 NMP_PATCHES  = $(NEUTRINO_TANGOS_PATCHES)
 HAL_PATCHES  = $(LIBSTB_HAL_TANGOS_PATCHES)
+else ifeq  ($(FLAVOUR), TANGOSEVO)
+GIT_URL     ?= $(GITHUB)/TangoCash
+NEUTRINO     = neutrino-tangos
+NMP_BRANCH  ?= evo
+NMP_PATCHES  = $(NEUTRINO_TANGOS_PATCHES)
 else ifeq  ($(FLAVOUR), DDT)
 GIT_URL     ?= $(GITHUB)/Duckbox-Developers
 NEUTRINO     = neutrino-ddt
@@ -272,6 +281,10 @@ NMP_PATCHES  = $(NEUTRINO_TUX_PATCHES)
 HAL_PATCHES  = $(LIBSTB_HAL_TUX_PATCHES)
 else ifeq ($(FLAVOUR), HD2)
 NEUTRINO     = neutrino-hd2
+endif
+
+ifneq  ($(FLAVOUR), TANGOSEVO)
+LIBDEP = $(D)/libstb-hal
 endif
 
 # -----------------------------------------------------------------------------
@@ -384,7 +397,7 @@ libstb-hal-distclean:
 
 # -----------------------------------------------------------------------------
 
-$(D)/neutrino.do_prepare: | $(NEUTRINO_DEPS) $(D)/libstb-hal
+$(D)/neutrino.do_prepare: | $(NEUTRINO_DEPS) $(LIBDEP)
 	$(START_BUILD)
 	rm -rf $(SOURCE_DIR)/$(NEUTRINO)
 	rm -rf $(SOURCE_DIR)/$(NEUTRINO).org

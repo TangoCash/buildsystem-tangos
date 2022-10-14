@@ -202,31 +202,32 @@ case $1 in
 esac
 
 case "$REPLY" in
-	30) BOXARCH="arm";BOXTYPE="osmio4k";;
-	31) BOXARCH="arm";BOXTYPE="osmio4kplus";;
-	32) BOXARCH="arm";BOXTYPE="osmini4k";;
-	40) BOXARCH="arm";BOXTYPE="vusolo4k";;
-	41) BOXARCH="arm";BOXTYPE="vuduo4k";;
-	42) BOXARCH="arm";BOXTYPE="vuzero4k";;
-	43) BOXARCH="arm";BOXTYPE="vuultimo4k";;
-	44) BOXARCH="arm";BOXTYPE="vuuno4kse";;
-	45) BOXARCH="arm";BOXTYPE="vuuno4k";;
-	51) BOXARCH="arm";BOXTYPE="hd51";;
-	52) BOXARCH="arm";BOXTYPE="bre2ze4k";;
-	53) BOXARCH="arm";BOXTYPE="h7";;
-	54) BOXARCH="arm";BOXTYPE="multibox";;
-	55) BOXARCH="arm";BOXTYPE="multiboxse";;
-	60) BOXARCH="arm";BOXTYPE="hd60";;
-	61) BOXARCH="arm";BOXTYPE="hd61";;
-	62) BOXARCH="arm";BOXTYPE="sf8008";;
-	63) BOXARCH="arm";BOXTYPE="sf8008m";;
-	64) BOXARCH="arm";BOXTYPE="ustym4kpro";;
-	65) BOXARCH="arm";BOXTYPE="h9combo";;
-	66) BOXARCH="arm";BOXTYPE="h9";;
-	 *) BOXARCH="arm";BOXTYPE="hd51";;
+	30) BOXARCH="arm";BOXTYPE="osmio4k";CI_ENABLED="0";;
+	31) BOXARCH="arm";BOXTYPE="osmio4kplus";CI_ENABLED="0";;
+	32) BOXARCH="arm";BOXTYPE="osmini4k";CI_ENABLED="0";;
+	40) BOXARCH="arm";BOXTYPE="vusolo4k";CI_ENABLED="1";;
+	41) BOXARCH="arm";BOXTYPE="vuduo4k";CI_ENABLED="1";;
+	42) BOXARCH="arm";BOXTYPE="vuzero4k";CI_ENABLED="1";;
+	43) BOXARCH="arm";BOXTYPE="vuultimo4k";CI_ENABLED="1";;
+	44) BOXARCH="arm";BOXTYPE="vuuno4kse";CI_ENABLED="1";;
+	45) BOXARCH="arm";BOXTYPE="vuuno4k";CI_ENABLED="1";;
+	51) BOXARCH="arm";BOXTYPE="hd51";CI_ENABLED="1";;
+	52) BOXARCH="arm";BOXTYPE="bre2ze4k";CI_ENABLED="1";;
+	53) BOXARCH="arm";BOXTYPE="h7";CI_ENABLED="1";;
+	54) BOXARCH="arm";BOXTYPE="multibox";CI_ENABLED="0";;
+	55) BOXARCH="arm";BOXTYPE="multiboxse";CI_ENABLED="0";;
+	60) BOXARCH="arm";BOXTYPE="hd60";CI_ENABLED="0";;
+	61) BOXARCH="arm";BOXTYPE="hd61";CI_ENABLED="0";;
+	62) BOXARCH="arm";BOXTYPE="sf8008";CI_ENABLED="0";;
+	63) BOXARCH="arm";BOXTYPE="sf8008m";CI_ENABLED="0";;
+	64) BOXARCH="arm";BOXTYPE="ustym4kpro";CI_ENABLED="0";;
+	65) BOXARCH="arm";BOXTYPE="h9combo";CI_ENABLED="0";;
+	66) BOXARCH="arm";BOXTYPE="h9";CI_ENABLED="0";;
+	 *) BOXARCH="arm";BOXTYPE="hd51";CI_ENABLED="1";;
 esac
 echo "BOXARCH=$BOXARCH" > config
 echo "BOXTYPE=$BOXTYPE" >> config
+echo "CI_ENABLED=$CI_ENABLED" >> config
 
 ##############################################
 
@@ -327,7 +328,7 @@ echo "IMAGE=$IMAGE" >> config
 ##############################################
 
 case $6 in
-	[1-6]) REPLY=$6;;
+	[1-7]) REPLY=$6;;
 	*)	echo -e "\nWhich Neutrino variant do you want to build?:"
 		echo "   1)  neutrino-tangos"
 		echo "   2)  neutrino-ddt"
@@ -335,7 +336,8 @@ case $6 in
 		echo "   4)  neutrino-ni"
 		echo "   5)  neutrino-max"
 		echo "   6)  neutrino-hd2"
-		read -p "Select Image to build (1-6)? [1]"
+		echo "   7)  neutrino-tangos-evo"
+		read -p "Select Image to build (1-7)? [1]"
 		REPLY="${REPLY:-1}";;
 esac
 
