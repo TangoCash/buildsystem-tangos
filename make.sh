@@ -51,7 +51,7 @@ if [ "$1" == defaultconfig ]; then
 	exit
 fi
 
-if [ "$1" == hd51 ] || [ "$1" == h7 ] || [ "$1" == bre2ze4k ]; then
+if [ "$1" == hd51 ] || [ "$1" == h7 ] || [ "$1" == bre2ze4k ] || [ "$1" == e4hdultra ]; then
 	echo "BOXARCH=arm" > config
 	echo "BOXTYPE=$1" >> config
 	echo "FFMPEG_EXPERIMENTAL=0" >> config
@@ -191,6 +191,9 @@ case $1 in
 		echo "   54)  Multibox"
 		echo "   55)  Multibox SE"
 		echo
+		echo "  Axas"
+		echo "   56)  E4HD Ultra"
+		echo
 		echo "  Octagon & Uclan"
 		echo "   62)  Octagon SF8008"
 		echo "   63)  Octagon SF8008m"
@@ -216,6 +219,7 @@ case "$REPLY" in
 	53) BOXARCH="arm";BOXTYPE="h7";CI_ENABLED="1";;
 	54) BOXARCH="arm";BOXTYPE="multibox";CI_ENABLED="0";;
 	55) BOXARCH="arm";BOXTYPE="multiboxse";CI_ENABLED="0";;
+	56) BOXARCH="arm";BOXTYPE="e4hdultra";CI_ENABLED="1";;
 	60) BOXARCH="arm";BOXTYPE="hd60";CI_ENABLED="0";;
 	61) BOXARCH="arm";BOXTYPE="hd61";CI_ENABLED="0";;
 	62) BOXARCH="arm";BOXTYPE="sf8008";CI_ENABLED="0";;
