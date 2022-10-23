@@ -23,7 +23,7 @@ KERNEL_PATCHES = \
 		reserve_dvb_adapter_0.patch \
 		blacklist_mmc0.patch \
 		export_pmpoweroffprepare.patch \
-		4_10_fix-multiple-defs-yyloc.patch \
+		4.10.12_fix-multiple-defs-yyloc.patch \
 		v3-1-3-media-si2157-Add-support-for-Si2141-A10.patch \
 		v3-2-3-media-si2168-add-support-for-Si2168-D60.patch \
 		v3-3-3-media-dvbsky-MyGica-T230C-support.patch \
@@ -45,8 +45,8 @@ DRIVER_SRC = e4hd-drivers-$(DRIVER_VER).zip
 DRIVER_URL = http://source.mynonpublic.com/ceryon
 
 LIBGLES_DATE = 20191101
-LIBGLES_SRC  = $(KERNEL_TYPE)-v3ddriver-$(LIBGLES_DATE).zip
-LIBGLES_URL  = http://downloads.mutant-digital.net/v3ddriver
+LIBGLES_SRC  = 8100s-v3ddriver-$(LIBGLES_DATE).zip
+LIBGLES_URL  = https://source.mynonpublic.com/ceryon
 
 LIBGLES_HEADERS = hd-v3ddriver-headers.tar.gz
 
