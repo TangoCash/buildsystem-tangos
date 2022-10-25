@@ -57,7 +57,9 @@ CAIRO_OPTS = \
 
 LINKS_PATCH_BOXTYPE = links-$(LINKS_VER)-event1-input.patch
 
-CUSTOM_RCS     = $(MACHINE_COMMON_DIR)/rcS_neutrino_$(BOXARCH)
+GRAPHLCD_EXTRA_PATCH = graphlcd-e4hdultra.patch
+
+CUSTOM_RCS     =
 CUSTOM_INITTAB = $(SKEL_ROOT)/etc/inittab_ttyS0
 
 # release target
