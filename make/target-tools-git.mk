@@ -11,7 +11,7 @@ tools-clean:
 	-$(MAKE) -C $(TOOLS_DIR)/spf_tool distclean
 	-$(MAKE) -C $(TOOLS_DIR)/tuxcom distclean
 	-$(MAKE) -C $(TOOLS_DIR)/read-edid distclean
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vuduo4k vuuno4kse vuultimo4k vusolo4k))
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vuduo4k vuuno4kse vuultimo4k vusolo4k e4hdultra))
 	-$(MAKE) -C $(TOOLS_DIR)/oled_ctrl distclean
 endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vuduo vuduo2 vuduo4k vuuno4kse vuzero4k vuultimo4k vuuno4k vusolo4k))
@@ -191,7 +191,7 @@ TOOLS += $(D)/tools-msgbox
 TOOLS += $(D)/tools-satfind
 TOOLS += $(D)/tools-showiframe
 TOOLS += $(D)/tools-tuxcom
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vuduo4k vuuno4kse vuultimo4k vusolo4k))
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vuduo4k vuuno4kse vuultimo4k vusolo4k e4hdultra))
 TOOLS += $(D)/tools-oled_ctrl
 endif
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), vuduo vuduo2 vuduo4k vuuno4kse vuzero4k vuultimo4k vuuno4k vusolo4k))
