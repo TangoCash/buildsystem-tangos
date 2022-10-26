@@ -9,7 +9,7 @@ index 270cae8..d256e4b 100644
 +[e4hdultra]
 +# Default for e4hdultra
 +Driver=framebuffer
-+Damage=none
++Zoom=0
 +Device=/dev/fb1
 +
  [ax206dpf]
