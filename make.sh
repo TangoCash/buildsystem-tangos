@@ -382,7 +382,7 @@ echo "EXTERNAL_LCD=$EXTERNAL_LCD" >> config
 
 LAYOUT=single
 
-if [ $BOXTYPE == 'hd51' -o $BOXTYPE == 'bre2ze4k' -o $BOXTYPE == 'h7' ]; then
+if [ $BOXTYPE == 'hd51' -o $BOXTYPE == 'bre2ze4k' -o $BOXTYPE == 'h7' -o $BOXTYPE == 'e4hdultra' ]; then
 
 case $8 in
 	[1-2]) REPLY=$8;;
