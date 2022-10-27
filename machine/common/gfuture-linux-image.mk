@@ -4,6 +4,16 @@ FLASH_BOOT_IMAGE = boot.img
 FLASH_IMAGE_LINK = $(FLASH_IMAGE_NAME).ext4
 FLASH_IMAGE_ROOTFS_SIZE = 294912
 
+ifeq ($(BOXTYPE),$(filter $(BOXTYPE),bre2ze4k hd51))
+IMAGE_SUBDIR = $(BOXTYPE)
+endif
+ifeq ($(BOXTYPE),e4hdultra)
+IMAGE_SUBDIR = e4hd
+endif
+ifeq ($(BOXTYPE),h7)
+IMAGE_SUBDIR = zgemma/$(BOXTYPE)
+endif
+
 # emmc image
 EMMC_IMAGE_SIZE = 3817472
 EMMC_IMAGE = $(FLASH_BUILD_TMP)/$(FLASH_IMAGE_NAME).img
@@ -148,37 +158,37 @@ else
 endif
 	# Truncate on purpose
 	dd if=$(FLASH_BUILD_TMP)/$(FLASH_IMAGE_LINK) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(ROOTFS_PARTITION_OFFSET) \* $(BLOCK_SECTOR)) count=$(shell expr $(FLASH_IMAGE_ROOTFS_SIZE) \* $(BLOCK_SECTOR))
-	mv $(FLASH_BUILD_TMP)/disk.img $(FLASH_BUILD_TMP)/$(BOXTYPE)/
+	mv $(FLASH_BUILD_TMP)/disk.img $(FLASH_BUILD_TMP)/$(IMAGE_SUBDIR)/
 
 flash-image-$(BOXTYPE)-multi-rootfs:
-	mkdir -p $(FLASH_BUILD_TMP)/$(BOXTYPE)
+	mkdir -p $(FLASH_BUILD_TMP)/$(IMAGE_SUBDIR)
 ifneq ($(KERNEL_DTB_VER),)
-	cp $(RELEASE_DIR)/boot/$(KERNEL_IMAGE).dtb $(FLASH_BUILD_TMP)/$(BOXTYPE)/kernel.bin
+	cp $(RELEASE_DIR)/boot/$(KERNEL_IMAGE).dtb $(FLASH_BUILD_TMP)/$(IMAGE_SUBDIR)/kernel.bin
 else
-	cp $(RELEASE_DIR)/boot/$(KERNEL_IMAGE) $(FLASH_BUILD_TMP)/$(BOXTYPE)/kernel.bin
+	cp $(RELEASE_DIR)/boot/$(KERNEL_IMAGE) $(FLASH_BUILD_TMP)/$(IMAGE_SUBDIR)/kernel.bin
 endif
 	cd $(RELEASE_DIR); \
-	tar -cvf $(FLASH_BUILD_TMP)/$(BOXTYPE)/rootfs.tar --exclude=zImage* . > /dev/null 2>&1; \
-	bzip2 $(FLASH_BUILD_TMP)/$(BOXTYPE)/rootfs.tar
-	echo $(BOXTYPE)_$(FLAVOUR)_multiroot_$(ITYPE)_$(DATE) > $(FLASH_BUILD_TMP)/$(BOXTYPE)/imageversion
+	tar -cvf $(FLASH_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs.tar --exclude=zImage* . > /dev/null 2>&1; \
+	bzip2 $(FLASH_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs.tar
+	echo $(BOXTYPE)_$(FLAVOUR)_multiroot_$(ITYPE)_$(DATE) > $(FLASH_BUILD_TMP)/$(IMAGE_SUBDIR)/imageversion
 	cd $(FLASH_BUILD_TMP) && \
-	zip -r $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_$(FLAVOUR)_$(LAYOUT)_$(ITYPE)_$(DATE).zip $(BOXTYPE)/rootfs.tar.bz2 $(BOXTYPE)/kernel.bin $(BOXTYPE)/disk.img $(BOXTYPE)/imageversion
+	zip -r $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_$(FLAVOUR)_$(LAYOUT)_$(ITYPE)_$(DATE).zip $(IMAGE_SUBDIR)/rootfs.tar.bz2 $(IMAGE_SUBDIR)/kernel.bin $(IMAGE_SUBDIR)/disk.img $(IMAGE_SUBDIR)/imageversion
 	# cleanup
 	rm -rf $(FLASH_BUILD_TMP)
 
 flash-image-$(BOXTYPE)-online:
 	rm -rf $(FLASH_BUILD_TMP) || true
-	mkdir -p $(FLASH_BUILD_TMP)/$(BOXTYPE)
+	mkdir -p $(FLASH_BUILD_TMP)/$(IMAGE_SUBDIR)
 ifneq ($(KERNEL_DTB_VER),)
-	cp $(RELEASE_DIR)/boot/$(KERNEL_IMAGE).dtb $(FLASH_BUILD_TMP)/$(BOXTYPE)/kernel.bin
+	cp $(RELEASE_DIR)/boot/$(KERNEL_IMAGE).dtb $(FLASH_BUILD_TMP)/$(IMAGE_SUBDIR)/kernel.bin
 else
-	cp $(RELEASE_DIR)/boot/$(KERNEL_IMAGE) $(FLASH_BUILD_TMP)/$(BOXTYPE)/kernel.bin
+	cp $(RELEASE_DIR)/boot/$(KERNEL_IMAGE) $(FLASH_BUILD_TMP)/$(IMAGE_SUBDIR)/kernel.bin
 endif
 	cd $(RELEASE_DIR); \
-	tar -cvf $(FLASH_BUILD_TMP)/$(BOXTYPE)/rootfs.tar --exclude=zImage* . > /dev/null 2>&1; \
-	bzip2 $(FLASH_BUILD_TMP)/$(BOXTYPE)/rootfs.tar
-	echo $(BOXTYPE)_$(FLAVOUR)_$(ITYPE)_$(DATE) > $(FLASH_BUILD_TMP)/$(BOXTYPE)/imageversion
-	cd $(FLASH_BUILD_TMP)/$(BOXTYPE) && \
+	tar -cvf $(FLASH_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs.tar --exclude=zImage* . > /dev/null 2>&1; \
+	bzip2 $(FLASH_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs.tar
+	echo $(BOXTYPE)_$(FLAVOUR)_$(ITYPE)_$(DATE) > $(FLASH_BUILD_TMP)/$(IMAGE_SUBDIR)/imageversion
+	cd $(FLASH_BUILD_TMP)/$(IMAGE_SUBDIR) && \
 	tar -cvzf $(RELEASE_IMAGE_DIR)/$(BOXTYPE)_$(FLAVOUR)_$(LAYOUT)_$(ITYPE)_$(DATE).tgz rootfs.tar.bz2 kernel.bin imageversion
 	# cleanup
 	rm -rf $(FLASH_BUILD_TMP)
