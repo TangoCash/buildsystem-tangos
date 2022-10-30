@@ -225,6 +225,9 @@ endif
 			cp -aR $(TARGET_SHARE_DIR)/fonts/tuxtxt.ttf $(RELEASE_DIR)/usr/share/fonts; \
 			ln -s /usr/share/fonts/tuxtxt.ttf $(RELEASE_DIR)/usr/share/fonts/shell.ttf; \
 		fi; \
+		if [ -e $(TARGET_SHARE_DIR)/fonts/oled ]; then \
+			cp -aR $(TARGET_SHARE_DIR)/fonts/oled $(RELEASE_DIR)/usr/share/fonts; \
+		fi; \
 	fi
 #
 # neutrino
