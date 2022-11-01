@@ -352,6 +352,7 @@ case "$REPLY" in
 	4) FLAVOUR="NI";;
 	5) FLAVOUR="MAX";;
 	6) FLAVOUR="HD2";;
+	7) FLAVOUR="TANGOSEVO"
 	*) FLAVOUR="TANGOS";;
 esac
 echo "FLAVOUR=$FLAVOUR" >> config
