@@ -100,7 +100,7 @@ CUSTOM_RCS     = $(MACHINE_COMMON_DIR)/rcS_neutrino_vu
 CUSTOM_INITTAB = $(SKEL_ROOT)/etc/inittab_ttyS0
 
 # release target
-neutrino-release-vuultimo4k:
+neutrino-release-uno4kse:
 	rm -f $(RELEASE_DIR)/lib/modules/fpga_directc.ko
 ifeq ($(VU_MULTIBOOT), 1)
 	cp $(MACHINE_FILES)/$(KERNEL_INITRD) $(RELEASE_DIR)/boot/
