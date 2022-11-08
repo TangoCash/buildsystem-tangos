@@ -411,7 +411,7 @@ esac
 
 fi
 
-if [ $BOXTYPE == 'vusolo4k' -o $BOXTYPE == 'vuduo4k' -o $BOXTYPE == 'vuultimo4k' -o $BOXTYPE == 'vuuno4k' -o $BOXTYPE == 'vuuno4kse' -o $BOXTYPE == 'vuzero4k' -o $BOXTYPE == vuduo4k ]; then
+if [ $BOXTYPE == 'vusolo4k' -o $BOXTYPE == 'vuduo4k' -o $BOXTYPE == 'vuultimo4k' -o $BOXTYPE == 'vuuno4k' -o $BOXTYPE == 'vuuno4kse' -o $BOXTYPE == 'vuzero4k' -o $BOXTYPE == 'vuduo4kse' ]; then
 case $8 in
 	[1-2]) REPLY=$8;;
 	*)	echo -e "\nNormal or MultiBoot:"
