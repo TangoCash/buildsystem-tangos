@@ -83,7 +83,7 @@ if [ "$1" == hd60 ] || [ "$1" == hd61 ] || [ "$1" == multibox ] || [ "$1" == mul
 	exit
 fi
 
-if [ "$1" == vusolo4k -o "$1" == vuduo4k -o "$1" == vuultimo4k -o "$1" == vuuno4k -o "$1" == vuuno4kse -o "$1" == vuzero4k ]; then
+if [ "$1" == vusolo4k -o "$1" == vuduo4k -o "$1" == vuultimo4k -o "$1" == vuuno4k -o "$1" == vuuno4kse -o "$1" == vuzero4k -o "$1" == vuduo4kse ]; then
 	echo "BOXARCH=arm" > config
 	echo "BOXTYPE=$1" >> config
 	echo "FFMPEG_EXPERIMENTAL=0" >> config
@@ -162,7 +162,7 @@ fi
 ##############################################
 
 case $1 in
-	3[0-2] | 4[0-5] | 5[1-7] | 6[0-6]) REPLY=$1;;
+	3[0-2] | 4[0-6] | 5[1-7] | 6[0-6]) REPLY=$1;;
 	*)
 		echo "Target receivers:"
 		echo
@@ -173,9 +173,10 @@ case $1 in
 		echo "   32)  Edision OS mini 4K"
 		echo
 		echo "  VU+"
-		echo "   40) VU+ Solo 4K     43) VU+ Ultimo 4K"
-		echo "   41) VU+ Duo  4K     44) VU+ Uno 4K SE"
-		echo "   42) VU+ Zero 4K     45) VU+ Uno 4K"
+		echo "   40) VU+ Solo 4K     41) VU+ Ultimo 4K"
+		echo "   42) VU+ Uno  4K     43) VU+ Uno 4K SE"
+		echo "   44) VU+ Duo  4K     45) VU+ Duo 4K SE"
+		echo "   46) VU+ Zero 4K"
 		echo
 		echo "  AX/Mut@nt"
 		echo "   51)  AX/Mut@nt HD51"
@@ -198,7 +199,7 @@ case $1 in
 		echo "   56)  E4HD Ultra"
 		echo
 		echo "  Protek"
-		echo "   57) Protek 4k"
+		echo "   57)  Protek 4k"
 		echo
 		echo "  Octagon & Uclan"
 		echo "   62)  Octagon SF8008"
@@ -215,11 +216,12 @@ case "$REPLY" in
 	31) BOXARCH="arm";BOXTYPE="osmio4kplus";CI_ENABLED="0";;
 	32) BOXARCH="arm";BOXTYPE="osmini4k";CI_ENABLED="0";;
 	40) BOXARCH="arm";BOXTYPE="vusolo4k";CI_ENABLED="1";;
-	41) BOXARCH="arm";BOXTYPE="vuduo4k";CI_ENABLED="1";;
-	42) BOXARCH="arm";BOXTYPE="vuzero4k";CI_ENABLED="1";;
-	43) BOXARCH="arm";BOXTYPE="vuultimo4k";CI_ENABLED="1";;
-	44) BOXARCH="arm";BOXTYPE="vuuno4kse";CI_ENABLED="1";;
-	45) BOXARCH="arm";BOXTYPE="vuuno4k";CI_ENABLED="1";;
+	41) BOXARCH="arm";BOXTYPE="vuultimo4k";CI_ENABLED="1";;
+	42) BOXARCH="arm";BOXTYPE="vuuno4k";CI_ENABLED="1";;
+	43) BOXARCH="arm";BOXTYPE="vuuno4kse";CI_ENABLED="1";;
+	44) BOXARCH="arm";BOXTYPE="vuduo4k";CI_ENABLED="1";;
+	45) BOXARCH="arm";BOXTYPE="vuduo4kse";CI_ENABLED="1";;
+	46) BOXARCH="arm";BOXTYPE="vuzero4k";CI_ENABLED="1";;
 	51) BOXARCH="arm";BOXTYPE="hd51";CI_ENABLED="1";;
 	52) BOXARCH="arm";BOXTYPE="bre2ze4k";CI_ENABLED="1";;
 	53) BOXARCH="arm";BOXTYPE="h7";CI_ENABLED="1";;
@@ -409,7 +411,7 @@ esac
 
 fi
 
-if [ $BOXTYPE == 'vusolo4k' -o $BOXTYPE == 'vuduo4k' -o $BOXTYPE == 'vuultimo4k' -o $BOXTYPE == 'vuuno4k' -o $BOXTYPE == 'vuuno4kse' -o $BOXTYPE == 'vuzero4k' ]; then
+if [ $BOXTYPE == 'vusolo4k' -o $BOXTYPE == 'vuduo4k' -o $BOXTYPE == 'vuultimo4k' -o $BOXTYPE == 'vuuno4k' -o $BOXTYPE == 'vuuno4kse' -o $BOXTYPE == 'vuzero4k' -o $BOXTYPE == vuduo4k ]; then
 case $8 in
 	[1-2]) REPLY=$8;;
 	*)	echo -e "\nNormal or MultiBoot:"
