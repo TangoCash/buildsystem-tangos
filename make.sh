@@ -46,12 +46,13 @@ if [ "$1" == defaultconfig ]; then
 	echo "FLAVOUR=TANGOS" >> config
 	echo "EXTERNAL_LCD=both" >> config
 	echo "LAYOUT=multi" >> config
+	echo "CI_ENABLED=1" >> config
 	echo " "
 	make printenv
 	exit
 fi
 
-if [ "$1" == hd51 ] || [ "$1" == h7 ] || [ "$1" == bre2ze4k ] || [ "$1" == e4hdultra ]; then
+if [ "$1" == hd51 ] || [ "$1" == h7 ] || [ "$1" == bre2ze4k ] || [ "$1" == e4hdultra ] || [ "$1" == protek4k ]; then
 	echo "BOXARCH=arm" > config
 	echo "BOXTYPE=$1" >> config
 	echo "FFMPEG_EXPERIMENTAL=0" >> config
@@ -61,6 +62,7 @@ if [ "$1" == hd51 ] || [ "$1" == h7 ] || [ "$1" == bre2ze4k ] || [ "$1" == e4hdu
 	echo "FLAVOUR=TANGOS" >> config
 	echo "EXTERNAL_LCD=both" >> config
 	echo "LAYOUT=multi" >> config
+	echo "CI_ENABLED=1" >> config
 	echo " "
 	make printenv
 	exit
@@ -92,6 +94,7 @@ if [ "$1" == vusolo4k -o "$1" == vuduo4k -o "$1" == vuultimo4k -o "$1" == vuuno4
 	echo "EXTERNAL_LCD=both" >> config
 	echo "VU_MULTIBOOT=1" >> config
 	echo "LAYOUT=single" >> config
+	echo "CI_ENABLED=1" >> config
 	echo " "
 	make printenv
 	exit
@@ -159,7 +162,7 @@ fi
 ##############################################
 
 case $1 in
-	3[0-2] | 4[0-5] | 5[1-3] | 6[0-6]) REPLY=$1;;
+	3[0-2] | 4[0-5] | 5[1-7] | 6[0-6]) REPLY=$1;;
 	*)
 		echo "Target receivers:"
 		echo
@@ -194,6 +197,9 @@ case $1 in
 		echo "  Axas"
 		echo "   56)  E4HD Ultra"
 		echo
+		echo "  Protek"
+		echo "   57) Protek 4k"
+		echo
 		echo "  Octagon & Uclan"
 		echo "   62)  Octagon SF8008"
 		echo "   63)  Octagon SF8008m"
@@ -220,6 +226,7 @@ case "$REPLY" in
 	54) BOXARCH="arm";BOXTYPE="multibox";CI_ENABLED="0";;
 	55) BOXARCH="arm";BOXTYPE="multiboxse";CI_ENABLED="0";;
 	56) BOXARCH="arm";BOXTYPE="e4hdultra";CI_ENABLED="1";;
+	57) BOXARCH="arm";BOXTYPE="protek4k";CI_ENABLED="1";;
 	60) BOXARCH="arm";BOXTYPE="hd60";CI_ENABLED="0";;
 	61) BOXARCH="arm";BOXTYPE="hd61";CI_ENABLED="0";;
 	62) BOXARCH="arm";BOXTYPE="sf8008";CI_ENABLED="0";;
@@ -383,7 +390,7 @@ echo "EXTERNAL_LCD=$EXTERNAL_LCD" >> config
 
 LAYOUT=single
 
-if [ $BOXTYPE == 'hd51' -o $BOXTYPE == 'bre2ze4k' -o $BOXTYPE == 'h7' -o $BOXTYPE == 'e4hdultra' ]; then
+if [ $BOXTYPE == 'hd51' -o $BOXTYPE == 'bre2ze4k' -o $BOXTYPE == 'h7' -o $BOXTYPE == 'e4hdultra' -o $BOXTYPE == 'protek4k' ]; then
 
 case $8 in
 	[1-2]) REPLY=$8;;

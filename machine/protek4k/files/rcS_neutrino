@@ -1,0 +1,285 @@
+#!/bin/sh
+
+read model < /etc/model
+
+im () {
+    ERR=0
+    FOUND=0
+    if [ $(echo $1|grep -o '.\{3\}$') != ".ko" ]; then
+        new=$1.ko
+        shift
+        set $new $*
+    fi
+    if [ -e /var/lib/$1 ]; then
+        insmod /var/lib/$*
+        ERR=$?
+        FOUND=1
+    elif [ -e /swap/lib/$1 ]; then
+        insmod /swap/lib/$*
+        ERR=$?
+        FOUND=1
+    elif [ -e /lib/modules/$1 ]; then
+        insmod /lib/modules/$*
+        ERR=$?
+        FOUND=1
+    else
+        echo -e "\033[01;31mloading: $1 -> [ERROR - MODULE NOT FOUND]\033[00m"
+  fi
+  if [ $FOUND -eq 1 ]; then
+    if [ $ERR != 0 ]; then
+      echo -e "\033[01;31mloading: $1 ($ERR) -> [ERROR]\033[00m"
+      oled -tc "Booting...TC-NMP" -td "[ERROR] $1"
+      echo "[ERROR] $1\n" >> /tmp/bootlog.log
+    else
+      echo -e "\033[01;32mloading: $1 ($ERR) -> [OK]\033[00m"
+    fi
+  fi
+}
+
+if [ -e /var/etc/.firstboot ]; then
+/usr/bin/passwd root <<EOF
+root
+root
+EOF
+  rm /var/etc/.firstboot
+fi
+
+mount -t proc proc /proc
+mount -t sysfs sys /sys
+mount -t tmpfs tmp /tmp
+mount -t tmpfs media /media
+mount -t tmpfs mnt /mnt
+#mkdir -p /media/hdd
+mkdir -p /dev/pts
+mount -t devpts devpts /dev/pts
+echo /sbin/mdev >/proc/sys/kernel/hotplug
+mdev -s
+
+echo -n "add mmcblks in /dev/block"
+/etc/init.d/mmcblk-by-name
+
+echo -n "check partitions"
+/etc/init.d/check_partitions
+
+echo "starting interface"
+/etc/init.d/mountall start
+
+echo "check boxmode"
+BOXMODE=5
+echo "boxmode="$BOXMODE
+
+[ -f /var/etc/modules.default ] && eval $(sed -e 's/#.*//' -e '/^\s*$/d' -e 's/^\(.*\)/im \0;/' < /var/etc/modules.default)
+
+/bin/initfb
+echo 200 > /proc/stb/lcd/oled_brightness
+oled -tc "Booting...TC-NMP"
+
+[ -f /var/etc/modules.extra ] && eval $(sed -e 's/#.*//' -e '/^\s*$/d' -e 's/^\(.*\)/im \0;/' < /var/etc/modules.extra)
+
+if [ -e /var/backup_flash.tar.gz ]; then
+  oled -tc "Booting...TC-NMP" -td "Restore Settings..."
+  tar xvf /var/backup_flash.tar.gz -C /
+  rm -f /var/backup_flash.tar.gz
+fi
+
+if [ -e /proc/stb/power/powerled ]; then
+  echo off > /proc/stb/power/powerled
+fi
+
+if [ -e /proc/stb/power/powerled2 ]; then
+  echo off > /proc/stb/power/powerled2
+fi
+
+if [ -e /var/tuxbox/config/.bootlogo ]; then
+  if [ "$BOXMODE" == "5" ]; then
+    START_RES=$(grep "video_Mode=" /var/tuxbox/config/neutrino.conf | awk -F "=" '{print $2}')
+    case "$START_RES" in
+       2) echo "576i" > /proc/stb/video/videomode;; # PAL/576i
+       7) echo "720p50" > /proc/stb/video/videomode;; # 720p50
+       8) echo "1080i50" > /proc/stb/video/videomode;; # 1080i
+      12) echo "1080p50" > /proc/stb/video/videomode;; # 1080p
+      17) echo "2160p25" > /proc/stb/video/videomode;; # 2160p25
+      19) echo "2160p50" > /proc/stb/video/videomode;; # 2160p50
+    esac
+  fi
+  showiframe /usr/share/tuxbox/neutrino/icons/bootlogo.m2v &
+fi
+
+oled -tc "Booting...TC-NMP"
+
+echo "setup network"
+read hstname < /etc/hostname
+if [ "$hstname" == "$model" ]; then
+	hwaddr=$(ifconfig eth0 | awk '/HWaddr/ { split($5,v,":"); print v[4] v[5] v[6] }')
+	echo "${model}-${hwaddr}" > /etc/hostname
+fi
+/etc/init.d/hostname start
+/etc/init.d/portmap start
+/usr/sbin/inetd
+NFS=$(grep -c nfs /proc/cmdline)
+  if [ "$NFS" -eq "1" ]; then
+    echo "Booting from nfs, don't set network"
+  else
+    if [ -e /etc/network/interfaces ]; then
+      ip addr flush eth0
+      /etc/init.d/networking stop
+      DHCP=$(grep -c dhcp /etc/network/interfaces)
+      if [ "$DHCP" -eq "1" ]; then
+        echo "Starting dhcp"
+        /etc/init.d/udhcpc start
+      fi
+      /etc/init.d/networking start
+    fi
+  fi
+/sbin/ifconfig lo 127.0.0.1 up
+
+  #date fix
+  ntp="$(sed -n 's/network_ntpserver=//p' /var/tuxbox/config/neutrino.conf)"
+  rdate ${ntp:-time.fu-berlin.de}
+  if [ "$?" != "0" ]; then
+    datefix=$(cat /.version | grep "version=" | grep -v image | awk -F "=" '{print $2}')
+    if [ "$datefix" != "" ]; then
+      date -s ${datefix:4}
+    else
+      date -s "202010011200"
+    fi
+  fi
+  date "+DATE: %m/%d/%y%nTIME: %H:%M:%S"
+
+  if [ -e /var/tuxbox/config/.mbefore ]; then
+    echo "starting early mount ..."
+    /etc/init.d/mount_before
+  fi
+
+  if [ -e /var/tuxbox/config/.nfsd ]; then
+    echo "starting nfd ..."
+    if [ ! -e /etc/exports ]; then
+      echo "/media/hdd *(ro,wdelay,nohide,insecure,no_root_squash,no_all_squash,no_subtree_check,sync)" >/etc/exports
+    fi
+    if [ ! -e /etc/hosts.allow ]; then
+      echo 'ALL: ALL' > /etc/hosts.allow
+    fi
+    touch /var/lib/nfs/etab
+    touch /var/lib/nfs/rmtab
+    touch /var/lib/nfs/xtab
+    touch /var/lib/nfs/state
+    /usr/sbin/rpc.nfsd 1
+    /usr/sbin/rpc.mountd -V 3
+    /usr/sbin/exportfs -ra
+  fi
+
+  if [ -e /usr/share/tuxbox/neutrino/control/migration.sh ]; then
+    echo "starting migration ..."
+    chmod 755 /usr/share/tuxbox/neutrino/control/migration.sh
+    /usr/share/tuxbox/neutrino/control/migration.sh
+  fi
+
+  if [ -e /var/tuxbox/config/.xupnpd ]; then
+    echo "starting xupnpd ..."
+    /usr/bin/xupnpd &
+  fi
+
+  if [ -e /var/tuxbox/config/.crond ]; then
+    echo "starting crond ..."
+    mkdir -p /var/spool/cron/crontabs
+    touch /var/spool/cron/crontabs/root
+    /usr/sbin/crond &
+  fi
+
+  if [ -e /var/tuxbox/config/.dropbear ]; then
+    echo "starting dropbear ..."
+    /etc/init.d/dropbear start &
+  fi
+
+  if [ -e /var/tuxbox/config/.tuxcald ]; then
+    echo "starting tuxcald ..."
+    /etc/init.d/tuxcald start &
+  fi
+
+  if [ -e /var/tuxbox/config/.tuxmaild ]; then
+    echo "starting tuxmaild ..."
+    /etc/init.d/tuxmaild start &
+  fi
+
+  if [ -e /var/tuxbox/config/.djmount ]; then
+    echo "starting djmount ..."
+    mkdir -p /media/upnp
+    /usr/bin/djmount /media/upnp &
+  fi
+
+  if [ -e /var/tuxbox/config/.samba ]; then
+    echo "starting samba ..."
+    /etc/init.d/samba start &
+  fi
+
+  if [ -e /var/tuxbox/config/.fritzcall ]; then
+    echo "starting fritzcall ..."
+    /var/tuxbox/plugins/fb.sh start >/dev/null 2>&1
+  fi
+
+# fix frontend.conf (uni_qrg->uni_freq)
+[ -e /var/tuxbox/config/zapit/frontend.conf ] && sed -i "s/_uni_qrg=/_uni_freq=/g" /var/tuxbox/config/zapit/frontend.conf
+
+if [ -e /var/bin/tangos ]; then
+    chmod 755 /var/bin/tangos
+    /var/bin/tangos
+fi
+
+if [ -e /etc/init.d/before_gui ]; then
+    chmod 755 /etc/init.d/before_gui
+    /etc/init.d/before_gui
+fi
+
+if [ -e /var/tuxbox/config/.lcd4l ]; then
+    echo "starting lcd4linux ..."
+    /usr/bin/lcd4linux
+fi
+
+hdd_idle="$(sed -n 's/hdd_sleep=//p' /var/tuxbox/config/neutrino.conf)"
+if [ "$hdd_idle" == "" ]; then
+    hdd_idle="60"
+fi
+/sbin/hd-idle -i $((hdd_idle*5))
+
+if [ -e /var/tuxbox/config/.bootlogo ]; then
+    killall -9 showiframe
+fi
+
+
+until false
+do
+    echo "starting GUI ->"
+    chmod 755 /usr/bin/neutrino
+    if [ -e /tmp/neutrino ]; then
+      chmod 755 /tmp/neutrino
+      /tmp/neutrino
+    else
+      /usr/bin/neutrino -v 0
+    fi
+    rtv=$?
+    echo "GUI ended <- RTV: " $rtv
+    case "$rtv" in
+      0) echo "0"
+        echo "SHUTDOWN"
+        init 0;;
+      1) echo "1"
+        echo "REBOOT"
+        oled -tc "      *-*       "
+        init 6;;
+      3) echo "3"
+        echo "RESTART"
+        oled -tc "    RESTART     "
+        sync;;
+      *) echo "*"
+        echo -e "\033[01;31mERROR: $rtv\033[00m"
+        oled -tc "    *ERROR*     "
+        #init 6
+        ;;
+    esac
+done
+oled -tc "      *-*       "
+
+#never reached
+oled -tc "REBOOT $model"
+echo "REBOOT $model"
+reboot -f

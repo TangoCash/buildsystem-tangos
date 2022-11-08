@@ -4,7 +4,7 @@ FLASH_BOOT_IMAGE = boot.img
 FLASH_IMAGE_LINK = $(FLASH_IMAGE_NAME).ext4
 FLASH_IMAGE_ROOTFS_SIZE = 294912
 
-ifeq ($(BOXTYPE),$(filter $(BOXTYPE),bre2ze4k hd51))
+ifeq ($(BOXTYPE),$(filter $(BOXTYPE),bre2ze4k hd51 protek4k))
 IMAGE_SUBDIR = $(BOXTYPE)
 endif
 ifeq ($(BOXTYPE),e4hdultra)
@@ -88,7 +88,7 @@ ifeq ($(LAYOUT), multi)
 	parted -s $(EMMC_IMAGE) unit KiB mkpart storage ext4 $(STORAGE_PARTITION_OFFSET_NL) 100%
 	dd if=/dev/zero of=$(FLASH_BUILD_TMP)/$(FLASH_BOOT_IMAGE) bs=$(BLOCK_SIZE) count=$(shell expr $(BOOT_PARTITION_SIZE) \* $(BLOCK_SECTOR))
 	mkfs.msdos -S 512 $(FLASH_BUILD_TMP)/$(FLASH_BOOT_IMAGE)
-ifeq ($(BOXTYPE), e4hdultra)
+ifeq ($(BOXTYPE),$(filter $(BOXTYPE),e4hdultra protek4k))
 		echo "boot emmcflash0.linuxkernel 'brcm_cma=504M@264M brcm_cma=192M@768M brcm_cma=1024M@2048M root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 kernel=/dev/mmcblk0p2 rw rootwait $(BOXTYPE)_4.boxmode=5'" > $(FLASH_BUILD_TMP)/STARTUP
 		echo "boot emmcflash0.linuxkernel 'brcm_cma=504M@264M brcm_cma=192M@768M brcm_cma=1024M@2048M root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 kernel=/dev/mmcblk0p2 rw rootwait $(BOXTYPE)_4.boxmode=5'" > $(FLASH_BUILD_TMP)/STARTUP_1
 		echo "boot emmcflash0.linuxkernel2 'brcm_cma=504M@264M brcm_cma=192M@768M brcm_cma=1024M@2048M root=/dev/mmcblk0p8 rootsubdir=linuxrootfs2 kernel=/dev/mmcblk0p4 rw rootwait $(BOXTYPE)_4.boxmode=5'" > $(FLASH_BUILD_TMP)/STARTUP_2
@@ -114,7 +114,7 @@ else
 	parted -s $(EMMC_IMAGE) unit KiB mkpart storage ext4 $(STORAGE_PARTITION_OFFSET) 100%
 	dd if=/dev/zero of=$(FLASH_BUILD_TMP)/$(FLASH_BOOT_IMAGE) bs=$(BLOCK_SIZE) count=$(shell expr $(BOOT_PARTITION_SIZE) \* $(BLOCK_SECTOR))
 	mkfs.msdos -S 512 $(FLASH_BUILD_TMP)/$(FLASH_BOOT_IMAGE)
-ifeq ($(BOXTYPE), e4hdultra)
+ifeq ($(BOXTYPE),$(filter $(BOXTYPE),e4hdultra protek4k))
 		echo "boot emmcflash0.kernel1 'brcm_cma=504M@264M brcm_cma=192M@768M brcm_cma=1024M@2048M root=/dev/mmcblk0p3 rw rootwait $(BOXTYPE)_4.boxmode=5'" > $(IMAGE_BUILD_DIR)/STARTUP
 		echo "boot emmcflash0.kernel1 'brcm_cma=504M@264M brcm_cma=192M@768M brcm_cma=1024M@2048M root=/dev/mmcblk0p3 rw rootwait $(BOXTYPE)_4.boxmode=5'" > $(IMAGE_BUILD_DIR)/STARTUP_1
 		echo "boot emmcflash0.kernel2 'brcm_cma=504M@264M brcm_cma=192M@768M brcm_cma=1024M@2048M root=/dev/mmcblk0p5 rw rootwait $(BOXTYPE)_4.boxmode=5'" > $(IMAGE_BUILD_DIR)/STARTUP_2
@@ -159,8 +159,8 @@ endif
 	tar -cvf $(FLASH_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs.tar --exclude=zImage* . > /dev/null 2>&1; \
 	bzip2 $(FLASH_BUILD_TMP)/$(IMAGE_SUBDIR)/rootfs.tar
 	echo $(BOXTYPE)_$(FLAVOUR)_multiroot_$(ITYPE)_$(DATE) > $(FLASH_BUILD_TMP)/$(IMAGE_SUBDIR)/imageversion
-	# lcd flashlogo for e4hdultra
-ifeq ($(BOXTYPE), e4hdultra)
+	# lcd flashlogo for e4hdultra/protek4k
+ifeq ($(BOXTYPE),$(filter $(BOXTYPE),e4hdultra protek4k))
 	cp $(MACHINE_FILES)/lcdflashing.bmp $(FLASH_BUILD_TMP)/$(IMAGE_SUBDIR)/
 	ADDITIONAL_FILES=$(IMAGE_SUBDIR)/lcdflashing.bmp
 endif
