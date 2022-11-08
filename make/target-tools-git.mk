@@ -3,11 +3,11 @@
 #
 tools-clean:
 	rm -f $(D)/tools-*
-	-$(MAKE) -C $(TOOLS_DIR)/aio-grab-$(BOXARCH) distclean
-	-$(MAKE) -C $(TOOLS_DIR)/minimon-$(BOXARCH) distclean
+	-$(MAKE) -C $(TOOLS_DIR)/aio-grab distclean
+	-$(MAKE) -C $(TOOLS_DIR)/minimon distclean
 	-$(MAKE) -C $(TOOLS_DIR)/msgbox distclean
 	-$(MAKE) -C $(TOOLS_DIR)/satfind distclean
-	-$(MAKE) -C $(TOOLS_DIR)/showiframe-$(BOXARCH) distclean
+	-$(MAKE) -C $(TOOLS_DIR)/showiframe distclean
 	-$(MAKE) -C $(TOOLS_DIR)/spf_tool distclean
 	-$(MAKE) -C $(TOOLS_DIR)/tuxcom distclean
 	-$(MAKE) -C $(TOOLS_DIR)/read-edid distclean
@@ -31,7 +31,7 @@ endif
 #
 $(D)/tools-aio-grab: $(D)/bootstrap $(D)/libpng $(D)/libjpeg
 	$(START_BUILD)
-	set -e; cd $(TOOLS_DIR)/aio-grab-$(BOXARCH); \
+	set -e; cd $(TOOLS_DIR)/aio-grab; \
 		$(CONFIGURE_TOOLS) \
 			--prefix= \
 		; \
@@ -59,7 +59,7 @@ $(D)/tools-initfb: $(D)/bootstrap
 #
 $(D)/tools-minimon: $(D)/bootstrap $(D)/libjpeg_turbo2
 	$(START_BUILD)
-	set -e; cd $(TOOLS_DIR)/minimon-$(BOXARCH); \
+	set -e; cd $(TOOLS_DIR)/minimon; \
 		$(CONFIGURE_TOOLS) \
 			--prefix= \
 		; \
@@ -128,7 +128,7 @@ $(D)/tools-satfind: $(D)/bootstrap
 #
 $(D)/tools-showiframe: $(D)/bootstrap
 	$(START_BUILD)
-	set -e; cd $(TOOLS_DIR)/showiframe-$(BOXARCH); \
+	set -e; cd $(TOOLS_DIR)/showiframe; \
 		$(CONFIGURE_TOOLS) \
 			--prefix= \
 		; \
