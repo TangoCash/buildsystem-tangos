@@ -261,7 +261,7 @@ else ifeq  ($(FLAVOUR), TANGOSEVO)
 GIT_URL     ?= $(GITHUB)/TangoCash
 NEUTRINO     = neutrino-tangos
 NMP_BRANCH  ?= evo
-NMP_PATCHES  = $(NEUTRINO_TANGOS_PATCHES)
+NMP_PATCHES  = $(NEUTRINO_TANGOSEVO_PATCHES)
 else ifeq  ($(FLAVOUR), DDT)
 GIT_URL     ?= $(GITHUB)/Duckbox-Developers
 NEUTRINO     = neutrino-ddt
