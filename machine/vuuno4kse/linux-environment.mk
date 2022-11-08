@@ -14,7 +14,7 @@ endif
 KERNEL_DIR             = $(BUILD_TMP)/linux
 KERNEL_IMAGE           = zImage
 KERNEL_DTB_VER         =
-KERNEL_INITRD          = vmlinuz-initrd-7439b0
+KERNEL_INITRD          = vmlinuz-initrd-7439b0_se
 KERNEL_CPDIR           = ../../common/patches/vuplus
 
 KERNEL_PATCHES = \
