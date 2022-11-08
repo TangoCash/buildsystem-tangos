@@ -133,6 +133,9 @@ endif
 	mcopy -i $(FLASH_BUILD_TMP)/$(FLASH_BOOT_IMAGE) -v $(FLASH_BUILD_TMP)/STARTUP_2 ::
 	mcopy -i $(FLASH_BUILD_TMP)/$(FLASH_BOOT_IMAGE) -v $(FLASH_BUILD_TMP)/STARTUP_3 ::
 	mcopy -i $(FLASH_BUILD_TMP)/$(FLASH_BOOT_IMAGE) -v $(FLASH_BUILD_TMP)/STARTUP_4 ::
+ifeq ($(BOXTYPE),$(filter $(BOXTYPE),e4hdultra protek4k))
+	mcopy -i $(FLASH_BUILD_TMP)/$(FLASH_BOOT_IMAGE) -v $(MACHINE_FILES)/lcdsplash.bmp ::
+endif
 	dd conv=notrunc if=$(FLASH_BUILD_TMP)/$(FLASH_BOOT_IMAGE) of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(IMAGE_ROOTFS_ALIGNMENT) \* $(BLOCK_SECTOR))
 ifneq ($(KERNEL_DTB_VER),)
 	dd conv=notrunc if=$(RELEASE_DIR)/boot/$(KERNEL_IMAGE).dtb of=$(EMMC_IMAGE) bs=$(BLOCK_SIZE) seek=$(shell expr $(KERNEL_PARTITION_OFFSET) \* $(BLOCK_SECTOR))

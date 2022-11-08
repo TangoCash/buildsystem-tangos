@@ -82,6 +82,8 @@ if [ -e /var/backup_flash.tar.gz ]; then
   rm -f /var/backup_flash.tar.gz
 fi
 
+[ ! -e /boot/lcdsplash.bmp ] && cp /usr/share/tuxbox/neutrino/icons/lcdsplash.bmp /boot
+
 if [ -e /proc/stb/power/powerled ]; then
   echo off > /proc/stb/power/powerled
 fi

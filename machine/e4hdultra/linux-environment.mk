@@ -69,5 +69,6 @@ ifeq ($(LAYOUT), multi)
 	sed -i -e 's#/dev/mmcblk0p11#/dev/mmcblk0p9#g' $(RELEASE_DIR)/etc/fstab
 endif
 	cp $(TARGET_DIR)/boot/zImage $(RELEASE_DIR)/boot/
+	install -m 0644 $(MACHINE_FILES)/lcdsplash.bmp $(RELEASE_DIR)/usr/share/tuxbox/neutrino/icons/
 
 
