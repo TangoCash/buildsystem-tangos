@@ -192,7 +192,19 @@ $(D)/tools-own-tools: $(D)/bootstrap $(D)/libcurl
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(TOUCH)
 
-TOOLS  = $(D)/tools-aio-grab
+$(D)/tools-prepare:
+	@$(call draw_line,)
+	@echo '      Prepare $(GIT_NAME_TOOLS)-tools git repository'
+	@$(call draw_line,)
+	if [ ! -e $(TOOLS_DIR)/.git ]; then \
+		git clone $(GITHUB)/$(GIT_NAME_TOOLS)/tools.git build_tools; \
+	else \
+		cd $(TOOLS_DIR) && git pull; \
+	fi
+	@$(call draw_line,)
+
+TOOLS  = $(D)/tools-prepare
+TOOLS += $(D)/tools-aio-grab
 TOOLS += $(D)/tools-msgbox
 TOOLS += $(D)/tools-satfind
 TOOLS += $(D)/tools-showiframe

@@ -25,7 +25,7 @@ MAKEFLAGS             += --no-print-directory
 # default platform...
 BASE_DIR             := $(shell pwd)
 ARCHIVE              ?= $(BASE_DIR)/Archive
-TOOLS_DIR             = $(BASE_DIR)/tools
+TOOLS_DIR             = $(BASE_DIR)/build_tools
 BUILD_TMP             = $(BASE_DIR)/build_tmp
 SOURCE_DIR            = $(BASE_DIR)/build_source
 RELEASE_IMAGE_DIR     = $(BASE_DIR)/release_image

@@ -100,17 +100,7 @@ $(D)/system-tools: $(SYSTEM_TOOLS) $(TOOLS)
 # preqs
 #
 #
-$(TOOLS_DIR):
-	@$(call draw_line,)
-	@echo '      Cloning $(GIT_NAME_TOOLS)-tools git repository'
-	@$(call draw_line,)
-	if [ ! -e $(TOOLS_DIR)/.git ]; then \
-		git clone $(GITHUB)/$(GIT_NAME_TOOLS)/tools.git tools; \
-	fi
-
-PREQS  = $(TOOLS_DIR)
-
-preqs: $(PREQS)
+preqs:
 	@mkdir -p $(OWN_BUILD)/neutrino-hd
 	@mkdir -p $(OWN_BUILD)/neutrino-hd.$(BOXTYPE)
 
