@@ -1,8 +1,8 @@
 #!/bin/bash
 
-mkdir -p buildlogs
+mkdir -p build_logs
 BOXTYPE=$(cat config | grep "BOXTYPE=" | awk -F "=" '{print $2}')
-LOGFILE=buildlogs/make_$(echo $BOXTYPE)_$(date +%d.%m.%Y_%H%M).log
+LOGFILE=build_logs/make_$(echo $BOXTYPE)_$(date +%d.%m.%Y_%H%M).log
 
 echo "--- DISTRIBUTION ---" > $LOGFILE
 cat /etc/*release >> $LOGFILE

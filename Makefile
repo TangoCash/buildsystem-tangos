@@ -158,19 +158,6 @@ update:
 		fi; \
 	fi
 	@echo;
-	@if test -d $(TOOLS_DIR); then \
-		cd $(TOOLS_DIR)/; \
-		$(call draw_line,); \
-		echo '      updating $(GIT_NAME_APPS)-tools git repository'; \
-		$(call draw_line,); \
-		echo; \
-		if [ "$(GIT_STASH_PULL)" = "stashpull" ]; then \
-			git stash && git stash show -p > ./pull-stash-tools.patch || true && git pull && git stash pop || true; \
-		else \
-			git pull; \
-		fi; \
-	fi
-	@echo;
 
 all:
 	@echo "'make all' is not a valid target. Please execute 'make print-targets' to display the alternatives."
