@@ -53,7 +53,8 @@ KERNEL_PATCHES = \
 
 KERNEL_PATCHES += \
 		bcmsysport_3.14.28-1.12.patch \
-		linux_prevent_usb_dma_from_bmem.patch
+		linux_prevent_usb_dma_from_bmem.patch \
+		technisat-usb2_use_DMA_buffers_for_I2C_transfers.patch
 
 #
 # DRIVER
