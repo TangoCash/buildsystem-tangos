@@ -198,6 +198,21 @@ endif
 		cp -aR $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/modules.default $(RELEASE_DIR)/etc/modules.default; \
 	fi;
 #
+# Technisat SkyStar USB HD modules
+#
+ifeq ($(BOXTYPE),$(filter $(BOXTYPE),vuultimo4k))
+	cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/kernel/drivers/media/dvb-frontends/stv6110x.ko $(RELEASE_DIR)/lib/modules/
+	cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/kernel/drivers/media/dvb-frontends/stv090x.ko $(RELEASE_DIR)/lib/modules/
+	cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/kernel/drivers/media/usb/dvb-usb/dvb-usb.ko $(RELEASE_DIR)/lib/modules/
+	cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/kernel/drivers/media/usb/dvb-usb/dvb-usb-technisat-usb2.ko $(RELEASE_DIR)/lib/modules/
+	echo stv6110x >> $(RELEASE_DIR)/etc/modules.extra
+	echo stv090x >> $(RELEASE_DIR)/etc/modules.extra
+	echo dvb-usb >> $(RELEASE_DIR)/etc/modules.extra
+	echo dvb-usb-technisat-usb2 >> $(RELEASE_DIR)/etc/modules.extra
+	cp -aR $(SKEL_ROOT)/firmware/dvb-usb-SkyStar_USB_HD_FW_v17_63.HEX.fw $(RELEASE_DIR)/lib/firmware/
+endif
+
+#
 # lib usr/lib
 #
 	cp -R $(TARGET_DIR)/lib/* $(RELEASE_DIR)/lib/
