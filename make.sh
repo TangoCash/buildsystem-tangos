@@ -41,7 +41,7 @@ if [ "$1" == defaultconfig ]; then
 	echo "BOXTYPE=hd51" >> config
 	echo "FFMPEG_EXPERIMENTAL=0" >> config
 	echo "OPTIMIZATIONS=size" >> config
-	echo "BS_GCC_VER=10.3.0" >> config
+	echo "BS_GCC_VER=10.4.0" >> config
 	echo "IMAGE=neutrino" >> config
 	echo "FLAVOUR=TANGOS" >> config
 	echo "EXTERNAL_LCD=both" >> config
@@ -52,16 +52,32 @@ if [ "$1" == defaultconfig ]; then
 	exit
 fi
 
-if [ "$1" == hd51 ] || [ "$1" == h7 ] || [ "$1" == bre2ze4k ] || [ "$1" == e4hdultra ] || [ "$1" == protek4k ]; then
+if [ "$1" == hd51 ] || [ "$1" == h7 ] || [ "$1" == bre2ze4k ]; then
 	echo "BOXARCH=arm" > config
 	echo "BOXTYPE=$1" >> config
 	echo "FFMPEG_EXPERIMENTAL=0" >> config
 	echo "OPTIMIZATIONS=size" >> config
-	echo "BS_GCC_VER=10.3.0" >> config
+	echo "BS_GCC_VER=10.4.0" >> config
 	echo "IMAGE=neutrino" >> config
 	echo "FLAVOUR=TANGOS" >> config
 	echo "EXTERNAL_LCD=both" >> config
 	echo "LAYOUT=multi" >> config
+	echo "CI_ENABLED=1" >> config
+	echo " "
+	make printenv
+	exit
+fi
+
+if [ "$1" == e4hdultra ] || [ "$1" == protek4k ]; then
+	echo "BOXARCH=arm" > config
+	echo "BOXTYPE=$1" >> config
+	echo "FFMPEG_EXPERIMENTAL=0" >> config
+	echo "OPTIMIZATIONS=size" >> config
+	echo "BS_GCC_VER=10.4.0" >> config
+	echo "IMAGE=neutrino" >> config
+	echo "FLAVOUR=TANGOS" >> config
+	echo "EXTERNAL_LCD=both" >> config
+	echo "LAYOUT=single" >> config
 	echo "CI_ENABLED=1" >> config
 	echo " "
 	make printenv
@@ -73,7 +89,7 @@ if [ "$1" == hd60 ] || [ "$1" == hd61 ] || [ "$1" == multibox ] || [ "$1" == mul
 	echo "BOXTYPE=$1" >> config
 	echo "FFMPEG_EXPERIMENTAL=0" >> config
 	echo "OPTIMIZATIONS=size" >> config
-	echo "BS_GCC_VER=10.3.0" >> config
+	echo "BS_GCC_VER=10.4.0" >> config
 	echo "IMAGE=neutrino" >> config
 	echo "FLAVOUR=TANGOS" >> config
 	echo "EXTERNAL_LCD=both" >> config
@@ -88,7 +104,7 @@ if [ "$1" == vusolo4k -o "$1" == vuduo4k -o "$1" == vuultimo4k -o "$1" == vuuno4
 	echo "BOXTYPE=$1" >> config
 	echo "FFMPEG_EXPERIMENTAL=0" >> config
 	echo "OPTIMIZATIONS=size" >> config
-	echo "BS_GCC_VER=10.3.0" >> config
+	echo "BS_GCC_VER=10.4.0" >> config
 	echo "IMAGE=neutrino" >> config
 	echo "FLAVOUR=TANGOS" >> config
 	echo "EXTERNAL_LCD=both" >> config
@@ -105,7 +121,7 @@ if [ "$1" == osmini4k ]; then
 	echo "BOXTYPE=$1" >> config
 	echo "FFMPEG_EXPERIMENTAL=0" >> config
 	echo "OPTIMIZATIONS=size" >> config
-	echo "BS_GCC_VER=10.3.0" >> config
+	echo "BS_GCC_VER=10.4.0" >> config
 	echo "IMAGE=neutrino" >> config
 	echo "FLAVOUR=TANGOS" >> config
 	echo "EXTERNAL_LCD=both" >> config
@@ -120,7 +136,7 @@ if [ "$1" == osmio4k ] || [ "$1" == osmio4kplus ]; then
 	echo "BOXTYPE=$1" >> config
 	echo "FFMPEG_EXPERIMENTAL=0" >> config
 	echo "OPTIMIZATIONS=size" >> config
-	echo "BS_GCC_VER=10.3.0" >> config
+	echo "BS_GCC_VER=10.4.0" >> config
 	echo "IMAGE=neutrino-wifi" >> config
 	echo "FLAVOUR=TANGOS" >> config
 	echo "EXTERNAL_LCD=both" >> config
@@ -135,7 +151,7 @@ if [ "$1" == sf8008 ] || [ "$1" == sf8008m ] || [ "$1" == ustym4kpro ] || [ "$1"
 	echo "BOXTYPE=$1" >> config
 	echo "FFMPEG_EXPERIMENTAL=0" >> config
 	echo "OPTIMIZATIONS=size" >> config
-	echo "BS_GCC_VER=10.3.0" >> config
+	echo "BS_GCC_VER=10.4.0" >> config
 	echo "IMAGE=neutrino-wifi" >> config
 	echo "FLAVOUR=TANGOS" >> config
 	echo "EXTERNAL_LCD=both" >> config
@@ -150,7 +166,7 @@ if [ "$1" == h9 ]; then
 	echo "BOXTYPE=$1" >> config
 	echo "FFMPEG_EXPERIMENTAL=0" >> config
 	echo "OPTIMIZATIONS=size" >> config
-	echo "BS_GCC_VER=10.3.0" >> config
+	echo "BS_GCC_VER=10.4.0" >> config
 	echo "IMAGE=neutrino-wifi" >> config
 	echo "FLAVOUR=TANGOS" >> config
 	echo "EXTERNAL_LCD=both" >> config
