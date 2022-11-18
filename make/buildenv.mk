@@ -125,12 +125,12 @@ TARGET_EXTRA_CFLAGS   =
 TARGET_EXTRA_LDFLAGS  =
 endif
 
-ifeq ($(BS_GCC_VER), 9.4.0)
-CROSSTOOL_GCC_VER = gcc-9.4.0
+ifeq ($(BS_GCC_VER), 9.5.0)
+CROSSTOOL_GCC_VER = gcc-9.5.0
 endif
 
-ifeq ($(BS_GCC_VER), 10.3.0)
-CROSSTOOL_GCC_VER = gcc-10.3.0
+ifeq ($(BS_GCC_VER), 10.4.0)
+CROSSTOOL_GCC_VER = gcc-10.4.0
 endif
 
 ifeq ($(BS_GCC_VER), 11.3.0)

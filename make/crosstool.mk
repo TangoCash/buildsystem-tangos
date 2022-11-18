@@ -10,7 +10,7 @@ $(TARGET_DIR)/lib/libc.so.6:
 #
 # crosstool-ng
 #
-CROSSTOOL_NG_VER     = db6f703
+CROSSTOOL_NG_VER     = 9e3c574e
 CROSSTOOL_NG_DIR     = crosstool-ng.git
 CROSSTOOL_NG_SOURCE  = $(CROSSTOOL_NG_DIR)
 CROSSTOOL_NG_URL     = $(GITHUB)/crosstool-ng/crosstool-ng
