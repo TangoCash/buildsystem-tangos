@@ -16,6 +16,7 @@ CROSSTOOL_NG_SOURCE  = $(CROSSTOOL_NG_DIR)
 CROSSTOOL_NG_URL     = $(GITHUB)/crosstool-ng/crosstool-ng
 CROSSTOOL_NG_CONFIG  = crosstool-ng-$(BOXARCH)-$(CROSSTOOL_GCC_VER)
 CROSSTOOL_NG_BACKUP  = $(ARCHIVE)/$(CROSSTOOL_NG_CONFIG)-kernel-$(KERNEL_VER)-backup.tar.gz
+CROSSTOOL_NG_PATCH   = crosstool-revert-autoconf-2.71.patch
 
 # -----------------------------------------------------------------------------
 
@@ -36,6 +37,7 @@ crosstool-ng: $(D)/directories $(D)/kernel.do_prepare $(ARCHIVE)/$(KERNEL_SRC)
 	ulimit -n 2048; \
 	$(CHDIR)/$(CROSSTOOL_NG_DIR); \
 		git checkout -q $(CROSSTOOL_NG_VER); \
+		$(call apply_patches, $(CROSSTOOL_NG_PATCH)); \
 		install -m 644 $(PATCHES)/ct-ng/$(CROSSTOOL_NG_CONFIG).config .config; \
 		sed -i "s|^CT_PARALLEL_JOBS=.*|CT_PARALLEL_JOBS=$(PARALLEL_JOBS)|" .config; \
 		\
