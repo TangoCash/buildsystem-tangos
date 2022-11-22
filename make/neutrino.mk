@@ -198,7 +198,7 @@ N_CONFIG_OPTS += \
 	--with-controldir_var=/var/tuxbox/control \
 	--with-zapitdir=/var/tuxbox/config/zapit
 
-ifeq ($(EXTERNAL_LCD), externallcd)
+ifeq ($(EXTERNAL_LCD), graphlcd)
 N_CONFIG_OPTS += --enable-graphlcd
 NEUTRINO_DEPS += $(D)/graphlcd
 endif

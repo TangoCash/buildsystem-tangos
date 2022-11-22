@@ -386,22 +386,35 @@ echo "FLAVOUR=$FLAVOUR" >> config
 
 case $7 in
 	[1-4]) REPLY=$7;;
-	*)	echo -e "\nExternal LCD support:"
-		echo "   1)  graphlcd and lcd4linux for external LCD"
-		echo "   2)  graphlcd for external LCD"
+	*)	echo -e "\nLCD support:"
+		echo "   1)  graphlcd for internal LCD and lcd4linux for external LCD"
+		echo "   2)  graphlcd for internal LCD"
 		echo "   3)  lcd4linux for external LCD"
-		echo "   4)  No external LCD"
-		read -p "Select external LCD support (1-4)? [1]"
+		echo "   4)  No external/internal LCD Support"
+		read -p "Select LCD support (1-4)? [1]"
 		REPLY="${REPLY:-1}";;
 esac
 
 case "$REPLY" in
 	1) EXTERNAL_LCD="both";;
-	2) EXTERNAL_LCD="externallcd";;
+	2) EXTERNAL_LCD="graphlcd";;
 	3) EXTERNAL_LCD="lcd4linux";;
 	4) EXTERNAL_LCD="none";;
-	*) EXTERNAL_LCD="externallcd";;
+	*) EXTERNAL_LCD="both";;
 esac
+
+if [ $BOXTYPE == 'vusolo4k' -o $BOXTYPE == 'vuduo4k' -o $BOXTYPE == 'vuultimo4k' -o $BOXTYPE == 'vuuno4kse' -o $BOXTYPE == 'vuduo4kse' -o $BOXTYPE == 'e4hdultra' -o $BOXTYPE == 'protek4k' ]; then
+
+if [ $EXTERNAL_LCD == 'none' ]; then
+	EXTERNAL_LCD="graphlcd"
+fi
+
+if [ $EXTERNAL_LCD == 'lcd4linux' ]; then
+	EXTERNAL_LCD="both"
+fi
+
+fi
+
 echo "EXTERNAL_LCD=$EXTERNAL_LCD" >> config
 
 ##############################################
