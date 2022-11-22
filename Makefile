@@ -43,6 +43,11 @@ printenv:
 	@echo "TARGET            : $(TARGET)"
 	@echo "BOXTYPE           : $(BOXTYPE)"
 	@echo "KERNEL_VERSION    : $(KERNEL_VER)"
+ifeq ($(EXTERNAL_LCD), both)
+	@echo "LCD_SUPPORT       : graphlcd + lcd4linux"
+else
+	@echo "LCD_SUPPORT       : $(EXTERNAL_LCD)"
+endif
 	@echo "LCD_SUPPORT       : $(EXTERNAL_LCD)"
 	@echo -e "FLAVOUR           : $(TERM_YELLOW)$(FLAVOUR)$(TERM_NORMAL)"
 	@echo "PARALLEL_JOBS     : $(PARALLEL_JOBS)"
