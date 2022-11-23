@@ -44,9 +44,10 @@ GIT_NAME_TOOLS       ?= TangoCash
 # default config...
 BOXARCH              ?= arm
 BOXTYPE              ?= hd51
+CI_ENABLED           ?= 1
 FFMPEG_EXPERIMENTAL  ?= 0
 OPTIMIZATIONS        ?= size
-BS_GCC_VER           ?= 10.3.0
+BS_GCC_VER           ?= 10.4.0
 IMAGE                ?= neutrino
 FLAVOUR              ?= TANGOS
 EXTERNAL_LCD         ?= both
