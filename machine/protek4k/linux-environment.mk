@@ -57,7 +57,7 @@ CAIRO_OPTS = \
 
 LINKS_PATCH_BOXTYPE = links-$(LINKS_VER)-event1-input.patch
 
-GRAPHLCD_EXTRA_PATCH = graphlcd-e4hdultra.patch
+GRAPHLCD_EXTRA_PATCH = graphlcd-protek4k.patch
 
 CUSTOM_RCS     =
 CUSTOM_INITTAB = $(SKEL_ROOT)/etc/inittab_ttyS0
