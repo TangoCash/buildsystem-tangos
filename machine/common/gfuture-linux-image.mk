@@ -60,7 +60,7 @@ STORAGE_PARTITION_OFFSET_NL = $(shell expr $(MULTI_ROOTFS_PARTITION_OFFSET) \+ $
 
 flash-image-$(BOXTYPE)-multi-disk: $(D)/host_resize2fs $(D)/host_parted
 	rm -rf $(FLASH_BUILD_TMP) || true
-	mkdir -p $(FLASH_BUILD_TMP)/$(BOXTYPE)
+	mkdir -p $(FLASH_BUILD_TMP)/$(IMAGE_SUBDIR)
 	# move kernel files from $(RELEASE_DIR)/boot to $(FLASH_BUILD_TMP)
 	mv -f $(RELEASE_DIR)/boot/zImage* $(FLASH_BUILD_TMP)/
 	# Create a sparse image block
