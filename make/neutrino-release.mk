@@ -99,7 +99,7 @@ neutrino-release-base:
 	install -d $(RELEASE_DIR)/usr/share/tuxbox/neutrino/icons/logo
 	install -d $(RELEASE_DIR)/usr/share/tuxbox/neutrino/icons/logo/events
 	install -d $(RELEASE_DIR)/usr/share/lua/5.2
-	install -d $(RELEASE_DIR)/var/{bin,emu,etc,epg,httpd,keys,lib,net,tuxbox,update}
+	install -d $(RELEASE_DIR)/var/{bin,emu,epg,httpd,keys,lib,net,tuxbox,update}
 	ln -sf /mnt $(RELEASE_DIR)/var/mnt
 	ln -sf /var/epg $(RELEASE_DIR)/var/net/epg
 	install -d $(RELEASE_DIR)/var/lib/{opkg,nfs,modules}
@@ -118,13 +118,13 @@ neutrino-release-base:
 	ln -sf /usr/share/tuxbox/neutrino/icons/logo $(RELEASE_DIR)/var/logos
 	ln -sf /usr/share/tuxbox/neutrino/icons/logo $(RELEASE_DIR)/var/httpd/logos
 	ln -sf /usr/share $(RELEASE_DIR)/share
-	touch $(RELEASE_DIR)/var/etc/.firstboot
+	touch $(RELEASE_DIR)/etc/.firstboot
 	cp -a $(TARGET_DIR)/bin/* $(RELEASE_DIR)/bin/
 	cp -a $(TARGET_DIR)/usr/bin/* $(RELEASE_DIR)/usr/bin/
 	cp -a $(TARGET_DIR)/sbin/* $(RELEASE_DIR)/sbin/
 	cp -a $(TARGET_DIR)/usr/sbin/* $(RELEASE_DIR)/usr/sbin/
 	cp -dp $(TARGET_DIR)/.version $(RELEASE_DIR)/
-	ln -sf /.version $(RELEASE_DIR)/var/etc/.version
+	ln -sf /.version $(RELEASE_DIR)/etc/.version
 	ln -sf /.version $(RELEASE_DIR)/usr/.version
 	ln -sf /proc/mounts $(RELEASE_DIR)/etc/mtab
 ifeq ($(LAYOUT), multi)
@@ -450,14 +450,9 @@ $(D)/neutrino-release: neutrino-release-base neutrino-release-$(BOXTYPE)
 	echo $(BOXTYPE) > $(RELEASE_DIR)/etc/model
 
 #
-#	moving /etc to /var/etc and create symlink
-#
-	cp -dpfr $(RELEASE_DIR)/etc $(RELEASE_DIR)/var
-	rm -fr $(RELEASE_DIR)/etc
-	ln -sf var/etc $(RELEASE_DIR)/etc
-#
 #	create some needed symlinks
 #
+	ln -s /etc $(RELEASE_DIR)/var/etc
 	ln -s /tmp $(RELEASE_DIR)/lib/init
 	ln -s /tmp $(RELEASE_DIR)/var/lib/urandom
 	ln -s /tmp $(RELEASE_DIR)/var/lock
