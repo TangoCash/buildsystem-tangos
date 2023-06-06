@@ -5,15 +5,15 @@ Upstream-Status: Inappropriate [configuration]
 # and uses it if it's there.
 # - jdike@linux.intel.com
 
-Index: sysvinit-2.97/src/Makefile
+Index: sysvinit-3.06/src/Makefile
 ===================================================================
 diff --git a/src/Makefile b/src/Makefile
 index 9f9f09e..9ae35df 100644
 --- a/src/Makefile
 +++ b/src/Makefile
-@@ -89,6 +76,10 @@
-   SULOGINLIBS	=
- endif
+@@ -94,6 +94,10 @@
+ 
+ ROOT	?= $(DESTDIR)
  
 +ifneq ($(LCRYPT),)
 +  SULOGINLIBS	+= $(LCRYPT)
@@ -22,7 +22,7 @@ index 9f9f09e..9ae35df 100644
  # Additional libs for GNU libc.
  ifneq ($(wildcard $(ROOT)/usr/lib*/libcrypt.*),)
    SULOGINLIBS	+= -lcrypt
-@@ -101,6 +92,8 @@
+@@ -106,6 +110,8 @@
  endif
  endif
  

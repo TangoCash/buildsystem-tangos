@@ -6,7 +6,7 @@ BUSYBOX_VER = snapshot
 BUSYBOX_SOURCE =
 BUSYBOX_DEPS =
 else
-BUSYBOX_VER = 1.35.0
+BUSYBOX_VER = 1.36.1
 BUSYBOX_SOURCE = busybox-$(BUSYBOX_VER).tar.bz2
 BUSYBOX_DEPS = $(ARCHIVE)/$(BUSYBOX_SOURCE)
 
@@ -179,14 +179,15 @@ $(D)/module_init_tools: $(D)/bootstrap $(D)/lsb $(ARCHIVE)/$(MODULE_INIT_TOOLS_S
 #
 # sysvinit
 #
-SYSVINIT_VER = 3.04
+SYSVINIT_VER = 3.07
 SYSVINIT_SOURCE = sysvinit-$(SYSVINIT_VER).tar.xz
 SYSVINIT_PATCH  = sysvinit-$(SYSVINIT_VER)-crypt-lib.patch
 SYSVINIT_PATCH += sysvinit-$(SYSVINIT_VER)-change-INIT_FIFO.patch
 SYSVINIT_PATCH += sysvinit-$(SYSVINIT_VER)-remove-killall5.patch
 
 $(ARCHIVE)/$(SYSVINIT_SOURCE):
-	$(DOWNLOAD) https://download.savannah.gnu.org/releases/sysvinit/$(SYSVINIT_SOURCE)
+#	$(DOWNLOAD) https://download.savannah.gnu.org/releases/sysvinit/$(SYSVINIT_SOURCE)
+	$(DOWNLOAD) https://github.com/slicer69/sysvinit/releases/download/$(SYSVINIT_VER)/$(SYSVINIT_SOURCE)
 
 $(D)/sysvinit: $(D)/bootstrap $(ARCHIVE)/$(SYSVINIT_SOURCE)
 	$(START_BUILD)
@@ -574,7 +575,7 @@ $(D)/jfsutils: $(D)/bootstrap $(D)/e2fsprogs $(ARCHIVE)/$(JFSUTILS_SOURCE)
 # f2fs-tools
 #
 
-F2FS-TOOLS_VER = 1.15.0
+F2FS-TOOLS_VER = 1.16.0
 F2FS-TOOLS_SOURCE = f2fs-tools-$(F2FS-TOOLS_VER).tar.gz
 F2FS-TOOLS_PATCH = f2fs-tools-$(F2FS-TOOLS_VER).patch
 
@@ -640,9 +641,10 @@ $(D)/ntfs_3g: $(D)/bootstrap $(ARCHIVE)/$(NTFS_3G_SOURCE)
 #
 # mc
 #
-MC_VER = 4.8.28
+MC_VER = 4.8.29
 MC_SOURCE = mc-$(MC_VER).tar.xz
-MC_PATCH = mc-$(MC_VER).patch
+MC_PATCH  = mc-$(MC_VER).patch
+MC_PATCH += mc-$(MC_VER)-fix_ftp_listing.patch
 
 $(ARCHIVE)/$(MC_SOURCE):
 	$(DOWNLOAD) ftp.midnight-commander.org/$(MC_SOURCE)
@@ -684,7 +686,7 @@ $(D)/mc: $(D)/bootstrap $(D)/libglib2 $(D)/ncurses $(ARCHIVE)/$(MC_SOURCE)
 #
 # socat
 #
-SOCAT_VER = 1.7.4.3
+SOCAT_VER = 1.7.4.4
 SOCAT_SOURCE = socat-$(SOCAT_VER).tar.gz
 SOCAT_PATCH = socat-$(SOCAT_VER).patch
 
@@ -884,7 +886,7 @@ $(D)/hddtemp: $(D)/bootstrap $(ARCHIVE)/$(HDDTEMP_SOURCE)
 #
 # hdparm
 #
-HDPARM_VER = 9.63
+HDPARM_VER = 9.65
 HDPARM_SOURCE = hdparm-$(HDPARM_VER).tar.gz
 
 $(ARCHIVE)/$(HDPARM_SOURCE):
@@ -949,8 +951,8 @@ $(D)/fbshot: $(D)/bootstrap $(D)/libpng $(ARCHIVE)/$(FBSHOT_SOURCE)
 #
 # sysstat
 #
-SYSSTAT_VER = 12.6.0
-SYSSTAT_SOURCE = sysstat-$(SYSSTAT_VER).tar.bz2
+SYSSTAT_VER = 12.6.2
+SYSSTAT_SOURCE = sysstat-$(SYSSTAT_VER).tar.xz
 
 $(ARCHIVE)/$(SYSSTAT_SOURCE):
 	$(DOWNLOAD) http://pagesperso-orange.fr/sebastien.godard/$(SYSSTAT_SOURCE)
@@ -1182,7 +1184,7 @@ $(D)/avahi: $(D)/bootstrap $(D)/expat $(D)/libdaemon $(D)/dbus $(ARCHIVE)/$(AVAH
 #
 # wget
 #
-WGET_VER = 1.21.3
+WGET_VER = 1.21.4
 WGET_SOURCE = wget-$(WGET_VER).tar.gz
 WGET_PATCH = wget-$(WGET_VER).patch
 
@@ -1427,7 +1429,7 @@ $(D)/htop: $(D)/bootstrap $(D)/ncurses $(ARCHIVE)/$(HTOP_SOURCE)
 #
 # ethtool
 #
-ETHTOOL_VER = 5.17
+ETHTOOL_VER = 6.0
 ETHTOOL_SOURCE = ethtool-$(ETHTOOL_VER).tar.xz
 ETHTOOL_PATCH = ethtool-$(ETHTOOL_VER).patch
 
@@ -1751,8 +1753,8 @@ $(D)/udpxy: $(D)/bootstrap $(ARCHIVE)/$(UDPXY_SOURCE)
 #
 # openvpn
 #
-OPENVPN_VER = 2.5.7
-OPENVPN_SOURCE = openvpn-$(OPENVPN_VER).tar.xz
+OPENVPN_VER = 2.5.9
+OPENVPN_SOURCE = openvpn-$(OPENVPN_VER).tar.gz
 
 $(ARCHIVE)/$(OPENVPN_SOURCE):
 	$(DOWNLOAD) http://swupdate.openvpn.org/community/releases/$(OPENVPN_SOURCE) || \
@@ -1827,7 +1829,7 @@ $(D)/vpnc: $(D)/bootstrap $(D)/openssl $(D)/lzo $(D)/libgcrypt $(ARCHIVE)/$(VPNC
 #
 # openssh
 #
-OPENSSH_VER = 9.0p1
+OPENSSH_VER = 9.3p1
 OPENSSH_SOURCE = openssh-$(OPENSSH_VER).tar.gz
 
 $(ARCHIVE)/$(OPENSSH_SOURCE):
@@ -1859,7 +1861,7 @@ $(D)/openssh: $(D)/bootstrap $(D)/zlib $(D)/openssl $(ARCHIVE)/$(OPENSSH_SOURCE)
 #
 # dropbear
 #
-DROPBEAR_VER = 2018.76
+DROPBEAR_VER = 2022.83
 DROPBEAR_SOURCE = dropbear-$(DROPBEAR_VER).tar.bz2
 
 $(ARCHIVE)/$(DROPBEAR_SOURCE):

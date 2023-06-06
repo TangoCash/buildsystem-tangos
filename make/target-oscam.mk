@@ -14,6 +14,7 @@ OSCAM_CONFIG = \
 				WITH_EMU \
 				WITH_LB \
 				WITH_NEUTRINO \
+				WITH_ARM_NEON \
 				\
 				MODULE_CAMD35 \
 				MODULE_CAMD35_TCP \
@@ -41,6 +42,7 @@ $(D)/oscam-emu.do_prepare:
 		sed -i 's/SoftCam\.Key/oscam.keys/ig' oscam-emu.patch; \
 		sed -i 's/SoftCam_Key/oscam_keys/ig' oscam-emu.patch; \
 		$(call apply_patches, $(SOURCE_DIR)/oscam-svn/oscam-emu.patch, 0); \
+		$(call apply_patches, $(LOCAL_OSCAM_EMU_PATCHES)); \
 		wget --progress=bar:force --no-check-certificate $(DOWNLOAD_SILENT_OPT) -t6 -T20 -O oscam.keys http://enigma.satupdate.net/SoftCam.txt ;\
 		$(OSCAM_CONFIG) \
 			WITH_EMU \
@@ -58,6 +60,7 @@ $(D)/oscam.do_prepare:
 	cp -ra $(ARCHIVE)/oscam-svn $(SOURCE_DIR)/oscam-svn;\
 	cp -ra $(SOURCE_DIR)/oscam-svn $(SOURCE_DIR)/oscam-svn.org;\
 	cd $(SOURCE_DIR)/oscam-svn; \
+		$(call apply_patches, $(LOCAL_OSCAM_PATCHES)); \
 		$(OSCAM_CONFIG) \
 			$(SILENT_OPT)
 	touch $@

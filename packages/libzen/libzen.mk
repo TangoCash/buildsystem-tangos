@@ -1,7 +1,7 @@
 #
 # libzen
 #
-LIBZEN_VER = 0.4.39
+LIBZEN_VER = 0.4.41
 LIBZEN_SOURCE = libzen_$(LIBZEN_VER).tar.bz2
 
 $(ARCHIVE)/$(LIBZEN_SOURCE):

@@ -501,12 +501,12 @@ $(D)/boost: $(D)/bootstrap $(ARCHIVE)/$(BOOST_SOURCE)
 #
 # zlib
 #
-ZLIB_VER = 1.2.11
+ZLIB_VER = 1.2.13
 ZLIB_SOURCE = zlib-$(ZLIB_VER).tar.xz
 ZLIB_Patch = zlib-$(ZLIB_VER).patch
 
 $(ARCHIVE)/$(ZLIB_SOURCE):
-	$(DOWNLOAD) https://sourceforge.net/projects/libpng/files/zlib/$(ZLIB_VER)/$(ZLIB_SOURCE)
+	$(DOWNLOAD) https://zlib.net/$(ZLIB_SOURCE)
 
 $(D)/zlib: $(D)/bootstrap $(ARCHIVE)/$(ZLIB_SOURCE)
 	$(START_BUILD)
@@ -708,9 +708,10 @@ $(D)/libjpeg: $(D)/libjpeg_turbo2
 #
 # libjpeg_turbo2
 #
-LIBJPEG_TURBO2_VER = 2.1.3
+LIBJPEG_TURBO2_VER = 2.1.5.1
 LIBJPEG_TURBO2_SOURCE = libjpeg-turbo-$(LIBJPEG_TURBO2_VER).tar.gz
 LIBJPEG_TURBO2_PATCH = libjpeg-turbo-tiff-ojpeg.patch
+LIBJPEG_TURBO2_PATCH += libjpeg-turbo-fix-unknown-type-name-FILE.patch
 
 $(ARCHIVE)/$(LIBJPEG_TURBO2_SOURCE):
 	$(DOWNLOAD) https://sourceforge.net/projects/libjpeg-turbo/files/$(LIBJPEG_TURBO2_VER)/$(LIBJPEG_TURBO2_SOURCE)
@@ -775,7 +776,7 @@ $(D)/libjpeg_turbo: $(D)/bootstrap $(ARCHIVE)/$(LIBJPEG_TURBO_SOURCE)
 #
 # libpng
 #
-LIBPNG_VER = 1.6.37
+LIBPNG_VER = 1.6.39
 LIBPNG_VER_X = 16
 LIBPNG_SOURCE = libpng-$(LIBPNG_VER).tar.xz
 LIBPNG_PATCH = libpng-$(LIBPNG_VER)-disable-tools.patch
@@ -894,7 +895,7 @@ $(D)/ca-bundle: $(ARCHIVE)/$(CA-BUNDLE_SOURCE)
 #
 # libcurl
 #
-LIBCURL_VER = 7.83.1
+LIBCURL_VER = 8.1.2
 LIBCURL_SOURCE = curl-$(LIBCURL_VER).tar.bz2
 LIBCURL_PATCH = libcurl-$(LIBCURL_VER).patch
 
@@ -946,7 +947,7 @@ $(D)/libcurl: $(D)/bootstrap $(D)/zlib $(D)/openssl $(D)/ca-bundle $(ARCHIVE)/$(
 #
 # libfribidi
 #
-LIBFRIBIDI_VER = 1.0.12
+LIBFRIBIDI_VER = 1.0.13
 LIBFRIBIDI_SOURCE = fribidi-$(LIBFRIBIDI_VER).tar.xz
 LIBFRIBIDI_PATCH = libfribidi-$(LIBFRIBIDI_VER).patch
 
@@ -1499,12 +1500,14 @@ $(D)/libsoup: $(D)/bootstrap $(D)/sqlite $(D)/libxml2 $(D)/libglib2 $(ARCHIVE)/$
 #
 # libxml2
 #
-LIBXML2_VER = 2.9.12
-LIBXML2_SOURCE = libxml2-$(LIBXML2_VER).tar.gz
+LIBXML2_MAJOR = 2.11
+LIBXML2_MINOR = 4
+LIBXML2_VER = $(LIBXML2_MAJOR).$(LIBXML2_MINOR)
+LIBXML2_SOURCE = libxml2-$(LIBXML2_VER).tar.xz
 LIBXML2_PATCH = libxml2-$(LIBXML2_VER).patch
 
 $(ARCHIVE)/$(LIBXML2_SOURCE):
-	$(DOWNLOAD) ftp://xmlsoft.org/libxml2/$(LIBXML2_SOURCE)
+	$(DOWNLOAD) https://download.gnome.org/sources/libxml2/$(LIBXML2_MAJOR)/$(LIBXML2_SOURCE)
 
 $(D)/libxml2: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/$(LIBXML2_SOURCE)
 	$(START_BUILD)
@@ -1641,7 +1644,7 @@ $(D)/libroxml: $(D)/bootstrap $(ARCHIVE)/$(LIBROXML_SOURCE)
 #
 # pugixml
 #
-PUGIXML_VER = 1.12
+PUGIXML_VER = 1.13
 PUGIXML_SOURCE = pugixml-$(PUGIXML_VER).tar.gz
 PUGIXML_PATCH = pugixml-$(PUGIXML_VER)-config.patch
 
@@ -1835,7 +1838,7 @@ $(D)/libusb_compat: $(D)/bootstrap $(D)/libusb $(ARCHIVE)/$(LIBUSB_COMPAT_SOURCE
 #
 # alsa-lib
 #
-ALSA_LIB_VER = 1.2.7.2
+ALSA_LIB_VER = 1.2.9
 ALSA_LIB_SOURCE = alsa-lib-$(ALSA_LIB_VER).tar.bz2
 ALSA_LIB_PATCH  = alsa-lib-$(ALSA_LIB_VER).patch
 ALSA_LIB_PATCH += alsa-lib-$(ALSA_LIB_VER)-link_fix.patch
@@ -1879,7 +1882,7 @@ $(D)/alsa_lib: $(D)/bootstrap $(ARCHIVE)/$(ALSA_LIB_SOURCE)
 #
 # alsa-utils
 #
-ALSA_UTILS_VER = 1.2.7
+ALSA_UTILS_VER = 1.2.9
 ALSA_UTILS_SOURCE = alsa-utils-$(ALSA_UTILS_VER).tar.bz2
 ALSA_UTILS_PATCH = alsa-utils-$(ALSA_UTILS_VER).patch
 
@@ -2066,7 +2069,7 @@ $(D)/lzo: $(D)/bootstrap $(ARCHIVE)/$(LZO_SOURCE)
 #
 # minidlna
 #
-MINIDLNA_VER = 1.3.0
+MINIDLNA_VER = 1.3.2
 MINIDLNA_SOURCE = minidlna-$(MINIDLNA_VER).tar.gz
 MINIDLNA_PATCH = minidlna-$(MINIDLNA_VER).patch
 
@@ -2436,7 +2439,7 @@ $(D)/libgpg-error: $(D)/bootstrap $(ARCHIVE)/$(LIBGPG_ERROR_SOURCE)
 #
 # libgcrypt
 #
-LIBGCRYPT_VER    = 1.8.9
+LIBGCRYPT_VER    = 1.8.10
 LIBGCRYPT_DIR    = libgcrypt-$(LIBGCRYPT_VER)
 LIBGCRYPT_SOURCE = libgcrypt-$(LIBGCRYPT_VER).tar.bz2
 LIBGCRYPT_URL    = https://gnupg.org/ftp/gcrypt/libgcrypt

@@ -263,7 +263,7 @@ echo "CI_ENABLED=$CI_ENABLED" >> config
 case $2 in
 	[1-2]) REPLY=$2;;
 	*)	echo -e "\nFFmpeg Version:"
-		echo "   1) buildsystem standard 4.4.2"
+		echo "   1) buildsystem standard 4.4.4"
 		echo "   2) ffmpeg git release/4.4 (with upstream fixes)"
 		echo "   3) buildsystem standard 4.3.2"
 		echo "   4) ffmpeg git snapshot (highly experimental)"
@@ -468,7 +468,7 @@ fi
 case $9 in
 	[1-2]) REPLY=$9;;
 	*)	echo -e "\nBusybox Version:"
-		echo "   1) buildsystem standard 1.35.0"
+		echo "   1) buildsystem standard 1.36.1"
 		echo "   2) busybox git snapshot (experimental)"
 		read -p "Select Busybox version (1-2)? [1]"
 		REPLY="${REPLY:-1}";;
