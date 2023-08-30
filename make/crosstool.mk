@@ -10,13 +10,13 @@ $(TARGET_DIR)/lib/libc.so.6:
 #
 # crosstool-ng
 #
-CROSSTOOL_NG_VER     = 9e3c574e
+CROSSTOOL_NG_VER     = 5a09578
 CROSSTOOL_NG_DIR     = crosstool-ng.git
 CROSSTOOL_NG_SOURCE  = $(CROSSTOOL_NG_DIR)
 CROSSTOOL_NG_URL     = $(GITHUB)/crosstool-ng/crosstool-ng
 CROSSTOOL_NG_CONFIG  = crosstool-ng-$(BOXARCH)-$(CROSSTOOL_GCC_VER)
 CROSSTOOL_NG_BACKUP  = $(ARCHIVE)/$(CROSSTOOL_NG_CONFIG)-kernel-$(KERNEL_VER)-backup.tar.gz
-CROSSTOOL_NG_PATCH   = crosstool-revert-autoconf-2.71.patch
+#CROSSTOOL_NG_PATCH   = crosstool-revert-autoconf-2.71.patch
 
 # -----------------------------------------------------------------------------
 

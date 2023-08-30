@@ -47,9 +47,9 @@ BOXTYPE              ?= hd51
 CI_ENABLED           ?= 1
 FFMPEG_EXPERIMENTAL  ?= 0
 OPTIMIZATIONS        ?= size
-BS_GCC_VER           ?= 10.4.0
+BS_GCC_VER           ?= 10.5.0
 IMAGE                ?= neutrino
-FLAVOUR              ?= TANGOS
+FLAVOUR              ?= TANGOSEVO
 EXTERNAL_LCD         ?= both
 LAYOUT               ?= multi
 BUSYBOX_SNAPSHOT     ?= 0
@@ -130,17 +130,22 @@ ifeq ($(BS_GCC_VER), 9.5.0)
 CROSSTOOL_GCC_VER = gcc-9.5.0
 endif
 
-ifeq ($(BS_GCC_VER), 10.4.0)
-CROSSTOOL_GCC_VER = gcc-10.4.0
+ifeq ($(BS_GCC_VER), 10.5.0)
+CROSSTOOL_GCC_VER = gcc-10.5.0
 endif
 
-ifeq ($(BS_GCC_VER), 11.3.0)
-CROSSTOOL_GCC_VER = gcc-11.3.0
+ifeq ($(BS_GCC_VER), 11.4.0)
+CROSSTOOL_GCC_VER = gcc-11.4.0
 NEED_TIRPC             = 1
 endif
 
-ifeq ($(BS_GCC_VER), 12.2.0)
-CROSSTOOL_GCC_VER = gcc-12.2.0
+ifeq ($(BS_GCC_VER), 12.3.0)
+CROSSTOOL_GCC_VER = gcc-12.3.0
+NEED_TIRPC             = 1
+endif
+
+ifeq ($(BS_GCC_VER), 13.2.0)
+CROSSTOOL_GCC_VER = gcc-13.2.0
 NEED_TIRPC             = 1
 endif
 
@@ -156,7 +161,7 @@ TARGET_INCLUDE_DIR    = $(TARGET_DIR)/usr/include
 TARGET_SHARE_DIR      = $(TARGET_DIR)/usr/share
 
 TARGET_CFLAGS         = -pipe $(TARGET_O_CFLAGS) $(TARGET_MARCH_CFLAGS) $(TARGET_EXTRA_CFLAGS) -I$(TARGET_INCLUDE_DIR)
-ifeq ($(BS_GCC_VER), $(filter $(BS_GCC_VER), 10.3.0 11.3.0 12.2.0))
+ifeq ($(BS_GCC_VER), $(filter $(BS_GCC_VER), 10.5.0 11.4.0 12.3.0 13.2.0))
 TARGET_CFLAGS        +=-fcommon
 endif
 TARGET_CPPFLAGS       = $(TARGET_CFLAGS)

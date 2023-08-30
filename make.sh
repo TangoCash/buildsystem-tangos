@@ -41,7 +41,7 @@ if [ "$1" == defaultconfig ]; then
 	echo "BOXTYPE=hd51" >> config
 	echo "FFMPEG_EXPERIMENTAL=0" >> config
 	echo "OPTIMIZATIONS=size" >> config
-	echo "BS_GCC_VER=10.4.0" >> config
+	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino" >> config
 	echo "FLAVOUR=TANGOS" >> config
 	echo "EXTERNAL_LCD=both" >> config
@@ -57,7 +57,7 @@ if [ "$1" == hd51 ] || [ "$1" == h7 ] || [ "$1" == bre2ze4k ]; then
 	echo "BOXTYPE=$1" >> config
 	echo "FFMPEG_EXPERIMENTAL=0" >> config
 	echo "OPTIMIZATIONS=size" >> config
-	echo "BS_GCC_VER=10.4.0" >> config
+	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino" >> config
 	echo "FLAVOUR=TANGOS" >> config
 	echo "EXTERNAL_LCD=both" >> config
@@ -73,7 +73,7 @@ if [ "$1" == e4hdultra ] || [ "$1" == protek4k ]; then
 	echo "BOXTYPE=$1" >> config
 	echo "FFMPEG_EXPERIMENTAL=0" >> config
 	echo "OPTIMIZATIONS=size" >> config
-	echo "BS_GCC_VER=10.4.0" >> config
+	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino" >> config
 	echo "FLAVOUR=TANGOS" >> config
 	echo "EXTERNAL_LCD=both" >> config
@@ -89,7 +89,7 @@ if [ "$1" == hd60 ] || [ "$1" == hd61 ] || [ "$1" == multibox ] || [ "$1" == mul
 	echo "BOXTYPE=$1" >> config
 	echo "FFMPEG_EXPERIMENTAL=0" >> config
 	echo "OPTIMIZATIONS=size" >> config
-	echo "BS_GCC_VER=10.4.0" >> config
+	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino" >> config
 	echo "FLAVOUR=TANGOS" >> config
 	echo "EXTERNAL_LCD=both" >> config
@@ -104,7 +104,7 @@ if [ "$1" == vusolo4k -o "$1" == vuduo4k -o "$1" == vuultimo4k -o "$1" == vuuno4
 	echo "BOXTYPE=$1" >> config
 	echo "FFMPEG_EXPERIMENTAL=0" >> config
 	echo "OPTIMIZATIONS=size" >> config
-	echo "BS_GCC_VER=10.4.0" >> config
+	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino" >> config
 	echo "FLAVOUR=TANGOS" >> config
 	echo "EXTERNAL_LCD=both" >> config
@@ -121,7 +121,7 @@ if [ "$1" == osmini4k ]; then
 	echo "BOXTYPE=$1" >> config
 	echo "FFMPEG_EXPERIMENTAL=0" >> config
 	echo "OPTIMIZATIONS=size" >> config
-	echo "BS_GCC_VER=10.4.0" >> config
+	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino" >> config
 	echo "FLAVOUR=TANGOS" >> config
 	echo "EXTERNAL_LCD=both" >> config
@@ -136,7 +136,7 @@ if [ "$1" == osmio4k ] || [ "$1" == osmio4kplus ]; then
 	echo "BOXTYPE=$1" >> config
 	echo "FFMPEG_EXPERIMENTAL=0" >> config
 	echo "OPTIMIZATIONS=size" >> config
-	echo "BS_GCC_VER=10.4.0" >> config
+	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino-wifi" >> config
 	echo "FLAVOUR=TANGOS" >> config
 	echo "EXTERNAL_LCD=both" >> config
@@ -151,7 +151,7 @@ if [ "$1" == sf8008 ] || [ "$1" == sf8008m ] || [ "$1" == ustym4kpro ] || [ "$1"
 	echo "BOXTYPE=$1" >> config
 	echo "FFMPEG_EXPERIMENTAL=0" >> config
 	echo "OPTIMIZATIONS=size" >> config
-	echo "BS_GCC_VER=10.4.0" >> config
+	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino-wifi" >> config
 	echo "FLAVOUR=TANGOS" >> config
 	echo "EXTERNAL_LCD=both" >> config
@@ -166,7 +166,7 @@ if [ "$1" == h9 ]; then
 	echo "BOXTYPE=$1" >> config
 	echo "FFMPEG_EXPERIMENTAL=0" >> config
 	echo "OPTIMIZATIONS=size" >> config
-	echo "BS_GCC_VER=10.4.0" >> config
+	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino-wifi" >> config
 	echo "FLAVOUR=TANGOS" >> config
 	echo "EXTERNAL_LCD=both" >> config
@@ -305,22 +305,24 @@ echo "OPTIMIZATIONS=$OPTIMIZATIONS" >> config
 ##############################################
 
 case $4 in
-	[1-4]) REPLY=$4;;
+	[1-5]) REPLY=$4;;
 	*)	echo -e "\nToolchain gcc version:"
-		echo "   1) GCC version 10.4.0"
+		echo "   1) GCC version 10.5.0"
 		echo "   2) GCC version  9.5.0"
-		echo "   3) GCC version 11.3.0"
-		echo "   4) GCC version 12.2.0"
-		read -p "Select toolchain gcc version (1-4)? [1] "
+		echo "   3) GCC version 11.4.0"
+		echo "   4) GCC version 12.3.0"
+		echo "   5) GCC version 13.2.0"
+		read -p "Select toolchain gcc version (1-5)? [1] "
 		REPLY="${REPLY:-1}";;
 esac
 
 case "$REPLY" in
-	1) BS_GCC_VER="10.4.0";;
+	1) BS_GCC_VER="10.5.0";;
 	2) BS_GCC_VER=" 9.5.0";;
-	3) BS_GCC_VER="11.3.0";;
-	4) BS_GCC_VER="12.2.0";;
-	*) BS_GCC_VER="10.4.0";;
+	3) BS_GCC_VER="11.4.0";;
+	4) BS_GCC_VER="12.3.0";;
+	5) BS_GCC_VER="13.2.0";;
+	*) BS_GCC_VER="10.5.0";;
 esac
 echo "BS_GCC_VER=$BS_GCC_VER" >> config
 
