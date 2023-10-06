@@ -154,6 +154,7 @@ N_CONFIG_OPTS += --enable-freesatepg
 N_CONFIG_OPTS += --enable-fribidi
 #N_CONFIG_OPTS += --enable-dynamicdemux
 #N_CONFIG_OPTS += --enable-reschange
+#N_CONFIG_OPTS += --enable-aitscan
 N_CONFIG_OPTS += --disable-upnp
 #N_CONFIG_OPTS += --disable-pip
 #N_CONFIG_OPTS += --disable-webif
@@ -167,7 +168,13 @@ ifeq ($(BOXTYPE), osmio4kplus)
 N_CONFIG_OPTS += --enable-lcd
 endif
 
-ifeq  ($(FLAVOUR), TANGOS)
+ifeq ($(FLAVOUR), TANGOS)
+N_CONFIG_OPTS += --with-default-theme=TangoCash
+endif
+
+ifeq ($(FLAVOUR), TANGOSEVO)
+#N_CONFIG_OPTS += --enable-dynamicdemux
+N_CONFIG_OPTS += --enable-aitscan
 N_CONFIG_OPTS += --with-default-theme=TangoCash
 endif
 

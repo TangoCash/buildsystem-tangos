@@ -200,7 +200,7 @@ endif
 #
 # Technisat SkyStar USB HD modules
 #
-ifeq ($(BOXTYPE),$(filter $(BOXTYPE),vuultimo4k))
+ifeq ($(FLAVOUR), TANGOSEVO)
 	cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/kernel/drivers/media/dvb-frontends/stv6110x.ko $(RELEASE_DIR)/lib/modules/
 	cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/kernel/drivers/media/dvb-frontends/stv090x.ko $(RELEASE_DIR)/lib/modules/
 	cp $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/kernel/drivers/media/usb/dvb-usb/dvb-usb.ko $(RELEASE_DIR)/lib/modules/
