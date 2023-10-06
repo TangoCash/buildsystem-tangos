@@ -6,9 +6,9 @@
      int http_seekable;
 +    char *key_uri_replace_old;
 +    char *key_uri_replace_new;
+     int seg_max_retry;
      AVIOContext *playlist_pb;
- } HLSContext;
- 
+     HLSCryptoContext  crypto_ctx;
 @@ -1255,8 +1257,16 @@
      } else if (seg->key_type == KEY_AES_128) {
          char iv[33], key[33], url[MAX_URL_SIZE];
@@ -37,9 +37,9 @@
          ff_data_to_hex(iv, seg->iv, sizeof(seg->iv), 0);
          ff_data_to_hex(key, pls->key, sizeof(pls->key), 0);
 @@ -2404,6 +2416,8 @@
-         OFFSET(http_seekable), AV_OPT_TYPE_BOOL, { .i64 = -1}, -1, 1, FLAGS},
-     {"seg_format_options", "Set options for segment demuxer",
          OFFSET(seg_format_opts), AV_OPT_TYPE_DICT, {.str = NULL}, 0, 0, FLAGS},
+     {"seg_max_retry", "Maximum number of times to reload a segment on error.",
+      OFFSET(seg_max_retry), AV_OPT_TYPE_INT, {.i64 = 0}, 0, INT_MAX, FLAGS},
 +    { "key_uri_old", "allow to replace part of AES key uri - old", OFFSET(key_uri_replace_old), AV_OPT_TYPE_STRING, { .str = "" }, 0, 0, FLAGS },
 +    { "key_uri_new", "allow to replace part of AES key uri - new", OFFSET(key_uri_replace_new), AV_OPT_TYPE_STRING, { .str = "" }, 0, 0, FLAGS },
      {NULL}
