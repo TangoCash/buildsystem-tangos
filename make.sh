@@ -39,7 +39,7 @@ fi
 if [ "$1" == defaultconfig ]; then
 	echo "BOXARCH=arm" > config
 	echo "BOXTYPE=hd51" >> config
-	echo "FFMPEG_EXPERIMENTAL=0" >> config
+	echo "FFMPEG_VERSION=6.1" >> config
 	echo "OPTIMIZATIONS=size" >> config
 	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino" >> config
@@ -55,7 +55,7 @@ fi
 if [ "$1" == hd51 ] || [ "$1" == h7 ] || [ "$1" == bre2ze4k ]; then
 	echo "BOXARCH=arm" > config
 	echo "BOXTYPE=$1" >> config
-	echo "FFMPEG_EXPERIMENTAL=0" >> config
+	echo "FFMPEG_VERSION=6.1" >> config
 	echo "OPTIMIZATIONS=size" >> config
 	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino" >> config
@@ -71,7 +71,7 @@ fi
 if [ "$1" == e4hdultra ] || [ "$1" == protek4k ]; then
 	echo "BOXARCH=arm" > config
 	echo "BOXTYPE=$1" >> config
-	echo "FFMPEG_EXPERIMENTAL=0" >> config
+	echo "FFMPEG_VERSION=6.1" >> config
 	echo "OPTIMIZATIONS=size" >> config
 	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino" >> config
@@ -87,7 +87,7 @@ fi
 if [ "$1" == hd60 ] || [ "$1" == hd61 ] || [ "$1" == multibox ] || [ "$1" == multiboxse ]; then
 	echo "BOXARCH=arm" > config
 	echo "BOXTYPE=$1" >> config
-	echo "FFMPEG_EXPERIMENTAL=0" >> config
+	echo "FFMPEG_VERSION=6.1" >> config
 	echo "OPTIMIZATIONS=size" >> config
 	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino" >> config
@@ -102,7 +102,7 @@ fi
 if [ "$1" == vusolo4k -o "$1" == vuduo4k -o "$1" == vuultimo4k -o "$1" == vuuno4k -o "$1" == vuuno4kse -o "$1" == vuzero4k -o "$1" == vuduo4kse ]; then
 	echo "BOXARCH=arm" > config
 	echo "BOXTYPE=$1" >> config
-	echo "FFMPEG_EXPERIMENTAL=0" >> config
+	echo "FFMPEG_VERSION=6.1" >> config
 	echo "OPTIMIZATIONS=size" >> config
 	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino" >> config
@@ -119,7 +119,7 @@ fi
 if [ "$1" == osmini4k ]; then
 	echo "BOXARCH=arm" > config
 	echo "BOXTYPE=$1" >> config
-	echo "FFMPEG_EXPERIMENTAL=0" >> config
+	echo "FFMPEG_VERSION=6.1" >> config
 	echo "OPTIMIZATIONS=size" >> config
 	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino" >> config
@@ -134,7 +134,7 @@ fi
 if [ "$1" == osmio4k ] || [ "$1" == osmio4kplus ]; then
 	echo "BOXARCH=arm" > config
 	echo "BOXTYPE=$1" >> config
-	echo "FFMPEG_EXPERIMENTAL=0" >> config
+	echo "FFMPEG_VERSION=6.1" >> config
 	echo "OPTIMIZATIONS=size" >> config
 	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino-wifi" >> config
@@ -149,7 +149,7 @@ fi
 if [ "$1" == sf8008 ] || [ "$1" == sf8008m ] || [ "$1" == ustym4kpro ] || [ "$1" == h9combo ]; then
 	echo "BOXARCH=arm" > config
 	echo "BOXTYPE=$1" >> config
-	echo "FFMPEG_EXPERIMENTAL=0" >> config
+	echo "FFMPEG_VERSION=6.1" >> config
 	echo "OPTIMIZATIONS=size" >> config
 	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino-wifi" >> config
@@ -164,7 +164,7 @@ fi
 if [ "$1" == h9 ]; then
 	echo "BOXARCH=arm" > config
 	echo "BOXTYPE=$1" >> config
-	echo "FFMPEG_EXPERIMENTAL=0" >> config
+	echo "FFMPEG_VERSION=6.1" >> config
 	echo "OPTIMIZATIONS=size" >> config
 	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino-wifi" >> config
@@ -263,22 +263,20 @@ echo "CI_ENABLED=$CI_ENABLED" >> config
 case $2 in
 	[1-2]) REPLY=$2;;
 	*)	echo -e "\nFFmpeg Version:"
-		echo "   1) buildsystem standard 4.4.4"
-		echo "   2) ffmpeg git release/4.4 (with upstream fixes)"
-		echo "   3) buildsystem standard 6.1"
-		echo "   4) ffmpeg git snapshot (highly experimental)"
-		read -p "Select FFmpeg version (1-4)? [1]"
+		echo "   1) buildsystem standard 6.1"
+		echo "   2) buildsystem standard 4.4.4"
+		echo "   3) ffmpeg git snapshot (experimental)"
+		read -p "Select FFmpeg version (1-3)? [1]"
 		REPLY="${REPLY:-1}";;
 esac
 
 case "$REPLY" in
-	1) FFMPEG_EXPERIMENTAL="0";;
-	2) FFMPEG_EXPERIMENTAL="1";;
-	3) FFMPEG_EXPERIMENTAL="2";;
-	4) FFMPEG_EXPERIMENTAL="3";;
-	*) FFMPEG_EXPERIMENTAL="0";;
+	1) FFMPEG_VERSION="6.1";;
+	2) FFMPEG_VERSION="4.4.4";;
+	3) FFMPEG_VERSION="snapshot";;
+	*) FFMPEG_VERSION="6.1";;
 esac
-echo "FFMPEG_EXPERIMENTAL=$FFMPEG_EXPERIMENTAL" >> config
+echo "FFMPEG_VERSION=$FFMPEG_VERSION" >> config
 
 ##############################################
 
@@ -361,26 +359,26 @@ echo "IMAGE=$IMAGE" >> config
 case $6 in
 	[1-7]) REPLY=$6;;
 	*)	echo -e "\nWhich Neutrino variant do you want to build?:"
-		echo "   1)  neutrino-tangos"
+		echo "   1)  neutrino-tangos-evo"
 		echo "   2)  neutrino-ddt"
 		echo "   3)  neutrino-tuxbox"
 		echo "   4)  neutrino-ni"
 		echo "   5)  neutrino-max"
 		echo "   6)  neutrino-hd2"
-		echo "   7)  neutrino-tangos-evo"
+		echo "   7)  neutrino-tangos"
 		read -p "Select Image to build (1-7)? [1]"
 		REPLY="${REPLY:-1}";;
 esac
 
 case "$REPLY" in
-	1) FLAVOUR="TANGOS";;
+	1) FLAVOUR="TANGOSEVO";;
 	2) FLAVOUR="DDT";;
 	3) FLAVOUR="TUXBOX";;
 	4) FLAVOUR="NI";;
 	5) FLAVOUR="MAX";;
 	6) FLAVOUR="HD2";;
-	7) FLAVOUR="TANGOSEVO";;
-	*) FLAVOUR="TANGOS";;
+	7) FLAVOUR="TANGOS";;
+	*) FLAVOUR="TANGOSEVO";;
 esac
 echo "FLAVOUR=$FLAVOUR" >> config
 

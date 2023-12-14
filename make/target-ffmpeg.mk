@@ -5,33 +5,17 @@
 
 FFMPEG_DEPS = $(D)/librtmp
 
-ifeq ($(FFMPEG_EXPERIMENTAL), 3)
+ifeq ($(FFMPEG_VERSION), snapshot)
 FFMPEG_VER = snapshot
 FFMPEG_SOURCE =
 else
-ifeq ($(FFMPEG_EXPERIMENTAL), 2)
-FFMPEG_VER = 6.1
+FFMPEG_VER = $(FFMPEG_VERSION)
 FFMPEG_SOURCE = ffmpeg-$(FFMPEG_VER).tar.xz
 FFMPEG_DEPS += $(ARCHIVE)/$(FFMPEG_SOURCE)
 
 $(ARCHIVE)/$(FFMPEG_SOURCE):
 	$(DOWNLOAD) http://www.ffmpeg.org/releases/$(FFMPEG_SOURCE)
 
-else
-ifeq ($(FFMPEG_EXPERIMENTAL), 1)
-FFMPEG_VER = 4.4.git
-FFMPEG_SOURCE =
-
-else
-FFMPEG_VER = 4.4.4
-FFMPEG_SOURCE = ffmpeg-$(FFMPEG_VER).tar.xz
-FFMPEG_DEPS += $(ARCHIVE)/$(FFMPEG_SOURCE)
-
-$(ARCHIVE)/$(FFMPEG_SOURCE):
-	$(DOWNLOAD) http://www.ffmpeg.org/releases/$(FFMPEG_SOURCE)
-
-endif
-endif
 endif
 
 FFMPEG_PATCH = $(PATCHES)/ffmpeg/$(FFMPEG_VER)
@@ -51,14 +35,7 @@ FFMPRG_EXTRA_CFLAGS  = -I$(TARGET_INCLUDE_DIR)/libxml2
 $(D)/ffmpeg: $(D)/bootstrap $(D)/openssl $(D)/bzip2 $(D)/freetype $(D)/alsa_lib $(D)/libass $(D)/libxml2 $(D)/libroxml $(FFMPEG_DEPS)
 	$(START_BUILD)
 	$(REMOVE)/ffmpeg-$(FFMPEG_VER)
-ifeq ($(FFMPEG_EXPERIMENTAL), 1)
-	set -e; if [ -d $(ARCHIVE)/ffmpeg-$(FFMPEG_VER).git ]; \
-		then cd $(ARCHIVE)/ffmpeg-$(FFMPEG_VER).git; git pull; \
-		else cd $(ARCHIVE); git clone git://git.ffmpeg.org/ffmpeg.git -b release/4.4 ffmpeg-$(FFMPEG_VER).git; \
-		fi
-	cp -ra $(ARCHIVE)/ffmpeg-$(FFMPEG_VER).git $(BUILD_TMP)/ffmpeg-$(FFMPEG_VER)
-else
-ifeq ($(FFMPEG_EXPERIMENTAL), 3)
+ifeq ($(FFMPEG_VERSION), snapshot)
 	set -e; if [ -d $(ARCHIVE)/ffmpeg.git ]; \
 		then cd $(ARCHIVE)/ffmpeg.git; git pull; \
 		else cd $(ARCHIVE); git clone git://git.ffmpeg.org/ffmpeg.git ffmpeg.git; \
@@ -66,7 +43,6 @@ ifeq ($(FFMPEG_EXPERIMENTAL), 3)
 	cp -ra $(ARCHIVE)/ffmpeg.git $(BUILD_TMP)/ffmpeg-$(FFMPEG_VER)
 else
 	$(UNTAR)/$(FFMPEG_SOURCE)
-endif
 endif
 	$(CHDIR)/ffmpeg-$(FFMPEG_VER); \
 		$(call apply_patches, $(FFMPEG_PATCH)); \

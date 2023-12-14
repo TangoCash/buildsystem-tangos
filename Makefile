@@ -62,10 +62,10 @@ ifeq ($(VU_MULTIBOOT), 1)
 else
 	@echo -e "IMAGE TYPE        : $(TERM_YELLOW)$(LAYOUT)$(TERM_NORMAL)"
 endif
-ifeq ($(FFMPEG_EXPERIMENTAL), 1)
-	@echo -e "FFMPEG_SNAPSHOT   : $(TERM_YELLOW)yes$(TERM_NORMAL)"
+ifeq ($(FFMPEG_VERSION), snapshot)
+	@echo -e "FFMPEG_VERSION    : $(TERM_YELLOW)git-snapshot$(TERM_NORMAL)"
 else
-	@echo "FFMPEG_SNAPSHOT   : no"
+	@echo "FFMPEG_VERSION    : $(FFMPEG_VERSION)"
 endif
 ifeq ($(BUSYBOX_SNAPSHOT), 1)
 	@echo -e "BUSYBOX_SNAPSHOT  : $(TERM_YELLOW)yes$(TERM_NORMAL)"
