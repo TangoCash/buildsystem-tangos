@@ -265,7 +265,7 @@ case $2 in
 	*)	echo -e "\nFFmpeg Version:"
 		echo "   1) buildsystem standard 4.4.4"
 		echo "   2) ffmpeg git release/4.4 (with upstream fixes)"
-		echo "   3) buildsystem standard 4.3.2"
+		echo "   3) buildsystem standard 6.1"
 		echo "   4) ffmpeg git snapshot (highly experimental)"
 		read -p "Select FFmpeg version (1-4)? [1]"
 		REPLY="${REPLY:-1}";;

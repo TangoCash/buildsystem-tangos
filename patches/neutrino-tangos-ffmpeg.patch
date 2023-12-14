@@ -1,0 +1,348 @@
+diff -Nur '--exclude-from=/home/tango/DDT/helpers/diff-exclude' neutrino-tangos.dev/src/driver/record.cpp neutrino-tangos/src/driver/record.cpp
+--- neutrino-tangos.dev/src/driver/record.cpp	2023-12-13 20:05:40.386004454 +0100
++++ neutrino-tangos/src/driver/record.cpp	2023-12-13 20:19:07.223646851 +0100
+@@ -65,9 +65,7 @@
+ 
+ extern "C" {
+ #include <libavformat/avformat.h>
+-#if LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(59, 0, 100)
+ #include <libavcodec/bsf.h>
+-#endif
+ }
+ 
+ #if (LIBAVCODEC_VERSION_MAJOR > 55)
+@@ -81,11 +79,7 @@
+ 	private:
+ 		AVFormatContext *ifcx;
+ 		AVFormatContext *ofcx;
+-#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(57, 48, 100)
+-		AVBitStreamFilterContext *bsfc;
+-#else
+ 		AVBSFContext *bsfc;
+-#endif
+ 		bool stopped;
+ 		bool interrupt;
+ 		time_t time_started;
+@@ -1989,11 +1983,7 @@
+ 		avformat_free_context(ofcx);
+ 	}
+ 	if (bsfc){
+-#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(57, 48, 100)
+-		av_bitstream_filter_close(bsfc);
+-#else
+ 		av_bsf_free(&bsfc);
+-#endif
+ 	}
+ 	ifcx = NULL;
+ 	ofcx = NULL;
+@@ -2011,11 +2001,7 @@
+ 
+ 	for (unsigned i = 0; i < ofcx->nb_streams; i++) {
+ 		AVStream *st = ofcx->streams[i];
+-#if LIBAVFORMAT_VERSION_INT < AV_VERSION_INT(57, 25, 101)
+-		AVCodecContext * codec = st->codec;
+-#else
+ 		AVCodecParameters * codec = st->codecpar;
+-#endif
+ 		if (codec->codec_type == AVMEDIA_TYPE_AUDIO) {
+ 			AUDIO_PIDS audio_pids;
+ 			AVDictionaryEntry *lang = av_dict_get(st->metadata, "language", NULL, 0);
+@@ -2188,10 +2174,6 @@
+ 	}
+ 
+ 	//av_log_set_level(AV_LOG_VERBOSE);
+-#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(58, 9, 100)
+-	av_register_all();
+-	avcodec_register_all();
+-#endif
+ 	avformat_network_init();
+ 	printf("%s: Open input [%s]....\n", __FUNCTION__, url.c_str());
+ 
+@@ -2225,11 +2207,7 @@
+ 		printf("%s: Cannot find stream info [%s]!\n", __FUNCTION__, channel->getUrl().c_str());
+ 		return false;
+ 	}
+-#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(58, 27, 102)
+-	const char *hls = "applehttp";
+-#else
+ 	const char *hls = "hls";
+-#endif
+ 	if (!strstr(ifcx->iformat->name, hls) &&
+ 		!strstr(ifcx->iformat->name, "mpegts") &&
+ 		!strstr(ifcx->iformat->name, "matroska") &&
+@@ -2242,19 +2220,10 @@
+ 	AVIOInterruptCB int_cb = { Interrupt, this };
+ 	ifcx->interrupt_callback = int_cb;
+ 
+-#if (LIBAVFORMAT_VERSION_MAJOR < 58)
+-	snprintf(ifcx->filename, sizeof(ifcx->filename), "%s", channel->getUrl().c_str());
+-	av_dump_format(ifcx, 0, ifcx->filename, 0);
+-#else
+ 	av_dump_format(ifcx, 0, ifcx->url, 0);
+-#endif
+ 
+ 	std::string tsfile = std::string(filename) + ".ts";
+-#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(59, 0, 100)
+-	AVOutputFormat *ofmt = av_guess_format(NULL, tsfile.c_str(), NULL);
+-#else
+ 	const AVOutputFormat *ofmt = av_guess_format(NULL, tsfile.c_str(), NULL);
+-#endif
+ 	if (ofmt == NULL) {
+ 		printf("%s: av_guess_format for [%s] failed!\n", __FUNCTION__, tsfile.c_str());
+ 		return false;
+@@ -2269,24 +2238,14 @@
+ 	}
+ 
+ 	av_dict_copy(&ofcx->metadata, ifcx->metadata, 0);
+-#if (LIBAVFORMAT_VERSION_MAJOR < 58)
+-	snprintf(ofcx->filename, sizeof(ofcx->filename), "%s", tsfile.c_str());
+-#else
+ 	ofcx->url = av_strdup(!tsfile.empty() ? tsfile.c_str() : "");
+-#endif
+ 
+ 	stream_index = -1;
+ 	int stid = 0x200;
+ 	for (unsigned i = 0; i < ifcx->nb_streams; i++) {
+-#if LIBAVFORMAT_VERSION_INT < AV_VERSION_INT(57, 25, 101)
+-		AVCodecContext * iccx = ifcx->streams[i]->codec;
+-		AVStream *ost = avformat_new_stream(ofcx, iccx->codec);
+-		avcodec_copy_context(ost->codec, iccx);
+-#else
+ 		AVCodecParameters * iccx = ifcx->streams[i]->codecpar;
+ 		AVStream *ost = avformat_new_stream(ofcx, NULL);
+ 		avcodec_parameters_copy(ost->codecpar, iccx);
+-#endif
+ 		av_dict_copy(&ost->metadata, ifcx->streams[i]->metadata, 0);
+ 		ost->time_base = ifcx->streams[i]->time_base;
+ 		ost->id = stid++;
+@@ -2296,17 +2255,8 @@
+ 			stream_index = i;
+ 	}
+ 	av_log_set_level(AV_LOG_VERBOSE);
+-#if (LIBAVFORMAT_VERSION_MAJOR < 58)
+-	av_dump_format(ofcx, 0, ofcx->filename, 1);
+-#else
+ 	av_dump_format(ofcx, 0, ofcx->url, 1);
+-#endif
+ 	av_log_set_level(AV_LOG_WARNING);
+-#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(57, 48, 100)
+-	bsfc = av_bitstream_filter_init("h264_mp4toannexb");
+-	if (!bsfc)
+-		printf("%s: av_bitstream_filter_init h264_mp4toannexb failed!\n", __FUNCTION__);
+-#else
+ 	const AVBitStreamFilter *bsf = av_bsf_get_by_name("h264_mp4toannexb");
+ 	if(!bsf) {
+ 		return false;
+@@ -2314,7 +2264,6 @@
+ 	if ((av_bsf_alloc(bsf, &bsfc))) {
+ 		return false;
+ 	}
+-#endif
+ 	return true;
+ }
+ 
+@@ -2338,24 +2287,9 @@
+ 			break;
+ 		if (pkt.stream_index < 0)
+ 			continue;
+-#if LIBAVFORMAT_VERSION_INT < AV_VERSION_INT(57, 25, 101)
+-		AVCodecContext *codec = ifcx->streams[pkt.stream_index]->codec;
+-#else
+ 		AVCodecParameters *codec = ifcx->streams[pkt.stream_index]->codecpar;
+-#endif
+ 		if (bsfc && codec->codec_id == AV_CODEC_ID_H264) {
+ 			AVPacket newpkt = pkt;
+-#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(57, 48, 100)
+-			if (av_bitstream_filter_filter(bsfc, codec, NULL, &newpkt.data, &newpkt.size, pkt.data, pkt.size, pkt.flags & AV_PKT_FLAG_KEY) >= 0) {
+-#if (LIBAVFORMAT_VERSION_MAJOR == 57 && LIBAVFORMAT_VERSION_MINOR == 25)
+-				av_packet_unref(&pkt);
+-#else
+-				av_free_packet(&pkt);
+-#endif
+-				newpkt.buf = av_buffer_create(newpkt.data, newpkt.size, av_buffer_default_free, NULL, 0);
+-				pkt = newpkt;
+-			}
+-#else
+ 			int ret = av_bsf_send_packet(bsfc, &pkt);
+ 			if (ret < 0){
+ 				break;
+@@ -2368,7 +2302,6 @@
+ 				av_packet_unref(&pkt);
+ 				pkt = newpkt;
+ 			}
+-#endif
+ 		}
+ 		pkt.pts = av_rescale_q(pkt.pts, ifcx->streams[pkt.stream_index]->time_base, ofcx->streams[pkt.stream_index]->time_base);
+ 		pkt.dts = av_rescale_q(pkt.dts, ifcx->streams[pkt.stream_index]->time_base, ofcx->streams[pkt.stream_index]->time_base);
+@@ -2380,11 +2313,7 @@
+ 		}
+ 
+ 		av_write_frame(ofcx, &pkt);
+-#if (LIBAVFORMAT_VERSION_MAJOR == 57 && LIBAVFORMAT_VERSION_MINOR == 25)
+-		av_packet_unref(&pkt);
+-#else
+ 		av_free_packet(&pkt);
+-#endif
+ 
+ 		if (now == 0)
+ 			WriteHeader(1000);
+diff -Nur '--exclude-from=/home/tango/DDT/helpers/diff-exclude' neutrino-tangos.dev/src/driver/streamts.cpp neutrino-tangos/src/driver/streamts.cpp
+--- neutrino-tangos.dev/src/driver/streamts.cpp	2023-12-13 20:05:40.386004454 +0100
++++ neutrino-tangos/src/driver/streamts.cpp	2023-12-13 20:15:36.782732694 +0100
+@@ -825,11 +825,7 @@
+ 		av_free(avio_ctx);
+ 
+ 	if (bsfc){
+-#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(57, 48, 100)
+-		av_bitstream_filter_close(bsfc);
+-#else
+ 		av_bsf_free(&bsfc);
+-#endif
+ 	}
+ 
+ 	ifcx = NULL;
+@@ -856,10 +852,6 @@
+ 	}
+ 
+ 	//av_log_set_level(AV_LOG_VERBOSE);
+-#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(58, 9, 100)
+-	av_register_all();
+-	avcodec_register_all();
+-#endif
+ 	avformat_network_init();
+ 
+ 	printf("%s: Open input [%s]....\n", __FUNCTION__, url.c_str());
+@@ -894,11 +886,7 @@
+ 		printf("%s: Cannot find stream info [%s]!\n", __FUNCTION__, channel->getUrl().c_str());
+ 		return false;
+ 	}
+-#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(58, 27, 102)
+-	const char *hls = "applehttp";
+-#else
+ 	const char *hls = "hls";
+-#endif
+ 	if (!strstr(ifcx->iformat->name, hls) &&
+ 			!strstr(ifcx->iformat->name, "mpegts") &&
+ 			!strstr(ifcx->iformat->name, "matroska") &&
+@@ -911,12 +899,7 @@
+ 	AVIOInterruptCB int_cb = { Interrupt, this };
+ 	ifcx->interrupt_callback = int_cb;
+ 
+-#if (LIBAVFORMAT_VERSION_MAJOR < 58)
+-	snprintf(ifcx->filename, sizeof(ifcx->filename), "%s", channel->getUrl().c_str());
+-	av_dump_format(ifcx, 0, ifcx->filename, 0);
+-#else
+ 	av_dump_format(ifcx, 0, ifcx->url, 0);
+-#endif
+ 
+ 	buf = (unsigned char *) av_malloc(IN_SIZE);
+ 	if (buf == NULL) {
+@@ -938,31 +921,16 @@
+ 	av_dict_copy(&ofcx->metadata, ifcx->metadata, 0);
+ 	int stid = 0x200;
+ 	for (unsigned i = 0; i < ifcx->nb_streams; i++) {
+-#if LIBAVFORMAT_VERSION_INT < AV_VERSION_INT(57, 25, 101)
+-		AVCodecContext * iccx = ifcx->streams[i]->codec;
+-		AVStream *ost = avformat_new_stream(ofcx, iccx->codec);
+-		avcodec_copy_context(ost->codec, iccx);
+-#else
+ 		AVCodecParameters * iccx = ifcx->streams[i]->codecpar;
+ 		AVStream *ost = avformat_new_stream(ofcx, NULL);
+ 		avcodec_parameters_copy(ost->codecpar, iccx);
+-#endif
+ 		av_dict_copy(&ost->metadata, ifcx->streams[i]->metadata, 0);
+ 		ost->time_base = ifcx->streams[i]->time_base;
+ 		ost->id = stid++;
+ 	}
+ 	av_log_set_level(AV_LOG_VERBOSE);
+-#if (LIBAVFORMAT_VERSION_MAJOR < 58)
+-	av_dump_format(ofcx, 0, ofcx->filename, 1);
+-#else
+ 	av_dump_format(ofcx, 0, ofcx->url, 1);
+-#endif
+ 	av_log_set_level(AV_LOG_WARNING);
+-#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(57, 48, 100)
+-	bsfc = av_bitstream_filter_init("h264_mp4toannexb");
+-	if (!bsfc)
+-		printf("%s: av_bitstream_filter_init h264_mp4toannexb failed!\n", __FUNCTION__);
+-#else
+ 	const AVBitStreamFilter *bsf = av_bsf_get_by_name("h264_mp4toannexb");
+ 	if(!bsf) {
+ 		return false;
+@@ -970,7 +938,6 @@
+ 	if ((av_bsf_alloc(bsf, &bsfc))) {
+ 		return false;
+ 	}
+-#endif
+ 	return true;
+ }
+ 
+@@ -1017,24 +984,10 @@
+ 		if (pkt.stream_index < 0)
+ 			continue;
+ 
+-#if LIBAVFORMAT_VERSION_INT < AV_VERSION_INT(57, 25, 101)
+-		AVCodecContext *codec = ifcx->streams[pkt.stream_index]->codec;
+-#else
+ 		AVCodecParameters *codec = ifcx->streams[pkt.stream_index]->codecpar;
+-#endif
++
+ 		if (bsfc && codec->codec_id == AV_CODEC_ID_H264 ) {
+ 			AVPacket newpkt = pkt;
+-#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(57, 48, 100)
+-			if (av_bitstream_filter_filter(bsfc, codec, NULL, &newpkt.data, &newpkt.size, pkt.data, pkt.size, pkt.flags & AV_PKT_FLAG_KEY) >= 0) {
+-#if (LIBAVFORMAT_VERSION_MAJOR == 57 && LIBAVFORMAT_VERSION_MINOR == 25)
+- 				av_packet_unref(&pkt);
+-#else
+-				av_free_packet(&pkt);
+-#endif
+-				newpkt.buf = av_buffer_create(newpkt.data, newpkt.size, av_buffer_default_free, NULL, 0);
+-				pkt = newpkt;
+-			}
+-#else
+ 			int ret = av_bsf_send_packet(bsfc, &pkt);
+ 			if (ret < 0){
+ 				break;
+@@ -1047,17 +1000,12 @@
+ 				av_packet_unref(&pkt);
+ 				pkt = newpkt;
+ 			}
+-#endif
+ 		}
+ 		pkt.pts = av_rescale_q(pkt.pts, ifcx->streams[pkt.stream_index]->time_base, ofcx->streams[pkt.stream_index]->time_base);
+ 		pkt.dts = av_rescale_q(pkt.dts, ifcx->streams[pkt.stream_index]->time_base, ofcx->streams[pkt.stream_index]->time_base);
+ 
+ 		av_write_frame(ofcx, &pkt);
+-#if (LIBAVFORMAT_VERSION_MAJOR == 57 && LIBAVFORMAT_VERSION_MINOR == 25)
+-		av_packet_unref(&pkt);
+-#else
+ 		av_free_packet(&pkt);
+-#endif
+ 	}
+ 
+ 	av_read_pause(ifcx);
+diff -Nur '--exclude-from=/home/tango/DDT/helpers/diff-exclude' neutrino-tangos.dev/src/driver/streamts.h neutrino-tangos/src/driver/streamts.h
+--- neutrino-tangos.dev/src/driver/streamts.h	2023-12-13 20:05:40.386004454 +0100
++++ neutrino-tangos/src/driver/streamts.h	2023-12-13 20:12:18.162633890 +0100
+@@ -33,9 +33,7 @@
+ 
+ extern "C" {
+ #include <libavformat/avformat.h>
+-#if LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(59, 0, 100)
+ #include <libavcodec/bsf.h>
+-#endif
+ }
+ 
+ typedef std::set<int> stream_pids_t;
+@@ -77,11 +75,7 @@
+ 	private:
+ 		AVFormatContext *ifcx;
+ 		AVFormatContext *ofcx;
+-#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(57, 48, 100)
+-		AVBitStreamFilterContext *bsfc;
+-#else
+ 		AVBSFContext *bsfc;
+-#endif
+ 		AVIOContext *avio_ctx;
+ 
+ 		bool stopped;
