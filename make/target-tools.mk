@@ -179,7 +179,7 @@ $(D)/module_init_tools: $(D)/bootstrap $(D)/lsb $(ARCHIVE)/$(MODULE_INIT_TOOLS_S
 #
 # sysvinit
 #
-SYSVINIT_VER = 3.07
+SYSVINIT_VER = 3.08
 SYSVINIT_SOURCE = sysvinit-$(SYSVINIT_VER).tar.xz
 SYSVINIT_PATCH  = sysvinit-$(SYSVINIT_VER)-crypt-lib.patch
 SYSVINIT_PATCH += sysvinit-$(SYSVINIT_VER)-change-INIT_FIFO.patch
@@ -352,11 +352,13 @@ $(D)/e2fsprogs: $(D)/bootstrap $(D)/util_linux $(ARCHIVE)/$(E2FSPROGS_SOURCE)
 #
 # util_linux
 #
-UTIL_LINUX_VER = 2.38
+UTIL_LINUX_MAJOR = 2.39
+UTIL_LINUX_MINOR = .3
+UTIL_LINUX_VER = $(UTIL_LINUX_MAJOR)$(UTIL_LINUX_MINOR)
 UTIL_LINUX_SOURCE = util-linux-$(UTIL_LINUX_VER).tar.xz
 
 $(ARCHIVE)/$(UTIL_LINUX_SOURCE):
-	$(DOWNLOAD) https://www.kernel.org/pub/linux/utils/util-linux/v$(UTIL_LINUX_VER)/$(UTIL_LINUX_SOURCE)
+	$(DOWNLOAD) https://www.kernel.org/pub/linux/utils/util-linux/v$(UTIL_LINUX_MAJOR)/$(UTIL_LINUX_SOURCE)
 
 $(D)/util_linux: $(D)/bootstrap $(D)/ncurses $(D)/zlib $(ARCHIVE)/$(UTIL_LINUX_SOURCE)
 	$(START_BUILD)
@@ -641,10 +643,9 @@ $(D)/ntfs_3g: $(D)/bootstrap $(ARCHIVE)/$(NTFS_3G_SOURCE)
 #
 # mc
 #
-MC_VER = 4.8.29
+MC_VER = 4.8.30
 MC_SOURCE = mc-$(MC_VER).tar.xz
 MC_PATCH  = mc-$(MC_VER).patch
-MC_PATCH += mc-$(MC_VER)-fix_ftp_listing.patch
 
 $(ARCHIVE)/$(MC_SOURCE):
 	$(DOWNLOAD) ftp.midnight-commander.org/$(MC_SOURCE)
@@ -686,7 +687,7 @@ $(D)/mc: $(D)/bootstrap $(D)/libglib2 $(D)/ncurses $(ARCHIVE)/$(MC_SOURCE)
 #
 # socat
 #
-SOCAT_VER = 1.7.4.4
+SOCAT_VER = 1.8.0.0
 SOCAT_SOURCE = socat-$(SOCAT_VER).tar.gz
 SOCAT_PATCH = socat-$(SOCAT_VER).patch
 
@@ -1256,7 +1257,7 @@ $(D)/coreutils: $(D)/bootstrap $(D)/openssl $(ARCHIVE)/$(COREUTILS_SOURCE)
 #
 # smartmontools
 #
-SMARTMONTOOLS_VER = 7.3
+SMARTMONTOOLS_VER = 7.4
 SMARTMONTOOLS_SOURCE = smartmontools-$(SMARTMONTOOLS_VER).tar.gz
 
 $(ARCHIVE)/$(SMARTMONTOOLS_SOURCE):

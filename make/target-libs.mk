@@ -501,7 +501,7 @@ $(D)/boost: $(D)/bootstrap $(ARCHIVE)/$(BOOST_SOURCE)
 #
 # zlib
 #
-ZLIB_VER = 1.2.13
+ZLIB_VER = 1.3
 ZLIB_SOURCE = zlib-$(ZLIB_VER).tar.xz
 ZLIB_Patch = zlib-$(ZLIB_VER).patch
 
@@ -708,7 +708,7 @@ $(D)/libjpeg: $(D)/libjpeg_turbo2
 #
 # libjpeg_turbo2
 #
-LIBJPEG_TURBO2_VER = 2.1.5.1
+LIBJPEG_TURBO2_VER = 3.0.1
 LIBJPEG_TURBO2_SOURCE = libjpeg-turbo-$(LIBJPEG_TURBO2_VER).tar.gz
 LIBJPEG_TURBO2_PATCH = libjpeg-turbo-tiff-ojpeg.patch
 LIBJPEG_TURBO2_PATCH += libjpeg-turbo-fix-unknown-type-name-FILE.patch
@@ -776,7 +776,7 @@ $(D)/libjpeg_turbo: $(D)/bootstrap $(ARCHIVE)/$(LIBJPEG_TURBO_SOURCE)
 #
 # libpng
 #
-LIBPNG_VER = 1.6.39
+LIBPNG_VER = 1.6.40
 LIBPNG_VER_X = 16
 LIBPNG_SOURCE = libpng-$(LIBPNG_VER).tar.xz
 LIBPNG_PATCH = libpng-$(LIBPNG_VER)-disable-tools.patch
@@ -895,7 +895,7 @@ $(D)/ca-bundle: $(ARCHIVE)/$(CA-BUNDLE_SOURCE)
 #
 # libcurl
 #
-LIBCURL_VER = 8.1.2
+LIBCURL_VER = 8.4.0
 LIBCURL_SOURCE = curl-$(LIBCURL_VER).tar.bz2
 LIBCURL_PATCH = libcurl-$(LIBCURL_VER).patch
 
@@ -1501,7 +1501,7 @@ $(D)/libsoup: $(D)/bootstrap $(D)/sqlite $(D)/libxml2 $(D)/libglib2 $(ARCHIVE)/$
 # libxml2
 #
 LIBXML2_MAJOR = 2.11
-LIBXML2_MINOR = 4
+LIBXML2_MINOR = 5
 LIBXML2_VER = $(LIBXML2_MAJOR).$(LIBXML2_MINOR)
 LIBXML2_SOURCE = libxml2-$(LIBXML2_VER).tar.xz
 LIBXML2_PATCH = libxml2-$(LIBXML2_VER).patch
@@ -1644,7 +1644,7 @@ $(D)/libroxml: $(D)/bootstrap $(ARCHIVE)/$(LIBROXML_SOURCE)
 #
 # pugixml
 #
-PUGIXML_VER = 1.13
+PUGIXML_VER = 1.14
 PUGIXML_SOURCE = pugixml-$(PUGIXML_VER).tar.gz
 PUGIXML_PATCH = pugixml-$(PUGIXML_VER)-config.patch
 
