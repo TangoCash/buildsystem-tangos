@@ -43,7 +43,7 @@ if [ "$1" == defaultconfig ]; then
 	echo "OPTIMIZATIONS=size" >> config
 	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino" >> config
-	echo "FLAVOUR=TANGOS" >> config
+	echo "FLAVOUR=TANGOSEVO" >> config
 	echo "EXTERNAL_LCD=both" >> config
 	echo "LAYOUT=multi" >> config
 	echo "CI_ENABLED=1" >> config
@@ -59,7 +59,7 @@ if [ "$1" == hd51 ] || [ "$1" == h7 ] || [ "$1" == bre2ze4k ]; then
 	echo "OPTIMIZATIONS=size" >> config
 	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino" >> config
-	echo "FLAVOUR=TANGOS" >> config
+	echo "FLAVOUR=TANGOSEVO" >> config
 	echo "EXTERNAL_LCD=both" >> config
 	echo "LAYOUT=multi" >> config
 	echo "CI_ENABLED=1" >> config
@@ -75,7 +75,7 @@ if [ "$1" == e4hdultra ] || [ "$1" == protek4k ]; then
 	echo "OPTIMIZATIONS=size" >> config
 	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino" >> config
-	echo "FLAVOUR=TANGOS" >> config
+	echo "FLAVOUR=TANGOSEVO" >> config
 	echo "EXTERNAL_LCD=both" >> config
 	echo "LAYOUT=single" >> config
 	echo "CI_ENABLED=1" >> config
@@ -91,7 +91,7 @@ if [ "$1" == hd60 ] || [ "$1" == hd61 ] || [ "$1" == multibox ] || [ "$1" == mul
 	echo "OPTIMIZATIONS=size" >> config
 	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino" >> config
-	echo "FLAVOUR=TANGOS" >> config
+	echo "FLAVOUR=TANGOSEVO" >> config
 	echo "EXTERNAL_LCD=both" >> config
 	echo "LAYOUT=multi" >> config
 	echo " "
@@ -106,7 +106,7 @@ if [ "$1" == vusolo4k -o "$1" == vuduo4k -o "$1" == vuultimo4k -o "$1" == vuuno4
 	echo "OPTIMIZATIONS=size" >> config
 	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino" >> config
-	echo "FLAVOUR=TANGOS" >> config
+	echo "FLAVOUR=TANGOSEVO" >> config
 	echo "EXTERNAL_LCD=both" >> config
 	echo "VU_MULTIBOOT=1" >> config
 	echo "LAYOUT=single" >> config
@@ -123,7 +123,7 @@ if [ "$1" == osmini4k ]; then
 	echo "OPTIMIZATIONS=size" >> config
 	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino" >> config
-	echo "FLAVOUR=TANGOS" >> config
+	echo "FLAVOUR=TANGOSEVO" >> config
 	echo "EXTERNAL_LCD=both" >> config
 	echo "LAYOUT=single" >> config
 	echo " "
@@ -138,7 +138,7 @@ if [ "$1" == osmio4k ] || [ "$1" == osmio4kplus ]; then
 	echo "OPTIMIZATIONS=size" >> config
 	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino-wifi" >> config
-	echo "FLAVOUR=TANGOS" >> config
+	echo "FLAVOUR=TANGOSEVO" >> config
 	echo "EXTERNAL_LCD=both" >> config
 	echo "LAYOUT=single" >> config
 	echo " "
@@ -153,7 +153,7 @@ if [ "$1" == sf8008 ] || [ "$1" == sf8008m ] || [ "$1" == ustym4kpro ] || [ "$1"
 	echo "OPTIMIZATIONS=size" >> config
 	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino-wifi" >> config
-	echo "FLAVOUR=TANGOS" >> config
+	echo "FLAVOUR=TANGOSEVO" >> config
 	echo "EXTERNAL_LCD=both" >> config
 	echo "LAYOUT=multi" >> config
 	echo " "
@@ -168,7 +168,7 @@ if [ "$1" == h9 ]; then
 	echo "OPTIMIZATIONS=size" >> config
 	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino-wifi" >> config
-	echo "FLAVOUR=TANGOS" >> config
+	echo "FLAVOUR=TANGOSEVO" >> config
 	echo "EXTERNAL_LCD=both" >> config
 	echo "LAYOUT=single" >> config
 	echo " "
