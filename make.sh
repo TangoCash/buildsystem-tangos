@@ -250,7 +250,7 @@ case "$REPLY" in
 	62) BOXARCH="arm";BOXTYPE="sf8008";CI_ENABLED="0";;
 	63) BOXARCH="arm";BOXTYPE="sf8008m";CI_ENABLED="0";;
 	64) BOXARCH="arm";BOXTYPE="ustym4kpro";CI_ENABLED="0";;
-	65) BOXARCH="arm";BOXTYPE="h9combo";CI_ENABLED="0";;
+	65) BOXARCH="arm";BOXTYPE="h9combo";CI_ENABLED="1";;
 	66) BOXARCH="arm";BOXTYPE="h9";CI_ENABLED="0";;
 	 *) BOXARCH="arm";BOXTYPE="hd51";CI_ENABLED="1";;
 esac
