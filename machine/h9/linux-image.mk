@@ -60,7 +60,7 @@ flash-image-h9: $(ARCHIVE)/$(BOOTARGS_SRC) $(ARCHIVE)/$(FASTBOOT_SRC) $(ARCHIVE)
 	$(MAKE) install-fastboot
 	$(MAKE) install-param
 	echo "rename this file to 'force' to force an update without confirmation" > $(FLASH_BUILD_TMP)/$(FLASH_PREFIX)/noforce;
-	cp $(RELEASE_DIR)/tmp/uImage $(FLASH_BUILD_TMP)/$(FLASH_PREFIX)
+	cp $(RELEASE_DIR)/boot/uImage $(FLASH_BUILD_TMP)/$(FLASH_PREFIX)
 	mkfs.ubifs -r $(RELEASE_DIR) -o $(FLASH_BUILD_TMP)/$(FLASH_PREFIX)/ubifs.img -m 2048 -e 126976 -c 4096
 	echo '[ubifs]' > $(FLASH_BUILD_TMP)/$(FLASH_PREFIX)/ubinize.cfg
 	echo 'mode=ubi' >> $(FLASH_BUILD_TMP)/$(FLASH_PREFIX)/ubinize.cfg
@@ -82,7 +82,7 @@ flash-image-h9: $(ARCHIVE)/$(BOOTARGS_SRC) $(ARCHIVE)/$(FASTBOOT_SRC) $(ARCHIVE)
 flash-image-h9-online:
 	rm -rf $(FLASH_BUILD_TMP) || true
 	mkdir -p $(FLASH_BUILD_TMP)/$(BOXTYPE)
-	cp $(RELEASE_DIR)/tmp/uImage $(FLASH_BUILD_TMP)/$(BOXTYPE)/uImage
+	cp $(RELEASE_DIR)/boot/uImage $(FLASH_BUILD_TMP)/$(BOXTYPE)/uImage
 	cd $(RELEASE_DIR); \
 	tar -cvf $(FLASH_BUILD_TMP)/$(BOXTYPE)/rootfs.tar --exclude=uImage* . > /dev/null 2>&1; \
 	bzip2 $(FLASH_BUILD_TMP)/$(BOXTYPE)/rootfs.tar
