@@ -60,8 +60,8 @@ $(D)/driver: $(ARCHIVE)/$(DRIVER_SRC) $(D)/bootstrap $(D)/kernel
 	install -m 0755 $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/turnoff_power $(TARGET_DIR)/bin
 	ls $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra | sed s/.ko//g > $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/modules.default
 #	$(MAKE) install-hisiplayer-preq
-#	$(MAKE) install-hisiplayer-libs
-#	$(MAKE) install-libmali
+	$(MAKE) install-hisiplayer-libs
+	$(MAKE) install-libmali
 #	$(MAKE) install-v3ddriver
 #	$(MAKE) install-v3ddriver-header
 #	$(MAKE) mali-gpu-modul
