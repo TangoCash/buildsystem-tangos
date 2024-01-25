@@ -265,8 +265,7 @@ HAL_BRANCH  ?= master
 NMP_PATCHES  = $(NEUTRINO_TANGOS_PATCHES)
 HAL_PATCHES  = $(LIBSTB_HAL_TANGOS_PATCHES)
 else ifeq  ($(FLAVOUR), TANGOSEVO)
-#GIT_URL     ?= $(GITHUB)/TangoCash
-GIT_URL     ?= $(GITHUB)/zukon
+GIT_URL     ?= $(GITHUB)/TangoCash
 NEUTRINO     = neutrino-tangos
 NMP_BRANCH  ?= evo
 ifeq ($(FFMPEG_VERSION), $(filter $(FFMPEG_VERSION), snapshot 6.1))
