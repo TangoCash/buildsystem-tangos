@@ -35,24 +35,13 @@ insmod /lib/modules/h9combo_2.ko
 insmod /lib/modules/h9combo_3.ko
 insmod /lib/modules/h9combo_4.ko
 
+[ -f /lib/modules/mali.ko ] && insmod /lib/modules/mali.ko
+
 wifi=`lsusb | grep -c 0bda:818b`
 if [ $wifi  == 1 ]; then
   insmod /lib/modules/cfg80211.ko
   insmod /lib/modules/8192fu.ko
 fi
-
-#xbox=`lsusb | grep -c 045e:02d5`
-#if [ $xbox  == 1 ]; then
-#  insmod /lib/modules/dib0070.ko
-#  insmod /lib/modules/dib0090.ko
-#  insmod /lib/modules/dibx000_common.ko
-#  insmod /lib/modules/dib7000m.ko
-#  insmod /lib/modules/mn88472.ko
-#  insmod /lib/modules/dib3000mc.ko
-#  insmod /lib/modules/dib9000.ko
-#  insmod /lib/modules/dvb-usb.ko
-#  insmod /lib/modules/dvb-usb-dib0700.ko
-#fi
 
 # load moduls from modules.extra ( kerneloptions )
 [ -f /var/etc/modules.extra ] && eval `awk '{ if ($1) print "insmod /lib/modules/" $1 ".ko " $2,$3,$4,$5,$6,$7,$8,$9 "; "}' < /var/etc/modules.extra`
@@ -74,7 +63,7 @@ if [ -e /share/tuxbox/neutrino/icons/bootlogo.m2v ]; then
   showiframe /share/tuxbox/neutrino/icons/bootlogo.m2v
 fi
 
-echo "Booting...TC-NMP" > /dev/null
+echo "Booting...TC-NMP" > /dev/dbox/oled0
 
 echo "setup network"
 /etc/init.d/hostname start

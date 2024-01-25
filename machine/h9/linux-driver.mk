@@ -57,17 +57,12 @@ $(D)/driver: $(ARCHIVE)/$(DRIVER_SRC) $(D)/bootstrap $(D)/kernel
 	unzip -o $(ARCHIVE)/$(DRIVER_SRC) -d $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra
 	$(MAKE) install-tntfs
 	$(MAKE) install-wifi
+	$(MAKE) mali-gpu-modul
 	install -m 0755 $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/turnoff_power $(TARGET_DIR)/bin
-	ls $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra | sed s/.ko//g > $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/modules.default
-#	$(MAKE) install-hisiplayer-preq
-#	$(MAKE) install-hisiplayer-libs
-#	$(MAKE) install-libmali
-#	$(MAKE) install-v3ddriver
-#	$(MAKE) install-v3ddriver-header
-#	$(MAKE) mali-gpu-modul
+	ls -I turnoff_power $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra | sed s/.ko//g > $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/modules.default
+	$(MAKE) install-hisiplayer-libs
+	$(MAKE) install-libmali
 	$(TOUCH)
-
-$(D)/install-hisiplayer-preq: $(D)/zlib $(D)/libpng $(D)/freetype $(D)/libcurl $(D)/libxml2 $(D)/libjpeg_turbo2 $(D)/harfbuzz
 
 $(D)/install-v3ddriver: $(ARCHIVE)/$(LIBGLES_SRC)
 	install -d $(TARGET_LIB_DIR)
@@ -176,6 +171,5 @@ $(D)/mali-gpu-modul: $(ARCHIVE)/$(MALI_MODULE_SRC) $(D)/bootstrap $(D)/kernel
 		CONFIG_MALI_DVFS=y \
 		CONFIG_GPU_AVS_ENABLE=y \
 		DEPMOD=$(DEPMOD) INSTALL_MOD_PATH=$(TARGET_DIR) modules_install
-	ls $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra | sed s/.ko//g > $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/modules.default
 	$(REMOVE)/$(MALI_MODULE_VER)
 	$(TOUCH)
