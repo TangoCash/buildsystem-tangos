@@ -169,7 +169,7 @@ if [ "$1" == h9 ]; then
 	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino-wifi" >> config
 	echo "FLAVOUR=TANGOSEVO" >> config
-	echo "EXTERNAL_LCD=both" >> config
+	echo "EXTERNAL_LCD=lcd4linux" >> config
 	echo "LAYOUT=single" >> config
 	echo " "
 	make printenv

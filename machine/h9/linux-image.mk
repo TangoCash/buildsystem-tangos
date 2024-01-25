@@ -6,7 +6,7 @@
 
 flashimage: $(D)/neutrino
 	$(START_BUILD)
-	$(MAKE) flash-image-h9 flash-image-h9-online
+	$(MAKE) flash-image-h9
 	$(TUXBOX_CUSTOMIZE)
 	@$(call draw_line,);
 	@$(call draw_line,Build of $@ for $(BOXTYPE) successfully completed.,2);
