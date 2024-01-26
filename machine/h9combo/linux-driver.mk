@@ -19,8 +19,8 @@ MALI_MODULE_VER = DX910-SW-99002-r7p0-00rel0
 MALI_MODULE_SRC = $(MALI_MODULE_VER).tgz
 MALI_MODULE_PATCH = 0001-hi3798mv200-support.patch
 
-WIFI_DIR = RTL8192FU-main
-WIFI_SRC = main.zip
+WIFI_DIR = RTL8192EU-master
+WIFI_SRC = master.zip
 WIFI = RTL8192EU.zip
 
 #LIBGLES_HEADERS = hd-v3ddriver-headers.tar.gz
@@ -41,7 +41,7 @@ $(ARCHIVE)/$(TNTFS_SRC):
 	$(DOWNLOAD) http://source.mynonpublic.com/tntfs/$(TNTFS_SRC)
 
 $(ARCHIVE)/$(WIFI_SRC):
-	$(DOWNLOAD) https://github.com/TangoCash/RTL8192FU/archive/refs/heads/$(WIFI_SRC) -O $(ARCHIVE)/$(WIFI)
+	$(DOWNLOAD) https://github.com/zukon/RTL8192EU/archive/refs/heads/$(WIFI_SRC) -O $(ARCHIVE)/$(WIFI)
 
 $(ARCHIVE)/$(MALI_MODULE_SRC):
 	$(DOWNLOAD) https://developer.arm.com/-/media/Files/downloads/mali-drivers/kernel/mali-utgard-gpu/$(MALI_MODULE_SRC);name=driver
@@ -136,7 +136,7 @@ $(D)/install-wifi: $(D)/bootstrap $(D)/kernel $(ARCHIVE)/$(WIFI_SRC)
 	echo $(KERNEL_DIR)
 	$(CHDIR)/$(WIFI_DIR); \
 		$(MAKE) ARCH=arm CROSS_COMPILE=$(TARGET)- KVER=$(DRIVER_VER) KSRC=$(KERNEL_DIR); \
-		install -m 644 8192fu.ko $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra
+		install -m 644 8192eu.ko $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra
 	$(REMOVE)/$(WIFI_DIR)
 	$(TOUCH)
 
