@@ -54,6 +54,11 @@ fi
 echo "[rcS] add mmcblks in /dev/block"
 /etc/init.d/mmcblk-by-name
 
+echo "[rcS] mount zukonMOD Zgemma H9 multiboot if exists"
+if [ -e /media/zukonMOD_system ]; then
+  mount /media/zukonMOD_system /boot
+fi
+
 if [ -e /etc/init.d/before_gui ]; then
   chmod 755 /etc/init.d/before_gui
   /etc/init.d/before_gui
