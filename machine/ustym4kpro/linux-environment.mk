@@ -33,11 +33,11 @@ KERNEL_PATCHES = \
 #
 
 DRIVER_VER     = $(KERNEL_VER)
-DRIVER_DATE    = 20220326
+DRIVER_DATE    = 20230804
 HILIB_DATE     = 20190603
 LIBGLES_DATE   = 20180301
-LIBREADER_DATE = 20200612
-HIHALT_DATE    = 20190603
+LIBREADER_DATE = 20221220
+HIHALT_DATE    = 20220326
 TNTFS_DATE     = 20200528
 
 #
@@ -45,7 +45,7 @@ TNTFS_DATE     = 20200528
 #
 
 MACHINE              = uclan
-FLASH_PARTITONS_DATE = 20201218
+FLASH_PARTITONS_DATE = 20220326
 
 # others
 #CAIRO_OPTS = \
@@ -63,7 +63,7 @@ neutrino-release-ustym4kpro:
 	install -d $(RELEASE_DIR)/var/tuxbox/config
 	touch $(RELEASE_DIR)/var/tuxbox/config/.crond
 	install -m 0755 $(MACHINE_FILES)/suspend  $(RELEASE_DIR)/etc/init.d/suspend
-	cp $(TARGET_DIR)/boot/uImage $(RELEASE_DIR)/boot/
+	cp $(TARGET_DIR)/boot/uImage $(RELEASE_DIR)/tmp/
 	install -m 0755 $(MACHINE_FILES)/libreader $(RELEASE_DIR)/etc/init.d/
 	cd $(RELEASE_DIR)/etc/rc.d/rc0.d; ln -sf ../../init.d/libreader ./S05libreader
 	cd $(RELEASE_DIR)/etc/rc.d/rc6.d; ln -sf ../../init.d/libreader ./S05libreader
