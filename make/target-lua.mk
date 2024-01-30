@@ -134,12 +134,12 @@ $(D)/luasocket: $(D)/bootstrap $(D)/lua $(ARCHIVE)/$(LUASOCKET_SOURCE)
 #
 # luasoap
 #
-LUASOAP_VER = 3.0
+LUASOAP_VER = 3_0_1
 LUASOAP_SOURCE = luasoap-$(LUASOAP_VER).tar.gz
-LUASOAP_PATCH = luasoap-$(LUASOAP_VER).patch
+#LUASOAP_PATCH = luasoap-$(LUASOAP_VER).patch
 
 $(ARCHIVE)/$(LUASOAP_SOURCE):
-	$(DOWNLOAD) $(GITHUB)/downloads/tomasguisasola/luasoap/$(LUASOAP_SOURCE)
+	$(DOWNLOAD) $(GITHUB)/tomasguisasola/luasoap/archive/refs/tags/v$(LUASOAP_VER).tar.gz -O $(ARCHIVE)/$(LUASOAP_SOURCE)
 
 $(D)/luasoap: $(D)/bootstrap $(D)/lua $(D)/luasocket $(D)/luaexpat $(ARCHIVE)/$(LUASOAP_SOURCE)
 	$(START_BUILD)
@@ -147,8 +147,6 @@ $(D)/luasoap: $(D)/bootstrap $(D)/lua $(D)/luasocket $(D)/luaexpat $(ARCHIVE)/$(
 	$(UNTAR)/$(LUASOAP_SOURCE)
 	$(CHDIR)/luasoap-$(LUASOAP_VER); \
 		$(call apply_patches, $(LUASOAP_PATCH)); \
-		$(MAKE) install LUA_DIR=$(TARGET_SHARE_DIR)/lua/$(LUA_VER_SHORT)
+		$(MAKE) install LUA_DIR=$(TARGET_DIR)/usr/share/lua/$(LUA_VER_SHORT)
 	$(REMOVE)/luasoap-$(LUASOAP_VER)
 	$(TOUCH)
-
-
