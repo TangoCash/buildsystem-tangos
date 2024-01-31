@@ -18,8 +18,8 @@ TNTFS_SRC = $(HICHIPSET)-tntfs-$(TNTFS_DATE).zip
 
 LIBJPEG_SRC = libjpeg.so.62.2.0
 
-WIFI_DIR = RTL8192FU-main
-WIFI_SRC = main.zip
+WIFI_DIR = RTL8192EU-master
+WIFI_SRC = master.zip
 WIFI = RTL8192EU.zip
 
 $(ARCHIVE)/$(DRIVER_SRC):
@@ -44,7 +44,7 @@ $(ARCHIVE)/$(LIBJPEG_SRC):
 	$(DOWNLOAD) https://github.com/oe-alliance/oe-alliance-core/blob/5.0/meta-brands/meta-$(MACHINE)/recipes-graphics/files/$(LIBJPEG_SRC)
 
 $(ARCHIVE)/$(WIFI_SRC):
-	$(DOWNLOAD) https://github.com/TangoCash/RTL8192FU/archive/refs/heads/$(WIFI_SRC) -O $(ARCHIVE)/$(WIFI)
+	$(DOWNLOAD) https://github.com/zukon/RTL8192EU/archive/refs/heads/$(WIFI_SRC) -O $(ARCHIVE)/$(WIFI)
 
 driver-clean:
 	rm -f $(D)/driver $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/$(KERNEL_TYPE)*
@@ -107,6 +107,6 @@ $(D)/install-wifi: $(D)/bootstrap $(D)/kernel $(ARCHIVE)/$(WIFI_SRC)
 	echo $(KERNEL_DIR)
 	$(CHDIR)/$(WIFI_DIR); \
 		$(MAKE) ARCH=arm CROSS_COMPILE=$(TARGET)- KVER=$(DRIVER_VER) KSRC=$(KERNEL_DIR); \
-		install -m 644 8192fu.ko $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra
+		install -m 644 8192eu.ko $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra
 	$(REMOVE)/$(WIFI_DIR)
 	$(TOUCH)

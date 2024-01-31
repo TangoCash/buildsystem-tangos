@@ -91,20 +91,14 @@ echo 200000 > /sys/devices/system/cpu/cpufreq/interactive/timer_rate
 wifi=`lsusb | grep -c 0bda:818b`
 if [ $wifi  == 1 ]; then
   insmod /lib/modules/cfg80211.ko
-  insmod /lib/modules/8192fu.ko
+  insmod /lib/modules/8192eu.ko
 fi
 
-#xbox=`lsusb | grep -c 045e:02d5`
-#if [ $xbox  == 1 ]; then
-#  insmod /lib/modules/dib0070.ko
-#  insmod /lib/modules/dib0090.ko
-#  insmod /lib/modules/dibx000_common.ko
-#  insmod /lib/modules/dib7000m.ko
-#  insmod /lib/modules/mn88472.ko
-#  insmod /lib/modules/dib3000mc.ko
-#  insmod /lib/modules/dib9000.ko
-#  insmod /lib/modules/dvb-usb-dib0700.ko
-#fi
+wifi2=`lsusb | grep -c 0bda:c812`
+if [ $wifi2  == 1 ]; then
+  insmod /lib/modules/cfg80211.ko
+  insmod /lib/modules/88x2cu.ko
+fi
 
 /usr/bin/libreader 720p_50
 

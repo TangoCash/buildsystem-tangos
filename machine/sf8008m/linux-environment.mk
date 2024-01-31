@@ -55,7 +55,7 @@ FLASH_PARTITONS_DATE = 20201218
 CUSTOM_RCS =
 
 # release target
-neutrino-release-sf8008:
+neutrino-release-sf8008m:
 	install -m 0755 $(MACHINE_FILES)/showiframe $(RELEASE_DIR)/bin
 	install -m 0755 $(MACHINE_FILES)/libreader.sh  $(RELEASE_DIR)/usr/bin/libreader.sh
 	install -d $(RELEASE_DIR)/var/spool/cron/crontabs
@@ -63,7 +63,7 @@ neutrino-release-sf8008:
 	install -d $(RELEASE_DIR)/var/tuxbox/config
 	touch $(RELEASE_DIR)/var/tuxbox/config/.crond
 	install -m 0755 $(MACHINE_FILES)/suspend  $(RELEASE_DIR)/etc/init.d/suspend
-	cp $(TARGET_DIR)/boot/uImage $(RELEASE_DIR)/boot/
+	cp $(TARGET_DIR)/boot/uImage $(RELEASE_DIR)/tmp/
 	install -m 0755 $(MACHINE_FILES)/libreader $(RELEASE_DIR)/etc/init.d/
 	cd $(RELEASE_DIR)/etc/rc.d/rc0.d; ln -sf ../../init.d/libreader ./S05libreader
 	cd $(RELEASE_DIR)/etc/rc.d/rc6.d; ln -sf ../../init.d/libreader ./S05libreader
