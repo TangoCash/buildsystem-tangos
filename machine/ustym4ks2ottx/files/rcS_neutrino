@@ -1,0 +1,192 @@
+#!/bin/sh
+
+. /etc/profile
+
+read model < /etc/model
+
+if [ -e /var/etc/.firstboot ]; then
+/usr/bin/passwd root <<EOF
+root
+root
+EOF
+  rm /var/etc/.firstboot
+fi
+
+mount -t proc proc /proc
+mount -t sysfs sys /sys
+mount -t tmpfs tmp /tmp
+mount -t tmpfs media /media
+mount -t tmpfs mnt /mnt
+mkdir -p /dev/pts
+mount -t devpts devpts /dev/pts
+echo /sbin/mdev >/proc/sys/kernel/hotplug
+mdev -s
+
+echo "starting interface"
+/etc/init.d/mountall start
+
+insmod /lib/modules/hi_media.ko
+insmod /lib/modules/hi_mmz.ko
+insmod /lib/modules/hi_common.ko
+insmod /lib/modules/hi_pdm.ko
+insmod /lib/modules/hi_pq.ko
+insmod /lib/modules/hi_cipher.ko
+insmod /lib/modules/hi_hdmi.ko
+insmod /lib/modules/hi_hdmicec.ko
+insmod /lib/modules/hi_vou.ko
+insmod /lib/modules/hi_gpio.ko
+insmod /lib/modules/hi_gpio_i2c.ko i2cmode=2
+insmod /lib/modules/hi_i2c.ko
+insmod /lib/modules/hi_tde.ko
+insmod /lib/modules/hi_otp.ko
+insmod /lib/modules/hi_demux.ko
+insmod /lib/modules/hi_adec.ko
+insmod /lib/modules/hi_vfmw.ko
+insmod /lib/modules/hi_vpss.ko
+insmod /lib/modules/hi_vdec.ko
+insmod /lib/modules/hi_adsp.ko
+insmod /lib/modules/hi_aiao.ko
+insmod /lib/modules/hi_sync.ko
+insmod /lib/modules/hi_pvr.ko
+insmod /lib/modules/hi_mce.ko
+
+insmod /lib/modules/hi_keyled.ko
+insmod /lib/modules/oled.ko
+insmod /lib/modules/vtunerc.ko
+# About hi_fb:
+#  For 1920*1080, triple buffer, ARGB8888 format, use:
+#  insmod /lib/modules/hi_fb.ko video="hi_fb:vram0_size:16200,vram4_size:2430"
+#  For 1280*720, use:
+#  insmod /lib/modules/hi_fb.ko video="hi_fb:vram0_size:7200,vram2_size:2430"
+#  insmod /lib/modules/hi_fb.ko with no args will use defaule value,The defaule value is set by cfg.mak.
+#  vram0 is memory size for HD and vram4 is for SD0. The size is calculated as below:
+#  vram0_size = (1920*1080*4*2/1024)KB; vram4_size = (720*576*2*2/1024)KB
+insmod /lib/modules/hi_fb.ko
+insmod /lib/modules/mali.ko
+insmod /lib/modules/hi_dbe.ko
+insmod /lib/modules/hi_jpeg.ko
+insmod /lib/modules/hi_jpge.ko
+insmod /lib/modules/hi_png.ko
+insmod /lib/modules/hi_advca.ko
+insmod /lib/modules/hi_venc.ko
+insmod /lib/modules/hi_aenc.ko
+insmod /lib/modules/hi_vi.ko
+insmod /lib/modules/hi_pmoc.ko
+insmod /lib/modules/libahci.ko
+insmod /lib/modules/libahci_platform.ko
+insmod /lib/modules/fusion.ko
+insmod /lib/modules/udc-hisi.ko
+insmod /lib/modules/libcomposite.ko
+
+insmod /lib/modules/usb_f_service.ko
+insmod /lib/modules/g_service.ko
+insmod /lib/modules/u_service.ko
+insmod /lib/modules/hi-dvb.ko hi_vendor=3 hi_device=3
+insmod /lib/modules/hisi-ir.ko
+insmod /lib/modules/hisi_sci.ko
+#insmod /lib/modules/hisi_encoder.ko
+echo 2097152 > /proc/sys/net/core/rmem_max
+echo 6 > /proc/sys/vm/dirty_ratio
+echo 1 > /proc/sys/vm/overcommit_memory
+echo 8192 > /proc/sys/vm/min_free_kbytes
+echo 1200000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+echo interactive > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+echo 200000 > /sys/devices/system/cpu/cpufreq/interactive/timer_rate
+
+/usr/bin/libreader 720p_50
+
+# load moduls from modules.extra ( kerneloptions )
+[ -f /var/etc/modules.extra ] && eval `awk '{ if ($1) print "insmod /lib/modules/" $1 ".ko " $2,$3,$4,$5,$6,$7,$8,$9 "; "}' < /var/etc/modules.extra`
+
+if [ -e /var/tuxbox/config/.crond ]; then
+  echo "starting crond ..."
+  mkdir -p /var/spool/cron/crontabs
+  touch /var/spool/cron/crontabs/root
+  chown root:root /var/spool/cron/crontabs/root
+  /usr/sbin/crond &
+fi
+
+if [ -e /var/backup_flash.tar.gz ]; then
+  tar xvf /var/backup_flash.tar.gz -C /
+  rm -f /var/backup_flash.tar.gz
+fi
+
+echo "[rcS] add mmcblks in /dev/block"
+/etc/init.d/mmcblk-by-name
+
+if [ -e /etc/init.d/before_gui ]; then
+  chmod 755 /etc/init.d/before_gui
+  /etc/init.d/before_gui
+fi
+
+if [ -e /share/tuxbox/neutrino/icons/bootlogo.m2v ]; then
+  showiframe /share/tuxbox/neutrino/icons/bootlogo.m2v
+fi
+
+echo "Booting... DDT" > /dev/dbox/oled0
+
+echo "setup network"
+/etc/init.d/hostname start
+/etc/init.d/portmap start
+/usr/sbin/inetd
+NFS=$(grep -c nfs /proc/cmdline)
+  if [ "$NFS" -eq "1" ]; then
+    echo "Booting from nfs, don't set network"
+    elif [ -e /var/tuxbox/config/.bootargs ]; then
+    echo "using ip set via bootargs, don't reset network"
+  else
+    if [ -e /etc/network/interfaces ]; then
+      ip addr flush eth0
+      /etc/init.d/networking stop
+      DHCP=$(grep -c dhcp /etc/network/interfaces)
+      if [ "$DHCP" -eq "1" ]; then
+        echo "Starting dhcp"
+        /etc/init.d/udhcpc start
+      fi
+      /etc/init.d/networking start
+    fi
+  fi
+/sbin/ifconfig lo 127.0.0.1 up
+
+# set dummy time
+date -s "2018-01-01 00:00"
+
+killall -9 showiframe
+
+until false
+do
+    echo "starting GUI ->"
+    chmod 755 /usr/bin/neutrino
+    if [ -e /tmp/neutrino ]; then
+      chmod 755 /tmp/neutrino
+      /tmp/neutrino
+    else
+      /usr/bin/neutrino -v 0
+    fi
+    rtv=$?
+    echo "GUI ended <- RTV: " $rtv
+    case "$rtv" in
+      0) echo "0"
+        echo "SHUTDOWN"
+      init 0;;
+      1) echo "1"
+        echo "REBOOT"
+        echo "      *-*       " > /dev/dbox/oled0
+      init 6;;
+      3) echo "3"
+        echo "RESTART"
+        echo "    RESTART     " > /dev/dbox/oled0
+      sync;;
+      *) echo "*"
+        echo -e "\033[01;31mERROR: $rtv\033[00m"
+        echo "    *ERROR*     " > /dev/dbox/oled0
+      init 6;;
+    esac
+done
+echo "      *-*       " > /dev/dbox/oled0
+
+#never reached
+echo "REBOOT $model" > /dev/dbox/oled0
+echo "REBOOT $model"
+reboot -f
+

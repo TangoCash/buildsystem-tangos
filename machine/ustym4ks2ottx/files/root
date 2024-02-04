@@ -1,0 +1,6 @@
+* * * * * ( /usr/bin/libreader.sh )
+* * * * * ( sleep 10 ; /usr/bin/libreader.sh )
+* * * * * ( sleep 20 ; /usr/bin/libreader.sh )
+* * * * * ( sleep 30 ; /usr/bin/libreader.sh )
+* * * * * ( sleep 40 ; /usr/bin/libreader.sh )
+* * * * * ( sleep 50 ; /usr/bin/libreader.sh )

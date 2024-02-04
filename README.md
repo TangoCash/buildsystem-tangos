@@ -39,7 +39,7 @@ alternate boxtypes to use with `./make.sh`
  - `hd51 bre2ze4k h7`
  - `e4hdultra protek4k`
  - `hd60 hd61 multibox multiboxse`
- - `h9 h9combo sf8008 sf8008m ustym4kpro`
+ - `h9 h9combo sf8008 sf8008m ustym4kpro ustym4ks2ottx`
  - `vuzero4k vusolo4k vuuno4k vuuno4kse vuduo4k vuduo4kse vuultimo4k`
 
 ----------
