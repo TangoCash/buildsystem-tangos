@@ -146,7 +146,7 @@ if [ "$1" == osmio4k ] || [ "$1" == osmio4kplus ]; then
 	exit
 fi
 
-if [ "$1" == sf8008 ] || [ "$1" == sf8008m ] || [ "$1" == ustym4kpro ] || [ "$1" == h9combo ]; then
+if [ "$1" == sf8008 ] || [ "$1" == sf8008m ] || [ "$1" == ustym4kpro ] || [ "$1" == ustym4ks2ottx ] || [ "$1" == h9combo ]; then
 	echo "BOXARCH=arm" > config
 	echo "BOXTYPE=$1" >> config
 	echo "FFMPEG_VERSION=6.1" >> config
@@ -221,6 +221,7 @@ case $1 in
 		echo "   62)  Octagon SF8008"
 		echo "   63)  Octagon SF8008m"
 		echo "   64)  Ustym 4k Pro"
+		echo "   67)  Ustym 4k S2 OTT X"
 		echo
 		echo
 		read -p "Select target (30-66)? [51]"
@@ -252,6 +253,7 @@ case "$REPLY" in
 	64) BOXARCH="arm";BOXTYPE="ustym4kpro";CI_ENABLED="0";;
 	65) BOXARCH="arm";BOXTYPE="h9combo";CI_ENABLED="1";;
 	66) BOXARCH="arm";BOXTYPE="h9";CI_ENABLED="0";;
+	67) BOXARCH="arm";BOXTYPE="ustym4ks2ottx";CI_ENABLED="0";;
 	 *) BOXARCH="arm";BOXTYPE="hd51";CI_ENABLED="1";;
 esac
 echo "BOXARCH=$BOXARCH" > config
@@ -331,7 +333,7 @@ case $5 in
 	*)	echo -e "\nWhich Image do you want to build:"
 		echo "   1)  Neutrino"
 		echo "   2)  Neutrino (includes WiFi functions)"
-	if [ $BOXTYPE == 'osmio4k' -o $BOXTYPE == 'osmio4kplus' -o $BOXTYPE == 'sf8008' -o $BOXTYPE == 'sf8008m' -o $BOXTYPE == 'ustym4kpro' -o $BOXTYPE == 'h9combo' -o $BOXTYPE == 'h9' ]; then
+	if [ $BOXTYPE == 'osmio4k' -o $BOXTYPE == 'osmio4kplus' -o $BOXTYPE == 'sf8008' -o $BOXTYPE == 'sf8008m' -o $BOXTYPE == 'ustym4kpro' -o $BOXTYPE == 'ustym4ks2ottx' -o $BOXTYPE == 'h9combo' -o $BOXTYPE == 'h9' ]; then
 		read -p "Select Image to build (1-2)? [2]"
 		REPLY="${REPLY:-2}"
 	else
@@ -345,7 +347,7 @@ case "$REPLY" in
 	1) IMAGE="neutrino";;
 	2) IMAGE="neutrino-wifi";;
 	*)
-	if [ $BOXTYPE == 'osmio4k' -o $BOXTYPE == 'osmio4kplus' -o $BOXTYPE == 'sf8008' -o $BOXTYPE == 'sf8008m' -o $BOXTYPE == 'ustym4kpro' -o $BOXTYPE == 'h9combo' -o $BOXTYPE == 'h9' ]; then
+	if [ $BOXTYPE == 'osmio4k' -o $BOXTYPE == 'osmio4kplus' -o $BOXTYPE == 'sf8008' -o $BOXTYPE == 'sf8008m' -o $BOXTYPE == 'ustym4kpro' -o $BOXTYPE == 'ustym4ks2ottx' -o $BOXTYPE == 'h9combo' -o $BOXTYPE == 'h9' ]; then
 		IMAGE="neutrino-wifi"
 	else
 		IMAGE="neutrino"
@@ -458,7 +460,7 @@ esac
 echo "VU_MULTIBOOT=$VU_MULTIBOOT" >> config
 fi
 
-if [ $BOXTYPE == 'hd60' -o $BOXTYPE == 'hd61' -o $BOXTYPE == 'multibox' -o $BOXTYPE == 'multiboxse' -o $BOXTYPE == 'sf8008' -o $BOXTYPE == 'sf8008m'  -o $BOXTYPE == 'ustym4kpro' -o $BOXTYPE == 'h9combo' ]; then
+if [ $BOXTYPE == 'hd60' -o $BOXTYPE == 'hd61' -o $BOXTYPE == 'multibox' -o $BOXTYPE == 'multiboxse' -o $BOXTYPE == 'sf8008' -o $BOXTYPE == 'sf8008m'  -o $BOXTYPE == 'ustym4kpro' -o $BOXTYPE == 'ustym4ks2ottx' -o $BOXTYPE == 'h9combo' ]; then
 echo "LAYOUT=multi" >> config
 else
 echo "LAYOUT=$LAYOUT" >> config

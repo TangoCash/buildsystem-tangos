@@ -71,7 +71,7 @@ COMMON_DEPS += $(D)/dropbearmulti
 COMMON_DEPS += $(D)/djmount
 #COMMON_DEPS +=  $(D)/minidlna
 #COMMON_DEPS +=  $(D)/minisatip
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), sf8008 sf8008m ustym4kpro))
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), sf8008 sf8008m ustym4kpro ustym4ks2ottx))
 	COMMON_DEPS += $(D)/libsdl
 endif
 

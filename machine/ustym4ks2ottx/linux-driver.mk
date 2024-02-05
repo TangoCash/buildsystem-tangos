@@ -1,8 +1,8 @@
 #
 # driver
 #
-HICHIPSET = 3798mv200
-SOC_FAMILY = hisi3798mv200
+HICHIPSET = 3798mv300
+SOC_FAMILY = hisi3798mv300
 
 DRIVER_SRC = $(BOXTYPE)-hiko-$(DRIVER_DATE).zip
 
@@ -12,15 +12,11 @@ LIBGLES_SRC = $(SOC_FAMILY)-opengl-$(LIBGLES_DATE).tar.gz
 
 LIBREADER_SRC = $(BOXTYPE)-libreader-$(LIBREADER_DATE).tar.gz
 
-HIHALT_SRC = $(BOXTYPE)-hihalt-$(HIHALT_DATE).tar.gz
+HIHALT_SRC = $(SOC_FAMILY)-hihalt-$(HIHALT_DATE).tar.gz
 
 TNTFS_SRC = $(HICHIPSET)-tntfs-$(TNTFS_DATE).zip
 
-LIBJPEG_SRC = libjpeg.so.62.2.0
-
-WIFI_DIR = RTL8192EU-master
-WIFI_SRC = master.zip
-WIFI = RTL8192EU.zip
+LIBJPEG_SRC = libjpeg.so.8.2.2
 
 $(ARCHIVE)/$(DRIVER_SRC):
 	$(DOWNLOAD) http://source.mynonpublic.com/$(MACHINE)/$(DRIVER_SRC)
@@ -43,9 +39,6 @@ $(ARCHIVE)/$(TNTFS_SRC):
 $(ARCHIVE)/$(LIBJPEG_SRC):	
 	$(DOWNLOAD) https://github.com/oe-alliance/oe-alliance-core/raw/5.3/meta-brands/meta-$(MACHINE)/recipes-graphics/files/$(LIBJPEG_SRC)
 
-$(ARCHIVE)/$(WIFI_SRC):
-	$(DOWNLOAD) https://github.com/zukon/RTL8192EU/archive/refs/heads/$(WIFI_SRC) -O $(ARCHIVE)/$(WIFI)
-
 driver-clean:
 	rm -f $(D)/driver $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/$(KERNEL_TYPE)*
 
@@ -58,7 +51,6 @@ $(D)/driver: $(ARCHIVE)/$(DRIVER_SRC) $(D)/bootstrap $(D)/kernel
 	mv $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/hiko/* $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra
 	rmdir $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/hiko
 	$(MAKE) install-tntfs
-	$(MAKE) install-wifi
 	ls $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra | sed s/.ko//g > $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/modules.default
 	$(MAKE) install-hisiplayer-libs
 	$(MAKE) install-hilib
@@ -99,14 +91,4 @@ $(D)/install-hihalt: $(ARCHIVE)/$(HIHALT_SRC)
 
 $(D)/install-libjpeg: $(ARCHIVE)/$(LIBJPEG_SRC)
 	cp $(ARCHIVE)/$(LIBJPEG_SRC) $(TARGET_LIB_DIR)
-
-$(D)/install-wifi: $(D)/bootstrap $(D)/kernel $(ARCHIVE)/$(WIFI_SRC)
-	$(START_BUILD)
-	$(REMOVE)/$(WIFI_DIR)
-	unzip -o $(ARCHIVE)/$(WIFI) -d $(BUILD_TMP)
-	echo $(KERNEL_DIR)
-	$(CHDIR)/$(WIFI_DIR); \
-		$(MAKE) ARCH=arm CROSS_COMPILE=$(TARGET)- KVER=$(DRIVER_VER) KSRC=$(KERNEL_DIR); \
-		install -m 644 8192eu.ko $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra
-	$(REMOVE)/$(WIFI_DIR)
-	$(TOUCH)
+	cd $(TARGET_LIB_DIR); ln -sf $(LIBJPEG_SRC) ./libjpeg.so.8

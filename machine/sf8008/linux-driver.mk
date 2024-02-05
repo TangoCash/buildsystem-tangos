@@ -18,9 +18,13 @@ TNTFS_SRC = $(HICHIPSET)-tntfs-$(TNTFS_DATE).zip
 
 LIBJPEG_SRC = libjpeg.so.62.2.0
 
-WIFI_DIR = RTL8192FU-main
-WIFI_SRC = main.zip
+WIFI_DIR = RTL8192EU-master
+WIFI_SRC = master.zip
 WIFI = RTL8192EU.zip
+
+WIFI2_DIR = RTL8822C-main
+WIFI2_SRC = main.zip
+WIFI2 = RTL8822C.zip
 
 $(ARCHIVE)/$(DRIVER_SRC):
 	$(DOWNLOAD) http://source.mynonpublic.com/$(MACHINE)/$(DRIVER_SRC)
@@ -41,10 +45,13 @@ $(ARCHIVE)/$(TNTFS_SRC):
 	$(DOWNLOAD) http://source.mynonpublic.com/tntfs/$(TNTFS_SRC)
 
 $(ARCHIVE)/$(LIBJPEG_SRC):	
-	$(DOWNLOAD) https://github.com/oe-alliance/oe-alliance-core/blob/5.0/meta-brands/meta-$(MACHINE)/recipes-graphics/files/$(LIBJPEG_SRC)
+	$(DOWNLOAD) https://github.com/oe-alliance/oe-alliance-core/raw/5.3/meta-brands/meta-$(MACHINE)/recipes-graphics/files/$(LIBJPEG_SRC)
 
 $(ARCHIVE)/$(WIFI_SRC):
-	$(DOWNLOAD) https://github.com/TangoCash/RTL8192FU/archive/refs/heads/$(WIFI_SRC) -O $(ARCHIVE)/$(WIFI)
+	$(DOWNLOAD) https://github.com/zukon/RTL8192EU/archive/refs/heads/$(WIFI_SRC) -O $(ARCHIVE)/$(WIFI)
+
+$(ARCHIVE)/$(WIFI2_SRC):
+	$(DOWNLOAD) https://github.com/zukon/RTL8822C/archive/refs/heads/$(WIFI2_SRC) -O $(ARCHIVE)/$(WIFI2)
 
 driver-clean:
 	rm -f $(D)/driver $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/$(KERNEL_TYPE)*
@@ -59,6 +66,7 @@ $(D)/driver: $(ARCHIVE)/$(DRIVER_SRC) $(D)/bootstrap $(D)/kernel
 	rmdir $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra/hiko
 	$(MAKE) install-tntfs
 	$(MAKE) install-wifi
+	$(MAKE) install-wifi2
 	ls $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra | sed s/.ko//g > $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/modules.default
 	$(MAKE) install-hisiplayer-libs
 	$(MAKE) install-hilib
@@ -107,6 +115,17 @@ $(D)/install-wifi: $(D)/bootstrap $(D)/kernel $(ARCHIVE)/$(WIFI_SRC)
 	echo $(KERNEL_DIR)
 	$(CHDIR)/$(WIFI_DIR); \
 		$(MAKE) ARCH=arm CROSS_COMPILE=$(TARGET)- KVER=$(DRIVER_VER) KSRC=$(KERNEL_DIR); \
-		install -m 644 8192fu.ko $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra
+		install -m 644 8192eu.ko $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra
 	$(REMOVE)/$(WIFI_DIR)
+	$(TOUCH)
+
+$(D)/install-wifi2: $(D)/bootstrap $(D)/kernel $(ARCHIVE)/$(WIFI2_SRC)
+	$(START_BUILD)
+	$(REMOVE)/$(WIFI2_DIR)
+	unzip -o $(ARCHIVE)/$(WIFI2) -d $(BUILD_TMP)
+	echo $(KERNEL_DIR)
+	$(CHDIR)/$(WIFI2_DIR); \
+		$(MAKE) ARCH=arm CROSS_COMPILE=$(TARGET)- KVER=$(DRIVER_VER) KSRC=$(KERNEL_DIR); \
+		install -m 644 88x2cu.ko $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/extra
+	$(REMOVE)/$(WIFI2_DIR)
 	$(TOUCH)
