@@ -262,7 +262,12 @@ NEUTRINO     = neutrino-tangos
 LIBSTB_HAL   = libstb-hal-tangos
 NMP_BRANCH  ?= master
 HAL_BRANCH  ?= master
+ifeq ($(FFMPEG_VERSION), $(filter $(FFMPEG_VERSION), snapshot 6.1))
+NMP_PATCHES  = neutrino-tangos-ffmpeg.patch
+NMP_PATCHES += $(NEUTRINO_TANGOS_PATCHES)
+else
 NMP_PATCHES  = $(NEUTRINO_TANGOS_PATCHES)
+endif
 HAL_PATCHES  = $(LIBSTB_HAL_TANGOS_PATCHES)
 else ifeq  ($(FLAVOUR), TANGOSEVO)
 GIT_URL     ?= $(GITHUB)/TangoCash
