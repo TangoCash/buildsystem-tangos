@@ -11,7 +11,7 @@ tools-clean:
 	-$(MAKE) -C $(TOOLS_DIR)/spf_tool distclean
 	-$(MAKE) -C $(TOOLS_DIR)/tuxcom distclean
 	-$(MAKE) -C $(TOOLS_DIR)/read-edid distclean
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), e4hdultra protek4k))
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), e4hdultra protek4k gbue4k))
 	-$(MAKE) -C $(TOOLS_DIR)/oled_ctrl distclean
 	-$(MAKE) -C $(TOOLS_DIR)/initfb distclean
 endif
@@ -209,7 +209,7 @@ TOOLS += $(D)/tools-msgbox
 TOOLS += $(D)/tools-satfind
 TOOLS += $(D)/tools-showiframe
 TOOLS += $(D)/tools-tuxcom
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), e4hdultra protek4k))
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), e4hdultra protek4k gbue4k))
 TOOLS += $(D)/tools-oled_ctrl
 TOOLS += $(D)/tools-initfb
 endif
