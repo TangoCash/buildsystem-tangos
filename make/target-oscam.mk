@@ -23,6 +23,7 @@ OSCAM_CONFIG = \
 				MODULE_CONSTCW \
 				MODULE_GBOX \
 				MODULE_NEWCAMD \
+				MODULE_STREAMRELAY \
 				\
 				CARDREADER_INTERNAL \
 				CARDREADER_PHOENIX \
@@ -89,21 +90,21 @@ $(D)/oscam-libusb.do_compile: libusb
 		$(MAKE) EXTRA_LDFLAGS="$(TARGET_LDFLAGS)" CROSS=$(TARGET)- USE_LIBUSB=1 CONF_DIR=/var/keys VER=libusb_svn
 	touch $@
 
-$(D)/oscam: bootstrap oscam.do_prepare oscam.do_compile
+$(D)/oscam: bootstrap libdvbcsa oscam.do_prepare oscam.do_compile
 	rm -rf $(TARGET_DIR)/../build_oscam
 	mkdir $(TARGET_DIR)/../build_oscam
 	cp -pR $(SOURCE_DIR)/oscam-svn/Distribution/* $(TARGET_DIR)/../build_oscam/
 	rm -rf $(SOURCE_DIR)/oscam-svn*
 	$(TOUCH)
 
-$(D)/oscam-ssl: bootstrap oscam.do_prepare oscam-ssl.do_compile
+$(D)/oscam-ssl: bootstrap libdvbcsa oscam.do_prepare oscam-ssl.do_compile
 	rm -rf $(TARGET_DIR)/../build_oscam
 	mkdir $(TARGET_DIR)/../build_oscam
 	cp -pR $(SOURCE_DIR)/oscam-svn/Distribution/* $(TARGET_DIR)/../build_oscam/
 	rm -rf $(SOURCE_DIR)/oscam-svn*
 	$(TOUCH)
 
-$(D)/oscam-libusb: bootstrap oscam.do_prepare oscam-libusb.do_compile
+$(D)/oscam-libusb: bootstrap libdvbcsa oscam.do_prepare oscam-libusb.do_compile
 	rm -rf $(TARGET_DIR)/../build_oscam
 	mkdir $(TARGET_DIR)/../build_oscam
 	cp -pR $(SOURCE_DIR)/oscam-svn/Distribution/* $(TARGET_DIR)/../build_oscam/
@@ -134,3 +135,28 @@ oscam-distclean:
 	rm -f $(D)/oscam-emu.do_prepare
 	rm -f $(D)/oscam-libusb.do_prepare
 
+#
+# libdvbcsa
+#
+LIBDVBCSA_GIT = https://code.videolan.org/videolan/libdvbcsa.git
+LIBDVBCSA_PATCH =
+
+$(D)/libdvbcsa: $(D)/bootstrap
+	$(START_BUILD)
+	$(REMOVE)/$(PKG_NAME)
+	$(call update_git, $(LIBDVBCSA_GIT))
+	$(CHDIR)/$(PKG_NAME); \
+		$(call apply_patches, $(LIBDVBCSA_PATCH)); \
+		$(BUILDENV) \
+		autoreconf --verbose --force --install; \
+		./configure $(SILENT_OPT) \
+			--build=$(BUILD) \
+			--host=$(TARGET) \
+			--prefix=/usr \
+		; \
+		$(MAKE) all; \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+	$(REWRITE_PKGCONF)
+	$(REWRITE_LIBTOOL)
+	$(REMOVE)/$(PKG_NAME)
+	$(TOUCH)
