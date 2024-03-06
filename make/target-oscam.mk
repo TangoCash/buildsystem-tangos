@@ -134,29 +134,3 @@ oscam-distclean:
 	rm -f $(D)/oscam.do_prepare
 	rm -f $(D)/oscam-emu.do_prepare
 	rm -f $(D)/oscam-libusb.do_prepare
-
-#
-# libdvbcsa
-#
-LIBDVBCSA_GIT = https://code.videolan.org/videolan/libdvbcsa.git
-LIBDVBCSA_PATCH =
-
-$(D)/libdvbcsa: $(D)/bootstrap
-	$(START_BUILD)
-	$(REMOVE)/$(PKG_NAME)
-	$(call update_git, $(LIBDVBCSA_GIT))
-	$(CHDIR)/$(PKG_NAME); \
-		$(call apply_patches, $(LIBDVBCSA_PATCH)); \
-		$(BUILDENV) \
-		autoreconf --verbose --force --install; \
-		./configure $(SILENT_OPT) \
-			--build=$(BUILD) \
-			--host=$(TARGET) \
-			--prefix=/usr \
-		; \
-		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF)
-	$(REWRITE_LIBTOOL)
-	$(REMOVE)/$(PKG_NAME)
-	$(TOUCH)
