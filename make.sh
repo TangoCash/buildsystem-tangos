@@ -77,7 +77,7 @@ if [ "$1" == e4hdultra ] || [ "$1" == protek4k ]; then
 	echo "IMAGE=neutrino" >> config
 	echo "FLAVOUR=TANGOSEVO" >> config
 	echo "EXTERNAL_LCD=both" >> config
-	echo "LAYOUT=single" >> config
+	echo "LAYOUT=multi" >> config
 	echo "CI_ENABLED=1" >> config
 	echo " "
 	make printenv
