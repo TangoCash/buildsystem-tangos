@@ -2002,7 +2002,7 @@ $(D)/libdvbsi: $(D)/bootstrap $(ARCHIVE)/$(LIBDVBSI_SOURCE)
 # libdvbcsa
 #
 #LIBDVBCSA_GIT = https://code.videolan.org/videolan/libdvbcsa.git
-LIBDVBCSA_GIT = $(GITHUB)/glenvt18/libdvbcsa
+LIBDVBCSA_GIT = $(GITHUB)/oe-mirrors/libdvbcsa
 
 $(D)/libdvbcsa: $(D)/bootstrap
 	$(START_BUILD)
