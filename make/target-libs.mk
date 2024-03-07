@@ -2012,6 +2012,7 @@ $(D)/libdvbcsa: $(D)/bootstrap
 		autoreconf -fi $(SILENT_OPT); \
 		$(CONFIGURE) \
 			--prefix=/usr \
+			--enable-neon \
 		; \
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
