@@ -69,7 +69,7 @@ $(D)/neutrino-plugins.do_prepare: $(D)/bootstrap $(D)/ffmpeg $(D)/libcurl $(D)/l
 		fi
 	cp -ra $(ARCHIVE)/neutrino-plugins-tangos.git $(SOURCE_DIR)/neutrino-plugins
 	sed -i -e 's#shellexec fx2#shellexec tuxmail tuxcal#g' $(SOURCE_DIR)/neutrino-plugins/Makefile.am
-ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51 h7 bre2ze4k e4hdultra protek4k multibox multiboxse hd60 hd61 osmio4k osmio4kplus sf8008 sf8008m ustym4kpro ustym4ks2ottx h9combo h9 gbue4k))
+ifeq ($(BOXTYPE), $(filter $(BOXTYPE), hd51 h7 bre2ze4k e4hdultra protek4k multibox multiboxse hd60 hd61 osmio4k osmio4kplus sf8008 sf8008m ustym4kpro ustym4ks2ottx h9combo h9))
 	sed -i -e 's#stb-startup \\#stb-startup-tuxbox \\#g' $(SOURCE_DIR)/neutrino-plugins/Makefile.am
 endif
 	cp -ra $(SOURCE_DIR)/neutrino-plugins $(SOURCE_DIR)/neutrino-plugins.org
