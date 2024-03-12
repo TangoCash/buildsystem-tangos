@@ -175,6 +175,21 @@ if [ "$1" == h9 ]; then
 	make printenv
 	exit
 fi
+
+if [ "$1" == gbue4k ]; then
+	echo "BOXARCH=arm" > config
+	echo "BOXTYPE=$1" >> config
+	echo "FFMPEG_VERSION=6.1" >> config
+	echo "OPTIMIZATIONS=size" >> config
+	echo "BS_GCC_VER=10.5.0" >> config
+	echo "FLAVOUR=TANGOSEVO" >> config
+	echo "EXTERNAL_LCD=both" >> config
+	echo "LAYOUT=single" >> config
+	echo "CI_ENABLED=1" >> config
+	echo " "
+	make printenv
+	exit
+fi
 ##############################################
 
 case $1 in
@@ -223,6 +238,9 @@ case $1 in
 		echo "   64)  Ustym 4k Pro"
 		echo "   67)  Ustym 4k S2 OTT X"
 		echo
+		echo "  GigaBlue"
+		echo "   68)  GigaBlue UHD UE 4k"
+		echo
 		echo
 		read -p "Select target (30-66)? [51]"
 		REPLY="${REPLY:-51}";;
@@ -254,6 +272,7 @@ case "$REPLY" in
 	65) BOXARCH="arm";BOXTYPE="h9combo";CI_ENABLED="1";;
 	66) BOXARCH="arm";BOXTYPE="h9";CI_ENABLED="0";;
 	67) BOXARCH="arm";BOXTYPE="ustym4ks2ottx";CI_ENABLED="0";;
+	68) BOXARCH="arm";BOXTYPE="gbue4k";CI_ENABLED="1";;
 	 *) BOXARCH="arm";BOXTYPE="hd51";CI_ENABLED="1";;
 esac
 echo "BOXARCH=$BOXARCH" > config
@@ -405,7 +424,7 @@ case "$REPLY" in
 	*) EXTERNAL_LCD="both";;
 esac
 
-if [ $BOXTYPE == 'vusolo4k' -o $BOXTYPE == 'vuduo4k' -o $BOXTYPE == 'vuultimo4k' -o $BOXTYPE == 'vuuno4kse' -o $BOXTYPE == 'vuduo4kse' -o $BOXTYPE == 'e4hdultra' -o $BOXTYPE == 'protek4k' ]; then
+if [ $BOXTYPE == 'vusolo4k' -o $BOXTYPE == 'vuduo4k' -o $BOXTYPE == 'vuultimo4k' -o $BOXTYPE == 'vuuno4kse' -o $BOXTYPE == 'vuduo4kse' -o $BOXTYPE == 'e4hdultra' -o $BOXTYPE == 'protek4k' -o $BOXTYPE == 'gbue4k' ]; then
 
 if [ $EXTERNAL_LCD == 'none' ]; then
 	EXTERNAL_LCD="graphlcd"
@@ -460,7 +479,7 @@ esac
 echo "VU_MULTIBOOT=$VU_MULTIBOOT" >> config
 fi
 
-if [ $BOXTYPE == 'hd60' -o $BOXTYPE == 'hd61' -o $BOXTYPE == 'multibox' -o $BOXTYPE == 'multiboxse' -o $BOXTYPE == 'sf8008' -o $BOXTYPE == 'sf8008m'  -o $BOXTYPE == 'ustym4kpro' -o $BOXTYPE == 'ustym4ks2ottx' -o $BOXTYPE == 'h9combo' ]; then
+if [ $BOXTYPE == 'hd60' -o $BOXTYPE == 'hd61' -o $BOXTYPE == 'multibox' -o $BOXTYPE == 'multiboxse' -o $BOXTYPE == 'sf8008' -o $BOXTYPE == 'sf8008m'  -o $BOXTYPE == 'ustym4kpro' -o $BOXTYPE == 'ustym4ks2ottx' -o $BOXTYPE == 'h9combo' -o $BOXTYPE == 'gbue4k' ]; then
 echo "LAYOUT=multi" >> config
 else
 echo "LAYOUT=$LAYOUT" >> config
