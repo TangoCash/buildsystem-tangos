@@ -90,6 +90,18 @@ $(D)/oscam-libusb.do_compile: libusb
 		$(MAKE) EXTRA_LDFLAGS="$(TARGET_LDFLAGS)" CROSS=$(TARGET)- USE_LIBUSB=1 CONF_DIR=/var/keys VER=libusb_svn
 	touch $@
 
+$(D)/oscam-static.do_compile:
+	cd $(SOURCE_DIR)/oscam-svn && \
+		$(BUILDENV) \
+		$(MAKE) EXTRA_LDFLAGS="$(TARGET_LDFLAGS)" CROSS=$(TARGET)- CONF_DIR=/var/keys LIBDVBCSA_LIB=$(TARGET_LIB_DIR)/libdvbcsa.a
+	touch $@
+
+$(D)/oscam-emu-static.do_compile: openssl
+	cd $(SOURCE_DIR)/oscam-svn && \
+		$(BUILDENV) \
+		$(MAKE) EXTRA_LDFLAGS="$(TARGET_LDFLAGS)" CROSS=$(TARGET)- USE_LIBCRYPTO=1 CONF_DIR=/var/keys VER=emu_svn LIBDVBCSA_LIB=$(TARGET_LIB_DIR)/libdvbcsa.a
+	touch $@
+
 $(D)/oscam: bootstrap libdvbcsa oscam.do_prepare oscam.do_compile
 	rm -rf $(TARGET_DIR)/../build_oscam
 	mkdir $(TARGET_DIR)/../build_oscam
@@ -119,6 +131,21 @@ $(D)/oscam-emu: bootstrap oscam-emu.do_prepare oscam-emu.do_compile
 	rm -rf $(SOURCE_DIR)/oscam-svn*
 	$(TOUCH)
 
+$(D)/oscam-emu-static: bootstrap oscam-emu.do_prepare oscam-emu-static.do_compile
+	rm -rf $(TARGET_DIR)/../build_oscam
+	mkdir $(TARGET_DIR)/../build_oscam
+	cp -pR $(SOURCE_DIR)/oscam-svn/oscam.keys $(TARGET_DIR)/../build_oscam/
+	cp -pR $(SOURCE_DIR)/oscam-svn/Distribution/* $(TARGET_DIR)/../build_oscam/
+	rm -rf $(SOURCE_DIR)/oscam-svn*
+	$(TOUCH)
+
+$(D)/oscam-static: bootstrap libdvbcsa oscam.do_prepare oscam-static.do_compile
+	rm -rf $(TARGET_DIR)/../build_oscam
+	mkdir $(TARGET_DIR)/../build_oscam
+	cp -pR $(SOURCE_DIR)/oscam-svn/Distribution/* $(TARGET_DIR)/../build_oscam/
+	rm -rf $(SOURCE_DIR)/oscam-svn*
+	$(TOUCH)
+
 oscam-clean:
 	rm -f $(D)/oscam
 	cd $(SOURCE_DIR)/oscam-svn && \
@@ -129,7 +156,9 @@ oscam-distclean:
 	rm -f $(D)/oscam-emu
 	rm -f $(D)/oscam-libusb
 	rm -f $(D)/oscam.do_compile
+	rm -f $(D)/oscam-static.do_compile
 	rm -f $(D)/oscam-emu.do_compile
+	rm -f $(D)/oscam-emu-static.do_compile
 	rm -f $(D)/oscam-libusb.do_compile
 	rm -f $(D)/oscam.do_prepare
 	rm -f $(D)/oscam-emu.do_prepare
