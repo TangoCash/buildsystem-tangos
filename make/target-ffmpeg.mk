@@ -48,7 +48,7 @@ endif
 		$(call apply_patches, $(FFMPEG_PATCH)); \
 		./configure $(SILENT_OPT) \
 			--disable-ffplay \
-			--disable-ffprobe \
+			--enable-ffprobe \
 			\
 			--disable-doc \
 			--disable-htmlpages \
@@ -232,7 +232,6 @@ endif
 			--enable-decoder=pcm_u32be \
 			--enable-decoder=pcm_u32le \
 			--enable-decoder=pcm_u8 \
-			--enable-decoder=pcm_zork \
 			--enable-decoder=pgssub \
 			--enable-decoder=png \
 			--enable-decoder=qcelp \
