@@ -896,7 +896,7 @@ $(D)/ca-bundle: $(ARCHIVE)/$(CA-BUNDLE_SOURCE)
 #
 # libcurl
 #
-LIBCURL_VER = 8.6.0
+LIBCURL_VER = 8.7.1
 LIBCURL_SOURCE = curl-$(LIBCURL_VER).tar.bz2
 LIBCURL_PATCH = libcurl-$(LIBCURL_VER).patch
 
@@ -1236,7 +1236,7 @@ $(D)/libiconv: $(D)/bootstrap $(ARCHIVE)/$(LIBICONV_SOURCE)
 #
 # expat
 #
-EXPAT_VER = 2.5.0
+EXPAT_VER = 2.6.2
 EXPAT_SOURCE = expat-$(EXPAT_VER).tar.bz2
 EXPAT_PATCH  = expat-$(EXPAT_VER)-libtool-tag.patch
 
@@ -1502,7 +1502,7 @@ $(D)/libsoup: $(D)/bootstrap $(D)/sqlite $(D)/libxml2 $(D)/libglib2 $(ARCHIVE)/$
 # libxml2
 #
 LIBXML2_MAJOR = 2.12
-LIBXML2_MINOR = 5
+LIBXML2_MINOR = 6
 LIBXML2_VER = $(LIBXML2_MAJOR).$(LIBXML2_MINOR)
 LIBXML2_SOURCE = libxml2-$(LIBXML2_VER).tar.xz
 LIBXML2_PATCH = libxml2-$(LIBXML2_VER).patch
@@ -1588,11 +1588,11 @@ $(D)/libxslt: $(D)/bootstrap $(D)/libxml2 $(ARCHIVE)/$(LIBXSLT_SOURCE)
 #
 # libpopt
 #
-LIBPOPT_VER = 1.16
+LIBPOPT_VER = 1.19
 LIBPOPT_SOURCE = popt-$(LIBPOPT_VER).tar.gz
 
 $(ARCHIVE)/$(LIBPOPT_SOURCE):
-	$(DOWNLOAD) ftp://anduin.linuxfromscratch.org/BLFS/popt/$(LIBPOPT_SOURCE)
+	$(DOWNLOAD) http://ftp.rpm.org/popt/releases/popt-1.x/$(LIBPOPT_SOURCE)
 
 $(D)/libpopt: $(D)/bootstrap $(ARCHIVE)/$(LIBPOPT_SOURCE)
 	$(START_BUILD)
@@ -2413,7 +2413,7 @@ $(D)/gnutls: $(D)/bootstrap $(D)/nettle $(ARCHIVE)/$(GNUTLS_SOURCE)
 #
 # libgpg-error
 #
-LIBGPG_ERROR_VER    = 1.45
+LIBGPG_ERROR_VER    = 1.48
 LIBGPG_ERROR_DIR    = libgpg-error-$(LIBGPG_ERROR_VER)
 LIBGPG_ERROR_SOURCE = libgpg-error-$(LIBGPG_ERROR_VER).tar.bz2
 LIBGPG_ERROR_URL    = https://www.gnupg.org/ftp/gcrypt/libgpg-error
@@ -2442,7 +2442,7 @@ $(D)/libgpg-error: $(D)/bootstrap $(ARCHIVE)/$(LIBGPG_ERROR_SOURCE)
 #
 # libgcrypt
 #
-LIBGCRYPT_VER    = 1.8.10
+LIBGCRYPT_VER    = 1.8.11
 LIBGCRYPT_DIR    = libgcrypt-$(LIBGCRYPT_VER)
 LIBGCRYPT_SOURCE = libgcrypt-$(LIBGCRYPT_VER).tar.bz2
 LIBGCRYPT_URL    = https://gnupg.org/ftp/gcrypt/libgcrypt

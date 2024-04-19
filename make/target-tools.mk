@@ -179,7 +179,7 @@ $(D)/module_init_tools: $(D)/bootstrap $(D)/lsb $(ARCHIVE)/$(MODULE_INIT_TOOLS_S
 #
 # sysvinit
 #
-SYSVINIT_VER = 3.08
+SYSVINIT_VER = 3.09
 SYSVINIT_SOURCE = sysvinit-$(SYSVINIT_VER).tar.xz
 SYSVINIT_PATCH  = sysvinit-$(SYSVINIT_VER)-crypt-lib.patch
 SYSVINIT_PATCH += sysvinit-$(SYSVINIT_VER)-change-INIT_FIFO.patch
@@ -459,7 +459,7 @@ $(D)/util_linux: $(D)/bootstrap $(D)/ncurses $(D)/zlib $(ARCHIVE)/$(UTIL_LINUX_S
 #
 # gptfdisk
 #
-GPTFDISK_VER = 1.0.9
+GPTFDISK_VER = 1.0.10
 GPTFDISK_SOURCE = gptfdisk-$(GPTFDISK_VER).tar.gz
 
 $(ARCHIVE)/$(GPTFDISK_SOURCE):
@@ -1185,7 +1185,7 @@ $(D)/avahi: $(D)/bootstrap $(D)/expat $(D)/libdaemon $(D)/dbus $(ARCHIVE)/$(AVAH
 #
 # wget
 #
-WGET_VER = 1.21.4
+WGET_VER = 1.24.5
 WGET_SOURCE = wget-$(WGET_VER).tar.gz
 WGET_PATCH = wget-$(WGET_VER).patch
 
@@ -1216,6 +1216,32 @@ $(D)/wget: $(D)/bootstrap $(D)/openssl $(ARCHIVE)/$(WGET_SOURCE)
 		$(MAKE); \
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	$(REMOVE)/wget-$(WGET_VER)
+	$(TOUCH)
+
+#
+# sed
+#
+SED_VER = 4.9
+SED_SOURCE = sed-$(SED_VER).tar.gz
+
+$(ARCHIVE)/$(SED_SOURCE):
+	$(DOWNLOAD) https://ftp.gnu.org/gnu/sed/$(SED_SOURCE)
+
+$(D)/sed: $(D)/bootstrap $(ARCHIVE)/$(SED_SOURCE)
+	$(START_BUILD)
+	$(REMOVE)/sed-$(SED_VER)
+	$(UNTAR)/$(SED_SOURCE)
+	$(CHDIR)/sed-$(SED_VER); \
+		$(CONFIGURE) \
+			--prefix=/usr \
+			--mandir=/.remove \
+			--infodir=/.remove \
+			--disable-bold-man-page-references \
+		; \
+		$(MAKE); \
+		$(MAKE) install DESTDIR=$(TARGET_DIR)
+		cd $(TARGET_DIR)/bin && rm -f sed && ln -sf /usr/bin/sed sed
+	$(REMOVE)/sed-$(SED_VER)
 	$(TOUCH)
 
 #
@@ -2069,156 +2095,19 @@ $(D)/iozone3: $(D)/bootstrap $(ARCHIVE)/$(IOZONE_SOURCE)
 	$(TOUCH)
 
 #
-# Mupen64Plus
+# node (ARM only)
 #
-MUPEN64CORE_VER = ef15526
-MUPEN64CORE_SOURCE = mupen64core-git-$(MUPEN64CORE_VER).tar.bz2
-MUPEN64CORE_URL = $(GITHUB)/mupen64plus/mupen64plus-core.git
+NODE_VER = 12.22.12
+NODE_SOURCE = node-v$(NODE_VER)-linux-armv7l.tar.xz
 
-$(ARCHIVE)/$(MUPEN64CORE_SOURCE):
-	$(HELPERS_DIR)/get-git-archive.sh $(MUPEN64CORE_URL) $(MUPEN64CORE_VER) $(notdir $@) $(ARCHIVE)
+$(ARCHIVE)/$(NODE_SOURCE):
+	$(DOWNLOAD) https://nodejs.org/dist/v$(NODE_VER)/$(NODE_SOURCE)
 
-$(D)/mupen64core: $(D)/bootstrap $(ARCHIVE)/$(MUPEN64CORE_SOURCE) $(D)/libsdl2 $(D)/libpng $(D)/freetype $(D)/zlib
+$(D)/node: $(D)/bootstrap $(ARCHIVE)/$(NODE_SOURCE)
 	$(START_BUILD)
-	$(REMOVE)/mupen64core-git-$(MUPEN64CORE_VER)
-	$(UNTAR)/$(MUPEN64CORE_SOURCE)
-	$(CHDIR)/mupen64core-git-$(MUPEN64CORE_VER); \
-		$(BUILDENV) \
-		cd projects/unix/ && $(MAKE) \
-			CPU=ARM \
-			CROSS_COMPILE=$(TARGET)- \
-			PKG_CONFIG=$(PKG_CONFIG) \
-			NO_ASM=1 \
-			SDL_CONFIG=$(TARGET_DIR)/usr/bin/sdl2-config \
-			USE_GLES=1 \
-			PREFIX=/usr \
-			DESTDIR=$(TARGET_DIR) \
-			all install; \
-	$(REMOVE)/mupen64core-git-$(MUPEN64CORE_VER)
+	$(REMOVE)/node-v$(NODE_VER)-linux-armv7l
+	$(UNTAR)/$(NODE_SOURCE)
+	$(CHDIR)/node-v$(NODE_VER)-linux-armv7l; \
+		cp bin/node $(TARGET_DIR)/usr/bin
+	$(REMOVE)/node-v$(NODE_VER)-linux-armv7l
 	$(TOUCH)
-
-MUPEN64CMD_VER = 5926250
-MUPEN64CMD_SOURCE = mupen64cmd-git-$(MUPEN64CMD_VER).tar.bz2
-MUPEN64CMD_URL = $(GITHUB)/mupen64plus/mupen64plus-ui-console.git
-
-$(ARCHIVE)/$(MUPEN64CMD_SOURCE):
-	$(HELPERS_DIR)/get-git-archive.sh $(MUPEN64CMD_URL) $(MUPEN64CMD_VER) $(notdir $@) $(ARCHIVE)
-
-$(D)/mupen64cmd: $(D)/bootstrap $(ARCHIVE)/$(MUPEN64CMD_SOURCE) $(D)/mupen64core
-	$(START_BUILD)
-	$(REMOVE)/mupen64cmd-git-$(MUPEN64CMD_VER)
-	$(UNTAR)/$(MUPEN64CMD_SOURCE)
-	$(CHDIR)/mupen64cmd-git-$(MUPEN64CMD_VER); \
-		$(BUILDENV) \
-		cd projects/unix/ && $(MAKE) \
-			CPU=ARM \
-			CROSS_COMPILE=$(TARGET)- \
-			PKG_CONFIG=$(PKG_CONFIG) \
-			NO_ASM=1 \
-			SDL_CONFIG=$(TARGET_DIR)/usr/bin/sdl2-config \
-			USE_GLES=1 \
-			PREFIX=/usr \
-			DESTDIR=$(TARGET_DIR) \
-			APIDIR=$(TARGET_INCLUDE_DIR)/mupen64plus \
-			MANDIR=/.remove \
-			APPSDIR=/.remove \
-			ICONSDIR=/.remove \
-			all install; \
-	$(REMOVE)/mupen64cmd-git-$(MUPEN64CMD_VER)
-	$(TOUCH)
-
-MUPEN64VID_VER = 7f10448
-MUPEN64VID_SOURCE = mupen64vid-git-$(MUPEN64VID_VER).tar.bz2
-MUPEN64VID_URL = $(GITHUB)/mupen64plus/mupen64plus-video-rice.git
-
-$(ARCHIVE)/$(MUPEN64VID_SOURCE):
-	$(HELPERS_DIR)/get-git-archive.sh $(MUPEN64VID_URL) $(MUPEN64VID_VER) $(notdir $@) $(ARCHIVE)
-
-$(D)/mupen64vid: $(D)/bootstrap $(ARCHIVE)/$(MUPEN64VID_SOURCE) $(D)/mupen64core
-	$(START_BUILD)
-	$(REMOVE)/mupen64vid-git-$(MUPEN64VID_VER)
-	$(UNTAR)/$(MUPEN64VID_SOURCE)
-	$(CHDIR)/mupen64vid-git-$(MUPEN64VID_VER); \
-		$(BUILDENV) \
-		cd projects/unix/ && $(MAKE) \
-			CPU=ARM \
-			CROSS_COMPILE=$(TARGET)- \
-			PKG_CONFIG=$(PKG_CONFIG) \
-			NO_ASM=1 \
-			SDL_CONFIG=$(TARGET_DIR)/usr/bin/sdl2-config \
-			USE_GLES=1 \
-			PREFIX=/usr \
-			DESTDIR=$(TARGET_DIR) \
-			APIDIR=$(TARGET_INCLUDE_DIR)/mupen64plus \
-			MANDIR=/.remove \
-			APPSDIR=/.remove \
-			ICONSDIR=/.remove \
-			all install; \
-	$(REMOVE)/mupen64vid-git-$(MUPEN64VID_VER)
-	$(TOUCH)
-
-MUPEN64AUD_VER = 732722c
-MUPEN64AUD_SOURCE = mupen64aud-git-$(MUPEN64AUD_VER).tar.bz2
-MUPEN64AUD_URL = $(GITHUB)/mupen64plus/mupen64plus-audio-sdl.git
-
-$(ARCHIVE)/$(MUPEN64AUD_SOURCE):
-	$(HELPERS_DIR)/get-git-archive.sh $(MUPEN64AUD_URL) $(MUPEN64AUD_VER) $(notdir $@) $(ARCHIVE)
-
-$(D)/mupen64aud: $(D)/bootstrap $(ARCHIVE)/$(MUPEN64AUD_SOURCE) $(D)/mupen64core
-	$(START_BUILD)
-	$(REMOVE)/mupen64aud-git-$(MUPEN64AUD_VER)
-	$(UNTAR)/$(MUPEN64AUD_SOURCE)
-	$(CHDIR)/mupen64aud-git-$(MUPEN64AUD_VER); \
-		$(BUILDENV) \
-		cd projects/unix/ && $(MAKE) \
-			CPU=ARM \
-			CROSS_COMPILE=$(TARGET)- \
-			PKG_CONFIG=$(PKG_CONFIG) \
-			SDL_CONFIG=$(TARGET_DIR)/usr/bin/sdl2-config \
-			NO_SPEEX=1 \
-			NO_OSS=1 \
-			NO_SRC=1 \
-			PREFIX=/usr \
-			DESTDIR=$(TARGET_DIR) \
-			APIDIR=$(TARGET_INCLUDE_DIR)/mupen64plus \
-			MANDIR=/.remove \
-			APPSDIR=/.remove \
-			ICONSDIR=/.remove \
-			all install; \
-	$(REMOVE)/mupen64aud-git-$(MUPEN64AUD_VER)
-	$(TOUCH)
-
-MUPEN64INP_VER = f5c3995
-MUPEN64INP_SOURCE = mupen64inp-git-$(MUPEN64INP_VER).tar.bz2
-MUPEN64INP_URL = $(GITHUB)/mupen64plus/mupen64plus-input-sdl.git
-
-$(ARCHIVE)/$(MUPEN64INP_SOURCE):
-	$(HELPERS_DIR)/get-git-archive.sh $(MUPEN64INP_URL) $(MUPEN64INP_VER) $(notdir $@) $(ARCHIVE)
-
-$(D)/mupen64inp: $(D)/bootstrap $(ARCHIVE)/$(MUPEN64INP_SOURCE) $(D)/mupen64core
-	$(START_BUILD)
-	$(REMOVE)/mupen64inp-git-$(MUPEN64INP_VER)
-	$(UNTAR)/$(MUPEN64INP_SOURCE)
-	$(CHDIR)/mupen64inp-git-$(MUPEN64INP_VER); \
-		$(BUILDENV) \
-		cd projects/unix/ && $(MAKE) \
-			CPU=ARM \
-			CROSS_COMPILE=$(TARGET)- \
-			PKG_CONFIG=$(PKG_CONFIG) \
-			NO_ASM=1 \
-			SDL_CONFIG=$(TARGET_DIR)/usr/bin/sdl2-config \
-			USE_GLES=1 \
-			PREFIX=/usr \
-			DESTDIR=$(TARGET_DIR) \
-			APIDIR=$(TARGET_INCLUDE_DIR)/mupen64plus \
-			MANDIR=/.remove \
-			APPSDIR=/.remove \
-			ICONSDIR=/.remove \
-			all install; \
-	$(REMOVE)/mupen64inp-git-$(MUPEN64INP_VER)
-	$(TOUCH)
-
-$(D)/mupen64: $(D)/mupen64core $(D)/mupen64vid $(D)/mupen64aud $(D)/mupen64inp $(D)/mupen64cmd
-	$(TOUCH)
-
-
