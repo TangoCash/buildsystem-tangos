@@ -70,6 +70,7 @@ COMMON_DEPS += $(D)/links
 COMMON_DEPS += $(D)/dropbearmulti
 COMMON_DEPS += $(D)/djmount
 COMMON_DEPS += $(D)/libdvbcsa
+COMMON_DEPS += $(D)/node
 #COMMON_DEPS +=  $(D)/minidlna
 #COMMON_DEPS +=  $(D)/minisatip
 ifeq ($(BOXTYPE), $(filter $(BOXTYPE), sf8008 sf8008m ustym4kpro ustym4ks2ottx))
