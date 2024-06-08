@@ -742,32 +742,6 @@ $(D)/nano: $(D)/bootstrap $(ARCHIVE)/$(NANO_SOURCE)
 	$(TOUCH)
 
 #
-# rsync
-#
-RSYNC_VER = 3.1.3
-RSYNC_SOURCE = rsync-$(RSYNC_VER).tar.gz
-
-$(ARCHIVE)/$(RSYNC_SOURCE):
-	$(DOWNLOAD) https://download.samba.org/pub/rsync/src/$(RSYNC_SOURCE)
-
-$(D)/rsync: $(D)/bootstrap $(ARCHIVE)/$(RSYNC_SOURCE)
-	$(START_BUILD)
-	$(REMOVE)/rsync-$(RSYNC_VER)
-	$(UNTAR)/$(RSYNC_SOURCE)
-	$(CHDIR)/rsync-$(RSYNC_VER); \
-		$(CONFIGURE) \
-			--prefix=/usr \
-			--mandir=/.remove \
-			--sysconfdir=/etc \
-			--disable-debug \
-			--disable-locale \
-		; \
-		$(MAKE) all; \
-		$(MAKE) install-all DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/rsync-$(RSYNC_VER)
-	$(TOUCH)
-
-#
 # fuse
 #
 FUSE_VER = 2.9.9
@@ -855,33 +829,6 @@ $(D)/sdparm: $(D)/bootstrap $(ARCHIVE)/$(SDPARM_SOURCE)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 	rm -f $(addprefix $(TARGET_DIR)/sbin/,sas_disk_blink scsi_ch_swp)
 	$(REMOVE)/sdparm-$(SDPARM_VER)
-	$(TOUCH)
-
-#
-# hddtemp
-#
-HDDTEMP_VER = 0.3-beta15
-HDDTEMP_SOURCE = hddtemp-$(HDDTEMP_VER).tar.bz2
-
-$(ARCHIVE)/$(HDDTEMP_SOURCE):
-	$(DOWNLOAD) http://savannah.c3sl.ufpr.br/hddtemp/$(HDDTEMP_SOURCE)
-
-$(D)/hddtemp: $(D)/bootstrap $(ARCHIVE)/$(HDDTEMP_SOURCE)
-	$(START_BUILD)
-	$(REMOVE)/hddtemp-$(HDDTEMP_VER)
-	$(UNTAR)/$(HDDTEMP_SOURCE)
-	$(CHDIR)/hddtemp-$(HDDTEMP_VER); \
-		$(CONFIGURE) \
-			--prefix= \
-			--mandir=/.remove \
-			--datadir=/.remove \
-			--with-db_path=/var/hddtemp.db \
-		; \
-		$(MAKE) all; \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-		install -d $(TARGET_DIR)/var/tuxbox/config
-		install -m 644 $(MACHINE_COMMON_DIR)/hddtemp.db $(TARGET_DIR)/var
-	$(REMOVE)/hddtemp-$(HDDTEMP_VER)
 	$(TOUCH)
 
 #
@@ -1242,42 +1189,6 @@ $(D)/sed: $(D)/bootstrap $(ARCHIVE)/$(SED_SOURCE)
 		$(MAKE) install DESTDIR=$(TARGET_DIR)
 		cd $(TARGET_DIR)/bin && rm -f sed && ln -sf /usr/bin/sed sed
 	$(REMOVE)/sed-$(SED_VER)
-	$(TOUCH)
-
-#
-# coreutils
-#
-COREUTILS_VER = 8.23
-COREUTILS_SOURCE = coreutils-$(COREUTILS_VER).tar.xz
-COREUTILS_PATCH = coreutils-$(COREUTILS_VER).patch
-
-$(ARCHIVE)/$(COREUTILS_SOURCE):
-	$(DOWNLOAD) https://ftp.gnu.org/gnu/coreutils/$(COREUTILS_SOURCE)
-
-$(D)/coreutils: $(D)/bootstrap $(D)/openssl $(ARCHIVE)/$(COREUTILS_SOURCE)
-	$(START_BUILD)
-	$(REMOVE)/coreutils-$(COREUTILS_VER)
-	$(UNTAR)/$(COREUTILS_SOURCE)
-	$(CHDIR)/coreutils-$(COREUTILS_VER); \
-		$(call apply_patches, $(COREUTILS_PATCH)); \
-		export fu_cv_sys_stat_statfs2_bsize=yes; \
-		$(CONFIGURE) \
-			--prefix=/usr \
-			--bindir=/bin \
-			--mandir=/.remove \
-			--infodir=/.remove \
-			--localedir=/.remove/locale \
-			--enable-largefile \
-			--enable-silent-rules \
-			--disable-xattr \
-			--disable-libcap \
-			--disable-acl \
-			--without-gmp \
-			--without-selinux \
-		; \
-		$(MAKE); \
-		$(MAKE) install DESTDIR=$(TARGET_DIR)
-	$(REMOVE)/coreutils-$(COREUTILS_VER)
 	$(TOUCH)
 
 #
@@ -1668,33 +1579,6 @@ $(D)/wireless_tools: $(D)/bootstrap $(ARCHIVE)/$(WIRELESS_TOOLS_SOURCE)
 		$(MAKE) CC="$(TARGET)-gcc" CFLAGS="$(TARGET_CFLAGS) -I."; \
 		$(MAKE) install PREFIX=$(TARGET_DIR)/usr INSTALL_MAN=$(TARGET_DIR)/.remove
 	$(REMOVE)/wireless_tools.$(WIRELESS_TOOLS_VER)
-	$(TOUCH)
-
-#
-# libnl
-#
-LIBNL_VER = 3.2.25
-LIBNL_SOURCE = libnl-$(LIBNL_VER).tar.gz
-
-$(ARCHIVE)/$(LIBNL_SOURCE):
-	$(DOWNLOAD) https://www.infradead.org/~tgr/libnl/files/$(LIBNL_SOURCE)
-
-$(D)/libnl: $(D)/bootstrap $(D)/openssl $(ARCHIVE)/$(LIBNL_SOURCE)
-	$(START_BUILD)
-	$(REMOVE)/libnl-$(LIBNL_VER)
-	$(UNTAR)/$(LIBNL_SOURCE)
-	$(CHDIR)/libnl-$(LIBNL_VER); \
-		$(CONFIGURE) \
-			--target=$(TARGET) \
-			--prefix=/usr \
-			--bindir=/.remove \
-			--mandir=/.remove \
-			--infodir=/.remove \
-		make $(SILENT_OPT); \
-		make install $(SILENT_OPT) DESTDIR=$(TARGET_DIR)
-	$(REWRITE_PKGCONF)
-	$(REWRITE_LIBTOOL)
-	$(REMOVE)/libnl-$(LIBNL_VER)
 	$(TOUCH)
 
 #

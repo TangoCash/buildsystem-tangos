@@ -776,7 +776,7 @@ $(D)/libjpeg_turbo: $(D)/bootstrap $(ARCHIVE)/$(LIBJPEG_TURBO_SOURCE)
 #
 # libpng
 #
-LIBPNG_VER = 1.6.42
+LIBPNG_VER = 1.6.43
 LIBPNG_VER_X = 16
 LIBPNG_SOURCE = libpng-$(LIBPNG_VER).tar.xz
 
@@ -896,7 +896,7 @@ $(D)/ca-bundle: $(ARCHIVE)/$(CA-BUNDLE_SOURCE)
 #
 # libcurl
 #
-LIBCURL_VER = 8.7.1
+LIBCURL_VER = 8.8.0
 LIBCURL_SOURCE = curl-$(LIBCURL_VER).tar.bz2
 LIBCURL_PATCH = libcurl-$(LIBCURL_VER).patch
 
@@ -916,6 +916,7 @@ $(D)/libcurl: $(D)/bootstrap $(D)/zlib $(D)/openssl $(D)/ca-bundle $(ARCHIVE)/$(
 			--enable-silent-rules \
 			--disable-debug \
 			--disable-curldebug \
+			--disable-docs \
 			--disable-manual \
 			--disable-file \
 			--disable-rtsp \
@@ -948,7 +949,7 @@ $(D)/libcurl: $(D)/bootstrap $(D)/zlib $(D)/openssl $(D)/ca-bundle $(ARCHIVE)/$(
 #
 # libfribidi
 #
-LIBFRIBIDI_VER = 1.0.13
+LIBFRIBIDI_VER = 1.0.15
 LIBFRIBIDI_SOURCE = fribidi-$(LIBFRIBIDI_VER).tar.xz
 LIBFRIBIDI_PATCH = libfribidi-$(LIBFRIBIDI_VER).patch
 
@@ -1501,7 +1502,7 @@ $(D)/libsoup: $(D)/bootstrap $(D)/sqlite $(D)/libxml2 $(D)/libglib2 $(ARCHIVE)/$
 # libxml2
 #
 LIBXML2_MAJOR = 2.12
-LIBXML2_MINOR = 6
+LIBXML2_MINOR = 7
 LIBXML2_VER = $(LIBXML2_MAJOR).$(LIBXML2_MINOR)
 LIBXML2_SOURCE = libxml2-$(LIBXML2_VER).tar.xz
 LIBXML2_PATCH = libxml2-$(LIBXML2_VER).patch

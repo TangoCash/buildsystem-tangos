@@ -1,7 +1,7 @@
 #
 # dropbearmulti
 #
-DROPBEARMULTI_VER = 9925b00
+DROPBEARMULTI_VER = edb2778
 DROPBEARMULTI_SOURCE = dropbearmulti-git-$(DROPBEARMULTI_VER).tar.bz2
 DROPBEARMULTI_URL = $(GITHUB)/mkj/dropbear.git
 
