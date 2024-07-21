@@ -58,6 +58,8 @@ if [ -e /var/tuxbox/config/.bootlogo ]; then
   showiframe /usr/share/tuxbox/neutrino/icons/bootlogo.m2v &
 fi
 
+ln -s /dev/dbox/lcd0 /dev/dbox/oled0
+
 echo "Booting...TC-NMP" > /dev/dbox/lcd0
 
 echo "setup network"
