@@ -26,7 +26,6 @@ $(D)/driver: $(ARCHIVE)/$(DRIVER_SRC) $(D)/bootstrap $(D)/kernel
 		echo $$i >> $(TARGET_DIR)/lib/modules/$(KERNEL_VER)/modules.default; \
 	done
 	$(MAKE) install-v3ddriver
-	$(MAKE) wlan-qcom
 	$(TOUCH)
 
 $(D)/install-v3ddriver: $(ARCHIVE)/$(LIBGLES_SRC)
