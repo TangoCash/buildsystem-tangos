@@ -39,7 +39,7 @@ fi
 if [ "$1" == defaultconfig ]; then
 	echo "BOXARCH=arm" > config
 	echo "BOXTYPE=hd51" >> config
-	echo "FFMPEG_VERSION=6.1.1" >> config
+	echo "FFMPEG_VERSION=6.1.2" >> config
 	echo "OPTIMIZATIONS=size" >> config
 	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino" >> config
@@ -55,7 +55,7 @@ fi
 if [ "$1" == hd51 ] || [ "$1" == h7 ] || [ "$1" == bre2ze4k ]; then
 	echo "BOXARCH=arm" > config
 	echo "BOXTYPE=$1" >> config
-	echo "FFMPEG_VERSION=6.1.1" >> config
+	echo "FFMPEG_VERSION=6.1.2" >> config
 	echo "OPTIMIZATIONS=size" >> config
 	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino" >> config
@@ -71,7 +71,7 @@ fi
 if [ "$1" == e4hdultra ] || [ "$1" == protek4k ]; then
 	echo "BOXARCH=arm" > config
 	echo "BOXTYPE=$1" >> config
-	echo "FFMPEG_VERSION=6.1.1" >> config
+	echo "FFMPEG_VERSION=6.1.2" >> config
 	echo "OPTIMIZATIONS=size" >> config
 	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino" >> config
@@ -87,7 +87,7 @@ fi
 if [ "$1" == hd60 ] || [ "$1" == hd61 ] || [ "$1" == multibox ] || [ "$1" == multiboxse ]; then
 	echo "BOXARCH=arm" > config
 	echo "BOXTYPE=$1" >> config
-	echo "FFMPEG_VERSION=6.1.1" >> config
+	echo "FFMPEG_VERSION=6.1.2" >> config
 	echo "OPTIMIZATIONS=size" >> config
 	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino" >> config
@@ -102,7 +102,7 @@ fi
 if [ "$1" == vusolo4k -o "$1" == vuduo4k -o "$1" == vuultimo4k -o "$1" == vuuno4k -o "$1" == vuuno4kse -o "$1" == vuzero4k -o "$1" == vuduo4kse ]; then
 	echo "BOXARCH=arm" > config
 	echo "BOXTYPE=$1" >> config
-	echo "FFMPEG_VERSION=6.1.1" >> config
+	echo "FFMPEG_VERSION=6.1.2" >> config
 	echo "OPTIMIZATIONS=size" >> config
 	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino" >> config
@@ -119,7 +119,7 @@ fi
 if [ "$1" == osmini4k ]; then
 	echo "BOXARCH=arm" > config
 	echo "BOXTYPE=$1" >> config
-	echo "FFMPEG_VERSION=6.1.1" >> config
+	echo "FFMPEG_VERSION=6.1.2" >> config
 	echo "OPTIMIZATIONS=size" >> config
 	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino" >> config
@@ -134,7 +134,7 @@ fi
 if [ "$1" == osmio4k ] || [ "$1" == osmio4kplus ]; then
 	echo "BOXARCH=arm" > config
 	echo "BOXTYPE=$1" >> config
-	echo "FFMPEG_VERSION=6.1.1" >> config
+	echo "FFMPEG_VERSION=6.1.2" >> config
 	echo "OPTIMIZATIONS=size" >> config
 	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino-wifi" >> config
@@ -149,7 +149,7 @@ fi
 if [ "$1" == sf8008 ] || [ "$1" == sf8008m ] || [ "$1" == ustym4kpro ] || [ "$1" == ustym4ks2ottx ] || [ "$1" == h9combo ]; then
 	echo "BOXARCH=arm" > config
 	echo "BOXTYPE=$1" >> config
-	echo "FFMPEG_VERSION=6.1.1" >> config
+	echo "FFMPEG_VERSION=6.1.2" >> config
 	echo "OPTIMIZATIONS=size" >> config
 	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino-wifi" >> config
@@ -164,7 +164,7 @@ fi
 if [ "$1" == h9 ]; then
 	echo "BOXARCH=arm" > config
 	echo "BOXTYPE=$1" >> config
-	echo "FFMPEG_VERSION=6.1.1" >> config
+	echo "FFMPEG_VERSION=6.1.2" >> config
 	echo "OPTIMIZATIONS=size" >> config
 	echo "BS_GCC_VER=10.5.0" >> config
 	echo "IMAGE=neutrino-wifi" >> config
@@ -179,7 +179,7 @@ fi
 if [ "$1" == gbue4k ]; then
 	echo "BOXARCH=arm" > config
 	echo "BOXTYPE=$1" >> config
-	echo "FFMPEG_VERSION=6.1.1" >> config
+	echo "FFMPEG_VERSION=6.1.2" >> config
 	echo "OPTIMIZATIONS=size" >> config
 	echo "BS_GCC_VER=10.5.0" >> config
 	echo "FLAVOUR=TANGOSEVO" >> config
@@ -282,20 +282,22 @@ echo "CI_ENABLED=$CI_ENABLED" >> config
 ##############################################
 
 case $2 in
-	[1-2]) REPLY=$2;;
+	[1-4]) REPLY=$2;;
 	*)	echo -e "\nFFmpeg Version:"
-		echo "   1) buildsystem standard 6.1.1"
-		echo "   2) buildsystem standard 4.4.4"
-		echo "   3) ffmpeg git snapshot (experimental)"
-		read -p "Select FFmpeg version (1-3)? [1]"
+		echo "   1) buildsystem standard 6.1.2"
+		echo "   2) buildsystem standard 7.0.2"
+		echo "   3) buildsystem standard 4.4.4"
+		echo "   4) ffmpeg git snapshot (experimental)"
+		read -p "Select FFmpeg version (1-4)? [1]"
 		REPLY="${REPLY:-1}";;
 esac
 
 case "$REPLY" in
-	1) FFMPEG_VERSION="6.1.1";;
-	2) FFMPEG_VERSION="4.4.4";;
-	3) FFMPEG_VERSION="snapshot";;
-	*) FFMPEG_VERSION="6.1.1";;
+	1) FFMPEG_VERSION="6.1.2";;
+	2) FFMPEG_VERSION="7.0.2";;
+	3) FFMPEG_VERSION="4.4.4";;
+	4) FFMPEG_VERSION="snapshot";;
+	*) FFMPEG_VERSION="6.1.2";;
 esac
 echo "FFMPEG_VERSION=$FFMPEG_VERSION" >> config
 
