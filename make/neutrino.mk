@@ -35,7 +35,6 @@ WEATHER_DEV_KEY ?=
 ifneq ($(strip $(WEATHER_DEV_KEY)),)
 N_CONFIG_KEYS += \
 	--with-weather-dev-key="$(WEATHER_DEV_KEY)" \
-	--with-weather-dev-ver=3.0 \
 	--disable-weather-key-manage
 endif
 
