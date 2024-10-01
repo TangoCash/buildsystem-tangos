@@ -179,7 +179,7 @@ $(D)/module_init_tools: $(D)/bootstrap $(D)/lsb $(ARCHIVE)/$(MODULE_INIT_TOOLS_S
 #
 # sysvinit
 #
-SYSVINIT_VER = 3.09
+SYSVINIT_VER = 3.10
 SYSVINIT_SOURCE = sysvinit-$(SYSVINIT_VER).tar.xz
 SYSVINIT_PATCH  = sysvinit-$(SYSVINIT_VER)-crypt-lib.patch
 SYSVINIT_PATCH += sysvinit-$(SYSVINIT_VER)-change-INIT_FIFO.patch
@@ -643,7 +643,7 @@ $(D)/ntfs_3g: $(D)/bootstrap $(ARCHIVE)/$(NTFS_3G_SOURCE)
 #
 # mc
 #
-MC_VER = 4.8.31
+MC_VER = 4.8.32
 MC_SOURCE = mc-$(MC_VER).tar.xz
 MC_PATCH  = mc-$(MC_VER).patch
 
@@ -687,7 +687,7 @@ $(D)/mc: $(D)/bootstrap $(D)/libglib2 $(D)/ncurses $(ARCHIVE)/$(MC_SOURCE)
 #
 # socat
 #
-SOCAT_VER = 1.8.0.0
+SOCAT_VER = 1.8.0.1
 SOCAT_SOURCE = socat-$(SOCAT_VER).tar.gz
 SOCAT_PATCH = socat-$(SOCAT_VER).patch
 
