@@ -1,0 +1,15 @@
+--- a/libavformat/demux.c
++++ b/libavformat/demux.c
+@@ -1553,6 +1553,12 @@
+     }
+ 
+     for (;;) {
++        if (ff_check_interrupt(&s->interrupt_callback)) {
++            ret = AVERROR_EXIT;
++            av_log(s, AV_LOG_DEBUG, "interrupted\n");
++            return ret;
++        }
++
+         PacketListEntry *pktl = si->packet_buffer.head;
+ 
+         if (pktl) {
