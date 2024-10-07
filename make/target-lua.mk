@@ -94,6 +94,7 @@ $(D)/luajson: $(D)/bootstrap $(D)/lua $(ARCHIVE)/json.lua
 LUACURL_VER = e0b1d2ee
 LUACURL_SOURCE = luacurl-git-$(LUACURL_VER).tar.bz2
 LUACURL_URL = $(GITHUB)/Lua-cURL/Lua-cURLv3.git
+LUACURL_PATCH = lua-curl-Makefile.patch
 
 $(ARCHIVE)/$(LUACURL_SOURCE):
 	$(HELPERS_DIR)/get-git-archive.sh $(LUACURL_URL) $(LUACURL_VER) $(notdir $@) $(ARCHIVE)
@@ -103,9 +104,11 @@ $(D)/luacurl: $(D)/bootstrap $(D)/libcurl $(D)/lua $(ARCHIVE)/$(LUACURL_SOURCE)
 	$(REMOVE)/luacurl-git-$(LUACURL_VER)
 	$(UNTAR)/$(LUACURL_SOURCE)
 	$(CHDIR)/luacurl-git-$(LUACURL_VER); \
+		$(call apply_patches, $(LUACURL_PATCH)); \
 		$(MAKE) CC=$(TARGET)-gcc LDFLAGS="-L$(TARGET_LIB_DIR)" \
 			LIBDIR=$(TARGET_LIB_DIR) \
-			LUA_INC=$(TARGET_INCLUDE_DIR); \
+			LUA_INC=$(TARGET_INCLUDE_DIR) \
+			CURL_LIBS="-lcurl"; \
 		$(MAKE) install DESTDIR=$(TARGET_DIR) LUA_CMOD=/usr/lib/lua/$(LUA_VER_SHORT) LUA_LMOD=/usr/share/lua/$(LUA_VER_SHORT)
 	$(REMOVE)/luacurl-git-$(LUACURL_VER)
 	$(TOUCH)
