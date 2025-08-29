@@ -94,7 +94,6 @@ CCACHE_DIR            = $(BASE_DIR)/.ccache-bs-arm
 export CCACHE_DIR
 TARGET               ?= arm-cortex-linux-gnueabihf
 TARGET_MARCH_CFLAGS   = -march=armv7ve -mtune=cortex-a15 -mfpu=neon-vfpv4 -mfloat-abi=hard
-CORTEX_STRINGS        = -lcortex-strings
 endif
 
 ifeq ($(BOXARCH), aarch64)
@@ -166,7 +165,7 @@ TARGET_CFLAGS        +=-fcommon
 endif
 TARGET_CPPFLAGS       = $(TARGET_CFLAGS)
 TARGET_CXXFLAGS       = $(TARGET_CFLAGS)
-TARGET_LDFLAGS        = $(CORTEX_STRINGS) -Wl,-rpath -Wl,/usr/lib -Wl,-rpath-link -Wl,$(TARGET_LIB_DIR) -L$(TARGET_LIB_DIR) -L$(TARGET_DIR)/lib $(TARGET_EXTRA_LDFLAGS)
+TARGET_LDFLAGS        = -Wl,-rpath -Wl,/usr/lib -Wl,-rpath-link -Wl,$(TARGET_LIB_DIR) -L$(TARGET_LIB_DIR) -L$(TARGET_DIR)/lib $(TARGET_EXTRA_LDFLAGS)
 LD_FLAGS              = $(TARGET_LDFLAGS)
 PKG_CONFIG            = $(HOST_DIR)/bin/$(TARGET)-pkg-config
 PKG_CONFIG_PATH       = $(TARGET_LIB_DIR)/pkgconfig

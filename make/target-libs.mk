@@ -4,10 +4,14 @@
 LIBNSL_VER = 2.0.0
 LIBNSL_SOURCE = libnsl-$(LIBNSL_VER).tar.gz
 
+ifeq ($(NEED_TIRPC), 1)
+LIBNSL_EXTRADEP = $(D)/libtirpc
+endif
+
 $(ARCHIVE)/$(LIBNSL_SOURCE):
 	$(DOWNLOAD) $(GITHUB)/thkukuk/libnsl/archive/v$(LIBNSL_VER)/$(LIBNSL_SOURCE)
 
-$(D)/libnsl: $(D)/bootstrap $(D)/libtirpc $(ARCHIVE)/$(LIBNSL_SOURCE)
+$(D)/libnsl: $(D)/bootstrap $(LIBNSL_EXTRADEP) $(ARCHIVE)/$(LIBNSL_SOURCE)
 	$(START_BUILD)
 	$(REMOVE)/libnsl-$(LIBNSL_VER)
 	$(UNTAR)/$(LIBNSL_SOURCE)
@@ -242,7 +246,7 @@ $(D)/host_libglib2_genmarshal: $(D)/bootstrap $(D)/host_libffi $(ARCHIVE)/$(LIBG
 LIBGLIB2_PATCH  = libglib2-$(LIBGLIB2_VER)-disable-tests.patch
 LIBGLIB2_PATCH += libglib2-$(LIBGLIB2_VER)-fix-gio-linking.patch
 
-$(D)/libglib2: $(D)/bootstrap $(D)/host_libglib2_genmarshal $(D)/zlib $(D)/libffi  $(D)/util_linux $(ARCHIVE)/$(LIBGLIB2_SOURCE)
+$(D)/libglib2: $(D)/bootstrap $(D)/zlib $(D)/libffi  $(D)/util_linux $(ARCHIVE)/$(LIBGLIB2_SOURCE)
 	$(START_BUILD)
 	$(REMOVE)/glib-$(LIBGLIB2_VER)
 	$(UNTAR)/$(LIBGLIB2_SOURCE)
@@ -254,7 +258,6 @@ $(D)/libglib2: $(D)/bootstrap $(D)/host_libglib2_genmarshal $(D)/zlib $(D)/libff
 		echo "ac_cv_func_posix_getgrgid_r=yes" >> config.cache; \
 		echo "glib_cv_stack_grows=no" >> config.cache; \
 		echo "glib_cv_uscore=no" >> config.cache; \
-		echo "ac_cv_path_GLIB_GENMARSHAL=$(HOST_DIR)/bin/glib-genmarshal" >> config.cache; \
 		$(call apply_patches, $(LIBGLIB2_PATCH)); \
 		autoreconf -fi $(SILENT_OPT); \
 		$(CONFIGURE) \
@@ -1237,19 +1240,21 @@ $(D)/libiconv: $(D)/bootstrap $(ARCHIVE)/$(LIBICONV_SOURCE)
 #
 # expat
 #
-EXPAT_VER = 2.6.3
-EXPAT_SOURCE = expat-$(EXPAT_VER).tar.bz2
-EXPAT_PATCH  = expat-$(EXPAT_VER)-libtool-tag.patch
+EXPAT_VER = 39ea0d1
+EXPAT_SOURCE = expat-git-$(EXPAT_VER).tar.bz2
+EXPAT_PATCH  = expat-libtool-tag.patch
+EXPAT_URL    = https://github.com/libexpat/libexpat.git
 
 $(ARCHIVE)/$(EXPAT_SOURCE):
-	$(DOWNLOAD) https://sourceforge.net/projects/expat/files/expat/$(EXPAT_VER)/$(EXPAT_SOURCE)
+	$(HELPERS_DIR)/get-git-archive.sh $(EXPAT_URL) $(EXPAT_VER) $(notdir $@) $(ARCHIVE)
 
 $(D)/expat: $(D)/bootstrap $(ARCHIVE)/$(EXPAT_SOURCE)
 	$(START_BUILD)
 	$(REMOVE)/expat-$(EXPAT_VER)
 	$(UNTAR)/$(EXPAT_SOURCE)
-	$(CHDIR)/expat-$(EXPAT_VER); \
+	$(CHDIR)/expat-git-$(EXPAT_VER)/expat; \
 		$(call apply_patches, $(EXPAT_PATCH)); \
+		autoreconf -fi $(SILENT_OPT); \
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--mandir=/.remove \
