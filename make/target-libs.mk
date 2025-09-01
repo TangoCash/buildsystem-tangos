@@ -780,7 +780,7 @@ $(D)/libjpeg_turbo: $(D)/bootstrap $(ARCHIVE)/$(LIBJPEG_TURBO_SOURCE)
 #
 # libpng
 #
-LIBPNG_VER = 1.6.44
+LIBPNG_VER = 1.6.50
 LIBPNG_VER_X = 16
 LIBPNG_SOURCE = libpng-$(LIBPNG_VER).tar.xz
 
@@ -900,7 +900,7 @@ $(D)/ca-bundle: $(ARCHIVE)/$(CA-BUNDLE_SOURCE)
 #
 # libcurl
 #
-LIBCURL_VER = 8.10.1
+LIBCURL_VER = 8.15.0
 LIBCURL_SOURCE = curl-$(LIBCURL_VER).tar.bz2
 LIBCURL_PATCH = libcurl-$(LIBCURL_VER).patch
 
@@ -1211,7 +1211,7 @@ $(D)/libvorbisidec: $(D)/bootstrap $(D)/libogg $(ARCHIVE)/$(LIBVORBISIDEC_SOURCE
 #
 # libiconv
 #
-LIBICONV_VER = 1.17
+LIBICONV_VER = 1.18
 LIBICONV_SOURCE = libiconv-$(LIBICONV_VER).tar.gz
 
 $(ARCHIVE)/$(LIBICONV_SOURCE):
@@ -1507,8 +1507,8 @@ $(D)/libsoup: $(D)/bootstrap $(D)/sqlite $(D)/libxml2 $(D)/libglib2 $(ARCHIVE)/$
 #
 # libxml2
 #
-LIBXML2_MAJOR = 2.12
-LIBXML2_MINOR = 9
+LIBXML2_MAJOR = 2.14
+LIBXML2_MINOR = 5
 LIBXML2_VER = $(LIBXML2_MAJOR).$(LIBXML2_MINOR)
 LIBXML2_SOURCE = libxml2-$(LIBXML2_VER).tar.xz
 LIBXML2_PATCH = libxml2-$(LIBXML2_VER).patch
@@ -1651,7 +1651,7 @@ $(D)/libroxml: $(D)/bootstrap $(ARCHIVE)/$(LIBROXML_SOURCE)
 #
 # pugixml
 #
-PUGIXML_VER = 1.14
+PUGIXML_VER = 1.15
 PUGIXML_SOURCE = pugixml-$(PUGIXML_VER).tar.gz
 PUGIXML_PATCH = pugixml-$(PUGIXML_VER)-config.patch
 
@@ -1845,7 +1845,7 @@ $(D)/libusb_compat: $(D)/bootstrap $(D)/libusb $(ARCHIVE)/$(LIBUSB_COMPAT_SOURCE
 #
 # alsa-lib
 #
-ALSA_LIB_VER = 1.2.12
+ALSA_LIB_VER = 1.2.14
 ALSA_LIB_SOURCE = alsa-lib-$(ALSA_LIB_VER).tar.bz2
 ALSA_LIB_PATCH  = alsa-lib-$(ALSA_LIB_VER).patch
 ALSA_LIB_PATCH += alsa-lib-$(ALSA_LIB_VER)-link_fix.patch
@@ -1871,6 +1871,7 @@ $(D)/alsa_lib: $(D)/bootstrap $(ARCHIVE)/$(ALSA_LIB_SOURCE)
 			--enable-silent-rules \
 			--disable-aload \
 			--disable-rawmidi \
+			--disable-seq \
 			--disable-resmgr \
 			--disable-old-symbols \
 			--disable-alisp \
@@ -1889,7 +1890,7 @@ $(D)/alsa_lib: $(D)/bootstrap $(ARCHIVE)/$(ALSA_LIB_SOURCE)
 #
 # alsa-utils
 #
-ALSA_UTILS_VER = 1.2.12
+ALSA_UTILS_VER = 1.2.14
 ALSA_UTILS_SOURCE = alsa-utils-$(ALSA_UTILS_VER).tar.bz2
 ALSA_UTILS_PATCH = alsa-utils-$(ALSA_UTILS_VER).patch
 
@@ -2419,7 +2420,7 @@ $(D)/gnutls: $(D)/bootstrap $(D)/nettle $(ARCHIVE)/$(GNUTLS_SOURCE)
 #
 # libgpg-error
 #
-LIBGPG_ERROR_VER    = 1.50
+LIBGPG_ERROR_VER    = 1.55
 LIBGPG_ERROR_DIR    = libgpg-error-$(LIBGPG_ERROR_VER)
 LIBGPG_ERROR_SOURCE = libgpg-error-$(LIBGPG_ERROR_VER).tar.bz2
 LIBGPG_ERROR_URL    = https://www.gnupg.org/ftp/gcrypt/libgpg-error
@@ -2448,7 +2449,7 @@ $(D)/libgpg-error: $(D)/bootstrap $(ARCHIVE)/$(LIBGPG_ERROR_SOURCE)
 #
 # libgcrypt
 #
-LIBGCRYPT_VER    = 1.8.11
+LIBGCRYPT_VER    = 1.11.2
 LIBGCRYPT_DIR    = libgcrypt-$(LIBGCRYPT_VER)
 LIBGCRYPT_SOURCE = libgcrypt-$(LIBGCRYPT_VER).tar.bz2
 LIBGCRYPT_URL    = https://gnupg.org/ftp/gcrypt/libgcrypt

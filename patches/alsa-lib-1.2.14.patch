@@ -15,7 +15,7 @@ diff --git a/src/control/control.c b/src/control/control.c
 index 91415b51..ca302df6 100644
 --- a/src/control/control.c
 +++ b/src/control/control.c
-@@ -1611,11 +1611,14 @@ int snd_ctl_open(snd_ctl_t **ctlp, const char *name, int mode)
+@@ -1616,11 +1616,14 @@ int snd_ctl_open(snd_ctl_t **ctlp, const char *name, int mode)
  	int err;
  
  	assert(ctlp && name);
@@ -31,6 +31,24 @@ index 91415b51..ca302df6 100644
  		err = snd_config_update_ref(&top);
  		if (err < 0)
  			return err;
+diff --git a/include/seqmid.h b/include/seqmid.h
+--- a/include/seqmid.h
++++ b/include/seqmid.h
+@@ -526,12 +526,14 @@
+ 	((ev)->type = SND_SEQ_EVENT_SYSEX,\
+ 	 snd_seq_ev_set_variable(ev, datalen, dataptr))
+ 
++#ifdef __ALSA_RAWMIDI_H
+ /* Helper API functions for UMP endpoint and block creations */
+ int snd_seq_create_ump_endpoint(snd_seq_t *seq,
+ 				const snd_ump_endpoint_info_t *info,
+ 				unsigned int num_groups);
+ int snd_seq_create_ump_block(snd_seq_t *seq, int blkid,
+ 			     const snd_ump_block_info_t *info);
++#endif
+ 
+ /** \} */
+ 
 diff --git a/src/pcm/pcm.c b/src/pcm/pcm.c
 index 892abf98..67912794 100644
 --- a/src/pcm/pcm.c
@@ -75,7 +93,7 @@ diff --git a/src/seq/seq.c b/src/seq/seq.c
 index f051426f..3330e770 100644
 --- a/src/seq/seq.c
 +++ b/src/seq/seq.c
-@@ -978,11 +978,14 @@ int snd_seq_open(snd_seq_t **seqp, const char *name,
+@@ -1054,11 +1054,14 @@ int snd_seq_open(snd_seq_t **seqp, const char *name,
  	int err;
  
  	assert(seqp && name);

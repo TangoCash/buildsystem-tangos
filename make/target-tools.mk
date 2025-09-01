@@ -179,7 +179,7 @@ $(D)/module_init_tools: $(D)/bootstrap $(D)/lsb $(ARCHIVE)/$(MODULE_INIT_TOOLS_S
 #
 # sysvinit
 #
-SYSVINIT_VER = 3.10
+SYSVINIT_VER = 3.14
 SYSVINIT_SOURCE = sysvinit-$(SYSVINIT_VER).tar.xz
 SYSVINIT_PATCH  = sysvinit-$(SYSVINIT_VER)-crypt-lib.patch
 SYSVINIT_PATCH += sysvinit-$(SYSVINIT_VER)-change-INIT_FIFO.patch
@@ -643,7 +643,7 @@ $(D)/ntfs_3g: $(D)/bootstrap $(ARCHIVE)/$(NTFS_3G_SOURCE)
 #
 # mc
 #
-MC_VER = 4.8.32
+MC_VER = 4.8.33
 MC_SOURCE = mc-$(MC_VER).tar.xz
 MC_PATCH  = mc-$(MC_VER).patch
 
@@ -687,7 +687,7 @@ $(D)/mc: $(D)/bootstrap $(D)/libglib2 $(D)/ncurses $(ARCHIVE)/$(MC_SOURCE)
 #
 # socat
 #
-SOCAT_VER = 1.8.0.1
+SOCAT_VER = 1.8.0.3
 SOCAT_SOURCE = socat-$(SOCAT_VER).tar.gz
 SOCAT_PATCH = socat-$(SOCAT_VER).patch
 
@@ -1132,7 +1132,7 @@ $(D)/avahi: $(D)/bootstrap $(D)/expat $(D)/libdaemon $(D)/dbus $(ARCHIVE)/$(AVAH
 #
 # wget
 #
-WGET_VER = 1.24.5
+WGET_VER = 1.25.0
 WGET_SOURCE = wget-$(WGET_VER).tar.gz
 WGET_PATCH = wget-$(WGET_VER).patch
 
@@ -1194,7 +1194,7 @@ $(D)/sed: $(D)/bootstrap $(ARCHIVE)/$(SED_SOURCE)
 #
 # smartmontools
 #
-SMARTMONTOOLS_VER = 7.4
+SMARTMONTOOLS_VER = 7.5
 SMARTMONTOOLS_SOURCE = smartmontools-$(SMARTMONTOOLS_VER).tar.gz
 
 $(ARCHIVE)/$(SMARTMONTOOLS_SOURCE):
@@ -1772,8 +1772,9 @@ $(D)/openssh: $(D)/bootstrap $(D)/zlib $(D)/openssl $(ARCHIVE)/$(OPENSSH_SOURCE)
 #
 # dropbear
 #
-DROPBEAR_VER = 2022.83
+DROPBEAR_VER = 2025.88
 DROPBEAR_SOURCE = dropbear-$(DROPBEAR_VER).tar.bz2
+DROPBEAR_PATCH = 
 
 $(ARCHIVE)/$(DROPBEAR_SOURCE):
 	$(DOWNLOAD) http://matt.ucc.asn.au/dropbear/releases/$(DROPBEAR_SOURCE)
@@ -1783,6 +1784,7 @@ $(D)/dropbear: $(D)/bootstrap $(D)/zlib $(ARCHIVE)/$(DROPBEAR_SOURCE)
 	$(REMOVE)/dropbear-$(DROPBEAR_VER)
 	$(UNTAR)/$(DROPBEAR_SOURCE)
 	$(CHDIR)/dropbear-$(DROPBEAR_VER); \
+		$(call apply_patches, $(DROPBEAR_PATCH)); \
 		$(CONFIGURE) \
 			--prefix=/usr \
 			--mandir=/.remove \
