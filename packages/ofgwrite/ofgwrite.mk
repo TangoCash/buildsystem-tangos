@@ -4,7 +4,7 @@
 OFGWRITE_GIT = $(GITHUB)/MaxWiesel/ofgwrite-max.git
 OFGWRITE_PATCH = ofgwrite.patch
 
-$(D)/ofgwrite: $(D)/bootstrap
+$(D)/ofgwrite: $(D)/bootstrap $(D)/openssl
 	$(START_BUILD)
 	$(REMOVE)/$(PKG_NAME)
 	$(call update_git, $(OFGWRITE_GIT))
