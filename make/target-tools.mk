@@ -153,7 +153,8 @@ MODULE_INIT_TOOLS_SOURCE = module-init-tools-$(MODULE_INIT_TOOLS_VER).tar.bz2
 MODULE_INIT_TOOLS_PATCH = module-init-tools-$(MODULE_INIT_TOOLS_VER).patch
 
 $(ARCHIVE)/$(MODULE_INIT_TOOLS_SOURCE):
-	$(DOWNLOAD) ftp.be.debian.org/pub/linux/utils/kernel/module-init-tools/$(MODULE_INIT_TOOLS_SOURCE)
+#	$(DOWNLOAD) ftp.be.debian.org/pub/linux/utils/kernel/module-init-tools/$(MODULE_INIT_TOOLS_SOURCE)
+	$(DOWNLOAD) http://distro.ibiblio.org/fatdog/source/600/m/$(MODULE_INIT_TOOLS_SOURCE)
 
 $(D)/module_init_tools: $(D)/bootstrap $(D)/lsb $(ARCHIVE)/$(MODULE_INIT_TOOLS_SOURCE)
 	$(START_BUILD)
@@ -262,10 +263,9 @@ PORTMAP_SOURCE = portmap_$(PORTMAP_VER).orig.tar.gz
 PORTMAP_PATCH = portmap-$(PORTMAP_VER).patch
 
 $(ARCHIVE)/$(PORTMAP_SOURCE):
-	$(DOWNLOAD) https://merges.ubuntu.com/p/portmap/$(PORTMAP_SOURCE)
-
+	$(DOWNLOAD) https://github.com/TangoCash/buildsystem-archive/blob/main/$(PORTMAP_SOURCE)
 $(ARCHIVE)/portmap_$(PORTMAP_VER)-3.diff.gz:
-	$(DOWNLOAD) https://merges.ubuntu.com/p/portmap/portmap_$(PORTMAP_VER)-3.diff.gz
+	$(DOWNLOAD) https://github.com/TangoCash/buildsystem-archive/blob/main/portmap_$(PORTMAP_VER)-3.diff.gz
 
 $(D)/portmap: $(D)/bootstrap $(D)/lsb $(ARCHIVE)/$(PORTMAP_SOURCE) $(ARCHIVE)/portmap_$(PORTMAP_VER)-3.diff.gz
 	$(START_BUILD)
@@ -899,11 +899,12 @@ $(D)/fbshot: $(D)/bootstrap $(D)/libpng $(ARCHIVE)/$(FBSHOT_SOURCE)
 #
 # sysstat
 #
-SYSSTAT_VER = 12.6.2
+SYSSTAT_VER = 12.7.8
 SYSSTAT_SOURCE = sysstat-$(SYSSTAT_VER).tar.xz
 
 $(ARCHIVE)/$(SYSSTAT_SOURCE):
-	$(DOWNLOAD) http://pagesperso-orange.fr/sebastien.godard/$(SYSSTAT_SOURCE)
+#	$(DOWNLOAD) http://pagesperso-orange.fr/sebastien.godard/$(SYSSTAT_SOURCE)
+	$(DOWNLOAD) https://github.com/sysstat/sysstat/archive/refs/tags/v$(SYSSTAT_VER).tar.gz -O $(ARCHIVE)/$(SYSSTAT_SOURCE)
 
 $(D)/sysstat: $(D)/bootstrap $(ARCHIVE)/$(SYSSTAT_SOURCE)
 	$(START_BUILD)
@@ -1772,7 +1773,7 @@ $(D)/openssh: $(D)/bootstrap $(D)/zlib $(D)/openssl $(ARCHIVE)/$(OPENSSH_SOURCE)
 #
 # dropbear
 #
-DROPBEAR_VER = 2025.88
+DROPBEAR_VER = 2025.89
 DROPBEAR_SOURCE = dropbear-$(DROPBEAR_VER).tar.bz2
 DROPBEAR_PATCH = 
 
