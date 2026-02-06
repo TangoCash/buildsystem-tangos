@@ -39,7 +39,7 @@ KERNEL_PATCHES = \
 # DRIVER
 #
 
-DRIVER_DATE = 20191101
+DRIVER_DATE = 20250429
 DRIVER_VER = 4.10.12-$(DRIVER_DATE)
 DRIVER_SRC = e4hd-drivers-$(DRIVER_VER).zip
 DRIVER_URL = http://source.mynonpublic.com/ceryon
