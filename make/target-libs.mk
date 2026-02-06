@@ -1971,7 +1971,9 @@ $(D)/libopenthreads: $(D)/bootstrap $(ARCHIVE)/$(LIBOPENTHREADS_SOURCE)
 LIBRTMP_VER = ad70c64
 LIBRTMP_SOURCE = rtmpdump-git-$(LIBRTMP_VER).tar.bz2
 LIBRTMP_URL = $(GITHUB)/oe-alliance/rtmpdump.git
-LIBRTMP_PATCH = rtmpdump-git-$(LIBRTMP_VER).patch
+LIBRTMP_PATCH  = rtmpdump-git-$(LIBRTMP_VER).patch
+LIBRTMP_PATCH += rtmpdump-git-$(LIBRTMP_VER)-0002-fix-build-openssl102q.patch
+LIBRTMP_PATCH += rtmpdump-git-$(LIBRTMP_VER)-0003-fix-build-openssl111a.patch
 
 $(ARCHIVE)/$(LIBRTMP_SOURCE):
 	$(HELPERS_DIR)/get-git-archive.sh $(LIBRTMP_URL) $(LIBRTMP_VER) $(notdir $@) $(ARCHIVE)
